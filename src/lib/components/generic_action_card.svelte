@@ -16,7 +16,6 @@
     })
 
     function startAction() {
-        console.log(time_left)
         if (is_active) return;
         
         const duration = action.base_duration / sing.final;

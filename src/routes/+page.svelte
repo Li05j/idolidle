@@ -5,8 +5,8 @@
     let time_left = $state(100);
 
     const actions = [
-        { id: 1, name: 'Study Programming', base_duration: 3.0, reward: () => sing.base++ },
-        { id: 2, name: 'Exercise', base_duration: 5.0, reward: () => sing.multi += 0.5 }
+        { id: 1, name: 'Sing', base_duration: 3.0, reward: () => sing.base++ },
+        { id: 2, name: 'Dance', base_duration: 5.0, reward: () => sing.multi += 0.5 }
     ];
 </script>
 
