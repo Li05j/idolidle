@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { checkpoint, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
+    import { checkpoint, trainings, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
     import { toFixedNumber } from "$lib/utils/utils";
 
     let { action } = $props()
@@ -11,7 +11,7 @@
     let action_actual_duration: number = $state(0.0)
 
     $effect(() => {
-        let time = action.base_duration / sing.final
+        let time = trainings.get_training_time(action.base_duration, sing.final);
         if (time <= 0.1) { time = 0.1 }
         action_actual_duration = toFixedNumber(time, 2)
     })
@@ -19,7 +19,8 @@
     function startAction() {
         if (is_active) return;
         
-        const duration = action.base_duration / sing.final;
+        const duration = action_actual_duration;
+        // const duration = trainings.get_training_time(action.base_duration, sing.final);
 
         is_active = true;
         
