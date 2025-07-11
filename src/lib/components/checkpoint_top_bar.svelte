@@ -1,6 +1,5 @@
-<script lang="ts">
-    import { time_till_next_checkpoint, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
-    import { toFixedNumber } from "$lib/utils/utils";
+<!-- <script lang="ts">
+    import { fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
 
     let { action, time_left = $bindable<number>() } = $props()
 
@@ -34,7 +33,7 @@
             const delta: number = now - lastTime;
             lastTime = now;
 
-            time_till_next_checkpoint.remaining_time = toFixedNumber(time_till_next_checkpoint.remaining_time - (delta / 1000), 2);
+            time_left = toFixedNumber(time_left - (delta / 1000), 2);
             
             progress = Math.min((elapsed / totalTime) * 100, 100);
             progress_text = `${Math.round(progress)}% complete`;
@@ -69,4 +68,4 @@
     >
         {is_active ? "In Progress..." : "Start"}
     </button>
-</div>
+</div> -->
