@@ -2,7 +2,7 @@
     let { 
         name, 
         onclick,
-        variant = 'primary',
+        variant = 'primary' as "primary" | "secondary" | "danger" | "none",
         class: customClass = '',
         disabled = false,
         type = 'button' as "button" | "submit" | "reset" | null | undefined,
@@ -17,10 +17,11 @@
                 return 'bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600 disabled:bg-gray-400'
             case 'danger':
                 return 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 disabled:bg-gray-400'
-            default:
+            case "none":
                 return ''
         }
     }
+
     const defaultButtonClass = getVariantStyle()
     
     // merge default and custom class
