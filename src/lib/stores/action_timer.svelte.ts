@@ -35,8 +35,8 @@ export function createActionTimer(): ActionTimer {
         elapsed = now - startTime;
         
         if (elapsed >= durationMs) {
-            stop();
             onCompleteCallback?.();
+            stop();
             return;
         }
 
