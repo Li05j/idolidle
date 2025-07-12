@@ -24,7 +24,7 @@
     }
 
     onDestroy(() => {
-        timer.stop();
+        timer.destroy();
     });
 </script>
 
@@ -35,7 +35,7 @@
     </div>
   
     <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
-        <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress}%"></div>
+        <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
     </div>
   
     <div class="text-center text-sm text-gray-600 mb-4">{timer.progress_text}</div>

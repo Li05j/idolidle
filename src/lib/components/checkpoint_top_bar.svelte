@@ -4,9 +4,6 @@
 
     let progress = $derived(Math.min((checkpoint.current_time_spent / checkpoint.current_total_time) * 100, 100));
     let progress_text = $derived(`${Math.round(progress).toFixed(DECIMAL_PLACES)}% complete`);
-    $inspect(checkpoint.current_time_spent, checkpoint.current_total_time)
-    $inspect(progress, progress_text)
-
 </script>
 
 <div class="bg-white p-6 rounded-lg shadow-md mb-4 top-0 left-0 w-full">

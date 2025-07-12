@@ -1,47 +1,72 @@
-// actionTimer.svelte.ts
 import { checkpoint } from "$lib/stores/store.svelte";
-import { DECIMAL_PLACES } from "$lib/utils/utils";
+import { msToSecF, DECIMAL_PLACES } from "$lib/utils/utils"
 
 export interface ActionTimer {
-    progress: number;
+    progress_percent: number;
     is_active: boolean;
     progress_text: string;
-    start: (duration: number, onComplete: () => void) => void;
+    start: (durationMs: number, onComplete: () => void) => void;
+    pause: () => void;
     stop: () => void;
+    destroy: () => void;
 }
 
 export function createActionTimer(): ActionTimer {
-    let progress = $state(0);
+    let progress_percent = $state(0);
     let is_active = $state(false);
+    let is_paused = $state(false);
     let progress_text = $state("Ready to start");
+
     let interval: NodeJS.Timeout | null = null;
+    let lastTime = 0;
+    let startTime = 0;
+    let elapsed = 0;
+    let durationMs = 0;
+    let onCompleteCallback: (() => void) | null = null;
+
+    let estimated_checkpoint_end_time = 0;
+
+    function updateProgress() {
+        if (is_paused) {
+            return
+        }
+
+        const now = performance.now();
+        elapsed = now - startTime;
+        
+        if (elapsed >= durationMs) {
+            stop();
+            onCompleteCallback?.();
+            return;
+        }
+
+        checkpoint.current_time_spent += now - lastTime;
+        
+        progress_percent = (elapsed / durationMs) * 100;
+        progress_text = `${Math.round(progress_percent).toFixed(DECIMAL_PLACES)}% complete`;
+
+        lastTime = now;
+    }
 
     function start(duration: number, onComplete: () => void) {
         if (is_active) return;
         
         is_active = true;
-        const startTime = Date.now();
-        const totalTime = duration;
-        let lastTime = Date.now();
+        durationMs = duration;
+        lastTime = performance.now();
+        startTime = performance.now();
+        onCompleteCallback = onComplete;
 
-        interval = setInterval(() => {
-            const now = Date.now();
-            const elapsed = now - startTime;
-            const delta = now - lastTime;
-            lastTime = now;
-
-            // 1000 is ms->s
-            checkpoint.current_time_spent += delta;
-            
-            // 100 is percent
-            progress = Math.min((elapsed / totalTime) * 100, 100);
-            progress_text = `${Math.round(progress).toFixed(DECIMAL_PLACES)}% complete`;
+        estimated_checkpoint_end_time = checkpoint.current_time_spent + durationMs - elapsed
         
-            if (progress >= 100) {
-                stop();
-                onComplete();
-            }
-        }, 100);
+        updateProgress();
+        interval = setInterval(updateProgress, 100);
+    }
+
+    function pause() {
+        is_active = false;
+        is_paused = true;
+        estimated_checkpoint_end_time = 0;
     }
 
     function stop() {
@@ -49,16 +74,29 @@ export function createActionTimer(): ActionTimer {
             clearInterval(interval);
             interval = null;
         }
-        progress = 0;
+        progress_percent = 0;
+        elapsed = 0;
         progress_text = "Ready to start";
         is_active = false;
+        onCompleteCallback = null;
+
+        checkpoint.current_time_spent = estimated_checkpoint_end_time
+    }
+
+    function destroy() {
+        if (interval !== null) {
+            clearInterval(interval);
+            interval = null;
+        }
     }
 
     return {
-        get progress() { return progress; },
+        get progress_percent() { return progress_percent; },
         get is_active() { return is_active; },
         get progress_text() { return progress_text; },
         start,
-        stop
+        pause,
+        stop,
+        destroy
     };
 }
