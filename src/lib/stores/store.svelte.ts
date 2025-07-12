@@ -19,7 +19,7 @@ function createTrainings() {
 }
 
 class Checkpoints {
-	private _checkpoints = [20, 300, 400]
+	private _checkpoints = [20000, 30000, 40000]
 	private _max_idx = 3
 	private _multi = $state([1.0, 1.0, 1.0])
 	private _current_idx = $state(0)
