@@ -57,7 +57,7 @@ export function createActionTimer(): ActionTimer {
         startTime = performance.now();
         onCompleteCallback = onComplete;
 
-        estimated_checkpoint_end_time = checkpoint.current_time_spent + durationMs - elapsed
+        estimated_checkpoint_end_time = checkpoint.current_time_spent + Math.max(durationMs - elapsed, 0)
         
         updateProgress();
         interval = setInterval(updateProgress, 100);

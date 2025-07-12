@@ -1,5 +1,6 @@
 <script lang="ts">
     import ActionCard from '$lib/components/generic_action_card.svelte';
+    import ActionCollection from '$lib/components/action_collection.svelte';
     import CheckpointTopBar from '$lib/components/checkpoint_top_bar.svelte';
     import { fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
 
@@ -9,7 +10,10 @@
 
     let actions = [
         { id: 1, name: 'Sing', base_duration: 3000, reward: () => sing.base++ },
-        { id: 2, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 }
+        { id: 2, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
+        { id: 3, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
+        { id: 4, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
+        { id: 5, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
     ];
 </script>
 
@@ -34,9 +38,7 @@
                 <h1 class="text-lg font-bold mb-4 justify-center text-center">Actions</h1>
                 <hr class="h-1 bg-black border-0 opacity-15 mb-4" />
                 <div>
-                    {#each actions as action}
-                        <ActionCard {action} />
-                    {/each}
+                    <ActionCollection title={"Dorm Room"} {actions} />
                 </div>
             </div>
         </div>
