@@ -1,7 +1,7 @@
 import { checkpoint } from "$lib/stores/store.svelte";
 import { msToSecF, DECIMAL_PLACES } from "$lib/utils/utils"
 
-export interface ActionTimer {
+export interface TodoTimer {
     progress_percent: number;
     is_active: boolean;
     progress_text: string;
@@ -11,7 +11,7 @@ export interface ActionTimer {
     destroy: () => void;
 }
 
-export function createActionTimer(): ActionTimer {
+export function createTodoTimer(): TodoTimer {
     let progress_percent = $state(0);
     let is_active = $state(false);
     let is_paused = $state(false);

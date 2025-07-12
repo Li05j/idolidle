@@ -2,24 +2,39 @@
     import { onDestroy } from "svelte";
     import { checkpoint, trainings, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
     import { msToSecF } from "$lib/utils/utils"
-    import { createActionTimer } from "$lib/stores/action_timer.svelte";
+    import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
 
-    let { action } = $props()
+    let { todo } = $props()
 
     const MIN_TRAINING_TIME = 100; // ms
 
-    const timer = createActionTimer();
+    const timer = createTodoTimer();
 
-    let action_actual_duration: number = $state(0.0)
+    let todo_actual_duration: number = $state(0.0)
+    let bg_color = $state("")
 
     $effect(() => {
-        action_actual_duration = trainings.get_training_time(action.base_duration, sing.final);
-        if (action_actual_duration <= MIN_TRAINING_TIME) { action_actual_duration = MIN_TRAINING_TIME }
+        todo_actual_duration = trainings.get_training_time(todo.base_duration, sing.final);
+        if (todo_actual_duration <= MIN_TRAINING_TIME) { todo_actual_duration = MIN_TRAINING_TIME }
     })
 
-    function startAction() {
-        timer.start(action_actual_duration, () => {
-            action.reward();
+    $effect(() => {
+        switch (todo.type) {
+            case "location":
+                bg_color = "bg-pink-200"
+                break
+            case "action":
+                bg_color = "bg-white"
+                break
+            case "none":
+                bg_color = "bg-white"
+                break
+        }
+    })
+
+    function starttodo() {
+        timer.start(todo_actual_duration, () => {
+            todo.reward();
         });
     }
 
@@ -28,10 +43,10 @@
     });
 </script>
 
-<div class="bg-white p-6 rounded-lg shadow-md mb-4 h-48">
+<div class="{bg_color} p-6 rounded-lg shadow-md mb-4 h-48">
     <div class="flex justify-between items-center mb-4">
-        <div class="text-lg font-semibold">{action.name}</div>
-        <div class="text-gray-600 text-sm">Base: {msToSecF(action_actual_duration)}s</div>
+        <div class="text-lg font-semibold">{todo.name}</div>
+        <div class="text-gray-600 text-sm">Base: {msToSecF(todo_actual_duration)}s</div>
     </div>
   
     <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
@@ -43,7 +58,7 @@
     <button 
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
         disabled={timer.is_active}
-        onclick={startAction}
+        onclick={starttodo}
     >
         {timer.is_active ? "In Progress..." : "Start"}
     </button>

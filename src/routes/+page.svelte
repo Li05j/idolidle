@@ -1,25 +1,27 @@
 <script lang="ts">
+    import type { Todo } from '$lib/types'
+
     import ActionCard from '$lib/components/generic_action_card.svelte';
     import ActionCollection from '$lib/components/action_collection.svelte';
     import CheckpointTopBar from '$lib/components/checkpoint_top_bar.svelte';
     import { fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
 
-    let locations = [
-        { id: 1, name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
-        { id: 2, name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
-        { id: 3, name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
-        { id: 4, name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
-        { id: 5, name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
-        { id: 6, name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
-        { id: 7, name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
+    let locations: Todo[] = [
+        { id: 1, type: 'location', name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
+        { id: 2, type: 'location', name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
+        { id: 3, type: 'location', name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
+        { id: 4, type: 'location', name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
+        { id: 5, type: 'location', name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
+        { id: 6, type: 'location', name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
+        { id: 7, type: 'location', name: 'Dorm Room', base_duration: 5000, reward: () => sta.base++},
     ]
 
-    let actions = [
-        { id: 1, name: 'Sing', base_duration: 3000, reward: () => sing.base++ },
-        { id: 2, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
-        { id: 3, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
-        { id: 4, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
-        { id: 5, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
+    let actions: Todo[] = [
+        { id: 1, type: 'action', name: 'Sing', base_duration: 3000, reward: () => sing.base++ },
+        { id: 2, type: 'action', name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
+        { id: 3, type: 'action', name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
+        { id: 4, type: 'action', name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
+        { id: 5, type: 'action', name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
     ];
 </script>
 
@@ -61,8 +63,8 @@
                 <hr class="h-1 bg-black border-0 opacity-15 mb-4" />
 
                 <div class="overflow-y-auto p-4 h-full">
-                    {#each locations as action}
-                        <ActionCard {action} />
+                    {#each locations as todo}
+                        <ActionCard {todo} />
                     {/each}
                 </div>
             </div>
@@ -74,13 +76,13 @@
 
                 <div class="overflow-y-auto p-4 h-full">
                     <div>
-                        <ActionCollection title={"Dorm Room"} {actions} />
+                        <ActionCollection title={"Dorm Room"} todos={actions} />
                     </div>
                     <div>
-                        <ActionCollection title={"Dorm Room"} {actions} />
+                        <ActionCollection title={"Dorm Room"} todos={actions} />
                     </div>
                     <div>
-                        <ActionCollection title={"Dorm Room"} {actions} />
+                        <ActionCollection title={"Dorm Room"} todos={actions} />
                     </div>
                 </div>
             </div>
