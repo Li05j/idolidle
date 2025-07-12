@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte"
+    import { fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte";
+    import GenericButton from "./generic_button.svelte";
 
     function openStatsModal() {
         console.log("Stats Modal opened - except it isn't implemented yet owo")
@@ -28,12 +29,7 @@
         <div>{eloq.final_str}</div>
 
         <div class="col-span-2 justify-center py-4">
-            <button 
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400 w-full"
-                onclick={openStatsModal}
-            >
-                Detailed Stats...
-            </button>
+            <GenericButton name={"Detailed Stats..."} onclick={openStatsModal} class={"w-full"}/> 
         </div>
     </div>
 </div>

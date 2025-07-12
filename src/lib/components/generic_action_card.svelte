@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
     import { trainings, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte"
+    import GenericButton from "./generic_button.svelte";
     import { msToSecF } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
 
@@ -32,7 +33,7 @@
         }
     })
 
-    function starttodo() {
+    function startTodo() {
         timer.start(todo_actual_duration, () => {
             todo.reward();
         });
@@ -55,11 +56,5 @@
   
     <div class="text-center text-sm text-gray-600 mb-4">{timer.progress_text}</div>
   
-    <button 
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
-        disabled={timer.is_active}
-        onclick={starttodo}
-    >
-        {timer.is_active ? "In Progress..." : "Start"}
-    </button>
+    <GenericButton name={timer.is_active ? "In Progress..." : "Start"} disabled={timer.is_active} onclick={startTodo}/>
 </div>
