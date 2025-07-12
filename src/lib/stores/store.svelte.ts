@@ -1,3 +1,5 @@
+import { DECIMAL_PLACES } from "$lib/utils/utils"
+
 class Trainings {
 	private _training_constant = $state(727);
 
@@ -19,7 +21,7 @@ function createTrainings() {
 }
 
 class Checkpoints {
-	private _checkpoints = [20000, 30000, 40000]
+	private _checkpoints = [200000, 300000, 400000]
 	private _max_idx = 3
 	private _multi = $state([1.0, 1.0, 1.0])
 	private _current_idx = $state(0)
@@ -86,11 +88,13 @@ function createCurrency(baseInit = 0, multiInit = 1.0) {
     let base = $state(baseInit);
     let multi = $state(multiInit);
     const final = (() => base * multi);
+	const final_str = (() => final().toFixed(DECIMAL_PLACES))
 
     return { 
 		get base() { return base }, set base(v) { base = v },
         get multi() { return multi }, set multi(v) { multi = v },
-        get final() { return final() } 
+        get final() { return final() },
+		get final_str() { return final_str() },
 	};
 }
 
@@ -99,12 +103,14 @@ function createStat(baseInit = 0, flatInit = 0.0, multiInit = 1.0) {
   	let flat = $state(flatInit);
   	let multi = $state(multiInit);
   	const final = (() => (base + flat) * multi);
+	const final_str = (() => final().toFixed(DECIMAL_PLACES))
 
   	return { 
 		get base() { return base }, set base(v) { base = v },
         get flat() { return flat }, set flat(v) { flat = v },
         get multi() { return multi }, set multi(v) { multi = v },
-        get final() { return final() } 
+        get final() { return final() },
+		get final_str() { return final_str() },
 	};
 }
 

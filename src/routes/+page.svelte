@@ -16,10 +16,10 @@
 
     let actions = [
         { id: 1, name: 'Sing', base_duration: 3000, reward: () => sing.base++ },
-        { id: 2, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
-        { id: 3, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
-        { id: 4, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
-        { id: 5, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.5 },
+        { id: 2, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
+        { id: 3, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
+        { id: 4, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
+        { id: 5, name: 'Dance', base_duration: 5000, reward: () => sing.multi += 0.01 },
     ];
 </script>
 
@@ -36,8 +36,22 @@
                 <hr class="h-1 bg-black border-0 opacity-15 mb-4" />
 
                 <div class="overflow-y-auto p-4 h-full">
-                    <div>Sing: {sing.base}</div>
-                    <div>Sing final: {sing.final}</div>
+                    <div class="grid grid-cols-2 gap-x-4 text-center justify-center">
+                        <div>Fans:</div>
+                        <div>{fans.final_str}</div>
+                        <div>Moni:</div>
+                        <div>{moni.final_str}</div>
+                        <div>Sing:</div>
+                        <div>{sing.final_str}</div>
+                        <div>Dance:</div>
+                        <div>{dance.final_str}</div>
+                        <div>Stamina:</div>
+                        <div>{sta.final_str}</div>
+                        <div>Charm:</div>
+                        <div>{charm.final_str}</div>
+                        <div>Eloquence:</div>
+                        <div>{eloq.final_str}</div>
+                    </div>
                 </div>
             </div>
 

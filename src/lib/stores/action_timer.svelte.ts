@@ -43,7 +43,7 @@ export function createActionTimer(): ActionTimer {
         checkpoint.current_time_spent += now - lastTime;
         
         progress_percent = (elapsed / durationMs) * 100;
-        progress_text = `${Math.round(progress_percent).toFixed(DECIMAL_PLACES)}% complete`;
+        progress_text = `${progress_percent.toFixed(DECIMAL_PLACES)}% complete`;
 
         lastTime = now;
     }
