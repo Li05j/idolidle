@@ -6,7 +6,7 @@
     let progress_text = $derived(`${Math.round(progress).toFixed(DECIMAL_PLACES)}% complete`);
 </script>
 
-<div class="bg-white p-6 rounded-lg shadow-md mb-4 top-0 left-0 w-full">
+<div class="bg-white p-6 rounded-lg shadow-md mb-4 top-0 left-0 w-full h-36">
     <div class="flex justify-between items-center mb-4">
         <div class="text-lg font-semibold">Time till next LIVE!</div>
         <div class="text-gray-600 text-sm">
