@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
-    import { checkpoint, trainings, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/store.svelte"
+    import { trainings, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte"
     import { msToSecF } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
 

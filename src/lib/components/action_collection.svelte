@@ -1,7 +1,6 @@
 <script lang="ts">
     import ActionCard from '$lib/components/generic_action_card.svelte';
 
-    let stuff = ['item1', 'item2', 'item3', 'item4', 'item5', 'item6'];
     let { title, todos } = $props()
 </script>
 
