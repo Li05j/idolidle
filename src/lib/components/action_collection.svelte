@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ActionCard from '$lib/components/generic_action_card.svelte';
+    import TodoCard from '$lib/components/generic_todo_card.svelte';
 
     let { title, todos } = $props()
     let repeat_val = $state('x1');
@@ -17,7 +17,7 @@
     <div class="grid grid-cols-3">
         {#each todos as todo}
             <div class="col-span-1 px-2">
-                <ActionCard {todo} {repeat_val} />
+                <TodoCard {todo} {repeat_val} />
             </div>
         {/each}
     </div>

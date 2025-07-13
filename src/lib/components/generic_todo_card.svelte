@@ -1,13 +1,15 @@
 <script lang="ts">
     import type { Todo } from "$lib/types";
 
-    import { onDestroy } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import { trainings } from "$lib/stores/stats.svelte"
     import { msToSecF } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
-    import GenericButton from "./generic_button.svelte";
+    import { TodoCardM } from "$lib/stores/central_todo_card_manager.svelte";
 	
-    let { todo, repeat_val }: { todo: Todo, repeat_val: string } = $props();
+    let { todo, repeat_val }: { todo: Todo, repeat_val?: string } = $props();
+
+    const card_id = TodoCardM.generateCardId()
 
     const MIN_TRAINING_TIME = 100; // ms
     const timer = createTodoTimer();
@@ -47,7 +49,7 @@
 
     $effect(() => {
         if (timer.is_active) {
-            border = "border-4 border-orange-500"
+            border = "border-4 border-orange-400"
         }
         else {
             border = ""
@@ -55,6 +57,7 @@
     })
 
     function startTodo() {
+        TodoCardM.activateCard(card_id)
         timer.start(todo_actual_duration, () => {
             todo.reward(todo.depends);
             todo.then?.();
@@ -65,8 +68,14 @@
         timer.pause()
     }
 
+    onMount(() => {
+        TodoCardM.registerCard(card_id, pauseTodo);
+        console.log(todo.name + card_id)
+    })
+
     onDestroy(() => {
         timer.destroy();
+        TodoCardM.unregisterCard(card_id);
     });
 </script>
 
