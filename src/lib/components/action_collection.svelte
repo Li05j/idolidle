@@ -8,7 +8,7 @@
     <legend class="px-2 text-lg font-medium">{title}</legend>
     <div class="grid grid-cols-3">
         {#each todos as todo}
-            <div class="col-span-1">
+            <div class="col-span-1 px-2">
                 <ActionCard {todo} />
             </div>
         {/each}

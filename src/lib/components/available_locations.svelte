@@ -1,7 +1,6 @@
 <script lang="ts">
     import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
     import ActionCard from '$lib/components/generic_action_card.svelte';
-    import { fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte"
 </script>
 
 <h1 class="text-lg font-bold mb-4 justify-center text-center">Locations</h1>

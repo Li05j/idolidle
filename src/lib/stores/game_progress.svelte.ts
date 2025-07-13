@@ -41,6 +41,7 @@ class GameProgress {
         this._update(part, which)
     }
 
+    // why do we need this?
     disable(part: number, which: ProgressFlag) {
         if (part >= this.p.TOTAL_PARTS) return;
         this.p.parts[part] &= ~which
@@ -53,6 +54,7 @@ class GameProgress {
 
     reset() {
         this.p.reset();
+        this.todolist_tracker.reset();
     }
 }
 

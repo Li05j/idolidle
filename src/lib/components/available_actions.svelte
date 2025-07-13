@@ -8,7 +8,7 @@
 
 <div class="overflow-y-auto p-4 h-full">
     {#each [...TD_List_Tracker.actions] as action}
-        <div>
+        <div class="pb-4">
             <ActionCollection title={action[0]} todos={action[1]} />
         </div>
     {/each}

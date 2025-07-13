@@ -1,17 +1,26 @@
 import type { Todo } from '$lib/types'
-import { Game_Progress } from '$lib/stores/game_progress.svelte';
-import { ProgressFlag } from '$lib/types'
-import { fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte"
+import {
+    locations_data,
+} from "$lib/stores/todos_data.svelte"
 
 class TodoListTracker {
     public constructor() {
-        this.locations.push({ id: 0, type: 'location', name: 'Dorm Room', base_duration: 2000, reward: () => sta.base++, flag_check: () => {
-            Game_Progress.enable(0, ProgressFlag.f0);
-        }},)
+        this.reset()
     }
 
     public locations: Todo[] = $state([]);
     public actions: Map<string, Todo[]> = $state(new Map);
+
+    public reset() {
+        let initial_loc = locations_data.find((ld) => ld.name == 'Living Room')
+        if (initial_loc) {
+            this.locations = [initial_loc]
+        }
+        else{
+            this.locations = []
+        }
+        this.actions.clear()
+    }
 }
 
 function createTodoListTracker() {

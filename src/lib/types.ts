@@ -1,13 +1,13 @@
-export type TodoType = "none" | "location" | "action"
+export type TodoType = "none" | "location" | "action";
 
 export type Todo = {
-    id: number,
+    name: string, // Primary key
     type: TodoType,
-    name: string,
-    base_duration: number,
+    base_cost: number,
+    depends: StatEffectPair[],
     reward: () => void,
-    flag_check?: () => void,
-}
+    then?: () => void,
+};
 
 // Only f0-f30, i.e. 31 entries
 export enum ProgressFlag {
@@ -15,4 +15,9 @@ export enum ProgressFlag {
     f8 = 1 << 8, f9 = 1 << 9, f10 = 1 << 10, f11 = 1 << 11, f12 = 1 << 12, f13 = 1 << 13, f14 = 1 << 14, f15 = 1 << 15, 
     f16 = 1 << 16, f17 = 1 << 17, f18 = 1 << 18, f19 = 1 << 19, f20 = 1 << 20, f21 = 1 << 21, f22 = 1 << 22, f23 = 1 << 23,
     f24 = 1 << 24, f25 = 1 << 25, f26 = 1 << 26, f27 = 1 << 27, f28 = 1 << 28, f29 = 1 << 29, f30 = 1 << 30,
-}
+};
+
+// Which stat the Todo is effected by and by how much based on effectiveness.
+export type StatEffectPair = { which_stat: BasicStats, effectiveness: number };
+
+type BasicStats = "fans" | "moni" | "sta" | "charm" | "presence" | "eloq" | "poise";

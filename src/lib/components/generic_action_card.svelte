@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
-    import { trainings, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte"
+    import { trainings } from "$lib/stores/stats.svelte"
     import { msToSecF } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import GenericButton from "./generic_button.svelte";
@@ -8,14 +8,13 @@
     let { todo } = $props()
 
     const MIN_TRAINING_TIME = 100; // ms
-
     const timer = createTodoTimer();
 
     let todo_actual_duration: number = $state(0.0)
     let bg_color = $state("")
 
     $effect(() => {
-        todo_actual_duration = trainings.get_training_time(todo.base_duration, sing.final);
+        todo_actual_duration = trainings.get_final_training_time(todo);
         if (todo_actual_duration <= MIN_TRAINING_TIME) { todo_actual_duration = MIN_TRAINING_TIME }
     })
 
@@ -36,7 +35,7 @@
     function startTodo() {
         timer.start(todo_actual_duration, () => {
             todo.reward();
-            todo.flag_check();
+            todo.then?.();
         });
     }
 
