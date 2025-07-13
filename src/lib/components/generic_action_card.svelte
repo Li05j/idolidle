@@ -7,13 +7,14 @@
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import GenericButton from "./generic_button.svelte";
 	
-    let { todo }: { todo: Todo } = $props();
+    let { todo, repeat_val }: { todo: Todo, repeat_val: string } = $props();
 
     const MIN_TRAINING_TIME = 100; // ms
     const timer = createTodoTimer();
 
     let todo_actual_duration: number = $state(0.0)
     let bg_color = $state("")
+    let border = $state("")
 
     $effect(() => {
         let b: number = NaN;
@@ -30,17 +31,26 @@
     $effect(() => {
         switch (todo.type) {
             case "location":
-                bg_color = "bg-pink-200"
+                bg_color = "bg-pink-100"
                 break
             case "action":
                 bg_color = "bg-white"
                 break
             case "moni_making":
-                bg_color = "bg-purple-200"
+                bg_color = "bg-purple-100"
                 break
             case "none":
                 bg_color = "bg-white"
                 break
+        }
+    })
+
+    $effect(() => {
+        if (timer.is_active) {
+            border = "border-4 border-orange-500"
+        }
+        else {
+            border = ""
         }
     })
 
@@ -51,22 +61,30 @@
         });
     }
 
+    function pauseTodo() {
+        timer.pause()
+    }
+
     onDestroy(() => {
         timer.destroy();
     });
 </script>
 
-<div class="{bg_color} p-6 rounded-lg shadow-md mb-4 h-48">
-    <div class="flex justify-between items-center mb-4">
-        <div class="text-base font-medium">{todo.name}</div>
-        <div class="text-gray-600 text-sm">{msToSecF(timer.elapsed)}/{msToSecF(todo_actual_duration)}s</div>
+<div class="{bg_color} {border} p-6 rounded-lg shadow-md mb-4 h-48 relative overflow-hidden" onclick={timer.is_paused ? startTodo : pauseTodo}>
+    <!-- Watermark -->
+    <div class="absolute bottom-4 right-4 flex pointer-events-none">
+        <span class="text-6xl font-bold text-gray-300 opacity-75 transform rotate-12 select-none">
+            {repeat_val}
+        </span>
     </div>
   
-    <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
-        <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
-    </div>
-  
-    <div class="flex justify-between">
-        <GenericButton name={"Start"} disabled={timer.is_active} onclick={startTodo}/>
+    <div class="relative z-10">
+        <div class="flex justify-between items-center mb-4">
+            <div class="text-base font-medium">{todo.name}</div>
+            <div class="text-gray-600 text-sm">{msToSecF(timer.elapsed)}/{msToSecF(todo_actual_duration)}s</div>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
+            <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
+        </div>
     </div>
 </div>
