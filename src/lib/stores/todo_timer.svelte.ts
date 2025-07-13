@@ -2,8 +2,9 @@ import { CPs } from "$lib/stores/checkpoints.svelte";
 import { DECIMAL_PLACES } from "$lib/utils/utils"
 
 export interface TodoTimer {
-    progress_percent: number;
     is_active: boolean;
+    elapsed: number;
+    progress_percent: number;
     progress_text: string;
     start: (durationMs: number, onComplete: () => void) => void;
     pause: () => void;
@@ -20,7 +21,7 @@ export function createTodoTimer(): TodoTimer {
     let interval: NodeJS.Timeout | null = null;
     let lastTime = 0;
     let startTime = 0;
-    let elapsed = 0;
+    let elapsed = $state(0);
     let durationMs = 0;
     let onCompleteCallback: (() => void) | null = null;
 
@@ -91,8 +92,9 @@ export function createTodoTimer(): TodoTimer {
     }
 
     return {
-        get progress_percent() { return progress_percent; },
         get is_active() { return is_active; },
+        get elapsed() { return elapsed; },
+        get progress_percent() { return progress_percent; },
         get progress_text() { return progress_text; },
         start,
         pause,

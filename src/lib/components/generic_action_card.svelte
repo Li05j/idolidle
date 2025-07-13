@@ -58,15 +58,15 @@
 
 <div class="{bg_color} p-6 rounded-lg shadow-md mb-4 h-48">
     <div class="flex justify-between items-center mb-4">
-        <div class="text-lg font-semibold">{todo.name}</div>
-        <div class="text-gray-600 text-sm">Base: {msToSecF(todo_actual_duration)}s</div>
+        <div class="text-base font-medium">{todo.name}</div>
+        <div class="text-gray-600 text-sm">{msToSecF(timer.elapsed)}/{msToSecF(todo_actual_duration)}s</div>
     </div>
   
     <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
         <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
     </div>
   
-    <div class="text-center text-sm text-gray-600 mb-4">{timer.progress_text}</div>
-  
-    <GenericButton name={timer.is_active ? "In Progress..." : "Start"} disabled={timer.is_active} onclick={startTodo}/>
+    <div class="flex justify-between">
+        <GenericButton name={"Start"} disabled={timer.is_active} onclick={startTodo}/>
+    </div>
 </div>
