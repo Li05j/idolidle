@@ -1,5 +1,5 @@
-import { checkpoints } from "$lib/stores/checkpoints.svelte";
-import { msToSecF, DECIMAL_PLACES } from "$lib/utils/utils"
+import { CPs } from "$lib/stores/checkpoints.svelte";
+import { DECIMAL_PLACES } from "$lib/utils/utils"
 
 export interface TodoTimer {
     progress_percent: number;
@@ -40,7 +40,7 @@ export function createTodoTimer(): TodoTimer {
             return;
         }
 
-        checkpoints.current_time_spent += now - lastTime;
+        CPs.current_time_spent += now - lastTime;
         
         progress_percent = (elapsed / durationMs) * 100;
         progress_text = `${progress_percent.toFixed(DECIMAL_PLACES)}% complete`;
@@ -57,7 +57,7 @@ export function createTodoTimer(): TodoTimer {
         startTime = performance.now();
         onCompleteCallback = onComplete;
 
-        estimated_checkpoint_end_time = checkpoints.current_time_spent + Math.max(durationMs - elapsed, 0)
+        estimated_checkpoint_end_time = CPs.current_time_spent + Math.max(durationMs - elapsed, 0)
         
         updateProgress();
         interval = setInterval(updateProgress, 100);
@@ -80,7 +80,7 @@ export function createTodoTimer(): TodoTimer {
         is_active = false;
         onCompleteCallback = null;
 
-        checkpoints.current_time_spent = estimated_checkpoint_end_time
+        CPs.current_time_spent = estimated_checkpoint_end_time
     }
 
     function destroy() {

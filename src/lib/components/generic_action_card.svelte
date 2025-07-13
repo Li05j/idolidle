@@ -1,9 +1,9 @@
 <script lang="ts">
     import { onDestroy } from "svelte";
     import { trainings, fans, moni, sing, dance, sta, charm, eloq } from "$lib/stores/stats.svelte"
-    import GenericButton from "./generic_button.svelte";
     import { msToSecF } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
+    import GenericButton from "./generic_button.svelte";
 
     let { todo } = $props()
 
@@ -36,6 +36,7 @@
     function startTodo() {
         timer.start(todo_actual_duration, () => {
             todo.reward();
+            todo.flag_check();
         });
     }
 
