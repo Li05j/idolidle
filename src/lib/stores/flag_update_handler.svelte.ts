@@ -1,9 +1,7 @@
 import { ProgressFlag } from '$lib/types'
 import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
-import {
-    locations_data,
-    actions_data,
-} from "$lib/stores/todos_data.svelte"
+import { locations_data } from "$lib/stores/locations_data.svelte"
+import { actions_data } from "$lib/stores/actions_data.svelte"
 
 type ProgressHandler = () => void;
 export type ProgressKey = `${number}-${ProgressFlag}`; // "part-flag"
@@ -15,7 +13,7 @@ class ProgressHandlers {
         return TD_List_Tracker;
     }
 
-    private _get_new_locations(loc_names: string[]) {
+    private _new_locations(loc_names: string[]) {
         loc_names.forEach((name) => {
             let t = locations_data.find((ld) => ld.name === name);
             if (t) {
@@ -24,12 +22,12 @@ class ProgressHandlers {
         })
     }
 
-    private _get_new_actions(loc_name: string) {
+    private _arriving_at(loc_name: string) {
         const index = TD_List_Tracker.locations.findIndex(ld => ld.name === loc_name);
         if (index > -1) {
             TD_List_Tracker.locations.splice(index, 1);
         }
-        
+
         let t = actions_data.get(loc_name);
         if (t) {
             TD_List_Tracker.actions = new Map([
@@ -40,10 +38,10 @@ class ProgressHandlers {
     }
 
     public handlers = new Map<ProgressKey, ProgressHandler>([
-        [`0-${this._pf.f0}`, () => { this._get_new_actions('Living Room'); this._get_new_locations(['Park', 'School']) }],
-        [`0-${this._pf.f1}`, () => { this._get_new_actions('Park') }],
-        [`0-${this._pf.f2}`, () => { this._get_new_actions('School') }],
-        [`0-${this._pf.f3}`, () => { return }],
+        [`0-${this._pf.f0}`, () => { this._arriving_at('Living Room'); this._new_locations(['Park', 'School']) }],
+        [`0-${this._pf.f1}`, () => { this._arriving_at('Park'); this._new_locations(['Mall']) }],
+        [`0-${this._pf.f2}`, () => { this._arriving_at('School') }],
+        [`0-${this._pf.f3}`, () => { this._arriving_at('Mall') }],
     ]);
 }
 

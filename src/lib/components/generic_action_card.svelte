@@ -1,11 +1,13 @@
 <script lang="ts">
+    import type { Todo } from "$lib/types";
+
     import { onDestroy } from "svelte";
     import { trainings } from "$lib/stores/stats.svelte"
     import { msToSecF } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import GenericButton from "./generic_button.svelte";
-
-    let { todo } = $props()
+	
+    let { todo }: { todo: Todo } = $props();
 
     const MIN_TRAINING_TIME = 100; // ms
     const timer = createTodoTimer();
@@ -14,8 +16,15 @@
     let bg_color = $state("")
 
     $effect(() => {
-        todo_actual_duration = trainings.get_final_training_time(todo);
-        if (todo_actual_duration <= MIN_TRAINING_TIME) { todo_actual_duration = MIN_TRAINING_TIME }
+        let b: number = NaN;
+        if (todo.type === 'moni_making') {
+            b = todo.base_cost
+        }
+        else {
+            b = trainings.get_final_training_time(todo);
+        }
+        if (b < MIN_TRAINING_TIME) b = MIN_TRAINING_TIME;
+        todo_actual_duration = b;
     })
 
     $effect(() => {
@@ -26,6 +35,9 @@
             case "action":
                 bg_color = "bg-white"
                 break
+            case "moni_making":
+                bg_color = "bg-purple-200"
+                break
             case "none":
                 bg_color = "bg-white"
                 break
@@ -34,7 +46,7 @@
 
     function startTodo() {
         timer.start(todo_actual_duration, () => {
-            todo.reward();
+            todo.reward(todo.depends);
             todo.then?.();
         });
     }

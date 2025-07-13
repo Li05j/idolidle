@@ -1,7 +1,5 @@
 import type { Todo } from '$lib/types'
-import {
-    locations_data,
-} from "$lib/stores/todos_data.svelte"
+import { locations_data } from "$lib/stores/locations_data.svelte"
 
 class TodoListTracker {
     public constructor() {

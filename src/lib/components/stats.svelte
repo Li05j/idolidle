@@ -3,7 +3,13 @@
     import GenericButton from "./generic_button.svelte";
 
     function openStatsModal() {
-        console.log("Stats Modal opened - except it isn't implemented yet owo")
+        console.log("Stats Modal opened - except it is a cheat button owo")
+        fans.base += 1000;
+        sta.base += 1000;
+        charm.base += 1000;
+        presence.base += 1000;
+        eloq.base += 1000;
+        poise.base += 1000;
         return
     }
 </script>

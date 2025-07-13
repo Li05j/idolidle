@@ -1,37 +1,12 @@
 import type { Todo } from "$lib/types";
-import { DECIMAL_PLACES } from "$lib/utils/utils"
+import { DECIMAL_PLACES, calc_stat_effectiveness } from "$lib/utils/utils"
 
 class Trainings {
 	private _training_constant = $state(727);
 
 	private _calc_stat(td: Todo): number {
-		let depends = td.depends;
-		let r_stat = 0;
-
-		depends.forEach((d) => {
-			switch (d.which_stat) {
-				case "fans":
-					r_stat += fans.final * d.effectiveness
-					break
-				case "sta":
-					r_stat += sta.final * d.effectiveness
-					break
-				case "charm":
-					r_stat += charm.final * d.effectiveness
-					break
-				case "presence":
-					r_stat += presence.final * d.effectiveness
-					break
-				case "eloq":
-					r_stat += eloq.final * d.effectiveness
-					break
-				case "poise":
-					r_stat += poise.final * d.effectiveness
-					break
-			}
-		})
-
-		return r_stat
+		let r = calc_stat_effectiveness(td.depends);
+		return r;
 	}
 
 	get training_constant() {
@@ -54,8 +29,8 @@ function createTrainings() {
 function createCurrency(baseInit = 0, multiInit = 1.0) {
     let base = $state(baseInit);
     let multi = $state(multiInit);
-    const final = (() => base * multi);
-	const final_str = (() => final().toFixed(DECIMAL_PLACES))
+    const final = (() => Math.floor(base * multi));
+	const final_str = (() => final().toString())
 
     return { 
 		get base() { return base }, set base(v) { base = v },

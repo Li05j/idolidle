@@ -1,11 +1,11 @@
-export type TodoType = "none" | "location" | "action";
+export type TodoType = "none" | "location" | "action" | "moni_making";
 
 export type Todo = {
     name: string, // Primary key
     type: TodoType,
     base_cost: number,
     depends: StatEffectPair[],
-    reward: () => void,
+    reward: (depends: StatEffectPair[]) => void,
     then?: () => void,
 };
 
