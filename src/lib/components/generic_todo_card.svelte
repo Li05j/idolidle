@@ -17,6 +17,7 @@
     let todo_actual_duration: number = $state(0.0)
     let bg_color = $state("")
     let border = $state("")
+    let loop = $state(1)
 
     $effect(() => {
         let b: number = NaN;
@@ -56,26 +57,55 @@
         }
     })
 
+    $effect(() => {
+        if (repeat_val) {
+            updateLoop()
+        }
+    })
+
+    function updateLoop() {
+        switch (repeat_val) {
+            case 'x1':
+                loop = 1;
+                break;
+            case 'x10':
+                loop = 10;
+                break;
+            case 'x100':
+                loop = 100;
+                break;
+        }
+    }
+
     function startTodo() {
+        updateLoop()
         TodoCardM.activateCard(card_id)
-        timer.start(todo_actual_duration, () => {
-            todo.reward(todo.depends);
-            todo.then?.();
-        });
+        timer.repeat(loop, todo_actual_duration, 
+            () => {
+                if (todo.type != 'location') {
+                    loop--;
+                }
+                todo.reward(todo.depends);
+            },
+            () => {
+                TodoCardM.deactivateCard(card_id)
+                todo.then?.();
+            }
+        );
     }
 
     function pauseTodo() {
+        TodoCardM.deactivateCard(card_id)
         timer.pause()
     }
 
     onMount(() => {
         TodoCardM.registerCard(card_id, pauseTodo);
-        console.log(todo.name + card_id)
     })
 
     onDestroy(() => {
-        timer.destroy();
         TodoCardM.unregisterCard(card_id);
+        timer.clear();
     });
 </script>
 
@@ -83,7 +113,7 @@
     <!-- Watermark -->
     <div class="absolute bottom-4 right-4 flex pointer-events-none">
         <span class="text-6xl font-bold text-gray-300 opacity-75 transform rotate-12 select-none">
-            {repeat_val}
+            x{loop}
         </span>
     </div>
   
