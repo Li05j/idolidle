@@ -1,0 +1,78 @@
+import type { Todo } from '$lib/types'
+import { Game_Progress } from '$lib/stores/game_progress.svelte';
+import { ProgressFlag } from '$lib/types'
+import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+
+const S_TO_MS = 1000
+
+export const locations_data: Todo[] = [
+    {
+        name: 'Wake Up',
+        type: 'location',
+        base_cost: 1 * S_TO_MS, 
+        depends: [],
+        rewards: [
+            {which_stat: "Stamina", flat_gain_base: 0.1},
+            {which_stat: "Charm", flat_gain_base: 0.1},
+            {which_stat: "Presence", flat_gain_base: 0.1},
+            {which_stat: "Eloquence", flat_gain_base: 0.1},
+            {which_stat: "Poise", flat_gain_base: 0.1},
+        ],
+        desc: "Time to wake up, silly. Everything starts here.",
+        then: () => {
+            Game_Progress.enable(0, ProgressFlag.f0);
+        }
+    },
+    {
+        name: 'Living Room',
+        type: 'location',
+        base_cost: 3 * S_TO_MS, 
+        depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
+        rewards: [
+            {which_stat: "Stamina", flat_gain_base: 0.3},
+        ],
+        desc: "The first stage of your idol career, or maybe just where socks mysteriously vanich. Sing off-key, dance like a disaster—no one\'s watching (except maybe the cat). Meow.",
+        then: () => {
+            Game_Progress.enable(0, ProgressFlag.f1);
+        }
+    },
+    {
+        name: 'Park', 
+        type: 'location',
+        base_cost: 30 * S_TO_MS, 
+        depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
+        rewards: [
+            {which_stat: "Stamina", flat_gain_base: 3},
+        ],
+        desc: "Just your everyday neighborhood park. Nothing fancy, but it got it's place in your heart. Something always feels about to happen.",
+        then: () => {
+            Game_Progress.enable(0, ProgressFlag.f2);
+        }
+    },
+    {
+        name: 'School', 
+        type: 'location',
+        base_cost: 240 * S_TO_MS, 
+        depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
+        rewards: [
+            {which_stat: "Stamina", flat_gain_base: 24},
+        ],
+        desc: "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
+        then: () => {
+            Game_Progress.enable(0, ProgressFlag.f3);
+        }
+    },
+    {
+        name: 'Mall', 
+        type: 'location',
+        base_cost: 300 * S_TO_MS, 
+        depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
+        rewards: [
+            {which_stat: "Stamina", flat_gain_base: 30},
+        ],
+        desc: "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
+        then: () => {
+            Game_Progress.enable(0, ProgressFlag.f4);
+        }
+    },
+];

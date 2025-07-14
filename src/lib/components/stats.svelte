@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { fans, moni, sta, charm, presence, eloq, poise } from "$lib/stores/stats.svelte";
+    import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
     import GenericButton from "./generic_button.svelte";
 
     function openStatsModal() {
@@ -7,7 +7,7 @@
         fans.base += 1000;
         sta.base += 1000;
         charm.base += 1000;
-        presence.base += 1000;
+        pres.base += 1000;
         eloq.base += 1000;
         poise.base += 1000;
         return
@@ -23,7 +23,7 @@
         <div>Moni:</div>        <div>{moni.final_str}</div>
         <div>Stamina:</div>     <div>{sta.final_str}</div>
         <div>Charm:</div>       <div>{charm.final_str}</div>
-        <div>Presence:</div>    <div>{presence.final_str}</div>
+        <div>Presence:</div>    <div>{pres.final_str}</div>
         <div>Eloquence:</div>   <div>{eloq.final_str}</div>
         <div>Poise:</div>       <div>{poise.final_str}</div>
 

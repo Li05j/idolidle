@@ -1,7 +1,7 @@
 import { ProgressFlag } from '$lib/types'
 import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
-import { locations_data } from "$lib/stores/locations_data.svelte"
-import { actions_data } from "$lib/stores/actions_data.svelte"
+import { locations_data } from "$lib/data/locations_data.svelte"
+import { actions_data } from "$lib/data/actions_data.svelte"
 
 type ProgressHandler = () => void;
 export type ProgressKey = `${number}-${ProgressFlag}`; // "part-flag"
@@ -38,10 +38,11 @@ class ProgressHandlers {
     }
 
     public handlers = new Map<ProgressKey, ProgressHandler>([
-        [`0-${this._pf.f0}`, () => { this._arriving_at('Living Room'); this._new_locations(['Park', 'School']) }],
-        [`0-${this._pf.f1}`, () => { this._arriving_at('Park'); this._new_locations(['Mall']) }],
-        [`0-${this._pf.f2}`, () => { this._arriving_at('School') }],
-        [`0-${this._pf.f3}`, () => { this._arriving_at('Mall') }],
+        [`0-${this._pf.f0}`, () => { this._arriving_at('Wake Up'); this._new_locations(['Living Room']) }],
+        [`0-${this._pf.f1}`, () => { this._arriving_at('Living Room'); this._new_locations(['Park', 'School']) }],
+        [`0-${this._pf.f2}`, () => { this._arriving_at('Park'); this._new_locations(['Mall']) }],
+        [`0-${this._pf.f3}`, () => { this._arriving_at('School') }],
+        [`0-${this._pf.f4}`, () => { this._arriving_at('Mall') }],
     ]);
 }
 

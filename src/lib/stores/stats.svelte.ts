@@ -65,6 +65,6 @@ export const moni = createCurrency();
 
 export const sta = createStat();
 export const charm = createStat();
-export const presence = createStat();
+export const pres = createStat();
 export const eloq = createStat();
 export const poise = createStat();

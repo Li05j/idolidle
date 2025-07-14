@@ -1,5 +1,5 @@
 import type { Todo } from '$lib/types'
-import { locations_data } from "$lib/stores/locations_data.svelte"
+import { locations_data } from "$lib/data/locations_data.svelte"
 
 class TodoListTracker {
     public constructor() {
@@ -10,7 +10,7 @@ class TodoListTracker {
     public actions: Map<string, Todo[]> = $state(new Map);
 
     public reset() {
-        let initial_loc = locations_data.find((ld) => ld.name == 'Living Room')
+        let initial_loc = locations_data.find((ld) => ld.name == 'Wake Up')
         if (initial_loc) {
             this.locations = [initial_loc]
         }

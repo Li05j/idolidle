@@ -1,11 +1,15 @@
-export type TodoType = "none" | "location" | "action" | "moni_making";
+export type TodoType = "none" | "location" | "action" | "gain_currency";
+export type BasicStats = "Fans" | "Moni" | "Stamina" | "Charm" | "Presence" | "Eloquence" | "Poise";
+export type TrainingEfficiency = "slow" | "mid" | "fast" | "n/a"
 
-export type Todo = {
+export interface Todo {
     name: string, // Primary key
     type: TodoType,
     base_cost: number,
     depends: StatEffectPair[],
-    reward: (depends: StatEffectPair[]) => void,
+    rewards: Rewards[],
+    desc: string,
+    extra_reward?: () => void,
     then?: () => void,
 };
 
@@ -17,7 +21,9 @@ export enum ProgressFlag {
     f24 = 1 << 24, f25 = 1 << 25, f26 = 1 << 26, f27 = 1 << 27, f28 = 1 << 28, f29 = 1 << 29, f30 = 1 << 30,
 };
 
-// Which stat the Todo is effected by and by how much based on effectiveness.
+// Which stat the Todo is effected by and by how much based on effectiveness. This only affects idle time.
 export type StatEffectPair = { which_stat: BasicStats, effectiveness: number };
 
-type BasicStats = "fans" | "moni" | "sta" | "charm" | "presence" | "eloq" | "poise";
+// Only 1 of flat_gain_base and flat_gain_multi can be defined at a time. 
+// If depends is defined, training_efficiency has to be defined as well.
+export type Rewards = { which_stat: BasicStats, flat_gain_base?: number, flat_gain_multi?: number, depends?: StatEffectPair[], efficiency?: TrainingEfficiency};

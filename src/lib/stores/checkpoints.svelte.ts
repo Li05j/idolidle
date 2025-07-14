@@ -1,8 +1,14 @@
+const S_TO_MS = 1000
+
 class Checkpoints {
 	public current_time_spent = $state(0)
 
-	private _checkpoints = [200000, 300000, 400000]
-	private _max_idx = 3
+	private _checkpoints = [
+		600 * S_TO_MS,
+		900 * S_TO_MS,
+		1200 * S_TO_MS,
+	]
+	private _max_idx = this._checkpoints.length
 	private _multi = $state([1.0, 1.0, 1.0])
 	private _current_idx = $state(0)
 

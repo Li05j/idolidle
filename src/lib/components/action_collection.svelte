@@ -1,6 +1,6 @@
 <script lang="ts">
-    import TodoCard from '$lib/components/generic_todo_card.svelte';
-    import { TodoCardM } from "$lib/stores/central_todo_card_manager.svelte";
+    import ActionTodoCard from '$lib/components/action_todo_card.svelte';
+    import { TodoCardM } from "$lib/stores/todo_card_manager.svelte";
 
     let { title, todos } = $props()
     let repeat_val = $state('x1');
@@ -24,7 +24,7 @@
     <div class="grid grid-cols-3">
         {#each todos as todo}
             <div class="col-span-1 px-2">
-                <TodoCard {todo} {repeat_val} />
+                <ActionTodoCard {todo} {repeat_val} />
             </div>
         {/each}
     </div>
