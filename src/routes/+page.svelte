@@ -3,6 +3,7 @@
     import AvailableActions from '$lib/components/available_actions.svelte';
     import CheckpointTopBar from '$lib/components/checkpoint_top_bar.svelte';
     import Stats from '$lib/components/stats.svelte';
+	import History from '$lib/components/history.svelte';
 </script>
 
 <div class="h-screen flex flex-col">
@@ -13,8 +14,12 @@
         <div class="grid grid-cols-5 overflow-hidden h-full">
 
             <!-- Stats and Logs -->
-            <div class="flex-auto col-span-1 overflow-hidden h-full">
+            <div class="flex flex-col col-span-1 h-full overflow-hidden">
                 <Stats />
+                <div class="flex-1 overflow-y-auto">
+                    <History />
+                </div>
+                hellow
             </div>
 
             <!-- Location -->

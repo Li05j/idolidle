@@ -17,7 +17,11 @@ export function msToSecF(ms: number, digits: number = DECIMAL_PLACES): string {
 export function parseText(text: string) {
     return text
         .split('\n')
-        .map(line => line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'))
+        .map(line => line
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/_([^_]+)_/g, '<em>$1</em>')
+            .replace(/\[([a-zA-Z]+)\](.*?)\[\/\1\]/g, '<span style="color: $1">$2</span>')
+        )
         .join('<br>');
     }
 

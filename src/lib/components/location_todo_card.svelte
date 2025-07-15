@@ -6,6 +6,7 @@
     import { msToSecF, parseText, handle_rewards, reward_string } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/stores/todo_card_manager.svelte";
+    import { logs } from "$lib/stores/history.svelte";
 	
     let { todo }: { todo: Todo } = $props();
 
@@ -38,7 +39,9 @@
         TodoCardM.activateCard(card_id)
         timer.repeat(LOOP, todo_actual_duration, 
             () => {
-                handle_rewards(todo.rewards)
+                handle_rewards(todo.rewards);
+                logs.addLogs(todo);
+                todo.extra_reward?.()
             },
             () => {
                 TodoCardM.deactivateCard(card_id)

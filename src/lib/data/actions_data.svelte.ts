@@ -1,5 +1,6 @@
 import type { Todo, StatEffectPair } from '$lib/types'
 import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+import { logs } from '$lib/stores/history.svelte'
 
 const S_TO_MS = 1000
 
@@ -84,6 +85,7 @@ export const actions_data: Map<string, Todo[]> = new Map([
                     let r = Math.random();
                     if (r < 0.1) {
                         fans.base += 1
+                        logs.addEurekaLogs('+1 Fans')
                     }
                 },
             },
