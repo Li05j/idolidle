@@ -4,6 +4,11 @@
     import CheckpointTopBar from '$lib/components/checkpoint_top_bar.svelte';
     import Stats from '$lib/components/stats.svelte';
 	import History from '$lib/components/history.svelte';
+	import GenericButton from '$lib/components/generic_button.svelte';
+
+    function openModal() {
+
+    }
 </script>
 
 <div class="h-screen flex flex-col">
@@ -16,10 +21,13 @@
             <!-- Stats and Logs -->
             <div class="flex flex-col col-span-1 h-full overflow-hidden">
                 <Stats />
+                <div class="grid grid-cols-2 justify-center p-4 gap-x-4">
+                    <GenericButton name={"Detailed Stats..."} onclick={openModal} class={"w-full"}/>
+                    <GenericButton name={"Detailed Stats..."} onclick={openModal} class={"w-full"}/> 
+                </div>
                 <div class="flex-1 overflow-y-auto">
                     <History />
                 </div>
-                hellow
             </div>
 
             <!-- Location -->

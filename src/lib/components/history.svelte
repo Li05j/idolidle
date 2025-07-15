@@ -6,7 +6,13 @@
     $effect(() => {
         logs.logs.length // Force reactivity
         if (scrollContainer) {
-            scrollContainer.scrollTop = scrollContainer.scrollHeight
+            const { scrollTop, scrollHeight, clientHeight } = scrollContainer
+            // Only force auto scroll when scroll is already near the bottom
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 150
+
+            if (isNearBottom) {
+                scrollContainer.scrollTop = scrollHeight
+            }
         }
     })
 </script>

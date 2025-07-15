@@ -1,6 +1,5 @@
 <script lang="ts">
     import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
-    import GenericButton from "./generic_button.svelte";
 
     function openStatsModal() {
         console.log("Stats Modal opened - except it is a cheat button owo")
@@ -26,9 +25,5 @@
         <div>Presence:</div>    <div>{pres.final_str}</div>
         <div>Eloquence:</div>   <div>{eloq.final_str}</div>
         <div>Poise:</div>       <div>{poise.final_str}</div>
-
-        <div class="col-span-2 justify-center py-4">
-            <GenericButton name={"Detailed Stats..."} onclick={openStatsModal} class={"w-full"}/> 
-        </div>
     </div>
 </div>
