@@ -26,13 +26,16 @@ function createTrainings() {
 	return new Trainings()
 }
 
-function createCurrency(baseInit = 0, multiInit = 1.0) {
+// Currency floors while Stat can have decimals.
+function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
+	const _name = name;
     let base = $state(baseInit);
     let multi = $state(multiInit);
     const final = (() => Math.floor(base * multi));
 	const final_str = (() => final().toString())
 
     return { 
+		get name() { return _name },
 		get base() { return base }, set base(v) { base = v },
         get multi() { return multi }, set multi(v) { multi = v },
 		// get final() { return Math.max(final() || 0, 0) }, in case of NaN
@@ -41,16 +44,16 @@ function createCurrency(baseInit = 0, multiInit = 1.0) {
 	};
 }
 
-function createStat(baseInit = 0, flatInit = 0.0, multiInit = 1.0) {
+function createStat(name: string, baseInit = 0, multiInit = 1.0) {
+	const _name = name;
   	let base = $state(baseInit);
-  	let flat = $state(flatInit);
   	let multi = $state(multiInit);
-  	const final = (() => (base + flat) * multi);
+  	const final = (() => base * multi);
 	const final_str = (() => final().toFixed(DECIMAL_PLACES))
 
   	return { 
+		get name() { return _name },
 		get base() { return base }, set base(v) { base = v },
-        get flat() { return flat }, set flat(v) { flat = v },
         get multi() { return multi }, set multi(v) { multi = v },
         // get final() { return Math.max(final() || 0, 0) },
         get final() { return final() },
@@ -60,11 +63,11 @@ function createStat(baseInit = 0, flatInit = 0.0, multiInit = 1.0) {
 
 export const trainings = createTrainings()
 
-export const fans = createCurrency();
-export const moni = createCurrency();
+export const fans = createCurrency('Fans');
+export const moni = createCurrency('Moni');
 
-export const sta = createStat();
-export const charm = createStat();
-export const pres = createStat();
-export const eloq = createStat();
-export const poise = createStat();
+export const sta = createStat('Stamina');
+export const charm = createStat('Charm');
+export const pres = createStat('Presence');
+export const eloq = createStat('Eloquence');
+export const poise = createStat('Poise');
