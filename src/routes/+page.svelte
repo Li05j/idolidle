@@ -8,26 +8,29 @@
 	import GenericModal from '$lib/components/modals/generic_modal.svelte';
 
     import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+	import { modal, type ModalType } from '$lib/stores/modal_manager.svelte';
 
     let isModalOpen = $state(false)
 
-    function openModal() { isModalOpen = true; }
+    function openModal(t: ModalType) {
+        modal.type = t
+        isModalOpen = true; 
+    }
     function closeModal() { isModalOpen = false; }
 
-    function openStatsModal() {
+    function cheat() {
         fans.base += 1000;
         sta.base += 1000;
         charm.base += 1000;
         pres.base += 1000;
         eloq.base += 1000;
         poise.base += 1000;
+        openModal('settings')
         return
     }
 </script>
 
-<GenericModal bind:show={isModalOpen} onClose={closeModal}>
-    <div class="p-6">Your modal content here</div>
-</GenericModal>
+<GenericModal bind:show={isModalOpen} type={modal.type} onClose={closeModal} />
 
 <div class="h-screen flex flex-col">
     <div class="top-0 bg-white">
@@ -43,8 +46,8 @@
                     <History />
                 </div>
                 <div class="grid grid-cols-2 justify-center p-4 gap-x-4">
-                    <GenericButton name={"Settings"} onclick={openStatsModal} variant='secondary' class={"w-full"}/>
-                    <GenericButton name={"Detailed Stats..."} onclick={openModal} class={"w-full"}/> 
+                    <GenericButton name={"Settings"} onclick={cheat} variant='secondary' class={"px-4 py-2 w-full"}/>
+                    <GenericButton name={"Detailed Stats..."} onclick={() => openModal('stats')} class={"px-4 py-2 w-full"}/> 
                 </div>
             </div>
 

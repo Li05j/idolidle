@@ -1,6 +1,7 @@
 <script lang="ts">
     let { 
-        name, 
+        name = '',
+        svg = '',
         onclick,
         variant = 'primary' as "primary" | "secondary" | "danger" | "none",
         class: customClass = '',
@@ -12,11 +13,11 @@
     function getVariantStyle(): string {
         switch (variant) {
             case 'primary':
-                return 'bg-blue-500 text-sm text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400'
+                return 'bg-blue-500 text-sm text-white rounded hover:bg-blue-600 disabled:bg-gray-400'
             case 'secondary':
-                return 'bg-zinc-500 text-sm text-white px-4 py-2 rounded hover:bg-zinc-600 disabled:bg-gray-400'
+                return 'bg-zinc-500 text-sm text-white rounded hover:bg-zinc-600 disabled:bg-gray-400'
             case 'danger':
-                return 'bg-red-500 text-sm text-white px-4 py-2 rounded hover:bg-red-600 disabled:bg-gray-400'
+                return 'bg-red-500 text-sm text-white rounded hover:bg-red-600 disabled:bg-gray-400'
             case "none":
                 return ''
         }
@@ -35,5 +36,5 @@
     {type}
     {...restProps}
 >
-    {name}
+    {@html svg}{name}
 </button>
