@@ -1,6 +1,6 @@
 <script lang="ts">
     import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
-    import LocationTodoCard from '$lib/components/location_todo_card.svelte';
+    import LocationTodoCard from '$lib/components/todo_cards/location_todo_card.svelte';
 </script>
 
 <h1 class="text-lg font-bold mb-4 justify-center text-center">Locations</h1>

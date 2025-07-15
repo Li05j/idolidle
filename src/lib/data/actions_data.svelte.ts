@@ -85,7 +85,7 @@ export const actions_data: Map<string, Todo[]> = new Map([
                     let r = Math.random();
                     if (r < 0.1) {
                         fans.base += 1
-                        logs.addEurekaLogs('+1 Fans')
+                        logs.addEurekaLogs( '+1 Fans', 'You converted a kid into a fan!')
                     }
                 },
             },

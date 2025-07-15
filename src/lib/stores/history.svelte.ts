@@ -7,12 +7,12 @@ type LogEntry = { data: StringPair, timestamp: number }
 // Generate default logs for a specific action.
 function createLogs() {
     const MAX_LOGS = 1000;
-    const MAX_AGE_HOURS = 4;
+    const MAX_AGE_HOURS = 1;
     let _logs: LogEntry[] = $state([])
 
     function cleanupLogs() {
         const now = Date.now();
-        const maxAge = MAX_AGE_HOURS * 60 * 60 * 1000; // 4 hours in milliseconds
+        const maxAge = MAX_AGE_HOURS * 60 * 60 * 1000; // MAX_AGE_HOURS hours in milliseconds
         
         // Only remove if both conditions are met
         while (_logs.length > MAX_LOGS && now - _logs[0].timestamp > maxAge) {
@@ -33,8 +33,15 @@ function createLogs() {
         cleanupLogs();
     }
 
-    function addEurekaLogs(s: string) {
-        let log = parseText(`[red]Eureka! ${s}![/red]`)
+    function addEurekaLogs(reward: string, custom_msg?: string) {
+        let log = ''
+        if (custom_msg) {
+            log = parseText(`[red]Eureka! ${custom_msg} ${reward}![/red]`)
+        }
+        else {
+            log = parseText(`[red]Eureka! You gained ${reward}![/red]`)
+        }
+
         _logs.push({
             data: {1: '', 2: log},
             timestamp: Date.now()

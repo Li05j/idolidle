@@ -1,5 +1,5 @@
 <script lang="ts">
-    import ActionTodoCard from '$lib/components/action_todo_card.svelte';
+    import ActionTodoCard from '$lib/components/todo_cards/action_todo_card.svelte';
     import { TodoCardM } from "$lib/stores/todo_card_manager.svelte";
 
     let { title, todos } = $props()

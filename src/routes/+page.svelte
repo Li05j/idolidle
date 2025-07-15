@@ -1,15 +1,33 @@
 <script lang="ts">
-    import AvailableLocations from '$lib/components/available_locations.svelte';
-    import AvailableActions from '$lib/components/available_actions.svelte';
-    import CheckpointTopBar from '$lib/components/checkpoint_top_bar.svelte';
-    import Stats from '$lib/components/stats.svelte';
-	import History from '$lib/components/history.svelte';
-	import GenericButton from '$lib/components/generic_button.svelte';
+    import AvailableLocations from '$lib/components/main_game_page/available_locations.svelte';
+    import AvailableActions from '$lib/components/main_game_page/available_actions.svelte';
+    import CheckpointTopBar from '$lib/components/main_game_page/checkpoint_top_bar.svelte';
+    import Stats from '$lib/components/main_game_page/stats.svelte';
+	import History from '$lib/components/main_game_page/history.svelte';
+	import GenericButton from '$lib/components/misc/generic_button.svelte';
+	import GenericModal from '$lib/components/modals/generic_modal.svelte';
 
-    function openModal() {
+    import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
 
+    let isModalOpen = $state(false)
+
+    function openModal() { isModalOpen = true; }
+    function closeModal() { isModalOpen = false; }
+
+    function openStatsModal() {
+        fans.base += 1000;
+        sta.base += 1000;
+        charm.base += 1000;
+        pres.base += 1000;
+        eloq.base += 1000;
+        poise.base += 1000;
+        return
     }
 </script>
+
+<GenericModal bind:show={isModalOpen} onClose={closeModal}>
+    <div class="p-6">Your modal content here</div>
+</GenericModal>
 
 <div class="h-screen flex flex-col">
     <div class="top-0 bg-white">
@@ -21,12 +39,12 @@
             <!-- Stats and Logs -->
             <div class="flex flex-col col-span-1 h-full overflow-hidden">
                 <Stats />
-                <div class="grid grid-cols-2 justify-center p-4 gap-x-4">
-                    <GenericButton name={"Detailed Stats..."} onclick={openModal} class={"w-full"}/>
-                    <GenericButton name={"Detailed Stats..."} onclick={openModal} class={"w-full"}/> 
-                </div>
                 <div class="flex-1 overflow-y-auto">
                     <History />
+                </div>
+                <div class="grid grid-cols-2 justify-center p-4 gap-x-4">
+                    <GenericButton name={"Settings"} onclick={openStatsModal} variant='secondary' class={"w-full"}/>
+                    <GenericButton name={"Detailed Stats..."} onclick={openModal} class={"w-full"}/> 
                 </div>
             </div>
 

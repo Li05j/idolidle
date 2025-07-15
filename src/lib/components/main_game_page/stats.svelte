@@ -1,16 +1,5 @@
 <script lang="ts">
     import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
-
-    function openStatsModal() {
-        console.log("Stats Modal opened - except it is a cheat button owo")
-        fans.base += 1000;
-        sta.base += 1000;
-        charm.base += 1000;
-        pres.base += 1000;
-        eloq.base += 1000;
-        poise.base += 1000;
-        return
-    }
 </script>
 
 <h3 class="text-lg font-bold mb-4 justify-center text-center">Your Stats</h3>

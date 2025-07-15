@@ -1,6 +1,6 @@
 <script lang="ts">
     import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
-    import ActionCollection from '$lib/components/action_collection.svelte';
+    import ActionCollection from '$lib/components/misc/action_collection.svelte';
 </script>
 
 <h1 class="text-lg font-bold mb-4 justify-center text-center">Actions</h1>
