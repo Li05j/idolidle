@@ -1,4 +1,4 @@
-import { P_Handler } from "$lib/stores/flag_update_handler.svelte";
+import { P_Handler } from "$lib/stores/game_progress_update_handlers.svelte";
 
 class GameProgress {
     private _progress_handler = P_Handler;

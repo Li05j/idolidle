@@ -1,7 +1,7 @@
 import { get, writable, type Writable } from 'svelte/store';
 
 class TodoCardManager {
-    private _active: boolean = $state(false)
+    private _is_active: boolean = $state(false)
 
     private _active_card: Writable<number | null> = writable(null);
     private _pause_card_callbacks = new Map<number, () => void>();
@@ -11,8 +11,8 @@ class TodoCardManager {
     //     return get(this._active_card) === null;
     // }
 
-    get active() {
-        return this._active;
+    get is_active() {
+        return this._is_active;
     }
 
     generateCardId() {
@@ -39,12 +39,24 @@ class TodoCardManager {
     
         // Set new active card
         this._active_card.set(card_id);
-        this._active = true;
+        this._is_active = true;
     }
 
     deactivateCard(card_id: number) {
         this._active_card.update(current => current === card_id ? null : current);
-        this._active = false
+        this._is_active = false;
+    }
+
+    deactivateCurrentActiveCard() {
+        const card_id = get(this._active_card)
+        if (card_id === null) {
+            return;
+        }
+        
+        const f = this._pause_card_callbacks.get(card_id);
+        if (f) f();
+        this._active_card.set(null);
+        this._is_active = false;
     }
 }
 

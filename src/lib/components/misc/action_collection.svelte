@@ -1,6 +1,6 @@
 <script lang="ts">
     import ActionTodoCard from '$lib/components/todo_cards/action_todo_card.svelte';
-    import { TodoCardM } from "$lib/stores/todo_card_manager.svelte";
+    import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
 
     let { title, todos } = $props()
     let repeat_val = $state('x1');
@@ -11,9 +11,9 @@
         {title}
         <select 
             bind:value={repeat_val} 
-            disabled={TodoCardM.active}
-            class:cursor-not-allowed={TodoCardM.active}
-            class:bg-gray-300={TodoCardM.active}
+            disabled={TodoCardM.is_active}
+            class:cursor-not-allowed={TodoCardM.is_active}
+            class:bg-gray-300={TodoCardM.is_active}
             class="border border-gray-300 rounded-lg text-center text-sm text-gray-600 w-32 mx-2"
         >
             <option value="x1">Repeat x1</option>

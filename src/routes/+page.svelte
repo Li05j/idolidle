@@ -8,15 +8,14 @@
 	import GenericModal from '$lib/components/modals/generic_modal.svelte';
 
     import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
-	import { modal, type ModalType } from '$lib/stores/modal_manager.svelte';
-
-    let isModalOpen = $state(false)
+	import { modal, type ModalType } from '$lib/managers/modal_manager.svelte';
+	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
 
     function openModal(t: ModalType) {
         modal.type = t
-        isModalOpen = true; 
+        modal.set_modal_open(true); 
     }
-    function closeModal() { isModalOpen = false; }
+    function closeModal() { modal.set_modal_open(false); }
 
     function cheat() {
         fans.base += 1000;
@@ -28,13 +27,17 @@
         openModal('settings')
         return
     }
+
+    function handle_live() {
+        TodoCardM.deactivateCurrentActiveCard()
+    }
 </script>
 
-<GenericModal bind:show={isModalOpen} type={modal.type} onClose={closeModal} />
+<GenericModal type={modal.type} onClose={closeModal} />
 
 <div class="h-screen flex flex-col">
     <div class="top-0 bg-white">
-        <CheckpointTopBar />
+        <CheckpointTopBar {handle_live}/>
     </div>
     <div class="flex-auto p-6 bg-gray-50 overflow-hidden">
         <div class="grid grid-cols-5 overflow-hidden h-full">

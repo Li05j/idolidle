@@ -5,7 +5,7 @@
     import { trainings } from "$lib/stores/stats.svelte"
     import { msToSecF, parseText, handle_rewards, reward_string } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
-    import { TodoCardM } from "$lib/stores/todo_card_manager.svelte";
+    import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
     import { logs } from "$lib/stores/history.svelte";
 	
     let { todo }: { todo: Todo } = $props();

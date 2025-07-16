@@ -1,11 +1,13 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { modal, type ModalType } from '$lib/managers/modal_manager.svelte'
+    import type { ModalType } from '$lib/managers/modal_manager.svelte'
     import { svgCross } from '$lib/data/icons.svelte';
     import GenericButton from "$lib/components/misc/generic_button.svelte";
 	import DetailedStats from '$lib/components/modals/detailed_stats.svelte';
+	import Live from '$lib/components/modals/live.svelte';
 
     interface Props {
+        show: boolean;
         type: ModalType;
         onClose?: () => void;
         closeOnBackdrop?: boolean;
@@ -14,6 +16,7 @@
     }
 
     let {
+        show = $bindable(),
         type = 'default',
         onClose,
         closeOnBackdrop = true,
@@ -44,7 +47,7 @@
     });
 </script>
 
-{#if modal.is_modal_open()}
+{#if show}
     <div
         bind:this={modalElement}
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
@@ -62,6 +65,8 @@
                 <div class="p-6 font-bold">Settings under construction.</div>
             {:else if type === 'stats'}
                 <DetailedStats />
+            {:else if type === 'live'}
+                <Live />
             {/if}
         </div>
     </div>
