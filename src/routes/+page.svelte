@@ -10,13 +10,14 @@
     import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
 	import { modal, type ModalType } from '$lib/managers/modal_manager.svelte';
 	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
+	import { onMount } from 'svelte';
 
     function openModal(t: ModalType) {
         modal.set_modal_open(t); 
     }
-    function closeModal(t: ModalType) { 
-        modal.set_modal_close(t); 
-    }
+    // function closeModal(t: ModalType) { 
+    //     modal.set_modal_close(t); 
+    // }
 
     function cheat() {
         fans.base += 1000;
@@ -31,11 +32,17 @@
 
     function handle_live() {
         TodoCardM.deactivateCurrentActiveCard()
+        openModal('live')
     }
+
+    onMount(() => {
+        document.addEventListener('keydown', modal.handleKeydown);
+        return () => document.removeEventListener('keydown', modal.handleKeydown);
+    });
 </script>
 
 {#each modal.modals as m}
-    <GenericModal type={m} onClose={() => closeModal(m)} />
+    <GenericModal type={m} />
 {/each}
 
 <div class="h-screen flex flex-col">

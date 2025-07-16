@@ -1,12 +1,14 @@
+import { CPs } from '$lib/stores/checkpoints.svelte';
+
 type Level1Modal = 'default' | 'settings' | 'stats'
 type Level2Modal = 'live'
 export type ModalType = Level1Modal | Level2Modal
 
 const MODAL_LEVELS = {
-    default: 1,
-    settings: 1,
-    stats: 1,
-    live: 2,
+    'default': 1,
+    'settings': 1,
+    'stats': 1,
+    'live': 2,
 } as const
 
 function createModalType() {
@@ -14,6 +16,8 @@ function createModalType() {
 
     let _level_1_open = $state(false)
     let _level_2_open = $state(false)
+
+    let _close_on_esc = $state(true)
 
     const level_states = {
         1: () => _level_1_open,
@@ -39,18 +43,29 @@ function createModalType() {
         _modals.push(t);
     }
 
-    function set_modal_close(t: ModalType) {
-        const level = MODAL_LEVELS[t]
-        level_setters[level](false)
+    function set_modal_close() {
+        const m = _modals.pop();
+        if (m) {
+            level_setters[MODAL_LEVELS[m]](false)
+            if (m === 'live') {
+                CPs.advanceToNextCheckpoint()
+            }
+        }
+    }
 
-        _modals.splice(modal.modals.indexOf(t), 1);
+    function handleKeydown(e: KeyboardEvent) {
+        if (_close_on_esc && e.key === 'Escape') {
+            set_modal_close()
+        }
     }
 
     return {
         get modals() { return _modals },
+        get close_on_esc() { return _close_on_esc }, set close_on_esc(b) { _close_on_esc = b },
         is_modal_open,
         set_modal_open,
         set_modal_close,
+        handleKeydown,
     }
 }
 
