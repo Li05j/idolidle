@@ -7,7 +7,7 @@
 
     interface Props {
         type: ModalType;
-        onClose?: () => void;
+        onClose?: (t: ModalType) => void;
         closeOnBackdrop?: boolean;
         closeOnEscape?: boolean;
         // children?: import('svelte').Snippet;
@@ -26,13 +26,13 @@
 
     function handleBackdropClick(e: MouseEvent) {
         if (closeOnBackdrop && e.target === modalElement) {
-            onClose?.();
+            onClose?.(type);
         }
     }
 
     function handleKeydown(e: KeyboardEvent) {
         if (closeOnEscape && e.key === 'Escape') {
-            onClose?.();
+            onClose?.(type);
         }
     }
 
@@ -44,7 +44,7 @@
     });
 </script>
 
-{#if modal.is_modal_open()}
+{#if modal.is_modal_open(type)}
     <div
         bind:this={modalElement}
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"

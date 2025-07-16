@@ -12,10 +12,11 @@
 	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
 
     function openModal(t: ModalType) {
-        modal.type = t
-        modal.set_modal_open(true); 
+        modal.set_modal_open(t); 
     }
-    function closeModal() { modal.set_modal_open(false); }
+    function closeModal(t: ModalType) { 
+        modal.set_modal_close(t); 
+    }
 
     function cheat() {
         fans.base += 1000;
@@ -33,7 +34,9 @@
     }
 </script>
 
-<GenericModal type={modal.type} onClose={closeModal} />
+{#each modal.modals as m}
+    <GenericModal type={m} onClose={() => closeModal(m)} />
+{/each}
 
 <div class="h-screen flex flex-col">
     <div class="top-0 bg-white">
