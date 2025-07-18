@@ -27,7 +27,7 @@ function createTrainings() {
 }
 
 // Currency floors while Stat can have decimals.
-function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
+function createCurrency(name: string, baseInit = 10, multiInit = 1.0) {
 	const _name = name;
     let base = $state(baseInit);
     let multi = $state(multiInit);
@@ -44,7 +44,7 @@ function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
 	};
 }
 
-function createStat(name: string, baseInit = 0, multiInit = 1.0) {
+function createStat(name: string, baseInit = 50, multiInit = 1.0) {
 	const _name = name;
   	let base = $state(baseInit);
   	let multi = $state(multiInit);
@@ -67,7 +67,17 @@ export const fans = createCurrency('Fans');
 export const moni = createCurrency('Moni');
 
 export const sta = createStat('Stamina');
+export const sing = createStat('Sing');
+export const dance = createStat('Dance');
 export const charm = createStat('Charm');
 export const pres = createStat('Presence');
-export const eloq = createStat('Eloquence');
-export const poise = createStat('Poise');
+
+export type BasicStatsValuesMap = {
+    Fans: number,
+    Moni?: number,
+    Stamina: number,
+    Sing: number,
+    Dance: number,
+    Charm: number,
+    Presence: number,
+}

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+    import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 </script>
 
 <h3 class="text-lg font-bold mb-4 justify-center text-center">Your Stats</h3>
@@ -10,9 +10,9 @@
         <div>Fans:</div>        <div>{fans.final_str}</div>
         <div>Moni:</div>        <div>{moni.final_str}</div>
         <div>Stamina:</div>     <div>{sta.final_str}</div>
+        <div>Sing:</div>        <div>{sing.final_str}</div>
+        <div>Dance:</div>       <div>{dance.final_str}</div>
         <div>Charm:</div>       <div>{charm.final_str}</div>
         <div>Presence:</div>    <div>{pres.final_str}</div>
-        <div>Eloquence:</div>   <div>{eloq.final_str}</div>
-        <div>Poise:</div>       <div>{poise.final_str}</div>
     </div>
 </div>

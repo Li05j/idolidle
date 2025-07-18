@@ -1,5 +1,5 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
-import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 
 export const DECIMAL_PLACES = 1;
 
@@ -25,7 +25,7 @@ export function parseText(text: string) {
         .join('<br>');
     }
 
-export function reward_string(rewards: Rewards[], stats = {fans, moni, sta, charm, pres, eloq, poise}): string {
+export function reward_string(rewards: Rewards[], stats = {fans, moni, sta, sing, dance, charm, pres}): string {
     let ret_str = ""
     rewards.forEach(r => {
         let temp = ``
@@ -73,10 +73,10 @@ export function find_stat_from_str(s: BasicStats) {
         case "Fans":        return fans;
         case "Moni":        return moni;
         case "Stamina":     return sta;
-        case "Charm":       return charm;
-        case "Presence":    return pres;
-        case "Eloquence":   return eloq;
-        case "Poise":       return poise;
+        case "Sing":       return sing;
+        case "Dance":    return dance;
+        case "Charm":   return charm;
+        case "Presence":       return pres;
         default:            return undefined;
     }
 }

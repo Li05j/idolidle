@@ -44,7 +44,7 @@
     role="dialog"
     aria-modal="true"
 >
-    <div class="relative min-w-3/4 min-h-3/4 overflow-auto bg-white rounded-lg shadow-xl" onclick={(e) => e.stopPropagation()}>
+    <div class="relative min-w-3/4 min-h-3/4 overflow-hidden bg-white rounded-lg shadow-xl" onclick={(e) => e.stopPropagation()}>
         {#if type === 'live'}
             <Live />
         {/if}

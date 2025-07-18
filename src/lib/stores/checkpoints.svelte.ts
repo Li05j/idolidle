@@ -7,6 +7,7 @@ class Checkpoints {
 		1 * S_TO_MS,
 		900 * S_TO_MS,
 		1200 * S_TO_MS,
+		Infinity,
 	]
 	private _max_idx = this._checkpoints.length
 	private _multi = $state([1.0, 1.0, 1.0])
@@ -16,12 +17,8 @@ class Checkpoints {
 		return idx < this._max_idx ? this._checkpoints[idx] * this._multi[idx] : NaN
 	}
 
-	get current_checkpoint() { 
-		return this._checkpoints[this._current_idx] 
-	}
-
-	get next_checkpoint() { 
-		return this._current_idx < this._max_idx ? this._checkpoints[this._current_idx + 1] : NaN 
+	get current_completed_checkpoint() { 
+		return this._current_idx;
 	}
 
 	get current_multi() { 

@@ -1,18 +1,36 @@
 <script lang="ts">
-    import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
-
-    let stats = [fans, moni, sta, charm, pres, eloq, poise]
-
-    let left: number = $state(30);
-    let right: number = $state(70);
+    import { LiveBattleM } from "$lib/managers/live_battle_manager.svelte"
+	import { onMount } from "svelte";
     
-    let total = $derived(left + right);
-    let leftPercent = $derived(left / total * 100);
-    let rightPercent = $derived(right / total * 100);
+    let scrollContainer: HTMLElement
+
+    let total = $derived(LiveBattleM.display_your_fans + LiveBattleM.display_enemy_fans);
+    let leftPercent = $derived(LiveBattleM.display_your_fans / total * 100);
+    let rightPercent = $derived(LiveBattleM.display_enemy_fans / total * 100);
+
+    onMount(() => {
+        LiveBattleM.start_live();
+        LiveBattleM.turn_logs.forEach((l) => {
+            console.log(l.msg)
+        })
+    })
+
+    $effect(() => {
+        LiveBattleM.turn_logs.length // Force reactivity
+        if (scrollContainer) {
+            const { scrollTop, scrollHeight, clientHeight } = scrollContainer
+            // Only force auto scroll when scroll is already near the bottom
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 150
+
+            if (isNearBottom) {
+                scrollContainer.scrollTop = scrollHeight
+            }
+        }
+    })
 </script>
 
 <div class="w-full flex justify-center">
-    <div class="relative w-1/2 h-6 bg-gray-200 rounded my-8">
+    <div class="relative w-2/3 h-6 bg-gray-200 rounded my-8">
         <!-- Left -->
         <div 
             class="absolute top-0 left-0 h-full bg-green-500 transition-all duration-300 rounded"
@@ -33,33 +51,15 @@
     </div>
 </div>
 
-<div class="mt-4 space-x-4">
-    <button 
-        class="px-4 py-2 bg-blue-500 text-white rounded"
-        onclick={() => left = Math.max(0, left - 10)}
+<div class="mt-2 flex justify-center">
+    <div 
+        bind:this={scrollContainer} 
+        class="mt-2 text-center overflow-y-auto w-[80vh] h-[50vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]"
     >
-        Left -10
-    </button>
-    <button 
-        class="px-4 py-2 bg-blue-500 text-white rounded"
-        onclick={() => left += 10}
-    >
-        Left +10
-    </button>
-    <button 
-        class="px-4 py-2 bg-red-500 text-white rounded"
-        onclick={() => right = Math.max(0, right - 10)}
-    >
-        Right -10
-    </button>
-    <button 
-        class="px-4 py-2 bg-red-500 text-white rounded"
-        onclick={() => right += 10}
-    >
-        Right +10
-    </button>
-</div>
-
-<div class="mt-2 text-sm text-gray-600">
-    Left: {left}, Right: {right}
+        {#each LiveBattleM.turn_logs as log }
+            <div>
+                {log.msg}
+            </div>
+        {/each}
+    </div>
 </div>

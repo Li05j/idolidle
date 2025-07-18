@@ -1,7 +1,6 @@
 import type { Todo } from '$lib/types'
 import { Game_Progress } from '$lib/stores/game_progress.svelte';
-import { ProgressFlag } from '$lib/types'
-import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 
 const S_TO_MS = 1000
 
@@ -13,10 +12,10 @@ export const locations_data: Todo[] = [
         depends: [],
         rewards: [
             {which_stat: "Stamina", flat_gain_base: 0.1},
+            {which_stat: "Sing", flat_gain_base: 0.1},
+            {which_stat: "Dance", flat_gain_base: 0.1},
             {which_stat: "Charm", flat_gain_base: 0.1},
             {which_stat: "Presence", flat_gain_base: 0.1},
-            {which_stat: "Eloquence", flat_gain_base: 0.1},
-            {which_stat: "Poise", flat_gain_base: 0.1},
         ],
         desc: "Time to wake up, silly. Everything starts here.",
         then: () => {

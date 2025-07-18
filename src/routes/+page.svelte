@@ -7,8 +7,9 @@
 	import GenericButton from '$lib/components/misc/generic_button.svelte';
 	import GenericModal from '$lib/components/modals/generic_modal.svelte';
 
-    import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+    import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 	import { modal, type ModalType } from '$lib/managers/modal_manager.svelte';
+    import { LiveBattleM } from "$lib/managers/live_battle_manager.svelte"
 	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
 	import { onMount } from 'svelte';
 
@@ -22,16 +23,17 @@
     function cheat() {
         fans.base += 1000;
         sta.base += 1000;
+        sing.base += 1000;
+        dance.base += 1000;
         charm.base += 1000;
         pres.base += 1000;
-        eloq.base += 1000;
-        poise.base += 1000;
         openModal('settings')
         return
     }
 
     function handle_live() {
         TodoCardM.deactivateCurrentActiveCard()
+        LiveBattleM.init()
         openModal('live')
     }
 

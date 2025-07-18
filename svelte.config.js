@@ -14,7 +14,7 @@ const config = {
 		adapter: adapter()
 	},
 	
-	// Surpressing ARIA warnings
+	// Surdancesing ARIA warnings
 	compilerOptions: {
     	warningFilter: (warning) => !warning.code.startsWith('a11y_')
   	}

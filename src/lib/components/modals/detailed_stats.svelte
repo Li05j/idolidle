@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { fans, moni, sta, charm, pres, eloq, poise } from "$lib/stores/stats.svelte";
+    import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 
-    let stats = [fans, moni, sta, charm, pres, eloq, poise]
+    let stats = [fans, moni, sta, sing, dance, charm, pres]
 </script>
 
 <div class="w-full p-4">
