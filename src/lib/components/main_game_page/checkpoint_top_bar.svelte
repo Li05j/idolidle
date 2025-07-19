@@ -7,8 +7,11 @@
     let progress_percent = $derived(Math.min((CPs.current_time_spent / CPs.current_total_time) * 100, 100));
     let progress_text = $derived(`${progress_percent.toFixed(DECIMAL_PLACES)}% complete`);
 
+    let checkpoint_triggered: number = $state(-1)
+
     $effect(() => {
-        if (CPs.current_time_spent >= CPs.current_total_time) {
+        if (checkpoint_triggered != CPs.current_completed_checkpoint && CPs.current_time_spent >= CPs.current_total_time) {
+            checkpoint_triggered = CPs.current_completed_checkpoint
             handle_live();
         }
     })

@@ -1,62 +1,14 @@
 import { CPs } from "$lib/stores/checkpoints.svelte";
-import { fans, moni, sta, sing, dance, charm, pres, type BasicStatsValuesMap } from "$lib/stores/stats.svelte";
-
-type Turn = {
-    msg: string,
-    your_stats: BasicStatsValuesMap,
-    enemy_stats: BasicStatsValuesMap,
-}
-
-class EnemyStats {
-
-    public stats: BasicStatsValuesMap = {
-        Fans: 1,
-        Stamina: 1,
-        Sing: 1,
-        Dance: 1,
-        Charm: 1,
-        Presence: 1,
-    }
-
-    public init_stats: { [key: number]: () => void } = {
-        0: () => this.genEnemyStatsCp0(),
-        1: () => this.genEnemyStatsCp1(),
-    }
-
-    private genEnemyStatsCp0() {
-        this.stats.Fans = 25;
-        this.stats.Stamina = 50;
-        this.stats.Sing = 15;
-        this.stats.Dance = 15;
-        this.stats.Charm = 10;
-        this.stats.Presence = 10;
-    }
-
-    private genEnemyStatsCp1() {
-        this.stats.Fans = 1;
-        this.stats.Stamina = 1;
-        this.stats.Sing = 1;
-        this.stats.Dance = 1;
-        this.stats.Charm = 1;
-        this.stats.Presence = 1;
-    }
-
-    public reset() {
-        this.stats.Fans = 1;
-        this.stats.Stamina = 1;
-        this.stats.Sing = 1;
-        this.stats.Dance = 1;
-        this.stats.Charm = 1;
-        this.stats.Presence = 1;
-    }
-}
+import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
+import { LiveEnemyStats } from "$lib/stores/live_enemy_stats.svelte";
+import type { LiveTurn, BasicStatsValuesMap } from "$lib/types";
 
 class LiveBattleManager {
     public display_your_fans: number = $state(1)
     public display_enemy_fans: number = $state(1)
 
-    private _turns: Turn[] = []
-    private _replay_turns: Turn[] = $state([])
+    private _turns: LiveTurn[] = []
+    private _replay_turns: LiveTurn[] = $state([])
     private _you: BasicStatsValuesMap = {
         Fans: fans.final,
         Stamina: sta.final,
@@ -65,7 +17,7 @@ class LiveBattleManager {
         Charm: charm.final,
         Presence: pres.final,
     }
-    private _enemy: EnemyStats = new EnemyStats()
+    private _enemy: LiveEnemyStats = new LiveEnemyStats()
     private _turn_order: ("player" | "enemy")[] = [];
 
     get battle_you() { return this._you; }
@@ -74,10 +26,16 @@ class LiveBattleManager {
     
     public init() {
         this._enemy.init_stats[CPs.current_completed_checkpoint]();
-        this._turns.push({msg: "LIVE start!", your_stats: this._you, enemy_stats: this._enemy.stats})
 
         this.display_your_fans = fans.final
         this.display_enemy_fans = this._enemy.stats.Fans
+        
+        this._turns.push({
+            msg: "LIVE start!", 
+            your_stats: { ...this._you }, 
+            enemy_stats: { ...this._enemy.stats },
+        })
+        this.debug_print_logs()
 
         this._turn_order = this._you.Fans >= this._enemy.stats.Fans
             ? ["player", "enemy"]
@@ -127,7 +85,7 @@ class LiveBattleManager {
         })
     }
 
-    private push_over_time(source: Turn[], target: Turn[], intervalMs: number = 500) {
+    private push_over_time(source: LiveTurn[], target: LiveTurn[], intervalMs: number = 500) {
         const interval = setInterval(() => {
             if (source.length === 0) {
                 clearInterval(interval);
@@ -147,14 +105,21 @@ class LiveBattleManager {
     }
 
     start_live() {
-        // this.init()
+        this.init()
         this.fight()
         this.replay_fight()
     }
 
     reset() {
         this._turns = []
+        this._replay_turns = []
         this._enemy.reset()
+    }
+
+    debug_print_logs() {
+        this._turns.forEach((l) => {
+            console.log(l.msg + ", Your fans: " + l.your_stats.Fans + ", Enemy fans: " + l.enemy_stats.Fans)
+        })
     }
 }
 

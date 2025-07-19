@@ -73,10 +73,10 @@ export function find_stat_from_str(s: BasicStats) {
         case "Fans":        return fans;
         case "Moni":        return moni;
         case "Stamina":     return sta;
-        case "Sing":       return sing;
-        case "Dance":    return dance;
-        case "Charm":   return charm;
-        case "Presence":       return pres;
+        case "Sing":        return sing;
+        case "Dance":       return dance;
+        case "Charm":       return charm;
+        case "Presence":    return pres;
         default:            return undefined;
     }
 }

@@ -13,6 +13,22 @@ export interface Todo {
     then?: () => void,
 };
 
+export type BasicStatsValuesMap = {
+    Fans: number,
+    Moni?: number,
+    Stamina: number,
+    Sing: number,
+    Dance: number,
+    Charm: number,
+    Presence: number,
+}
+
+export type LiveTurn = {
+    msg: string,
+    your_stats: BasicStatsValuesMap,
+    enemy_stats: BasicStatsValuesMap,
+}
+
 // Only f0-f30, i.e. 31 entries
 // export enum ProgressFlag {
 //     f0 = 1 << 0, f1 = 1 << 1, f2 = 1 << 2, f3 = 1 << 3, f4 = 1 << 4, f5 = 1 << 5, f6 = 1 << 6, f7 = 1 << 7,

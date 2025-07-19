@@ -8,11 +8,12 @@
     let leftPercent = $derived(LiveBattleM.display_your_fans / total * 100);
     let rightPercent = $derived(LiveBattleM.display_enemy_fans / total * 100);
 
+    $inspect("You: " + LiveBattleM.display_your_fans)
+    $inspect("Other: " + LiveBattleM.display_enemy_fans)
+
     onMount(() => {
         LiveBattleM.start_live();
-        LiveBattleM.turn_logs.forEach((l) => {
-            console.log(l.msg)
-        })
+        // LiveBattleM.debug_print_logs();
     })
 
     $effect(() => {
@@ -54,7 +55,7 @@
 <div class="mt-2 flex justify-center">
     <div 
         bind:this={scrollContainer} 
-        class="mt-2 text-center overflow-y-auto w-[80vh] h-[50vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]"
+        class="p-4 text-center overflow-y-auto w-[80vh] h-[50vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]"
     >
         {#each LiveBattleM.turn_logs as log }
             <div>

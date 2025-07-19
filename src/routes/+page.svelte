@@ -33,7 +33,6 @@
 
     function handle_live() {
         TodoCardM.deactivateCurrentActiveCard()
-        LiveBattleM.init()
         openModal('live')
     }
 

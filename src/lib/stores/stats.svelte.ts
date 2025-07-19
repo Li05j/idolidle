@@ -44,7 +44,7 @@ function createCurrency(name: string, baseInit = 10, multiInit = 1.0) {
 	};
 }
 
-function createStat(name: string, baseInit = 50, multiInit = 1.0) {
+function createStat(name: string, baseInit = 20, multiInit = 1.0) {
 	const _name = name;
   	let base = $state(baseInit);
   	let multi = $state(multiInit);
@@ -71,13 +71,3 @@ export const sing = createStat('Sing');
 export const dance = createStat('Dance');
 export const charm = createStat('Charm');
 export const pres = createStat('Presence');
-
-export type BasicStatsValuesMap = {
-    Fans: number,
-    Moni?: number,
-    Stamina: number,
-    Sing: number,
-    Dance: number,
-    Charm: number,
-    Presence: number,
-}
