@@ -18,7 +18,7 @@ class LiveBattleManager {
         Presence: pres.final,
     }
     private _enemy: LiveEnemyStats = new LiveEnemyStats()
-    private _turn_order: ("player" | "enemy")[] = [];
+    private _turn_order: ("Player" | "Rival")[] = [];
 
     get battle_you() { return this._you; }
     get battle_enemy() { return this._enemy.stats; }
@@ -31,15 +31,15 @@ class LiveBattleManager {
         this.display_enemy_fans = this._enemy.stats.Fans
         
         this._turns.push({
-            msg: "LIVE start!", 
+            msg: "**LIVE start!**", 
             your_stats: { ...this._you }, 
             enemy_stats: { ...this._enemy.stats },
         })
         this.debug_print_logs()
 
         this._turn_order = this._you.Fans >= this._enemy.stats.Fans
-            ? ["player", "enemy"]
-            : ["enemy", "player"]
+            ? ["Player", "Rival"]
+            : ["Rival", "Player"]
     }
 
     private fight() {
@@ -55,12 +55,12 @@ class LiveBattleManager {
         this.log(`Battle over! ${winner}`)
     }
 
-    private take_turn(actor: "player" | "enemy") {
-        const attacker = actor === "player" ? this._you : this._enemy.stats
-        const defender = actor === "player" ? this._enemy.stats : this._you
+    private take_turn(actor: "Player" | "Rival") {
+        const attacker = actor === "Player" ? this._you : this._enemy.stats
+        const defender = actor === "Player" ? this._enemy.stats : this._you
 
         if (attacker.Stamina <= 0) {
-            this.log(`${actor} has no Stamina left!`)
+            this.log(`[red]${actor} has no Stamina left![/red]`)
             return
         }
 
@@ -68,8 +68,12 @@ class LiveBattleManager {
         attacker.Stamina -= 5
         attacker.Fans += steal
         defender.Fans -= steal
-
-        this.log(`${actor} steals ${steal} fans`)
+        
+        if (actor === "Player") {
+            this.log(`[green]${actor} steals ${steal} fans[/green]`)
+        } else {
+            this.log(`[blue]${actor} steals ${steal} fans[/blue]`)
+        }
     }
 
     private battleOver(): boolean {

@@ -1,6 +1,8 @@
 <script lang="ts">
     import { LiveBattleM } from "$lib/managers/live_battle_manager.svelte"
 	import { onMount } from "svelte";
+
+    import { parseText } from "$lib/utils/utils";
     
     let scrollContainer: HTMLElement
 
@@ -13,7 +15,6 @@
 
     onMount(() => {
         LiveBattleM.start_live();
-        // LiveBattleM.debug_print_logs();
     })
 
     $effect(() => {
@@ -40,7 +41,7 @@
         
         <!-- Right part -->
         <div 
-            class="absolute top-0 right-0 h-full bg-red-500 transition-all duration-300 rounded"
+            class="absolute top-0 right-0 h-full bg-blue-500 transition-all duration-300 rounded"
             style="width: {rightPercent}%"
         ></div>
         
@@ -59,7 +60,7 @@
     >
         {#each LiveBattleM.turn_logs as log }
             <div>
-                {log.msg}
+                {@html parseText(log.msg)}
             </div>
         {/each}
     </div>
