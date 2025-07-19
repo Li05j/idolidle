@@ -30,7 +30,7 @@ export const locations_data: Todo[] = [
         rewards: [
             {which_stat: "Stamina", flat_gain_base: 0.3},
         ],
-        desc: "The first stage of your idol career, or maybe just where socks mysteriously vanich. Sing off-key, dance like a disaster—no one\'s watching (except maybe the cat). Meow.",
+        desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one\'s watching (except maybe the cat). Meow.",
         then: () => {
             Game_Progress.enable('Living Room');
         }

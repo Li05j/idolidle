@@ -71,10 +71,10 @@ class LiveBattleManager {
         
         if (actor === "Player") {
             this.log(`[green]${actor} performed a ${move} move![/green]`, false)
-            this.log(`[green]${actor} poached ${dmg.toFixed(DECIMAL_PLACES)} fans![/green]`)
+            this.log(`[green]${actor} poached ${dmg} fans![/green]`)
         } else {
             this.log(`[darkorange]${actor} performed a ${move} move![/darkorange]`, false)
-            this.log(`[darkorange]${actor} poached ${dmg.toFixed(DECIMAL_PLACES)} fans![/darkorange]`)
+            this.log(`[darkorange]${actor} poached ${dmg} fans![/darkorange]`)
         }
     }
 
@@ -86,7 +86,7 @@ class LiveBattleManager {
             let def_stat = defender.Charm
 
             let fluctuation = Math.random() * 0.4 - 0.2;
-            let dmg = Math.max(Math.min((atk_stat - def_stat) * fluctuation, defender.Fans), 0)
+            let dmg = Math.max(Math.min(Math.ceil((atk_stat - def_stat) * fluctuation), defender.Fans), 0)
             attacker.Fans += dmg
             defender.Fans -= dmg
 
@@ -97,7 +97,7 @@ class LiveBattleManager {
             let def_stat = defender.Presence
 
             let fluctuation = 1 + Math.random() * 0.4 - 0.2;
-            let dmg = Math.max(Math.min((atk_stat - def_stat) * fluctuation, defender.Fans), 0)
+            let dmg = Math.max(Math.min(Math.ceil((atk_stat - def_stat) * fluctuation), defender.Fans), 0)
             attacker.Fans += dmg
             defender.Fans -= dmg
 
