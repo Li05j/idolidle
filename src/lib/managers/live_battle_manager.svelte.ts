@@ -2,8 +2,11 @@ import { CPs } from "$lib/stores/checkpoints.svelte";
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 import { LiveEnemyStats } from "$lib/stores/live_enemy_stats.svelte";
 import type { LiveTurn, BasicStatsValuesMap } from "$lib/types";
+import { DECIMAL_PLACES } from "$lib/utils/utils";
 
 class LiveBattleManager {
+    public live_sim_complete: boolean = $state(false)
+
     public display_your_fans: number = $state(1)
     public display_enemy_fans: number = $state(1)
 
@@ -64,15 +67,42 @@ class LiveBattleManager {
             return
         }
 
-        const steal = Math.min(5, defender.Fans) // dummy calc
-        attacker.Stamina -= 5
-        attacker.Fans += steal
-        defender.Fans -= steal
+        const [dmg, move] = this.calc_and_log_damage(attacker, defender)
         
         if (actor === "Player") {
-            this.log(`[green]${actor} steals ${steal} fans[/green]`)
+            this.log(`[green]${actor} performed a ${move} move![/green]`, false)
+            this.log(`[green]${actor} poached ${dmg.toFixed(DECIMAL_PLACES)} fans![/green]`)
         } else {
-            this.log(`[blue]${actor} steals ${steal} fans[/blue]`)
+            this.log(`[darkorange]${actor} performed a ${move} move![/darkorange]`, false)
+            this.log(`[darkorange]${actor} poached ${dmg.toFixed(DECIMAL_PLACES)} fans![/darkorange]`)
+        }
+    }
+
+    // Todo: Make this smarter
+    private calc_and_log_damage(attacker: BasicStatsValuesMap, defender: BasicStatsValuesMap): [number, string] {
+        let r = Math.random()
+        if (r > 0.5) {
+            let atk_stat = attacker.Sing
+            let def_stat = defender.Charm
+
+            let fluctuation = Math.random() * 0.4 - 0.2;
+            let dmg = Math.max(Math.min((atk_stat - def_stat) * fluctuation, defender.Fans), 0)
+            attacker.Fans += dmg
+            defender.Fans -= dmg
+
+            attacker.Stamina -= atk_stat / 2
+            return [dmg, "Sing"];
+        } else {
+            let atk_stat = attacker.Dance
+            let def_stat = defender.Presence
+
+            let fluctuation = 1 + Math.random() * 0.4 - 0.2;
+            let dmg = Math.max(Math.min((atk_stat - def_stat) * fluctuation, defender.Fans), 0)
+            attacker.Fans += dmg
+            defender.Fans -= dmg
+
+            attacker.Stamina -= atk_stat / 2
+            return [dmg, "Dance"];
         }
     }
 
@@ -81,25 +111,30 @@ class LiveBattleManager {
                (this._you.Stamina <= 0 && this._enemy.stats.Stamina <= 0)
     }
 
-    private log(msg: string) {
-        this._turns.push({
-            msg,
-            your_stats: { ...this._you },
-            enemy_stats: { ...this._enemy.stats },
-        })
+    private log(msg: string, auto_push_stats: boolean = true) {
+        if (auto_push_stats) {
+            this._turns.push({
+                msg,
+                your_stats: { ...this._you },
+                enemy_stats: { ...this._enemy.stats },
+            })
+        } else {
+            this._turns.push({msg});
+        }
     }
 
     private push_over_time(source: LiveTurn[], target: LiveTurn[], intervalMs: number = 500) {
         const interval = setInterval(() => {
             if (source.length === 0) {
                 clearInterval(interval);
+                this.live_sim_complete = true;
                 return;
             }
             const item = source.shift();
             if (item !== undefined) {
                 target.push(item);
-                this.display_your_fans = item.your_stats.Fans
-                this.display_enemy_fans = item.enemy_stats.Fans
+                if (item.your_stats) this.display_your_fans = item.your_stats.Fans;
+                if (item.enemy_stats) this.display_enemy_fans = item.enemy_stats.Fans;
             }
         }, intervalMs);
     }
@@ -115,6 +150,7 @@ class LiveBattleManager {
     }
 
     reset() {
+        this.live_sim_complete = false;
         this._turns = []
         this._replay_turns = []
         this._enemy.reset()
@@ -122,7 +158,7 @@ class LiveBattleManager {
 
     debug_print_logs() {
         this._turns.forEach((l) => {
-            console.log(l.msg + ", Your fans: " + l.your_stats.Fans + ", Enemy fans: " + l.enemy_stats.Fans)
+            console.log(l.msg + ", Your fans: " + l.your_stats?.Fans + ", Enemy fans: " + l.enemy_stats?.Fans)
         })
     }
 }

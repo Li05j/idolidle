@@ -25,8 +25,8 @@ export type BasicStatsValuesMap = {
 
 export type LiveTurn = {
     msg: string,
-    your_stats: BasicStatsValuesMap,
-    enemy_stats: BasicStatsValuesMap,
+    your_stats?: BasicStatsValuesMap,
+    enemy_stats?: BasicStatsValuesMap,
 }
 
 // Only f0-f30, i.e. 31 entries

@@ -27,7 +27,7 @@ function createTrainings() {
 }
 
 // Currency floors while Stat can have decimals.
-function createCurrency(name: string, baseInit = 10, multiInit = 1.0) {
+function createCurrency(name: string, baseInit = 20, multiInit = 1.0) {
 	const _name = name;
     let base = $state(baseInit);
     let multi = $state(multiInit);

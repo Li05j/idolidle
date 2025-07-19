@@ -3,15 +3,13 @@
 	import { onMount } from "svelte";
 
     import { parseText } from "$lib/utils/utils";
+	import GenericButton from "$lib/components/misc/generic_button.svelte";
     
     let scrollContainer: HTMLElement
 
     let total = $derived(LiveBattleM.display_your_fans + LiveBattleM.display_enemy_fans);
     let leftPercent = $derived(LiveBattleM.display_your_fans / total * 100);
     let rightPercent = $derived(LiveBattleM.display_enemy_fans / total * 100);
-
-    $inspect("You: " + LiveBattleM.display_your_fans)
-    $inspect("Other: " + LiveBattleM.display_enemy_fans)
 
     onMount(() => {
         LiveBattleM.start_live();
@@ -41,7 +39,7 @@
         
         <!-- Right part -->
         <div 
-            class="absolute top-0 right-0 h-full bg-blue-500 transition-all duration-300 rounded"
+            class="absolute top-0 right-0 h-full bg-orange-500 transition-all duration-300 rounded"
             style="width: {rightPercent}%"
         ></div>
         

@@ -5,8 +5,8 @@ class Checkpoints {
 
 	private _checkpoints = [
 		1 * S_TO_MS,
-		900 * S_TO_MS,
-		1200 * S_TO_MS,
+		1000 * S_TO_MS,
+		1500 * S_TO_MS,
 		Infinity,
 	]
 	private _max_idx = this._checkpoints.length
