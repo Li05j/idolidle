@@ -1,56 +1,24 @@
-import { CPs } from '$lib/stores/checkpoints.svelte';
+type BigModals = 'default' | 'settings' | 'stats' | 'live'
+type SmallModals = 'rebirth_alert'
 
-type Level1Modal = 'default' | 'settings' | 'stats'
-type Level2Modal = 'live'
-export type ModalType = Level1Modal | Level2Modal
-
-const MODAL_LEVELS = {
-    'default': 1,
-    'settings': 1,
-    'stats': 1,
-    'live': 2,
-} as const
+export type ModalType = BigModals | SmallModals
 
 function createModalType() {
     let _modals: ModalType[] = $state([])
-
-    let _level_1_open = $state(false)
-    let _level_2_open = $state(false)
-
-    let _close_on_esc = $state(true)
-
-    const level_states = {
-        1: () => _level_1_open,
-        2: () => _level_2_open,
-    }
-
-    const level_setters = {
-        1: (b: boolean) => _level_1_open = b,
-        2: (b: boolean) => _level_2_open = b,
-    }
+    let _close_on_esc: boolean = $state(true)
 
     function is_modal_open(t: ModalType) {
-        const level = MODAL_LEVELS[t]
-        return level_states[level]()
+        return _modals.includes(t)
     }
 
     function set_modal_open(t: ModalType) {
         if (is_modal_open(t)) return
-
-        const level = MODAL_LEVELS[t]
-        level_setters[level](true)
 
         _modals.push(t);
     }
 
     function set_modal_close() {
         const m = _modals.pop();
-        if (m) {
-            level_setters[MODAL_LEVELS[m]](false)
-            if (m === 'live') {
-                CPs.advanceToNextCheckpoint()
-            }
-        }
     }
 
     function handleKeydown(e: KeyboardEvent) {
@@ -69,4 +37,4 @@ function createModalType() {
     }
 }
 
-export const modal = createModalType()
+export const ModalM = createModalType()

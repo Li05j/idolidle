@@ -4,7 +4,7 @@ class Checkpoints {
 	public current_time_spent = $state(0)
 
 	private _checkpoints = [
-		600 * S_TO_MS,
+		1 * S_TO_MS,
 		1000 * S_TO_MS,
 		1500 * S_TO_MS,
 		Infinity,

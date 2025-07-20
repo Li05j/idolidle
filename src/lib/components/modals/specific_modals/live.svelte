@@ -4,7 +4,12 @@
 
     import { parseText } from "$lib/utils/utils";
 	import GenericButton from "$lib/components/misc/generic_button.svelte";
+	import { CPs } from "$lib/stores/checkpoints.svelte";
+	import { ModalM } from "$lib/managers/modal_manager.svelte";
     
+    let { onClose } = $props()
+    const type = 'live'
+
     let scrollContainer: HTMLElement
 
     let total = $derived(LiveBattleM.display_your_fans + LiveBattleM.display_enemy_fans);
@@ -27,6 +32,16 @@
             }
         }
     })
+
+    function on_continue_clicked() {
+        LiveBattleM.reset()
+        CPs.advanceToNextCheckpoint()
+        onClose(type)
+    }
+
+    function on_rebirth_clicked() {
+        ModalM.set_modal_open('rebirth_alert')
+    }
 </script>
 
 <div class="w-full flex justify-center">
@@ -63,3 +78,10 @@
         {/each}
     </div>
 </div>
+
+{#if LiveBattleM.live_sim_complete}
+    <div class="absolute bottom-4 left-4 right-4 flex justify-between gap-4">
+        <GenericButton name={"Rebirth"} onclick={on_rebirth_clicked} variant='secondary' class={"px-4 py-2 w-full"}/>
+        <GenericButton name={"Continue"} onclick={on_continue_clicked} variant='primary' class={"px-4 py-2 w-full"}/>
+    </div>
+{/if}

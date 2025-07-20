@@ -25,10 +25,10 @@ export const locations_data: Todo[] = [
     {
         name: 'Living Room',
         type: 'location',
-        base_cost: 3 * S_TO_MS, 
+        base_cost: 4 * S_TO_MS, 
         depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
         rewards: [
-            {which_stat: "Stamina", flat_gain_base: 0.3},
+            {which_stat: "Stamina", flat_gain_base: 0.2},
         ],
         desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one\'s watching (except maybe the cat). Meow.",
         then: () => {
@@ -41,7 +41,7 @@ export const locations_data: Todo[] = [
         base_cost: 30 * S_TO_MS, 
         depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
         rewards: [
-            {which_stat: "Stamina", flat_gain_base: 3},
+            {which_stat: "Stamina", flat_gain_base: 1.5},
         ],
         desc: "Just your everyday neighborhood park. Nothing fancy, but it got it's place in your heart. Something always feels about to happen.",
         then: () => {
@@ -54,7 +54,7 @@ export const locations_data: Todo[] = [
         base_cost: 240 * S_TO_MS, 
         depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
         rewards: [
-            {which_stat: "Stamina", flat_gain_base: 24},
+            {which_stat: "Stamina", flat_gain_base: 12},
         ],
         desc: "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
         then: () => {
@@ -67,7 +67,7 @@ export const locations_data: Todo[] = [
         base_cost: 300 * S_TO_MS, 
         depends: [{ which_stat: "Stamina", effectiveness: 1.0 }],
         rewards: [
-            {which_stat: "Stamina", flat_gain_base: 30},
+            {which_stat: "Stamina", flat_gain_base: 15},
         ],
         desc: "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
         then: () => {

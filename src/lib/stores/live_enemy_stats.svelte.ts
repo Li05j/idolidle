@@ -17,12 +17,12 @@ export class LiveEnemyStats {
     }
 
     private genEnemyStatsCp0() {
-        this.stats.Fans = 55;
-        this.stats.Stamina = 100;
-        this.stats.Sing = 25;
-        this.stats.Dance = 35;
-        this.stats.Charm = 40;
-        this.stats.Presence = 15;
+        this.stats.Fans = 25;
+        this.stats.Stamina = 50;
+        this.stats.Sing = 9;
+        this.stats.Dance = 6;
+        this.stats.Charm = 4;
+        this.stats.Presence = 5;
     }
 
     private genEnemyStatsCp1() {

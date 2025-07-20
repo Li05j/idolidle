@@ -8,16 +8,15 @@
 	import GenericModal from '$lib/components/modals/generic_modal.svelte';
 
     import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
-	import { modal, type ModalType } from '$lib/managers/modal_manager.svelte';
-    import { LiveBattleM } from "$lib/managers/live_battle_manager.svelte"
+	import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte';
 	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
 	import { onMount } from 'svelte';
 
     function openModal(t: ModalType) {
-        modal.set_modal_open(t); 
+        ModalM.set_modal_open(t); 
     }
     // function closeModal(t: ModalType) { 
-    //     modal.set_modal_close(t); 
+    //     ModalM.set_modal_close(t); 
     // }
 
     function cheat() {
@@ -37,12 +36,12 @@
     }
 
     onMount(() => {
-        document.addEventListener('keydown', modal.handleKeydown);
-        return () => document.removeEventListener('keydown', modal.handleKeydown);
+        document.addEventListener('keydown', ModalM.handleKeydown);
+        return () => document.removeEventListener('keydown', ModalM.handleKeydown);
     });
 </script>
 
-{#each modal.modals as m}
+{#each ModalM.modals as m}
     <GenericModal type={m} />
 {/each}
 

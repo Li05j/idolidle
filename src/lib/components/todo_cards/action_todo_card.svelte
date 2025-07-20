@@ -113,6 +113,6 @@
             <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
         </div>
         <div class="text-gray-700 text-xs pt-2"> <i>{@html parseText(todo.desc)}</i></div>
-        <div class="text-gray-700 text-sm pt-2 text-right"> {reward_string(todo.rewards)} </div>
+        <div class="text-gray-700 text-xs pt-2 text-right"> {reward_string(todo.rewards)} </div>
     </div>
 </div>

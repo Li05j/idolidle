@@ -1,7 +1,8 @@
 <script lang="ts">
     import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 
-    let stats = [fans, moni, sta, sing, dance, charm, pres]
+    let currency = [fans, moni]
+    let other_stats = [sta, sing, dance, charm, pres]
 </script>
 
 <div class="w-full p-4">
@@ -15,9 +16,15 @@
             <div class='font-semibold text-lg'>Final Stat</div>
 
             <div class='col-span-4 grid grid-cols-4 text-center justify-center'>
-                {#each stats as stat}
+                {#each currency as stat}
                     <div class='text-sm'>{stat.name}</div>
-                    <div class='text-sm'>{stat.base}</div> 
+                    <div class='text-sm'>{stat.base.toFixed(0)}</div> 
+                    <div class='text-sm'>{stat.multi.toFixed(2)}</div> 
+                    <div class='text-sm'>{stat.final_str}</div>
+                {/each}
+                {#each other_stats as stat}
+                    <div class='text-sm'>{stat.name}</div>
+                    <div class='text-sm'>{stat.base.toFixed(2)}</div> 
                     <div class='text-sm'>{stat.multi.toFixed(2)}</div> 
                     <div class='text-sm'>{stat.final_str}</div>
                 {/each}

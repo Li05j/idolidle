@@ -1,5 +1,5 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
-import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
+import { fans, moni, sta, sing, dance, charm, pres, dummy } from "$lib/stores/stats.svelte";
 
 export const DECIMAL_PLACES = 1;
 
@@ -37,7 +37,9 @@ export function reward_string(rewards: Rewards[], stats = {fans, moni, sta, sing
             depends_gain = find_training_eff_from_str(r.efficiency)(calc_stat_effectiveness(r.depends))
         }
         if (r.flat_gain_base) {
-            temp += ` +${(r.flat_gain_base + depends_gain).toFixed(fixed_at)} ${r.which_stat}`;
+            let summed_flat_gain = r.flat_gain_base + depends_gain
+            let multi = find_stat_from_str(r.which_stat).multi
+            temp += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
         }
         else if (r.flat_gain_multi) {
             temp += ` +${(r.flat_gain_multi + depends_gain).toFixed(fixed_at)} ${r.which_stat} Multi`;
@@ -77,7 +79,7 @@ export function find_stat_from_str(s: BasicStats) {
         case "Dance":       return dance;
         case "Charm":       return charm;
         case "Presence":    return pres;
-        default:            return undefined;
+        default:            return dummy;
     }
 }
 

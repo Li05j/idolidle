@@ -30,6 +30,15 @@ class LiveBattleManager {
     public init() {
         this._enemy.init_stats[CPs.current_completed_checkpoint]();
 
+        this._you = {
+            Fans: fans.final,
+            Stamina: sta.final,
+            Sing: sing.final,
+            Dance: dance.final,
+            Charm: charm.final,
+            Presence: pres.final,
+        }
+
         this.display_your_fans = fans.final
         this.display_enemy_fans = this._enemy.stats.Fans
         
