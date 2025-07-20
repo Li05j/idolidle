@@ -1,58 +1,55 @@
-import type { Todo, StatEffectPair } from '$lib/types'
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 import { logs } from '$lib/stores/history.svelte'
+import { ActionTodo, GainCurrencyTodo, SpendCurrencyTodo, type TodoBase } from './todo_type';
+import { Game_Progress } from "$lib/stores/game_progress.svelte";
 
 const S_TO_MS = 1000
 
-export const actions_data: Map<string, Todo[]> = new Map([
-    ['Living Room', 
+export const actions_data: Map<string, TodoBase[]> = new Map([
+    ["Living Room", 
         [
-            {
-                name: 'Singing Practice', 
-                type: 'action', 
-                base_cost: 5 * S_TO_MS,
-                depends: [
+            new ActionTodo(
+                'Singing Practice',
+                5 * S_TO_MS,
+                [
                     { which_stat: "Stamina", effectiveness: 0.25 },
                     { which_stat: "Charm", effectiveness: 0.75 },
                 ],
-                rewards: [
+                [
                     {which_stat: "Sing", flat_gain_base: 0.5},
                 ],
-                desc: "Your voice cracks. Your cat weeps. But somewhere in the noise, a star might be warming up.",
-            },
-            {
-                name: 'Dancing Practice', 
-                type: 'action', 
-                base_cost: 5 * S_TO_MS,
-                depends: [
+                "Your voice cracks. Your cat weeps. But somewhere in the noise, a star might be warming up.",
+            ),
+            new ActionTodo(
+                'Dancing Practice',
+                5 * S_TO_MS,
+                [
                     { which_stat: "Stamina", effectiveness: 0.25 },
                     { which_stat: "Presence", effectiveness: 0.75 },
                 ],
-                rewards: [
+                [
                     {which_stat: "Dance", flat_gain_base: 0.5},
                 ],
-                desc: "Limbs flail, rhythm fails, and then you trip yourself. Maybe the floor just hates you.",
-            },
-        ],
+                "Limbs flail, rhythm fails, and then you trip yourself. Maybe the floor just hates you.",
+            ),
+        ]
     ],
-    ['Park', 
+    ["Park", 
         [
-            {
-                name: 'Pickup Bottles', 
-                type: 'gain_currency', 
-                base_cost: 5 * S_TO_MS,
-                depends: [],
-                rewards: [
+            new GainCurrencyTodo(
+                'Picking Bottles',
+                5 * S_TO_MS,
+                [],
+                [
                     {which_stat: "Moni", flat_gain_base: 5, depends: [{ which_stat: "Stamina", effectiveness: 1.0 }], efficiency: "slow"},
                 ],
-                desc: "Being an Idol always means starting somewhere, you know? This isn't for the Moni, obviously; Just making sure the Park is clean and tidy.",
-            },
-            {
-                name: 'Busker', 
-                type: 'gain_currency', 
-                base_cost: 30 * S_TO_MS,
-                depends: [],
-                rewards: [
+                "Being an Idol always means starting somewhere, you know? This isn't for the Moni, obviously; Just making sure the Park is clean and tidy.",
+            ),
+            new GainCurrencyTodo(
+                'Busker',
+                30 * S_TO_MS,
+                [],
+                [
                     {which_stat: "Fans", flat_gain_base: 3},
                     {which_stat: 
                         "Moni",
@@ -65,122 +62,170 @@ export const actions_data: Map<string, Todo[]> = new Map([
                         efficiency: "mid",
                     },
                 ],
-                desc: "Being an Idol always meens starting somewhere, you know? It's not for the Moni, obviously. Just making sure the Park is clean and tidy.",
-            },
-            {
-                name: 'Running around with kids', 
-                type: 'action', 
-                base_cost: 12 * S_TO_MS,
-                depends: [
+                "This is quite embarrassing... But at least it's somewhat better than collecting bottles?",
+            ),
+            new ActionTodo(
+                'Play Tag with Kids',
+                12 * S_TO_MS,
+                [
                     { which_stat: "Stamina", effectiveness: 0.8 },
                     { which_stat: "Charm", effectiveness: 0.2 },
                 ],
-                rewards: [
+                [
                     {which_stat: "Stamina", flat_gain_base: 0.6},
                     {which_stat: "Charm", flat_gain_base: 0.6},
                 ],
-                desc: "Being an Idol always meens starting somewhere, you know? It's not for the Moni, obviously. Just making sure the Park is clean and tidy.",
-                extra_reward: () => {
-                    let r = Math.random();
-                    if (r < 0.1) {
-                        fans.base += 1
-                        logs.addEurekaLogs( '+1 Fans', 'You converted a kid into a fan!')
-                    }
+                "\'Tag - You're it!\' You giggle, trying to charm them with your elegant wink. It usually doesn\'t work, though.",
+                {
+                    extra_reward_fn: () => {
+                        let r = Math.random();
+                        if (r < 0.1) {
+                            fans.base += 1
+                            logs.addEurekaLogs( '+1 Fans', 'You converted a kid into a fan!')
+                        }
+                    },
                 },
-            },
-        ],
+            ),
+        ]
     ],
-    ['School', 
+    ["School", 
         [
-            {
-                name: 'Go to class', 
-                type: 'action', 
-                base_cost: 60 * S_TO_MS,
-                depends: [
-                    { which_stat: "Charm", effectiveness: 0.5 },
-                    { which_stat: "Presence", effectiveness: 0.5 },
+            new ActionTodo(
+                'Go to Class',
+                60 * S_TO_MS,
+                [
+                    { which_stat: "Charm", effectiveness: 0.25 },
+                    { which_stat: "Presence", effectiveness: 0.25 },
                 ],
-                rewards: [
+                [
                     {which_stat: "Sing", flat_gain_base: 1.2 },
                     {which_stat: "Dance", flat_gain_base: 1.2 },
                     {which_stat: "Charm", flat_gain_base: 1.2 },
                     {which_stat: "Presence", flat_gain_base: 1.2 },
                 ],
-                desc: "Being an Idol always meens starting somewhere, you know? It's not for the Moni, obviously. Just making sure the Park is clean and tidy.",
-                extra_reward: () => {
-                    let a = Math.random();
-                    let b = Math.random();
-                    let c = Math.random();
-                    let d = Math.random();
-                    if (a < 0.5) {
-                        sing.base += 1.2
-                        logs.addEurekaLogs( '+1.2 Sing')
-                    }
-                    if (b < 0.5) {
-                        dance.base += 1.2
-                        logs.addEurekaLogs( '+1.2 Dance')
-                    }
-                    if (c < 0.5) {
-                        charm.base += 1.2
-                        logs.addEurekaLogs( '+1.2 Charm')
-                    }
-                    if (d < 0.5) {
-                        pres.base += 1.2
-                        logs.addEurekaLogs( '+1.2 Presence')
-                    }
+                "You still gotta study alright; elite idol and elite student? That's the spirit.",
+                {
+                    extra_reward_fn: () => {
+                        let a = Math.random();
+                        let b = Math.random();
+                        let c = Math.random();
+                        let d = Math.random();
+                        if (a < 0.5) {
+                            sing.base += 1.2
+                            logs.addEurekaLogs( '+1.2 Sing')
+                        }
+                        if (b < 0.5) {
+                            dance.base += 1.2
+                            logs.addEurekaLogs( '+1.2 Dance')
+                        }
+                        if (c < 0.5) {
+                            charm.base += 1.2
+                            logs.addEurekaLogs( '+1.2 Charm')
+                        }
+                        if (d < 0.5) {
+                            pres.base += 1.2
+                            logs.addEurekaLogs( '+1.2 Presence')
+                        }
+                    },
                 },
-            },
-            {
-                name: 'Yell on a wooden box', 
-                type: 'action', 
-                base_cost: 15 * S_TO_MS,
-                depends: [
+            ),
+            new ActionTodo(
+                'Yell on Wooden Box',
+                15 * S_TO_MS,
+                [
                     { which_stat: "Presence", effectiveness: 1.0 },
                 ],
-                rewards: [
+                [
                     {which_stat: "Fans", flat_gain_base: 2 },
                 ],
-                desc: "Being an Idol always meens starting somewhere, you know? It's not for the Moni, obviously. Just making sure the Park is clean and tidy.",
-                extra_reward: () => {
-                    let r = Math.random();
-                    if (r < 0.1) {
-                        fans.base += 1
-                        logs.addEurekaLogs( '+1 Fans', 'You poached an extra fan!')
-                    }
-                },
-            },
-            {
-                name: 'Dancing in the hallway', 
-                type: 'action', 
-                base_cost: 35 * S_TO_MS,
-                depends: [
+                "You know when those anime girls standing near the school gate after school to try and advertise their idol activities? Yeah, that's you now.",
+            ),
+            new ActionTodo(
+                'Hallway Dancing',
+                35 * S_TO_MS,
+                [
                     { which_stat: "Presence", effectiveness: 1.0 },
                 ],
-                rewards: [
-                    {which_stat: "Dance", flat_gain_base: 2 },
-                    {which_stat: "Presence", flat_gain_base: 1.5 },
+                [
+                    {which_stat: "Dance", flat_gain_multi: 0.01 },
+                    {which_stat: "Presence", flat_gain_multi: 0.01 },
                 ],
-                desc: "Being an Idol always meens starting somewhere, you know? It's not for the Moni, obviously. Just making sure the Park is clean and tidy.",
-                extra_reward: () => {
-                    let r = Math.random();
-                    if (r < 0.1) {
-                        fans.base += 1
-                        logs.addEurekaLogs( '+1 Fans', 'You attracted a student to be a fan!')
-                    }
+                "Your school is too poor to have their own dance studio, but as an serious Idol, anywhere is your dance studio!",
+                {
+                    extra_reward_fn: () => {
+                        let r = Math.random();
+                        if (r < 0.1) {
+                            fans.base += 1
+                            logs.addEurekaLogs( '+1 Fans', 'You attracted a student to be a fan!')
+                        }
+                    },
                 },
-            },
-            {
-                name: 'Running up and down the stairs', 
-                type: 'action', 
-                base_cost: 40 * S_TO_MS,
-                depends: [
+            ),
+            new ActionTodo(
+                'Climbing the Stairs',
+                40 * S_TO_MS,
+                [
                     { which_stat: "Stamina", effectiveness: 1.0 },
                 ],
-                rewards: [
+                [
                     {which_stat: "Stamina", flat_gain_base: 4.0 },
                 ],
-                desc: "Being an Idol always meens starting somewhere, you know? It's not for the Moni, obviously. Just making sure the Park is clean and tidy.",
-            },
-        ],
+                "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
+                {
+                    extra_reward_fn: () => {
+                        let r = Math.random();
+                        if (r < 0.1) {
+                            fans.base += 1
+                            logs.addEurekaLogs( '+1 Fans', 'You attracted a student to be a fan!')
+                        }
+                    },
+                },
+            ),
+        ]
+    ],
+    ["Mall", 
+        [
+            new SpendCurrencyTodo(
+                'Upgrade Living Room',
+                120 * S_TO_MS,
+                10,
+                [],
+                "Tired of the shitty environment at home? Well, hopefully this little upgrade will make it better.",
+                {
+                    one_off_flag: true,
+                    then_fn: () => {
+                        Game_Progress.progress_handler.upgrade_living_room();
+                    },
+                },
+            ),
+        ]
+    ],
+    ["Living Room+", 
+        [
+            new ActionTodo(
+                'Singing Practice+',
+                50 * S_TO_MS,
+                [
+                    { which_stat: "Stamina", effectiveness: 0.25 },
+                    { which_stat: "Charm", effectiveness: 0.75 },
+                ],
+                [
+                    {which_stat: "Sing", flat_gain_base: 6.0},
+                ],
+                "At least your cat won\'t faint anymore, that\'s what we call improvement.",
+            ),
+            new ActionTodo(
+                'Dancing Practice+',
+                50 * S_TO_MS,
+                [
+                    { which_stat: "Stamina", effectiveness: 0.25 },
+                    { which_stat: "Presence", effectiveness: 0.75 },
+                ],
+                [
+                    {which_stat: "Dance", flat_gain_base: 6.0},
+                ],
+                "No more kisses with the floor you just mopped. More calm, more peace. Going with the flow.",
+            ),
+        ]
     ],
 ]);

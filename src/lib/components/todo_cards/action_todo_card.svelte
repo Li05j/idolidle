@@ -1,14 +1,12 @@
 <script lang="ts">
-    import type { Todo } from "$lib/types";
-
     import { onMount, onDestroy } from "svelte";
     import { trainings } from "$lib/stores/stats.svelte"
-    import { msToSecF, parseText, handle_rewards, reward_string } from "$lib/utils/utils"
+    import { msToSecF, parseText } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
-	import { logs } from "$lib/stores/history.svelte";
+	import type { TodoBase } from "$lib/data/todo_type";
 	
-    let { todo, repeat_val }: { todo: Todo, repeat_val?: string } = $props();
+    let { todo, repeat_val }: { todo: TodoBase, repeat_val?: string } = $props();
 
     const card_id = TodoCardM.generateCardId()
 
@@ -63,15 +61,11 @@
         }
     }
 
-    function startTodo() {
-        updateLoop()
-        TodoCardM.activateCard(card_id)
+    function startTodoNormal() {
         timer.repeat(loop, todo_actual_duration, 
             () => {
                 loop--;
-                handle_rewards(todo.rewards);
-                logs.addLogs(todo);
-                todo.extra_reward?.()
+                todo.spend_and_reward()
             },
             () => {
                 TodoCardM.deactivateCard(card_id)
@@ -79,6 +73,28 @@
                 todo.then?.();
             }
         );
+    }
+
+    function startTodoOneOff() {
+        timer.repeat(1, todo_actual_duration, 
+            () => {
+                todo.spend_and_reward()
+            },
+            () => {
+                TodoCardM.deactivateCard(card_id)
+                todo.then?.();
+            }
+        );
+    }
+
+    function startTodo() {
+        updateLoop()
+        TodoCardM.activateCard(card_id)
+        if (todo.one_off) {
+            startTodoOneOff();
+        } else {
+            startTodoNormal();
+        }
     }
 
     function pauseTodo() {
@@ -101,7 +117,11 @@
     <!-- Watermark -->
     <div class="absolute bottom-4 right-4 flex pointer-events-none">
         <span class="text-7xl font-bold text-teal-800 opacity-20 transform rotate-12 select-none">
-            x{loop}
+            {#if todo.one_off}
+                ONCE
+            {:else}
+                x{loop}
+            {/if}
         </span>
     </div>
   
@@ -114,6 +134,6 @@
             <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
         </div>
         <div class="text-gray-700 text-xs pt-2"> <i>{@html parseText(todo.desc)}</i></div>
-        <div class="text-gray-700 text-xs pt-2 text-right"> {reward_string(todo.rewards)} </div>
+        <div class="text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
     </div>
 </div>

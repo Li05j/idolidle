@@ -3,7 +3,6 @@
     import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte'
     import { svgCross } from '$lib/data/icons.svelte';
     import GenericButton from "$lib/components/misc/generic_button.svelte";
-	import DetailedStats from '$lib/components/modals/specific_modals/detailed_stats.svelte';
 
     interface Props {
         type: ModalType;

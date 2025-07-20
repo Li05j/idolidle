@@ -1,14 +1,12 @@
 <script lang="ts">
-    import type { Todo } from "$lib/types";
-
     import { onMount, onDestroy } from "svelte";
     import { trainings } from "$lib/stores/stats.svelte"
-    import { msToSecF, parseText, handle_rewards, reward_string } from "$lib/utils/utils"
+    import { msToSecF, parseText } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
-    import { logs } from "$lib/stores/history.svelte";
+	import type { TodoBase } from "$lib/data/todo_type";
 	
-    let { todo }: { todo: Todo } = $props();
+    let { todo }: { todo: TodoBase } = $props();
 
     const card_id = TodoCardM.generateCardId()
 
@@ -39,9 +37,7 @@
         TodoCardM.activateCard(card_id)
         timer.repeat(LOOP, todo_actual_duration, 
             () => {
-                handle_rewards(todo.rewards);
-                logs.addLogs(todo);
-                todo.extra_reward?.()
+                todo.spend_and_reward()
             },
             () => {
                 TodoCardM.deactivateCard(card_id)
@@ -75,6 +71,6 @@
             <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
         </div>
         <div class="text-gray-700 text-xs"> <i>{@html parseText(todo.desc)}</i></div>
-        <div class="text-gray-700 text-xs pt-2 text-right"> {reward_string(todo.rewards)} </div>
+        <div class="text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
     </div>
 </div>

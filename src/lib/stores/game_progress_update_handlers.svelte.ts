@@ -1,8 +1,24 @@
 import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
 import { locations_data } from "$lib/data/locations_data.svelte"
 import { actions_data } from "$lib/data/actions_data.svelte"
+import type { TodoBase } from "$lib/data/todo_type";
 
 class ProgressHandlers {
+    private _arrived(loc_name: string) {
+        const index = TD_List_Tracker.locations.findIndex(ld => ld.name === loc_name);
+        if (index > -1) {
+            TD_List_Tracker.locations.splice(index, 1);
+        }
+
+        let v = actions_data.get(loc_name);
+        if (v) {
+            TD_List_Tracker.actions = new Map([
+                ...TD_List_Tracker.actions,
+                [loc_name, v],
+            ]);
+        }
+    }
+
     private _new_locations(loc_names: string[]) {
         loc_names.forEach((name) => {
             let t = locations_data.find((ld) => ld.name === name);
@@ -12,19 +28,21 @@ class ProgressHandlers {
         })
     }
 
-    private _arrived(loc_name: string) {
-        const index = TD_List_Tracker.locations.findIndex(ld => ld.name === loc_name);
-        if (index > -1) {
-            TD_List_Tracker.locations.splice(index, 1);
+    private _replace_actions(from_loc: string, to_loc: string) {
+        const new_available_actions: Map<string, TodoBase[]> = new Map();
+        for (const [key, value] of TD_List_Tracker.actions) {
+            if (key === from_loc) {
+                const v = actions_data.get(to_loc);
+                if (v) {
+                    new_available_actions.set(to_loc, v)
+                } else {
+                    new_available_actions.set(key, value)
+                }
+            } else {
+                new_available_actions.set(key, value)
+            }
         }
-
-        let t = actions_data.get(loc_name);
-        if (t) {
-            TD_List_Tracker.actions = new Map([
-                ...TD_List_Tracker.actions,
-                [loc_name, t],
-            ]);
-        }
+        TD_List_Tracker.actions = new_available_actions;
     }
 
     ////////////////////////////////
@@ -52,6 +70,10 @@ class ProgressHandlers {
 
     public mall() {
         this._arrived('Mall');
+    }
+
+    public upgrade_living_room() {
+        this._replace_actions('Living Room', 'Living Room+');
     }
 }
 

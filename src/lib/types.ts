@@ -2,18 +2,18 @@ export type TodoType = "none" | "location" | "action" | "gain_currency" | "spend
 export type BasicStats = "Fans" | "Moni" | "Stamina" | "Sing" | "Dance" | "Charm" | "Presence";
 export type TrainingEfficiency = "slow" | "mid" | "fast" | "n/a"
 
-export interface Todo {
-    name: string,               // Primary key.
-    type: TodoType,
-    one_off?: boolean,          // If the card is one time use or not. Locations are by default 1 time use.
-    base_cost: number,
-    depends: StatEffectPair[],
-    spendings_moni?: number,    // How much moni is spent. This is used with "spend_currency" type.
-    rewards: Rewards[],
-    desc: string,
-    extra_reward?: () => void,
-    then?: () => void,
-};
+// export interface Todo {
+//     name: string,               // Primary key.
+//     type: TodoType,
+//     one_off?: boolean,          // If the card is one time use or not. Locations are by default 1 time use.
+//     base_cost: number,
+//     depends: StatEffectPair[],
+//     spendings_moni?: number,    // How much moni is spent. This is used with "spend_currency" type.
+//     rewards: Rewards[],
+//     desc: string,
+//     extra_reward?: () => void,
+//     then?: () => void,
+// };
 
 export type BasicStatsValuesMap = {
     Fans: number,
@@ -43,5 +43,5 @@ export type LiveTurn = {
 export type StatEffectPair = { which_stat: BasicStats, effectiveness: number };
 
 // Only 1 of flat_gain_base and flat_gain_multi can be defined at a time. 
-// If depends is defined, training_efficiency has to be defined as well.
+// If depends is defined, training_efficiency has to be defined as well (this is for dynamic rewards).
 export type Rewards = { which_stat: BasicStats, flat_gain_base?: number, flat_gain_multi?: number, depends?: StatEffectPair[], efficiency?: TrainingEfficiency};

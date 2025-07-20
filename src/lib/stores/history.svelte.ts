@@ -1,5 +1,5 @@
-import type { Todo } from '$lib/types'
-import { reward_string, parseText } from '$lib/utils/utils'
+import type { TodoBase } from '$lib/data/todo_type';
+import { parseText } from '$lib/utils/utils'
 
 type StringPair = { 1: string, 2: string}
 type LogEntry = { data: StringPair, timestamp: number }
@@ -20,11 +20,11 @@ function createLogs() {
         }
     }
 
-    function addLogs(todo: Todo) {
+    function addLogs(todo: TodoBase) {
         const now = new Date();
         const timestamp = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
         
-        let log = parseText(`_${todo.name}_ ${reward_string(todo.rewards)}`)
+        let log = parseText(`_${todo.name}_ ${todo.get_spendings_rewards_string}`)
         _logs.push({
             data: {1: timestamp, 2: log},
             timestamp: now.getTime()
