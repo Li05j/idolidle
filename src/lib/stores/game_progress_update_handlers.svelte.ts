@@ -1,7 +1,7 @@
 import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
 import { locations_data } from "$lib/data/locations_data.svelte"
 import { actions_data } from "$lib/data/actions_data.svelte"
-import type { TodoBase } from "$lib/data/todo_type";
+import type { TodoBase } from "$lib/data/todo_type.svelte";
 
 class ProgressHandlers {
     private _arrived(loc_name: string) {
@@ -28,7 +28,19 @@ class ProgressHandlers {
         })
     }
 
-    private _replace_actions(from_loc: string, to_loc: string) {
+    // Mainly used for one off actions
+    private _remove_single_action(key: string, action_name: string) {
+        const actions = TD_List_Tracker.actions.get(key);
+        if (!actions) return;
+
+        const index = actions.findIndex(a => a.name === action_name);
+        if (index !== -1) {
+            actions.splice(index, 1);
+            TD_List_Tracker.actions.set(key, [...actions]); // force reactivity by replacing the array
+        }
+    }
+
+    private _replace_action_collection(from_loc: string, to_loc: string) {
         const new_available_actions: Map<string, TodoBase[]> = new Map();
         for (const [key, value] of TD_List_Tracker.actions) {
             if (key === from_loc) {
@@ -73,7 +85,8 @@ class ProgressHandlers {
     }
 
     public upgrade_living_room() {
-        this._replace_actions('Living Room', 'Living Room+');
+        this._remove_single_action('Mall', 'Upgrade Living Room');
+        this._replace_action_collection('Living Room', 'Living Room+');
     }
 }
 

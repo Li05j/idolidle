@@ -1,4 +1,4 @@
-import type { TodoBase } from '$lib/data/todo_type';
+import type { TodoBase } from '$lib/data/todo_type.svelte';
 import { parseText } from '$lib/utils/utils'
 
 type StringPair = { 1: string, 2: string}
@@ -24,7 +24,7 @@ function createLogs() {
         const now = new Date();
         const timestamp = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
         
-        let log = parseText(`_${todo.name}_ ${todo.get_spendings_rewards_string}`)
+        let log = parseText(`_${todo.name}_ ${todo.get_spendings_rewards_string()}`)
         _logs.push({
             data: {1: timestamp, 2: log},
             timestamp: now.getTime()
@@ -50,10 +50,22 @@ function createLogs() {
         cleanupLogs();
     }
 
+    function addHintLogs(custom_msg: string) {
+        let log = parseText(`[red]${custom_msg}[/red]`)
+
+        _logs.push({
+            data: {1: '', 2: log},
+            timestamp: Date.now()
+        })
+        
+        cleanupLogs();
+    }
+
     return { 
         get logs() { return _logs.map(entry => entry.data) },
         addLogs,
         addEurekaLogs,
+        addHintLogs,
     };
 }
 

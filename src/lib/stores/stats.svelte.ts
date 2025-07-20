@@ -1,11 +1,11 @@
-import type { Todo } from "$lib/types";
+import type { TodoBase } from "$lib/data/todo_type.svelte";
 import { DECIMAL_PLACES, calc_stat_effectiveness } from "$lib/utils/utils"
 
 class Trainings {
 	private _training_constant = $state(727);
 
-	private _calc_stat(td: Todo): number {
-		let r = calc_stat_effectiveness(td.depends);
+	private _calc_stat(td: TodoBase): number {
+		let r = calc_stat_effectiveness(td.get_depends());
 		return r;
 	}
 
@@ -17,7 +17,7 @@ class Trainings {
 		this._training_constant = c
 	}
 
-	public get_final_training_time(td: Todo): number {
+	public get_final_training_time(td: TodoBase): number {
 		return td.base_cost * Math.exp(-this._calc_stat(td) / this._training_constant)
 	}
 }
@@ -27,7 +27,7 @@ function createTrainings() {
 }
 
 // Currency floors while Stat can have decimals.
-function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
+function createCurrency(name: string, baseInit = 30, multiInit = 1.0) {
 	const _name = name;
     let base = $state(baseInit);
     let multi = $state(multiInit);
@@ -72,5 +72,14 @@ export const dance = createStat('Dance');
 export const charm = createStat('Charm');
 export const pres = createStat('Presence');
 
-
 export const dummy = createStat('Dummy');
+
+export const stat_list = {
+	fans: fans,
+	moni: moni,
+	sta: sta,
+	sing: sing,
+	dance: dance,
+	charm: charm,
+	pres: pres,
+}

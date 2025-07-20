@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { trainings } from "$lib/stores/stats.svelte"
+    import { stat_list, trainings } from "$lib/stores/stats.svelte"
     import { msToSecF, parseText } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
-	import type { TodoBase } from "$lib/data/todo_type";
+	import type { TodoBase } from "$lib/data/todo_type.svelte";
 	
     let { todo }: { todo: TodoBase } = $props();
 
@@ -17,6 +17,8 @@
     let bg_color = "bg-pink-100"
     let border = $state("")
     const LOOP = 1
+
+    let disabled = $derived(todo.check_disabled(stat_list));
 
     $effect(() => {
         let b: number = trainings.get_final_training_time(todo);
@@ -34,6 +36,7 @@
     })
 
     function startTodo() {
+        if (disabled) return;
         TodoCardM.activateCard(card_id)
         timer.repeat(LOOP, todo_actual_duration, 
             () => {
@@ -61,7 +64,18 @@
     });
 </script>
 
-<div class="{bg_color} {border} pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4" onclick={timer.is_paused ? startTodo : pauseTodo}>
+<div class="{bg_color} {border} pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" onclick={timer.is_paused ? startTodo : pauseTodo}>
+    <!-- Watermark Line -->
+    {#if (disabled && !timer.is_active)}
+        <div class="absolute inset-0 pointer-events-none z-50">
+            <div class="w-full h-full">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" y1="0" x2="100%" y2="100%" stroke="red" stroke-opacity="0.2" stroke-width="4" />
+                </svg>
+            </div>
+        </div>
+    {/if}
+
     <div class="relative z-10">
         <div class="flex justify-between items-center mb-3">
             <div class="text-base font-medium">{todo.name}</div>

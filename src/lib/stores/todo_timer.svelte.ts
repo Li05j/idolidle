@@ -7,6 +7,7 @@ export interface TodoTimer {
     elapsed: number;
     progress_percent: number;
     progress_text: string;
+    loop_count: number;
     repeat: (loop_count: number, durationMs: number, onComplete: () => void, onAllComplete: () => void) => void;
     pause: () => void;
     stop: () => void;
@@ -124,6 +125,7 @@ export function createTodoTimer(): TodoTimer {
         get elapsed() { return elapsed; },
         get progress_percent() { return progress_percent; },
         get progress_text() { return progress_text; },
+        set loop_count(c: number) { loop_count = c; },
         repeat,
         pause,
         stop,

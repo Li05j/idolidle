@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { trainings } from "$lib/stores/stats.svelte"
+    import { stat_list, trainings } from "$lib/stores/stats.svelte"
     import { msToSecF, parseText } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
-	import type { TodoBase } from "$lib/data/todo_type";
+	import type { TodoBase } from "$lib/data/todo_type.svelte";
 	
     let { todo, repeat_val }: { todo: TodoBase, repeat_val?: string } = $props();
 
@@ -17,6 +17,8 @@
     let bg_color = $state("")
     let border = $state("")
     let loop = $state(1)
+
+    let disabled = $derived(todo.check_disabled(stat_list));
 
     $effect(() => {
         let b: number = NaN;
@@ -66,6 +68,7 @@
             () => {
                 loop--;
                 todo.spend_and_reward()
+                if (disabled) timer.loop_count = 0;
             },
             () => {
                 TodoCardM.deactivateCard(card_id)
@@ -88,6 +91,7 @@
     }
 
     function startTodo() {
+        if (disabled) return;
         updateLoop()
         TodoCardM.activateCard(card_id)
         if (todo.one_off) {
@@ -113,7 +117,7 @@
     });
 </script>
 
-<div class="{bg_color} {border} p-6 rounded-lg shadow-md mb-4 h-48 relative overflow-hidden" onclick={timer.is_paused ? startTodo : pauseTodo}>
+<div class="{bg_color} {border} p-6 rounded-lg shadow-md mb-4 h-48 relative overflow-hidden {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" onclick={timer.is_paused ? startTodo : pauseTodo}>
     <!-- Watermark -->
     <div class="absolute bottom-4 right-4 flex pointer-events-none">
         <span class="text-7xl font-bold text-teal-800 opacity-20 transform rotate-12 select-none">
@@ -124,6 +128,17 @@
             {/if}
         </span>
     </div>
+
+    <!-- Watermark Line -->
+    {#if (disabled && !timer.is_active)}
+        <div class="absolute inset-0 pointer-events-none z-50">
+            <div class="w-full h-full">
+                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="0" y1="0" x2="100%" y2="100%" stroke="red" stroke-opacity="0.2" stroke-width="4" />
+                </svg>
+            </div>
+        </div>
+    {/if}
   
     <div class="relative z-10">
         <div class="flex justify-between items-center mb-4">

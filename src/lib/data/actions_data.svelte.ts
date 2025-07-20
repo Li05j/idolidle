@@ -1,6 +1,6 @@
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 import { logs } from '$lib/stores/history.svelte'
-import { ActionTodo, GainCurrencyTodo, SpendCurrencyTodo, type TodoBase } from './todo_type';
+import { ActionTodo, GainCurrencyTodo, SpendCurrencyTodo, type TodoBase } from './todo_type.svelte';
 import { Game_Progress } from "$lib/stores/game_progress.svelte";
 
 const S_TO_MS = 1000
@@ -16,7 +16,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     { which_stat: "Charm", effectiveness: 0.75 },
                 ],
                 [
-                    {which_stat: "Sing", flat_gain_base: 0.5},
+                    { which_stat: "Sing", flat_gain_base: 0.5},
                 ],
                 "Your voice cracks. Your cat weeps. But somewhere in the noise, a star might be warming up.",
             ),
@@ -28,7 +28,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     { which_stat: "Presence", effectiveness: 0.75 },
                 ],
                 [
-                    {which_stat: "Dance", flat_gain_base: 0.5},
+                    { which_stat: "Dance", flat_gain_base: 0.5},
                 ],
                 "Limbs flail, rhythm fails, and then you trip yourself. Maybe the floor just hates you.",
             ),
@@ -43,15 +43,15 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 [
                     {which_stat: "Moni", flat_gain_base: 5, depends: [{ which_stat: "Stamina", effectiveness: 1.0 }], efficiency: "slow"},
                 ],
-                "Being an Idol always means starting somewhere, you know? This isn't for the Moni, obviously; Just making sure the Park is clean and tidy.",
+                "Being an Idol means starting somewhere, you know? Defo not working for the Moni - Just making sure the Park is clean and tidy.",
             ),
             new GainCurrencyTodo(
                 'Busker',
                 30 * S_TO_MS,
                 [],
                 [
-                    {which_stat: "Fans", flat_gain_base: 3},
-                    {which_stat: 
+                    { which_stat: "Fans", flat_gain_base: 3},
+                    { which_stat: 
                         "Moni",
                         flat_gain_base: 3, 
                         depends: [
@@ -72,8 +72,8 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     { which_stat: "Charm", effectiveness: 0.2 },
                 ],
                 [
-                    {which_stat: "Stamina", flat_gain_base: 0.6},
-                    {which_stat: "Charm", flat_gain_base: 0.6},
+                    { which_stat: "Stamina", flat_gain_base: 0.6},
+                    { which_stat: "Charm", flat_gain_base: 0.6},
                 ],
                 "\'Tag - You're it!\' You giggle, trying to charm them with your elegant wink. It usually doesn\'t work, though.",
                 {
@@ -98,10 +98,10 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     { which_stat: "Presence", effectiveness: 0.25 },
                 ],
                 [
-                    {which_stat: "Sing", flat_gain_base: 1.2 },
-                    {which_stat: "Dance", flat_gain_base: 1.2 },
-                    {which_stat: "Charm", flat_gain_base: 1.2 },
-                    {which_stat: "Presence", flat_gain_base: 1.2 },
+                    { which_stat: "Sing", flat_gain_base: 1.2 },
+                    { which_stat: "Dance", flat_gain_base: 1.2 },
+                    { which_stat: "Charm", flat_gain_base: 1.2 },
+                    { which_stat: "Presence", flat_gain_base: 1.2 },
                 ],
                 "You still gotta study alright; elite idol and elite student? That's the spirit.",
                 {
@@ -147,8 +147,8 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     { which_stat: "Presence", effectiveness: 1.0 },
                 ],
                 [
-                    {which_stat: "Dance", flat_gain_multi: 0.01 },
-                    {which_stat: "Presence", flat_gain_multi: 0.01 },
+                    { which_stat: "Dance", flat_gain_multi: 0.01 },
+                    { which_stat: "Presence", flat_gain_multi: 0.01 },
                 ],
                 "Your school is too poor to have their own dance studio, but as an serious Idol, anywhere is your dance studio!",
                 {
@@ -168,7 +168,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     { which_stat: "Stamina", effectiveness: 1.0 },
                 ],
                 [
-                    {which_stat: "Stamina", flat_gain_base: 4.0 },
+                    { which_stat: "Stamina", flat_gain_base: 4.0 },
                 ],
                 "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
                 {
@@ -187,14 +187,55 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
         [
             new SpendCurrencyTodo(
                 'Upgrade Living Room',
-                120 * S_TO_MS,
-                10,
+                1 * S_TO_MS,
+                5000,
                 [],
                 "Tired of the shitty environment at home? Well, hopefully this little upgrade will make it better.",
                 {
                     one_off_flag: true,
                     then_fn: () => {
                         Game_Progress.progress_handler.upgrade_living_room();
+                        logs.addHintLogs('Your Living Room upgraded to Living Room+, give it a check!')
+                    },
+                    check_disabled_fn: (stat_list) => {
+                        if (stat_list.moni.final >= 5000) {
+                            return false;
+                        }
+                        return true;
+                    },
+                },
+            ),
+            new SpendCurrencyTodo(
+                'Buy Cute Outfit',
+                1 * S_TO_MS,
+                99,
+                [
+                    { which_stat: "Charm", flat_gain_base: 5.0 },
+                ],
+                "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
+                {
+                    check_disabled_fn: (stat_list) => {
+                        if (stat_list.moni.final >= 99) {
+                            return false;
+                        }
+                        return true;
+                    },
+                },
+            ),
+            new SpendCurrencyTodo(
+                'Buy Cool Outfit',
+                1 * S_TO_MS,
+                99,
+                [
+                    { which_stat: "Presence", flat_gain_base: 5.0 },
+                ],
+                "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
+                {
+                    check_disabled_fn: (stat_list) => {
+                        if (stat_list.moni.final >= 99) {
+                            return false;
+                        }
+                        return true;
                     },
                 },
             ),
