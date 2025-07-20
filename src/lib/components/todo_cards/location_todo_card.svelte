@@ -19,6 +19,7 @@
     const LOOP = 1
 
     let disabled = $derived(todo.check_disabled(stat_list));
+    let hovered = $state(false)
 
     $effect(() => {
         let b: number = trainings.get_final_training_time(todo);
@@ -64,7 +65,12 @@
     });
 </script>
 
-<div class="{bg_color} {border} pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" onclick={timer.is_paused ? startTodo : pauseTodo}>
+<div 
+    class="{bg_color} {border} pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" 
+    onclick={timer.is_paused ? startTodo : pauseTodo}
+    onmouseenter={() => hovered = true}
+    onmouseleave={() => hovered = false}
+>
     <!-- Watermark Line -->
     {#if (disabled && !timer.is_active)}
         <div class="absolute inset-0 pointer-events-none z-50">
@@ -84,7 +90,17 @@
         <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
             <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
         </div>
-        <div class="text-gray-700 text-xs"> <i>{@html parseText(todo.desc)}</i></div>
-        <div class="text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
+
+        <!-- Hover -->
+        <div class="relative pt-2 text-xs text-gray-700">
+            <div class="transition-opacity duration-300" style="opacity: {hovered ? 0 : 1};">
+                <i>{@html parseText(todo.desc)}</i>
+            </div>
+            <div class="absolute top-0 left-0 pt-2 transition-opacity duration-300" style="opacity: {hovered ? 1 : 0};">
+                <i>owo</i>
+            </div>
+        </div>
     </div>
+
+    <div class="absolute bottom-4 right-4 text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
 </div>

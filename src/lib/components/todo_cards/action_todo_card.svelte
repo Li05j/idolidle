@@ -19,6 +19,7 @@
     let loop = $state(1)
 
     let disabled = $derived(todo.check_disabled(stat_list));
+    let hovered = $state(false)
 
     $effect(() => {
         let b: number = NaN;
@@ -117,7 +118,12 @@
     });
 </script>
 
-<div class="{bg_color} {border} p-6 rounded-lg shadow-md mb-4 h-48 relative overflow-hidden {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" onclick={timer.is_paused ? startTodo : pauseTodo}>
+<div 
+    class="{bg_color} {border} p-6 rounded-lg shadow-md mb-4 h-48 relative overflow-hidden {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" 
+    onclick={timer.is_paused ? startTodo : pauseTodo}
+    onmouseenter={() => hovered = true}
+    onmouseleave={() => hovered = false}
+>
     <!-- Watermark -->
     <div class="absolute bottom-4 right-4 flex pointer-events-none">
         <span class="text-7xl font-bold text-teal-800 opacity-20 transform rotate-12 select-none">
@@ -148,7 +154,17 @@
         <div class="w-full bg-gray-200 rounded-full h-4 mb-4">
             <div class="h-4 bg-green-500 rounded transition-all duration-100" style="width: {timer.progress_percent}%"></div>
         </div>
-        <div class="text-gray-700 text-xs pt-2"> <i>{@html parseText(todo.desc)}</i></div>
-        <div class="text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
+
+        <!-- Hover -->
+        <div class="relative pt-2 text-xs text-gray-700">
+            <div class="transition-opacity duration-300" style="opacity: {hovered ? 0 : 1};">
+                <i>{@html parseText(todo.desc)}</i>
+            </div>
+            <div class="absolute top-0 left-0 pt-2 transition-opacity duration-300" style="opacity: {hovered ? 1 : 0};">
+                <i>owo</i>
+            </div>
+        </div>
     </div>
+
+    <div class="absolute bottom-4 right-4 text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
 </div>
