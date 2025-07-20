@@ -1,21 +1,22 @@
+import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
 import { P_Handler } from "$lib/stores/game_progress_update_handlers.svelte";
 
 class GameProgress {
-    private _progress_handler = P_Handler;
+    public progress_handler = P_Handler;
 
-    private _update(key: string) {
-        const f = this._progress_handler.handlers.get(key)
-        if (f) f();
-        return
-    }
+    // private _update(key: string) {
+    //     const f = this._progress_handler.handlers.get(key)
+    //     if (f) f();
+    //     return
+    // }
 
     get todolist_tracker() {
-        return this._progress_handler.TD_List_Tracker
+        return TD_List_Tracker;
     }
 
-    enable(key: string) {
-        this._update(key)
-    }
+    // enable(key: string) {
+    //     this._update(key)
+    // }
 
     reset() {
         this.todolist_tracker.reset();

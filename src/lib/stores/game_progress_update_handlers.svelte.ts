@@ -2,13 +2,7 @@ import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
 import { locations_data } from "$lib/data/locations_data.svelte"
 import { actions_data } from "$lib/data/actions_data.svelte"
 
-type ProgressHandler = () => void;
-
 class ProgressHandlers {
-    get TD_List_Tracker() {
-        return TD_List_Tracker;
-    }
-
     private _new_locations(loc_names: string[]) {
         loc_names.forEach((name) => {
             let t = locations_data.find((ld) => ld.name === name);
@@ -33,13 +27,32 @@ class ProgressHandlers {
         }
     }
 
-    public handlers = new Map<string, ProgressHandler>([
-        ['Wake Up',             () => { this._arrived('Wake Up'); this._new_locations(['Living Room']) }],
-        ['Living Room',         () => { this._arrived('Living Room'); this._new_locations(['Park', 'School']) }],
-        ['Park',                () => { this._arrived('Park'); this._new_locations(['Mall']) }],
-        ['School',              () => { this._arrived('School') }],
-        ['Mall',                () => { this._arrived('Mall') }],
-    ]);
+    ////////////////////////////////
+    /////////// Handlers ///////////
+    ////////////////////////////////
+
+    public wake_up() {
+        this._arrived('Wake Up'); 
+        this._new_locations(['Living Room']);
+    }
+
+    public living_room() {
+        this._arrived('Living Room'); 
+        this._new_locations(['Park', 'School']);
+    }
+
+    public park() {
+        this._arrived('Park'); 
+        this._new_locations(['Mall']);
+    }
+
+    public school() {
+        this._arrived('School');
+    }
+
+    public mall() {
+        this._arrived('Mall');
+    }
 }
 
 function createProgressHandlers() {

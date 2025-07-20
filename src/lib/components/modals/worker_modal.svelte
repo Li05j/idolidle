@@ -1,10 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount } from 'svelte';
     import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte'
-    import { svgCross } from '$lib/data/icons.svelte';
-    import GenericButton from "$lib/components/misc/generic_button.svelte";
 	import Live from '$lib/components/modals/specific_modals/live.svelte';
-	import { LiveBattleM } from '$lib/managers/live_battle_manager.svelte';
 
     let closeOnBackdrop: boolean = true
 

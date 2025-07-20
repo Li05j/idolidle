@@ -36,6 +36,7 @@
         switch (todo.type) {
             case "action": bg_color = "bg-white"; break
             case "gain_currency": bg_color = "bg-purple-100"; break
+            case "spend_currency": bg_color = "bg-yellow-100"; break
         }
     })
 

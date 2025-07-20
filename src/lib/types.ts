@@ -1,4 +1,4 @@
-export type TodoType = "none" | "location" | "action" | "gain_currency";
+export type TodoType = "none" | "location" | "action" | "gain_currency" | "spend_currency";
 export type BasicStats = "Fans" | "Moni" | "Stamina" | "Sing" | "Dance" | "Charm" | "Presence";
 export type TrainingEfficiency = "slow" | "mid" | "fast" | "n/a"
 
@@ -7,6 +7,7 @@ export interface Todo {
     type: TodoType,
     base_cost: number,
     depends: StatEffectPair[],
+    spendings?: number,
     rewards: Rewards[],
     desc: string,
     extra_reward?: () => void,

@@ -19,7 +19,7 @@ export const locations_data: Todo[] = [
         ],
         desc: "Time to wake up, silly. Everything starts here.",
         then: () => {
-            Game_Progress.enable('Wake Up');
+            Game_Progress.progress_handler.wake_up();
         }
     },
     {
@@ -32,7 +32,7 @@ export const locations_data: Todo[] = [
         ],
         desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one\'s watching (except maybe the cat). Meow.",
         then: () => {
-            Game_Progress.enable('Living Room');
+            Game_Progress.progress_handler.living_room();
         }
     },
     {
@@ -45,7 +45,7 @@ export const locations_data: Todo[] = [
         ],
         desc: "Just your everyday neighborhood park. Nothing fancy, but it got it's place in your heart. Something always feels about to happen.",
         then: () => {
-            Game_Progress.enable('Park');
+            Game_Progress.progress_handler.park();
         }
     },
     {
@@ -58,7 +58,7 @@ export const locations_data: Todo[] = [
         ],
         desc: "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
         then: () => {
-            Game_Progress.enable('School');
+            Game_Progress.progress_handler.school()
         }
     },
     {
@@ -71,7 +71,7 @@ export const locations_data: Todo[] = [
         ],
         desc: "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
         then: () => {
-            Game_Progress.enable('Mall');
+            Game_Progress.progress_handler.mall();
         }
     },
 ];
