@@ -3,11 +3,12 @@ export type BasicStats = "Fans" | "Moni" | "Stamina" | "Sing" | "Dance" | "Charm
 export type TrainingEfficiency = "slow" | "mid" | "fast" | "n/a"
 
 export interface Todo {
-    name: string, // Primary key
+    name: string,               // Primary key.
     type: TodoType,
+    one_off?: boolean,          // If the card is one time use or not. Locations are by default 1 time use.
     base_cost: number,
     depends: StatEffectPair[],
-    spendings?: number,
+    spendings_moni?: number,    // How much moni is spent. This is used with "spend_currency" type.
     rewards: Rewards[],
     desc: string,
     extra_reward?: () => void,
