@@ -2,9 +2,11 @@ import { CPs } from "$lib/stores/checkpoints.svelte";
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 import { LiveEnemyStats } from "$lib/stores/live_enemy_stats.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
+import { Rebirth } from "$lib/stores/rebirth.svelte";
 
 class LiveBattleManager {
     public live_sim_complete: boolean = $state(false)
+    public did_player_win: boolean = $state(false)
 
     public display_your_fans: number = $state(1)
     public display_enemy_fans: number = $state(1)
@@ -32,8 +34,8 @@ class LiveBattleManager {
 
         this._you = {
             Fans: fans.final,
-            Max_Stamina: sta.final,
-            Curr_Stamina: sta.final,
+            Max_Stamina: Math.max(sta.final, 0.1),
+            Curr_Stamina: Math.max(sta.final, 0.1),
             Sing: sing.final,
             Dance: dance.final,
             Charm: charm.final,
@@ -62,9 +64,9 @@ class LiveBattleManager {
             }
         }
 
-        const winner = this._you.Fans === this._enemy.stats.Fans ? "Draw" :
-                       this._you.Fans > this._enemy.stats.Fans ? "You win!" : "Rival wins!"
-        this.log(`LIVE over! ${winner}`)
+        this.did_player_win = this._you.Fans > this._enemy.stats.Fans
+        const winner_str = this.did_player_win ? "You win!" : "Rival wins!"
+        this.log(`LIVE over! ${winner_str}`)
     }
 
     private take_turn(actor: "Player" | "Rival") {
@@ -100,7 +102,7 @@ class LiveBattleManager {
             attacker.Fans += dmg
             defender.Fans -= dmg
 
-            attacker.Curr_Stamina -= atk_stat / 2
+            attacker.Curr_Stamina -= atk_stat / 2 + 0.1
             return [dmg, "Sing"];
         } else {
             let atk_stat = attacker.Dance
@@ -112,7 +114,7 @@ class LiveBattleManager {
             attacker.Fans += dmg
             defender.Fans -= dmg
 
-            attacker.Curr_Stamina -= atk_stat / 2
+            attacker.Curr_Stamina -= atk_stat / 2 + 0.1
             return [dmg, "Dance"];
         }
     }
@@ -156,8 +158,7 @@ class LiveBattleManager {
 
     private post_fight(): number {
         let temp = fans.final
-        fans.base = Math.floor(this._you.Fans / fans.multi)
-        let difference = fans.final - temp
+        let difference = Math.floor(this._you.Fans / fans.multi) - temp
 
         if (difference >= 0) {
             this.log(`LIVE has successfully concluded. You gained ${difference} fans!`, false)
@@ -165,7 +166,7 @@ class LiveBattleManager {
             this.log(`LIVE has concluded. You lost ${-difference} fans!`, false)
         }
 
-        return difference
+        return difference;
     }
 
     start_live(): number {
@@ -181,6 +182,7 @@ class LiveBattleManager {
         this.live_sim_complete = false;
         this._turns = []
         this._replay_turns = []
+        this.did_player_win = false;
         this._enemy.reset()
     }
 

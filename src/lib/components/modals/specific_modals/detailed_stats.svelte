@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Rebirth } from "$lib/stores/rebirth.svelte";
     import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 
     let currency = [fans, moni]
@@ -29,6 +30,14 @@
                     <div class='text-sm'>{stat.final_str}</div>
                 {/each}
             </div>
+        </div>
+    </div>
+    <div class="rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)] mt-2">
+        <div class="grid grid-cols-4 px-4 py-4 text-center justify-center gap-y-2">
+            <div class='font-semibold text-lg'>Total Dreams:</div>
+            <div class='text-sm'>{Rebirth.rebirth_count}</div>
+            <div class='font-semibold text-lg'>Max LIVE Wins:</div> 
+            <div class='text-sm'>{Rebirth.max_completed_checkpoints}</div>
         </div>
     </div>
 </div>

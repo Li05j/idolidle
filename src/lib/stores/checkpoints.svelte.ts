@@ -2,6 +2,7 @@ import { S_TO_MS } from "$lib/utils/utils"
 
 class Checkpoints {
 	public current_time_spent = $state(0)
+	public last_live_checkpoint_triggered = $state(-1)
 
 	private _checkpoints = [
 		100 * S_TO_MS,
@@ -47,6 +48,7 @@ class Checkpoints {
 	reset() {
 		this._current_idx = 0
 		this.current_time_spent = 0
+		this.last_live_checkpoint_triggered = -1
 	}
 }
 

@@ -9,7 +9,6 @@
         type: ModalType;
         onClose: (t: ModalType) => void;
         closeOnBackdrop?: boolean;
-        closeOnEscape?: boolean;
         // children?: import('svelte').Snippet;
     }
 
@@ -17,7 +16,6 @@
         type = 'default',
         onClose,
         closeOnBackdrop = true,
-        closeOnEscape = true,
         // children
     }: Props = $props();
 

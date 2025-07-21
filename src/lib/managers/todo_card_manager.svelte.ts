@@ -58,6 +58,11 @@ class TodoCardManager {
         this._active_card.set(null);
         this._is_active = false;
     }
+
+    reset() {
+        this.deactivateCurrentActiveCard();
+        this._pause_card_callbacks.clear();
+    }
 }
 
 export const TodoCardM = new TodoCardManager();

@@ -27,6 +27,11 @@ function createModalType() {
         }
     }
 
+    function reset() {
+        _close_on_esc = true
+        _modals = []
+    }
+
     return {
         get modals() { return _modals },
         get close_on_esc() { return _close_on_esc }, set close_on_esc(b) { _close_on_esc = b },
@@ -34,6 +39,7 @@ function createModalType() {
         set_modal_open,
         set_modal_close,
         handleKeydown,
+        reset,
     }
 }
 

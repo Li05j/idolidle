@@ -7,6 +7,8 @@
 	import { CPs } from "$lib/stores/checkpoints.svelte";
 	import { ModalM } from "$lib/managers/modal_manager.svelte";
 	import { logs } from "$lib/stores/history.svelte";
+	import { Rebirth } from "$lib/stores/rebirth.svelte";
+	import { fans } from "$lib/stores/stats.svelte";
     
     let { onClose } = $props()
     const type = 'live'
@@ -18,6 +20,7 @@
     let rightPercent = $derived(LiveBattleM.display_enemy_fans / total * 100);
 
     let fan_change = 0;
+    let is_won = $state(LiveBattleM.did_player_win)
 
     onMount(() => {
         fan_change = LiveBattleM.start_live();
@@ -38,7 +41,11 @@
 
     function on_continue_clicked() {
         LiveBattleM.reset()
+        // Update only after continue clicked, all transactions will be invalid if game stopped prematurely.
         CPs.advanceToNextCheckpoint()
+        Rebirth.update_max_completed_checkpoints(CPs.current_completed_checkpoint)
+        fans.base = Math.abs(fan_change) / fans.multi;
+
         if (fan_change >= 0) {
             logs.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
         } else {
@@ -89,7 +96,7 @@
 
 {#if LiveBattleM.live_sim_complete}
     <div class="absolute bottom-4 left-4 right-4 flex justify-between gap-4">
-        <GenericButton name={"Rebirth"} onclick={on_rebirth_clicked} variant='secondary' class={"px-4 py-2 w-full"}/>
-        <GenericButton name={"Continue"} onclick={on_continue_clicked} variant='primary' class={"px-4 py-2 w-full"}/>
+        <GenericButton name={"It was all a Dream..."} onclick={on_rebirth_clicked} variant='secondary' class={"px-4 py-2 w-full"}/>
+        <GenericButton name={"Continue"} onclick={on_continue_clicked} variant='primary' class={"px-4 py-2 w-full"} disabled={!is_won} tooltip='You have to win the LIVE to continue'/>
     </div>
 {/if}
