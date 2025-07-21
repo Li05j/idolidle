@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { stat_list, trainings } from "$lib/stores/stats.svelte"
-    import { msToSecF, parseText } from "$lib/utils/utils"
+    import { msToSecF, parseText, tooltip_string } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
 	import type { TodoBase } from "$lib/data/todo_type.svelte";
@@ -14,8 +14,8 @@
     const timer = createTodoTimer();
 
     let todo_actual_duration: number = $state(0.0)
-    let bg_color = "bg-pink-100"
-    let border = $state("")
+    let bg_color = $state("bg-pink-100")
+    let border = $state("outline outline-4 outline-orange-300/10")
     const LOOP = 1
 
     let disabled = $derived(todo.check_disabled(stat_list));
@@ -32,8 +32,13 @@
             border = "outline outline-4 outline-orange-400"
         }
         else {
-            border = ""
+            border = "outline outline-4 outline-orange-300/10"
         }
+    })
+
+    $effect(() => {
+        if (hovered) bg_color = "bg-pink-200"
+        else bg_color = "bg-pink-100"
     })
 
     function startTodo() {
@@ -66,7 +71,7 @@
 </script>
 
 <div 
-    class="{bg_color} {border} pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" 
+    class="{bg_color} {border} transition-all duration-300 pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" 
     onclick={timer.is_paused ? startTodo : pauseTodo}
     onmouseenter={() => hovered = true}
     onmouseleave={() => hovered = false}
@@ -82,7 +87,7 @@
         </div>
     {/if}
 
-    <div class="relative z-10">
+    <div class="relative h-full">
         <div class="flex justify-between items-center mb-3">
             <div class="text-base font-medium">{todo.name}</div>
             <div class="text-gray-600 text-sm">{msToSecF(timer.elapsed)}/{msToSecF(todo_actual_duration)}s</div>
@@ -92,15 +97,14 @@
         </div>
 
         <!-- Hover -->
-        <div class="relative pt-2 text-xs text-gray-700">
-            <div class="transition-opacity duration-300" style="opacity: {hovered ? 0 : 1};">
+        <div class="relative text-xs h-full">
+            <div class="transition-opacity duration-300 text-gray-700" style="opacity: {hovered ? 0 : 1};">
                 <i>{@html parseText(todo.desc)}</i>
             </div>
-            <div class="absolute top-0 left-0 pt-2 transition-opacity duration-300" style="opacity: {hovered ? 1 : 0};">
-                <i>owo</i>
+            <div class="absolute top-0 left-0 rounded transition-opacity duration-300 h-2/5 w-full" style="opacity: {hovered ? 1 : 0};">
+                <p>{@html parseText(tooltip_string(todo.tooltip, disabled))}</p>
             </div>
         </div>
     </div>
-
     <div class="absolute bottom-4 right-4 text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
 </div>

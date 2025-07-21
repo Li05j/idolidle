@@ -1,5 +1,6 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
 import { fans, moni, sta, sing, dance, charm, pres, dummy } from "$lib/stores/stats.svelte";
+import type { PrereqTooltip } from '$lib/data/todo_type.svelte';
 
 export const DECIMAL_PLACES = 1;
 
@@ -68,6 +69,34 @@ export function handle_rewards(rewards: Rewards[]): void {
             }
         }
     });
+}
+
+export function tooltip_string(tooltip: PrereqTooltip, is_disabled: boolean,): string {
+    if ('custom_msg' in tooltip) {
+        return tooltip.custom_msg;
+    }
+
+    let ret_str = '';
+    if ('prereq' in tooltip) {
+        const prereq = tooltip.prereq;
+        if (prereq) {
+            if (is_disabled) ret_str += `[red]Prereq: ${prereq}.[/red]\n`
+            else ret_str += `Prereq: ${prereq}.\n`
+        }
+    }
+    if ('dependsOn' in tooltip) {
+        const depends_on = tooltip.dependsOn;
+        if (depends_on) {
+            ret_str += `Depends: ${depends_on}.\n`
+        }
+    }
+    if ('eureka' in tooltip) {
+        const eureka = tooltip.eureka;
+        if (eureka) {
+            ret_str += `Bonus: ${eureka}.\n`
+        }
+    }
+    return ret_str;
 }
 
 export function find_stat_from_str(s: BasicStats) {

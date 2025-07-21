@@ -4,19 +4,9 @@ import { P_Handler } from "$lib/stores/game_progress_update_handlers.svelte";
 class GameProgress {
     public progress_handler = P_Handler;
 
-    // private _update(key: string) {
-    //     const f = this._progress_handler.handlers.get(key)
-    //     if (f) f();
-    //     return
-    // }
-
     get todolist_tracker() {
         return TD_List_Tracker;
     }
-
-    // enable(key: string) {
-    //     this._update(key)
-    // }
 
     reset() {
         this.todolist_tracker.reset();

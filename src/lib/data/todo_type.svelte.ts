@@ -4,7 +4,7 @@ import type { Rewards, StatEffectPair, TodoType } from "$lib/types";
 import { handle_rewards, reward_string } from "$lib/utils/utils";
 
 type StatList = typeof stat_list;
-type PrereqTooltip =
+export type PrereqTooltip =
     | { prereq?: string; dependsOn?: string; eureka?: string }   // all keys optional
     | { custom_msg: string; prereq?: never; dependsOn?: never; extras?: never }; // only custom_msg allowed
 
@@ -45,13 +45,14 @@ export class LocationTodo extends TodoBase {
         public depends: StatEffectPair[],
         public rewards: Rewards[],
         desc: string,
+        tooltip: PrereqTooltip,
         opts: {
             extra_reward_fn?: () => void;
             then_fn?: () => void;
             check_disabled_fn?: (stats: StatList) => boolean;
         } = {}
     ) {
-        super(name, "location", base_cost, desc);
+        super(name, "location", base_cost, desc, tooltip);
         this.one_off = true;
         if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
         if (opts.then_fn) this.then = opts.then_fn;
@@ -76,13 +77,14 @@ export class ActionTodo extends TodoBase {
         public depends: StatEffectPair[],
         public rewards: Rewards[],
         desc: string,
+        tooltip: PrereqTooltip,
         opts: {
             extra_reward_fn?: () => void;
             then_fn?: () => void;
-            check_disabled_fn?: (stats) => boolean;
+            check_disabled_fn?: (stats: StatList) => boolean;
         } = {}
     ) {
-        super(name, "action", base_cost, desc);
+        super(name, "action", base_cost, desc, tooltip);
         if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
         if (opts.then_fn) this.then = opts.then_fn;
         if (opts.check_disabled_fn) this.check_disabled = opts.check_disabled_fn;
@@ -106,13 +108,14 @@ export class GainCurrencyTodo extends TodoBase {
         public depends: StatEffectPair[],
         public rewards: Rewards[],
         desc: string,
+        tooltip: PrereqTooltip,
         opts: {
             extra_reward_fn?: () => void;
             then_fn?: () => void;
-            check_disabled_fn?: (stats) => boolean;
+            check_disabled_fn?: (stats: StatList) => boolean;
         } = {}
     ) {
-        super(name, "gain_currency", base_cost, desc);
+        super(name, "gain_currency", base_cost, desc, tooltip);
         if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
         if (opts.then_fn) this.then = opts.then_fn;
         if (opts.check_disabled_fn) this.check_disabled = opts.check_disabled_fn;
@@ -136,14 +139,15 @@ export class SpendCurrencyTodo extends TodoBase {
         public spendings_moni: number,
         public rewards: Rewards[],
         desc: string,
+        tooltip: PrereqTooltip,
         opts: {
             one_off_flag?: boolean;
             extra_reward_fn?: () => void;
             then_fn?: () => void;
-            check_disabled_fn?: (stats) => boolean;
+            check_disabled_fn?: (stats: StatList) => boolean;
         } = {}
     ) {
-        super(name, "spend_currency", base_cost, desc);
+        super(name, "spend_currency", base_cost, desc, tooltip);
         if (opts.one_off_flag) this.one_off = opts.one_off_flag;
         if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
         if (opts.then_fn) this.then = opts.then_fn;

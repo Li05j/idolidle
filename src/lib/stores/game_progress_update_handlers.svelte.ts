@@ -4,6 +4,7 @@ import { actions_data } from "$lib/data/actions_data.svelte"
 import type { TodoBase } from "$lib/data/todo_type.svelte";
 
 class ProgressHandlers {
+    // For locations only
     private _arrived(loc_name: string) {
         const index = TD_List_Tracker.locations.findIndex(ld => ld.name === loc_name);
         if (index > -1) {
@@ -36,7 +37,9 @@ class ProgressHandlers {
         const index = actions.findIndex(a => a.name === action_name);
         if (index !== -1) {
             actions.splice(index, 1);
-            TD_List_Tracker.actions.set(key, [...actions]); // force reactivity by replacing the array
+            TD_List_Tracker.actions = new Map([
+                ...TD_List_Tracker.actions,
+            ]);
         }
     }
 
@@ -55,6 +58,19 @@ class ProgressHandlers {
             }
         }
         TD_List_Tracker.actions = new_available_actions;
+    }
+
+    private _add_actions_from(from_loc: string, to_loc: string) {
+        const fromActions = actions_data.get(from_loc);
+        if (!fromActions) return;
+
+        const current = TD_List_Tracker.actions.get(to_loc) || [];
+        const updated = [...current, ...fromActions];
+
+        TD_List_Tracker.actions = new Map([
+            ...TD_List_Tracker.actions,
+            [to_loc, updated],
+        ]);
     }
 
     ////////////////////////////////
@@ -87,6 +103,11 @@ class ProgressHandlers {
     public upgrade_living_room() {
         this._remove_single_action('Mall', 'Upgrade Living Room');
         this._replace_action_collection('Living Room', 'Living Room+');
+    }
+
+    public school_idol_club() {
+        this._remove_single_action('School', 'Open Idol Club');
+        this._add_actions_from('Idol Club', 'School');
     }
 }
 

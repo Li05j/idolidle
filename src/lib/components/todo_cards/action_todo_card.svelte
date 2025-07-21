@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
     import { stat_list, trainings } from "$lib/stores/stats.svelte"
-    import { msToSecF, parseText } from "$lib/utils/utils"
+    import { msToSecF, parseText, tooltip_string } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
 	import type { TodoBase } from "$lib/data/todo_type.svelte";
@@ -15,7 +15,7 @@
 
     let todo_actual_duration: number = $state(0.0)
     let bg_color = $state("")
-    let border = $state("")
+    let border = $state("outline outline-4 outline-orange-300/10")
     let loop = $state(1)
 
     let disabled = $derived(todo.check_disabled(stat_list));
@@ -34,10 +34,18 @@
     })
 
     $effect(() => {
-        switch (todo.type) {
-            case "action": bg_color = "bg-white"; break
-            case "gain_currency": bg_color = "bg-purple-100"; break
-            case "spend_currency": bg_color = "bg-yellow-100"; break
+        if (hovered) {
+            switch (todo.type) {
+                case "action": bg_color = "bg-stone-100"; break
+                case "gain_currency": bg_color = "bg-purple-200"; break
+                case "spend_currency": bg_color = "bg-yellow-200"; break
+            }
+        } else {
+            switch (todo.type) {
+                case "action": bg_color = "bg-white"; break
+                case "gain_currency": bg_color = "bg-purple-100"; break
+                case "spend_currency": bg_color = "bg-yellow-100"; break
+            }
         }
     })
 
@@ -46,7 +54,7 @@
             border = "outline outline-4 outline-orange-400"
         }
         else {
-            border = ""
+            border = "outline outline-4 outline-orange-300/10"
         }
     })
 
@@ -119,7 +127,7 @@
 </script>
 
 <div 
-    class="{bg_color} {border} p-6 rounded-lg shadow-md mb-4 h-48 relative overflow-hidden {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" 
+    class="{bg_color} {border} transition-all duration-300 pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" 
     onclick={timer.is_paused ? startTodo : pauseTodo}
     onmouseenter={() => hovered = true}
     onmouseleave={() => hovered = false}
@@ -146,7 +154,7 @@
         </div>
     {/if}
   
-    <div class="relative z-10">
+    <div class="relative h-full">
         <div class="flex justify-between items-center mb-4">
             <div class="text-base font-medium">{todo.name}</div>
             <div class="text-gray-600 text-sm">{msToSecF(timer.elapsed)}/{msToSecF(todo_actual_duration)}s</div>
@@ -156,12 +164,12 @@
         </div>
 
         <!-- Hover -->
-        <div class="relative pt-2 text-xs text-gray-700">
-            <div class="transition-opacity duration-300" style="opacity: {hovered ? 0 : 1};">
+        <div class="relative text-xs h-full">
+            <div class="transition-opacity duration-300 text-gray-700" style="opacity: {hovered ? 0 : 1};">
                 <i>{@html parseText(todo.desc)}</i>
             </div>
-            <div class="absolute top-0 left-0 pt-2 transition-opacity duration-300" style="opacity: {hovered ? 1 : 0};">
-                <i>owo</i>
+            <div class="absolute top-0 left-0 rounded transition-opacity duration-300 h-2/5 w-full" style="opacity: {hovered ? 1 : 0};">
+                <p>{@html parseText(tooltip_string(todo.tooltip, disabled))}</p>
             </div>
         </div>
     </div>
