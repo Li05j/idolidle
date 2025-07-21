@@ -3,7 +3,7 @@ import { fans, moni, sta, sing, dance, charm, pres, dummy } from "$lib/stores/st
 import type { PrereqTooltip } from '$lib/data/todo_type.svelte';
 
 export const DECIMAL_PLACES = 1;
-export const S_TO_MS = 1
+export const S_TO_MS = 1000
 
 // export function toFixedNumber(num: number, digits: number = DECIMAL_PLACES, base: number = 10) {
 //     const pow = Math.pow(base, digits);
