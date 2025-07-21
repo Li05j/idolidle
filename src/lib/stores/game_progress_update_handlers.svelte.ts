@@ -94,10 +94,19 @@ class ProgressHandlers {
 
     public school() {
         this._arrived('School');
+        this._new_locations(['Gym', 'Maid Cafe']);
     }
 
     public mall() {
         this._arrived('Mall');
+    }
+
+    public gym() {
+        this._arrived('Gym');
+    }
+
+    public maid_cafe() {
+        this._arrived('Maid Cafe');
     }
 
     public upgrade_living_room() {
@@ -108,6 +117,11 @@ class ProgressHandlers {
     public school_idol_club() {
         this._remove_single_action('School', 'Open Idol Club');
         this._add_actions_from('Idol Club', 'School');
+    }
+
+    public upgrade_gym() {
+        this._remove_single_action('Gym', 'Purchase Gym VIP');
+        this._add_actions_from('Gym VIP', 'Gym');
     }
 }
 

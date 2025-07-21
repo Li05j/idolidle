@@ -1,4 +1,4 @@
-const S_TO_MS = 1000
+import { S_TO_MS } from "$lib/utils/utils"
 
 class Checkpoints {
 	public current_time_spent = $state(0)

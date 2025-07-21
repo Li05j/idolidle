@@ -3,6 +3,7 @@ import { fans, moni, sta, sing, dance, charm, pres, dummy } from "$lib/stores/st
 import type { PrereqTooltip } from '$lib/data/todo_type.svelte';
 
 export const DECIMAL_PLACES = 1;
+export const S_TO_MS = 1000
 
 // export function toFixedNumber(num: number, digits: number = DECIMAL_PLACES, base: number = 10) {
 //     const pow = Math.pow(base, digits);
@@ -131,15 +132,15 @@ function find_training_eff_from_str(s: TrainingEfficiency) {
 }
 
 function training_slow(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.5)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.427)), 1)
 }
 
 function training_mid(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.727)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.577)), 1)
 }
 
 function training_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.9)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.727)), 1)
 }
 
 function identity(i: any) {

@@ -105,7 +105,6 @@ export class GainCurrencyTodo extends TodoBase {
     constructor(
         name: string,
         base_cost: number,
-        public depends: StatEffectPair[],
         public rewards: Rewards[],
         desc: string,
         tooltip: PrereqTooltip,
