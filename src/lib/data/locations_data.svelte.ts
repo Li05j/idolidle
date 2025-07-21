@@ -10,10 +10,10 @@ export const locations_data: TodoBase[] = [
         1 * S_TO_MS,
         [],
         [
-            {which_stat: "Sing", flat_gain_base: 0.1},
-            {which_stat: "Dance", flat_gain_base: 0.1},
-            {which_stat: "Charm", flat_gain_base: 0.1},
-            {which_stat: "Presence", flat_gain_base: 0.1},
+            { which_stat: "Sing", flat_gain_base: 0.1 },
+            { which_stat: "Dance", flat_gain_base: 0.1 },
+            { which_stat: "Charm", flat_gain_base: 0.1 },
+            { which_stat: "Presence", flat_gain_base: 0.1 },
         ],
         "Time to wake up, silly. Everything starts here.",
         {        

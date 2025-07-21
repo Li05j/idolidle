@@ -132,20 +132,14 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new ActionTodo(
                 'Yell on Wooden Box',
                 15 * S_TO_MS,
-                [
-                    { which_stat: "Presence", effectiveness: 1.0 },
-                ],
-                [
-                    {which_stat: "Fans", flat_gain_base: 2 },
-                ],
+                [{ which_stat: "Presence", effectiveness: 1.0 },],
+                [{ which_stat: "Fans", flat_gain_base: 2 },],
                 "You know when those anime girls standing near the school gate after school to try and advertise their idol activities? Yeah, that's you now.",
             ),
             new ActionTodo(
                 'Hallway Dancing',
                 35 * S_TO_MS,
-                [
-                    { which_stat: "Presence", effectiveness: 1.0 },
-                ],
+                [{ which_stat: "Presence", effectiveness: 1.0 },],
                 [
                     { which_stat: "Dance", flat_gain_multi: 0.01 },
                     { which_stat: "Presence", flat_gain_multi: 0.01 },
@@ -164,12 +158,8 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new ActionTodo(
                 'Climbing the Stairs',
                 40 * S_TO_MS,
-                [
-                    { which_stat: "Stamina", effectiveness: 1.0 },
-                ],
-                [
-                    { which_stat: "Stamina", flat_gain_base: 4.0 },
-                ],
+                [{ which_stat: "Stamina", effectiveness: 1.0 },],
+                [{ which_stat: "Stamina", flat_gain_base: 4.0 },],
                 "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
                 {
                     extra_reward_fn: () => {
@@ -188,7 +178,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new SpendCurrencyTodo(
                 'Upgrade Living Room',
                 1 * S_TO_MS,
-                5000,
+                5,
                 [],
                 "Tired of the shitty environment at home? Well, hopefully this little upgrade will make it better.",
                 {
@@ -198,7 +188,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         logs.addHintLogs('Your Living Room upgraded to Living Room+, give it a check!')
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 5000) {
+                        if (stat_list.moni.final >= 5) {
                             return false;
                         }
                         return true;

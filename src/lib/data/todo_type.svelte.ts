@@ -3,12 +3,18 @@ import { stat_list } from "$lib/stores/stats.svelte";
 import type { Rewards, StatEffectPair, TodoType } from "$lib/types";
 import { handle_rewards, reward_string } from "$lib/utils/utils";
 
+type StatList = typeof stat_list;
+type PrereqTooltip =
+    | { prereq?: string; dependsOn?: string; eureka?: string }   // all keys optional
+    | { custom_msg: string; prereq?: never; dependsOn?: never; extras?: never }; // only custom_msg allowed
+
 export abstract class TodoBase {
     constructor(
         public name: string,
         public type: TodoType,
         public base_cost: number,
         public desc: string,
+        public tooltip: PrereqTooltip,
         public one_off: boolean = false,
     ) {}
 
@@ -42,7 +48,7 @@ export class LocationTodo extends TodoBase {
         opts: {
             extra_reward_fn?: () => void;
             then_fn?: () => void;
-            check_disabled_fn?: (stats) => boolean;
+            check_disabled_fn?: (stats: StatList) => boolean;
         } = {}
     ) {
         super(name, "location", base_cost, desc);
