@@ -4,10 +4,10 @@ export type TodoType = "none" | "location" | "action" | "gain_currency" | "spend
 export type BasicStats = "Fans" | "Moni" | "Stamina" | "Sing" | "Dance" | "Charm" | "Presence";
 export type TrainingEfficiency = "slow" | "mid" | "fast" | "n/a"
 
-export type BasicStatsValuesMap = {
+export type LiveBattleStats = {
     Fans: number,
-    Moni?: number,
-    Stamina: number,
+    Max_Stamina: number,
+    Curr_Stamina: number,
     Sing: number,
     Dance: number,
     Charm: number,
@@ -16,8 +16,8 @@ export type BasicStatsValuesMap = {
 
 export type LiveTurn = {
     msg: string,
-    your_stats?: BasicStatsValuesMap,
-    enemy_stats?: BasicStatsValuesMap,
+    your_stats?: LiveBattleStats,
+    enemy_stats?: LiveBattleStats,
 }
 
 // Which stat the Todo is effected by and by how much based on effectiveness. This only affects idle time.

@@ -1,8 +1,7 @@
 import { CPs } from "$lib/stores/checkpoints.svelte";
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 import { LiveEnemyStats } from "$lib/stores/live_enemy_stats.svelte";
-import type { LiveTurn, BasicStatsValuesMap } from "$lib/types";
-import { DECIMAL_PLACES } from "$lib/utils/utils";
+import type { LiveTurn, LiveBattleStats } from "$lib/types";
 
 class LiveBattleManager {
     public live_sim_complete: boolean = $state(false)
@@ -12,9 +11,10 @@ class LiveBattleManager {
 
     private _turns: LiveTurn[] = []
     private _replay_turns: LiveTurn[] = $state([])
-    private _you: BasicStatsValuesMap = {
+    private _you: LiveBattleStats = {
         Fans: fans.final,
-        Stamina: sta.final,
+        Max_Stamina: sta.final,
+        Curr_Stamina: sta.final,
         Sing: sing.final,
         Dance: dance.final,
         Charm: charm.final,
@@ -32,7 +32,8 @@ class LiveBattleManager {
 
         this._you = {
             Fans: fans.final,
-            Stamina: sta.final,
+            Max_Stamina: sta.final,
+            Curr_Stamina: sta.final,
             Sing: sing.final,
             Dance: dance.final,
             Charm: charm.final,
@@ -47,7 +48,6 @@ class LiveBattleManager {
             your_stats: { ...this._you }, 
             enemy_stats: { ...this._enemy.stats },
         })
-        this.debug_print_logs()
 
         this._turn_order = this._you.Fans >= this._enemy.stats.Fans
             ? ["Player", "Rival"]
@@ -63,15 +63,15 @@ class LiveBattleManager {
         }
 
         const winner = this._you.Fans === this._enemy.stats.Fans ? "Draw" :
-                       this._you.Fans > this._enemy.stats.Fans ? "You win!" : "Enemy wins!"
-        this.log(`Battle over! ${winner}`)
+                       this._you.Fans > this._enemy.stats.Fans ? "You win!" : "Rival wins!"
+        this.log(`LIVE over! ${winner}`)
     }
 
     private take_turn(actor: "Player" | "Rival") {
         const attacker = actor === "Player" ? this._you : this._enemy.stats
         const defender = actor === "Player" ? this._enemy.stats : this._you
 
-        if (attacker.Stamina <= 0) {
+        if (attacker.Curr_Stamina <= 0) {
             this.log(`[red]${actor} has no Stamina left![/red]`)
             return
         }
@@ -88,36 +88,38 @@ class LiveBattleManager {
     }
 
     // Todo: Make this smarter
-    private calc_and_log_damage(attacker: BasicStatsValuesMap, defender: BasicStatsValuesMap): [number, string] {
+    private calc_and_log_damage(attacker: LiveBattleStats, defender: LiveBattleStats): [number, string] {
         let r = Math.random()
         if (r > 0.5) {
             let atk_stat = attacker.Sing
-            let def_stat = defender.Charm
+            let def_stat = defender.Charm * (defender.Curr_Stamina / defender.Max_Stamina)
 
-            let fluctuation = Math.random() * 0.4 - 0.2;
+            let fluctuation = 1 + (Math.random() * 0.4 - 0.2);
             let dmg = Math.max(Math.min(Math.ceil((atk_stat - def_stat) * fluctuation), defender.Fans), 0)
+
             attacker.Fans += dmg
             defender.Fans -= dmg
 
-            attacker.Stamina -= atk_stat / 2
+            attacker.Curr_Stamina -= atk_stat / 2
             return [dmg, "Sing"];
         } else {
             let atk_stat = attacker.Dance
-            let def_stat = defender.Presence
+            let def_stat = defender.Presence * (defender.Curr_Stamina / defender.Max_Stamina)
 
-            let fluctuation = 1 + Math.random() * 0.4 - 0.2;
+            let fluctuation = 1 + (Math.random() * 0.4 - 0.2);
             let dmg = Math.max(Math.min(Math.ceil((atk_stat - def_stat) * fluctuation), defender.Fans), 0)
+
             attacker.Fans += dmg
             defender.Fans -= dmg
 
-            attacker.Stamina -= atk_stat / 2
+            attacker.Curr_Stamina -= atk_stat / 2
             return [dmg, "Dance"];
         }
     }
 
     private battleOver(): boolean {
         return this._enemy.stats.Fans <= 0 || this._you.Fans <= 0 ||
-               (this._you.Stamina <= 0 && this._enemy.stats.Stamina <= 0)
+               (this._you.Curr_Stamina <= 0 && this._enemy.stats.Curr_Stamina <= 0)
     }
 
     private log(msg: string, auto_push_stats: boolean = true) {
@@ -152,10 +154,27 @@ class LiveBattleManager {
         this.push_over_time(this._turns, this._replay_turns);
     }
 
-    start_live() {
+    private post_fight(): number {
+        let temp = fans.final
+        fans.base = Math.floor(this._you.Fans / fans.multi)
+        let difference = fans.final - temp
+
+        if (difference >= 0) {
+            this.log(`LIVE has successfully concluded. You gained ${difference} fans!`, false)
+        } else {
+            this.log(`LIVE has concluded. You lost ${-difference} fans!`, false)
+        }
+
+        return difference
+    }
+
+    start_live(): number {
         this.init()
         this.fight()
+        let diff = this.post_fight()
         this.replay_fight()
+
+        return diff;
     }
 
     reset() {

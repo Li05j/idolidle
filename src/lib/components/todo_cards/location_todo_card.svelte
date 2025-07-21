@@ -78,7 +78,7 @@
 >
     <!-- Watermark Line -->
     {#if (disabled && !timer.is_active)}
-        <div class="absolute inset-0 pointer-events-none z-50">
+        <div class="absolute inset-0 pointer-events-none z-10">
             <div class="w-full h-full">
                 <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                     <line x1="0" y1="0" x2="100%" y2="100%" stroke="red" stroke-opacity="0.2" stroke-width="4" />

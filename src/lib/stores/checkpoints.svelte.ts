@@ -4,9 +4,9 @@ class Checkpoints {
 	public current_time_spent = $state(0)
 
 	private _checkpoints = [
-		1000 * S_TO_MS,
-		2000 * S_TO_MS,
-		3000 * S_TO_MS,
+		100 * S_TO_MS,
+		2500 * S_TO_MS,
+		4000 * S_TO_MS,
 		Infinity,
 	]
 	private _max_idx = this._checkpoints.length

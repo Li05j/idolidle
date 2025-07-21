@@ -44,7 +44,7 @@ function createCurrency(name: string, baseInit = 30, multiInit = 1.0) {
 	};
 }
 
-function createStat(name: string, baseInit = 0, multiInit = 1.0) {
+function createStat(name: string, baseInit = 10, multiInit = 1.0) {
 	const _name = name;
   	let base = $state(baseInit);
   	let multi = $state(multiInit);
@@ -83,3 +83,5 @@ export const stat_list = {
 	charm: charm,
 	pres: pres,
 }
+
+sta.base += 20

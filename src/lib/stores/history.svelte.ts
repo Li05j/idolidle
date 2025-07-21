@@ -50,13 +50,23 @@ function createLogs() {
         cleanupLogs();
     }
 
-    function addHintLogs(custom_msg: string) {
+    function addHintLogs(custom_msg: string, add_date: boolean = false) {
         let log = parseText(`[red]${custom_msg}[/red]`)
+        
+        if (add_date) {
+            const now = new Date();
+            const timestamp = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
 
-        _logs.push({
-            data: {1: '', 2: log},
-            timestamp: Date.now()
-        })
+            _logs.push({
+                data: {1: timestamp, 2: log},
+                timestamp: Date.now()
+            })
+        } else {
+            _logs.push({
+                data: {1: '', 2: log},
+                timestamp: Date.now()
+            })
+        }
         
         cleanupLogs();
     }

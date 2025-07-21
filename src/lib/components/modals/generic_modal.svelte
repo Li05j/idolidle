@@ -17,16 +17,18 @@
     }: Props = $props();
 </script>
 
-{#if ModalM.is_modal_open(type)}
-    {#if type === 'default'}
-        <div class="p-6 font-bold text-red-500">Modal not found? This should not happen.</div>
-    {:else if type === 'settings'}
-        <BasicModal type={type} onClose={onClose} />
-    {:else if type === 'stats'}
-        <BasicModal type={type} onClose={onClose} />
-    {:else if type === 'live'}
-        <WorkerModal type={type} onClose={onClose} />
-    {:else if type === 'rebirth_alert'}
-        <SmallBasicModal type={type} onClose={onClose} />
+<div class="z-100">
+    {#if ModalM.is_modal_open(type)}
+        {#if type === 'default'}
+            <div class="p-6 font-bold text-red-500">Modal not found? This should not happen.</div>
+        {:else if type === 'settings'}
+            <BasicModal type={type} onClose={onClose} />
+        {:else if type === 'stats'}
+            <BasicModal type={type} onClose={onClose} />
+        {:else if type === 'live'}
+            <WorkerModal type={type} onClose={onClose} />
+        {:else if type === 'rebirth_alert'}
+            <SmallBasicModal type={type} onClose={onClose} />
+        {/if}
     {/if}
-{/if}
+</div>

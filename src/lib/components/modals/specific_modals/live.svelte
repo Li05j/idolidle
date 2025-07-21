@@ -6,6 +6,7 @@
 	import GenericButton from "$lib/components/misc/generic_button.svelte";
 	import { CPs } from "$lib/stores/checkpoints.svelte";
 	import { ModalM } from "$lib/managers/modal_manager.svelte";
+	import { logs } from "$lib/stores/history.svelte";
     
     let { onClose } = $props()
     const type = 'live'
@@ -16,8 +17,10 @@
     let leftPercent = $derived(LiveBattleM.display_your_fans / total * 100);
     let rightPercent = $derived(LiveBattleM.display_enemy_fans / total * 100);
 
+    let fan_change = 0;
+
     onMount(() => {
-        LiveBattleM.start_live();
+        fan_change = LiveBattleM.start_live();
     })
 
     $effect(() => {
@@ -36,6 +39,11 @@
     function on_continue_clicked() {
         LiveBattleM.reset()
         CPs.advanceToNextCheckpoint()
+        if (fan_change >= 0) {
+            logs.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
+        } else {
+            logs.addHintLogs(`LIVE has concluded. You lost ${-fan_change} fans!`, true)
+        }
         onClose(type)
     }
 
