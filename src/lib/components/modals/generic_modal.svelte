@@ -25,6 +25,8 @@
             <BasicModal type={type} onClose={onClose} />
         {:else if type === 'stats'}
             <BasicModal type={type} onClose={onClose} />
+        {:else if type === 'rival_info'}
+            <BasicModal type={type} onClose={onClose} />
         {:else if type === 'live'}
             <WorkerModal type={type} onClose={onClose} />
         {:else if type === 'rebirth_alert'}

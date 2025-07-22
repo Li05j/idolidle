@@ -3,7 +3,7 @@
         name = '',
         svg = '',
         onclick,
-        variant = 'primary' as "primary" | "secondary" | "danger" | "none",
+        variant = 'primary' as "primary" | "secondary" | "cute" | "none",
         class: customClass = '',
         disabled = false,
         type = 'button' as "button" | "submit" | "reset" | null | undefined,
@@ -17,8 +17,8 @@
                 return 'bg-blue-500 text-sm text-white rounded hover:bg-blue-600 disabled:bg-gray-400 relative group inline-block'
             case 'secondary':
                 return 'bg-zinc-500 text-sm text-white rounded hover:bg-zinc-600 disabled:bg-gray-400'
-            case 'danger':
-                return 'bg-red-500 text-sm text-white rounded hover:bg-red-600 disabled:bg-gray-400'
+            case 'cute':
+                return 'bg-pink-500 text-sm text-white rounded hover:bg-pink-600 disabled:bg-gray-400'
             case "none":
                 return ''
         }

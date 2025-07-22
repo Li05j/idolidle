@@ -1,4 +1,4 @@
-type BigModals = 'default' | 'settings' | 'stats' | 'live'
+type BigModals = 'default' | 'settings' | 'stats' | 'live' | 'rival_info'
 type SmallModals = 'rebirth_alert'
 
 export type ModalType = BigModals | SmallModals

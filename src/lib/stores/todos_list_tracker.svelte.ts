@@ -17,7 +17,7 @@ class TodoListTracker {
         else{
             this.locations = []
         }
-        this.actions.clear()
+        this.actions = new Map();
     }
 }
 

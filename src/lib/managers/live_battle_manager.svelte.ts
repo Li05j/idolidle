@@ -1,8 +1,7 @@
 import { CPs } from "$lib/stores/checkpoints.svelte";
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
-import { LiveEnemyStats } from "$lib/stores/live_enemy_stats.svelte";
+import { RivalStatsM } from "$lib/stores/live_enemy_stats.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
-import { Rebirth } from "$lib/stores/rebirth.svelte";
 
 class LiveBattleManager {
     public live_sim_complete: boolean = $state(false)
@@ -22,15 +21,14 @@ class LiveBattleManager {
         Charm: charm.final,
         Presence: pres.final,
     }
-    private _enemy: LiveEnemyStats = new LiveEnemyStats()
     private _turn_order: ("Player" | "Rival")[] = [];
 
     get battle_you() { return this._you; }
-    get battle_enemy() { return this._enemy.stats; }
+    get battle_enemy() { return RivalStatsM.stats; }
     get turn_logs() { return this._replay_turns; }
     
     public init() {
-        this._enemy.init_stats[CPs.current_completed_checkpoint]();
+        RivalStatsM.init_stats[CPs.current_completed_checkpoint]();
 
         this._you = {
             Fans: fans.final,
@@ -43,15 +41,15 @@ class LiveBattleManager {
         }
 
         this.display_your_fans = fans.final
-        this.display_enemy_fans = this._enemy.stats.Fans
+        this.display_enemy_fans = RivalStatsM.stats.Fans
         
         this._turns.push({
             msg: "**LIVE start!**", 
             your_stats: { ...this._you }, 
-            enemy_stats: { ...this._enemy.stats },
+            enemy_stats: { ...RivalStatsM.stats },
         })
 
-        this._turn_order = this._you.Fans >= this._enemy.stats.Fans
+        this._turn_order = this._you.Fans >= RivalStatsM.stats.Fans
             ? ["Player", "Rival"]
             : ["Rival", "Player"]
     }
@@ -64,14 +62,14 @@ class LiveBattleManager {
             }
         }
 
-        this.did_player_win = this._you.Fans > this._enemy.stats.Fans
+        this.did_player_win = this._you.Fans > RivalStatsM.stats.Fans
         const winner_str = this.did_player_win ? "You win!" : "Rival wins!"
         this.log(`LIVE over! ${winner_str}`)
     }
 
     private take_turn(actor: "Player" | "Rival") {
-        const attacker = actor === "Player" ? this._you : this._enemy.stats
-        const defender = actor === "Player" ? this._enemy.stats : this._you
+        const attacker = actor === "Player" ? this._you : RivalStatsM.stats
+        const defender = actor === "Player" ? RivalStatsM.stats : this._you
 
         if (attacker.Curr_Stamina <= 0) {
             this.log(`[red]${actor} has no Stamina left![/red]`)
@@ -120,8 +118,8 @@ class LiveBattleManager {
     }
 
     private battleOver(): boolean {
-        return this._enemy.stats.Fans <= 0 || this._you.Fans <= 0 ||
-               (this._you.Curr_Stamina <= 0 && this._enemy.stats.Curr_Stamina <= 0)
+        return RivalStatsM.stats.Fans <= 0 || this._you.Fans <= 0 ||
+               (this._you.Curr_Stamina <= 0 && RivalStatsM.stats.Curr_Stamina <= 0)
     }
 
     private log(msg: string, auto_push_stats: boolean = true) {
@@ -129,7 +127,7 @@ class LiveBattleManager {
             this._turns.push({
                 msg,
                 your_stats: { ...this._you },
-                enemy_stats: { ...this._enemy.stats },
+                enemy_stats: { ...RivalStatsM.stats },
             })
         } else {
             this._turns.push({msg});
@@ -183,7 +181,7 @@ class LiveBattleManager {
         this._turns = []
         this._replay_turns = []
         this.did_player_win = false;
-        this._enemy.reset()
+        RivalStatsM.reset()
     }
 
     debug_print_logs() {

@@ -3,7 +3,7 @@ import { fans, moni, sta, sing, dance, charm, pres, dummy } from "$lib/stores/st
 import type { PrereqTooltip } from '$lib/data/todo_type.svelte';
 
 export const DECIMAL_PLACES = 1;
-export const S_TO_MS = 1000
+export const S_TO_MS = 100
 
 // export function toFixedNumber(num: number, digits: number = DECIMAL_PLACES, base: number = 10) {
 //     const pow = Math.pow(base, digits);
@@ -81,7 +81,7 @@ export function tooltip_string(tooltip: PrereqTooltip, is_disabled: boolean,): s
     if ('prereq' in tooltip) {
         const prereq = tooltip.prereq;
         if (prereq) {
-            if (is_disabled) ret_str += `[red]Prereq: ${prereq}.[/red]\n`
+            if (is_disabled) ret_str += `[red]**!! Prereq: ${prereq}.**[/red]\n`
             else ret_str += `Prereq: ${prereq}.\n`
         }
     }
@@ -94,7 +94,7 @@ export function tooltip_string(tooltip: PrereqTooltip, is_disabled: boolean,): s
     if ('eureka' in tooltip) {
         const eureka = tooltip.eureka;
         if (eureka) {
-            ret_str += `Bonus: ${eureka}.\n`
+            ret_str += `[blue]⭐ ${eureka}.[/blue]\n`
         }
     }
     return ret_str;

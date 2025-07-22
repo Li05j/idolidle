@@ -7,7 +7,6 @@
 	import GenericButton from '$lib/components/misc/generic_button.svelte';
 	import GenericModal from '$lib/components/modals/generic_modal.svelte';
 
-    import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 	import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte';
 	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
 	import { onMount } from 'svelte';
@@ -20,12 +19,12 @@
     // }
 
     function cheat() {
-        fans.base += 1000;
-        sta.base += 1000;
-        sing.base += 1000;
-        dance.base += 1000;
-        charm.base += 1000;
-        pres.base += 1000;
+        // fans.base   += 1000;
+        // sta.base    += 1000;
+        // sing.base   += 1000;
+        // dance.base  += 1000;
+        // charm.base  += 1000;
+        // pres.base   += 1000;
         openModal('settings')
         return
     }
@@ -49,7 +48,7 @@
     <div class="top-0 bg-white">
         <CheckpointTopBar {handle_live}/>
     </div>
-    <div class="flex-auto p-6 bg-gray-50 overflow-hidden">
+    <div class="flex-auto p-2 bg-gray-50 overflow-hidden">
         <div class="grid grid-cols-5 overflow-hidden h-full">
 
             <!-- Stats and Logs -->

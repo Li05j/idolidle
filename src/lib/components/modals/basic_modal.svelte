@@ -4,6 +4,7 @@
     import { svgCross } from '$lib/data/icons.svelte';
     import GenericButton from "$lib/components/misc/generic_button.svelte";
 	import DetailedStats from '$lib/components/modals/specific_modals/detailed_stats.svelte';
+	import RivalInfo from './specific_modals/rival_info.svelte';
 
     interface Props {
         type: ModalType;
@@ -46,6 +47,8 @@
             <div class="p-6 font-bold">Settings under construction.</div>
         {:else if type === 'stats'}
             <DetailedStats />
+        {:else if type === 'rival_info'}
+            <RivalInfo />
         {/if}
     </div>
 </div>
