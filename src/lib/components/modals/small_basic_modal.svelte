@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte'
-    import { svgCross } from '$lib/data/icons.svelte';
+    import { type ModalType } from '$lib/managers/modal_manager.svelte'
+    import { svgCross } from '$lib/data/icons';
     import GenericButton from "$lib/components/misc/generic_button.svelte";
 	import RebirthAlert from './specific_modals/rebirth_alert.svelte';
 

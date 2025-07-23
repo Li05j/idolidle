@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte'
-    import { svgCross } from '$lib/data/icons.svelte';
+    import { type ModalType } from '$lib/managers/modal_manager.svelte'
+    import { svgCross } from '$lib/data/icons';
     import GenericButton from "$lib/components/misc/generic_button.svelte";
 	import DetailedStats from '$lib/components/modals/specific_modals/detailed_stats.svelte';
 	import RivalInfo from './specific_modals/rival_info.svelte';

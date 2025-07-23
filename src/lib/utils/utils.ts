@@ -1,6 +1,6 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
 import { fans, moni, sta, sing, dance, charm, pres, dummy } from "$lib/stores/stats.svelte";
-import type { PrereqTooltip } from '$lib/data/todo_type.svelte';
+import type { PrereqTooltip } from '$lib/data/todo_type';
 
 export const DECIMAL_PLACES = 1;
 export const S_TO_MS = 100
@@ -117,30 +117,44 @@ export function calc_stat_effectiveness(depends: StatEffectPair[]): number {
     let r_stat = 0;
     depends.forEach((d) => {
         let s = find_stat_from_str(d.which_stat);
-        if (s) r_stat += s.final * d.effectiveness;
+        let normalization_factor = 1;
+        if (d.which_stat === 'Fans') normalization_factor = 2;
+        if (d.which_stat === 'Stamina') normalization_factor = 3;
+
+        if (s) r_stat += s.final * d.effectiveness / normalization_factor;
     })
     return r_stat
 }
 
 function find_training_eff_from_str(s: TrainingEfficiency) {
     switch (s) {
-        case "slow" : return training_slow;
-        case "mid"  : return training_mid;
-        case "fast" : return training_fast;
-        default     : return identity;
+        case "v_slow"       : return training_v_slow;
+        case "slow"         : return training_slow;
+        case "mid"          : return training_mid;
+        case "fast"         : return training_fast;
+        case "v_fast"       : return training_v_fast;
+        default             : return identity;
     }
 }
 
+function training_v_slow(v: number) {
+    return Math.max(Math.floor(Math.pow(v, 0.42)), 1)
+}
+
 function training_slow(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.427)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.50)), 1)
 }
 
 function training_mid(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.577)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.58)), 1)
 }
 
 function training_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.727)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.66)), 1)
+}
+
+function training_v_fast(v: number) {
+    return Math.max(Math.floor(Math.pow(v, 0.74)), 1)
 }
 
 function identity(i: any) {

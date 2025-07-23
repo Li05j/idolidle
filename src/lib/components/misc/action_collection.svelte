@@ -19,6 +19,7 @@
             <option value="x1">Repeat x1</option>
             <option value="x5">Repeat x5</option>
             <option value="x20">Repeat x20</option>
+            <option value="x100">Repeat x100</option>
         </select>
     </legend>
     <div class="grid grid-cols-3">

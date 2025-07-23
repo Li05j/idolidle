@@ -1,4 +1,4 @@
-import type { TodoBase } from '$lib/data/todo_type.svelte';
+import type { TodoBase } from '$lib/data/todo_type';
 import { parseText } from '$lib/utils/utils'
 
 type StringPair = { 1: string, 2: string}

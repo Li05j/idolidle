@@ -4,7 +4,7 @@
     import { msToSecF, parseText, tooltip_string } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
-	import type { TodoBase } from "$lib/data/todo_type.svelte";
+	import type { TodoBase } from "$lib/data/todo_type";
 	
     let { todo }: { todo: TodoBase } = $props();
 

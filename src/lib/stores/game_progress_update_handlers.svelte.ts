@@ -1,7 +1,7 @@
 import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
-import { locations_data } from "$lib/data/locations_data.svelte"
-import { actions_data } from "$lib/data/actions_data.svelte"
-import type { TodoBase } from "$lib/data/todo_type.svelte";
+import { locations_data } from "$lib/data/locations_data"
+import { actions_data } from "$lib/data/actions_data"
+import type { TodoBase } from "$lib/data/todo_type";
 
 class ProgressHandlers {
     // For locations only

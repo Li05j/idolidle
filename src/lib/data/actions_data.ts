@@ -1,8 +1,9 @@
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
 import { logs } from '$lib/stores/history.svelte'
-import { ActionTodo, GainCurrencyTodo, SpendCurrencyTodo, type TodoBase } from './todo_type.svelte';
+import { ActionTodo, GainCurrencyTodo, SpendCurrencyTodo, type TodoBase } from './todo_type';
 import { Game_Progress } from "$lib/stores/game_progress.svelte";
 import { DECIMAL_PLACES, S_TO_MS } from "$lib/utils/utils";
+import { Cost } from "$lib/data/cost_constants";
 
 export const actions_data: Map<string, TodoBase[]> = new Map([
     ["Living Room", 
@@ -11,7 +12,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Singing Practice',
                 5 * S_TO_MS,
                 [
-                    { which_stat: "Stamina", effectiveness: 0.20 },
+                    { which_stat: "Stamina", effectiveness: 0.25 },
                     { which_stat: "Charm", effectiveness: 0.75 },
                 ],
                 [
@@ -26,7 +27,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Dancing Practice',
                 5 * S_TO_MS,
                 [
-                    { which_stat: "Stamina", effectiveness: 0.20 },
+                    { which_stat: "Stamina", effectiveness: 0.25 },
                     { which_stat: "Presence", effectiveness: 0.75 },
                 ],
                 [
@@ -45,7 +46,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Singing Practice+',
                 30 * S_TO_MS,
                 [
-                    { which_stat: "Stamina", effectiveness: 0.20 },
+                    { which_stat: "Stamina", effectiveness: 0.25 },
                     { which_stat: "Charm", effectiveness: 0.75 },
                 ],
                 [
@@ -61,7 +62,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Dancing Practice+',
                 30 * S_TO_MS,
                 [
-                    { which_stat: "Stamina", effectiveness: 0.20 },
+                    { which_stat: "Stamina", effectiveness: 0.25 },
                     { which_stat: "Presence", effectiveness: 0.75 },
                 ],
                 [
@@ -79,9 +80,9 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
         [
             new GainCurrencyTodo(
                 'Picking Bottles',
-                8 * S_TO_MS,
+                5 * S_TO_MS,
                 [
-                    {which_stat: "Moni", flat_gain_base: 5, depends: [{ which_stat: "Stamina", effectiveness: 0.8 }], efficiency: "slow"},
+                    {which_stat: "Moni", flat_gain_base: 2, depends: [{ which_stat: "Stamina", effectiveness: 1.0 }], efficiency: "v_slow"},
                 ],
                 "Being an Idol means starting somewhere, you know? Defo not working for the Moni - Just making sure the Park is clean and tidy.",
                 {
@@ -92,14 +93,20 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Busker',
                 30 * S_TO_MS,
                 [
-                    { which_stat: "Fans", flat_gain_base: 3},
-                    { which_stat: 
-                        "Moni",
+                    {
+                        which_stat: "Fans", 
+                        flat_gain_base: 2,
+                        depends: [
+                            { which_stat: "Sing", effectiveness: 0.25 },
+                            { which_stat: "Dance", effectiveness: 0.25 },
+                        ],
+                        efficiency: "v_slow",
+                    },
+                    {
+                        which_stat: "Moni",
                         flat_gain_base: 3, 
                         depends: [
                             { which_stat: "Fans", effectiveness: 0.5 },
-                            { which_stat: "Sing", effectiveness: 0.25 },
-                            { which_stat: "Dance", effectiveness: 0.25 },
                         ],
                         efficiency: "slow",
                     },
@@ -113,12 +120,12 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Play Tag with Kids',
                 12 * S_TO_MS,
                 [
-                    { which_stat: "Stamina", effectiveness: 0.64 },
-                    { which_stat: "Charm", effectiveness: 0.2 },
+                    { which_stat: "Stamina", effectiveness: 0.5 },
+                    { which_stat: "Charm", effectiveness: 0.5 },
                 ],
                 [
-                    { which_stat: "Stamina", flat_gain_base: 0.6},
-                    { which_stat: "Charm", flat_gain_base: 0.6},
+                    { which_stat: "Stamina", flat_gain_base: 0.6 },
+                    { which_stat: "Charm", flat_gain_base: 0.6 },
                 ],
                 "\"Tag - You're it!\" You giggle, trying to charm them with your elegant wink. It usually doesn\'t work, though.",
                 {
@@ -144,13 +151,13 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new SpendCurrencyTodo(
                 'Open Idol Club',
                 60 * S_TO_MS,
-                500,
+                Cost.idol_club.moni,
                 [
-                    { which_stat: "Fans", flat_gain_base: 20 },
+                    { which_stat: "Fans", flat_gain_base: 25 },
                 ],
                 "On your way to become the ultimate school idol. One step closer to becoming the star you\'ve always dreamed of.",
                 {
-                    prereq: "Fans ≥ 100, Moni ≥ 500",
+                    prereq: `Fans ≥ ${Cost.idol_club.fans}, Moni ≥ ${Cost.idol_club.moni}`,
                 },
                 {
                     one_off_flag: true,
@@ -159,7 +166,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         logs.addHintLogs('You have unlocked some club activities under School, go check them out!')
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.fans.final >= 100 && stat_list.moni.final >= 500) {
+                        if (stat_list.fans.final >= Cost.idol_club.fans && stat_list.moni.final >= Cost.idol_club.moni) {
                             return false;
                         }
                         return true;
@@ -170,8 +177,8 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Go to Class',
                 75 * S_TO_MS,
                 [
-                    { which_stat: "Charm", effectiveness: 0.25 },
-                    { which_stat: "Presence", effectiveness: 0.25 },
+                    { which_stat: "Charm", effectiveness: 0.35 },
+                    { which_stat: "Presence", effectiveness: 0.35 },
                 ],
                 [
                     { which_stat: "Sing", flat_gain_base: 1.5 },
@@ -248,7 +255,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new ActionTodo(
                 'Climbing the Stairs',
                 40 * S_TO_MS,
-                [{ which_stat: "Stamina", effectiveness: 0.8 },],
+                [{ which_stat: "Stamina", effectiveness: 1.0 },],
                 [{ which_stat: "Stamina", flat_gain_base: 4.0 },],
                 "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
                 {
@@ -262,10 +269,9 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new SpendCurrencyTodo(
                 'Host School Concert',
                 45 * S_TO_MS,
-                100,
+                Cost.idol_club_concert,
                 [
-                    { which_stat: 
-                        "Fans",
+                    { which_stat: "Fans",
                         flat_gain_base: 10, 
                         depends: [
                             { which_stat: "Sing", effectiveness: 0.5 },
@@ -278,7 +284,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 ],
                 "Finally, a real stage. The lighting, the music, the fans...! Is this what it feels like to be in the spotlight? The tickets are free though.",
                 {
-                    prereq: "Moni ≥ 100",
+                    prereq: `Moni ≥ ${Cost.idol_club_concert}`,
                     dependsOn: "Sing, Dance",
                     eureka: "Tiny chance for Big Success."
                 },
@@ -292,7 +298,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         }
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 100) {
+                        if (stat_list.moni.final >= Cost.idol_club_concert) {
                             return false;
                         }
                         return true;
@@ -301,10 +307,9 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             ),
             new GainCurrencyTodo(
                 'Sell Merch',
-                15 * S_TO_MS,
-                [{ which_stat: 
-                    "Moni",
-                    flat_gain_base: 15,
+                25 * S_TO_MS,
+                [{ which_stat: "Moni",
+                    flat_gain_base: 10,
                     depends: [
                         { which_stat: "Fans", effectiveness: 1.0 },
                     ],
@@ -347,11 +352,11 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new SpendCurrencyTodo(
                 'Upgrade Living Room',
                 60 * S_TO_MS,
-                650,
+                Cost.living_room_upgrarde,
                 [],
                 "Tired of the shitty environment at home? Well, hopefully this little upgrade will make it better.",
                 {
-                    prereq: "Moni ≥ 999",
+                    prereq: `Moni ≥ ${Cost.living_room_upgrarde}`,
                 },
                 {
                     one_off_flag: true,
@@ -360,7 +365,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         logs.addHintLogs('Your Living Room upgraded to Living Room+, give it a check!')
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 999) {
+                        if (stat_list.moni.final >= Cost.living_room_upgrarde) {
                             return false;
                         }
                         return true;
@@ -414,11 +419,11 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new SpendCurrencyTodo(
                 'Purchase Gym VIP',
                 10 * S_TO_MS,
-                500,
+                Cost.gym_vip,
                 [],
                 "With just a 1 time fee, you no longer need to pay to use any equipment. What a deal!",
                 {
-                    prereq: "Moni ≥ 1100",
+                    prereq: `Moni ≥ ${Cost.gym_vip}`,
                 },
                 {
                     one_off_flag: true,
@@ -427,7 +432,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         logs.addHintLogs('You are now a VIP member of the Gym! All equipment costs are voided.')
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 1100) {
+                        if (stat_list.moni.final >= Cost.gym_vip) {
                             return false;
                         }
                         return true;
@@ -437,17 +442,17 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new SpendCurrencyTodo(
                 'Treadmill',
                 20 * S_TO_MS,
-                5,
+                Cost.gym_actions,
                 [
                     { which_stat: "Stamina", flat_gain_base: 3.0 },
                 ],
                 "\"...Why do I have to pay to run?\"",
                 {
-                    prereq: "Moni ≥ 5",
+                    prereq: `Moni ≥ ${Cost.gym_actions}`,
                 },
                 {
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 5) {
+                        if (stat_list.moni.final >= Cost.gym_actions) {
                             return false;
                         }
                         return true;
@@ -457,25 +462,25 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
             new SpendCurrencyTodo(
                 'Bench Press',
                 20 * S_TO_MS,
-                5,
+                Cost.gym_actions,
                 [
-                    { which_stat: "Stamina", flat_gain_base: 1.2 },
+                    { which_stat: "Stamina", flat_gain_base: 1.0 },
                 ],
-                "????!?!?",
+                "Is this the Idol meta nowadays?",
                 {
-                    prereq: "Moni ≥ 5",
-                    eureka: "Slight chance to gain 0.01 Stamina multi"
+                    prereq: `Moni ≥ ${Cost.gym_actions}`,
+                    eureka: "Tiny chance to gain 0.01 Stamina multi"
                 },
                 {
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 5) {
+                        if (stat_list.moni.final >= Cost.gym_actions) {
                             return false;
                         }
                         return true;
                     },
                     extra_reward_fn: () => {
                         let r = Math.random();
-                        if (r < 0.25) {
+                        if (r < 0.1) {
                             sta.multi += 0.01
                             logs.addEurekaLogs(`+0.01 Stamina multi`, 'An unexpected breakthrough!')
                         }
@@ -531,9 +536,9 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     { which_stat: "Charm", flat_gain_base: 2 },
                     { which_stat: 
                         "Moni",
-                        flat_gain_base: 5,
+                        flat_gain_base: 8,
                         depends: [
-                            { which_stat: "Charm", effectiveness: 1.1 },
+                            { which_stat: "Charm", effectiveness: 1.2 },
                         ],
                         efficiency: "mid",
                     },

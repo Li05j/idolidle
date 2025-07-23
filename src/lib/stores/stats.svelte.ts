@@ -1,4 +1,4 @@
-import type { TodoBase } from "$lib/data/todo_type.svelte";
+import type { TodoBase } from "$lib/data/todo_type";
 import { DECIMAL_PLACES, calc_stat_effectiveness } from "$lib/utils/utils"
 
 class Trainings {

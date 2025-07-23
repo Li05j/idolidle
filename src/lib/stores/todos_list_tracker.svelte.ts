@@ -1,5 +1,5 @@
-import { locations_data } from "$lib/data/locations_data.svelte"
-import type { TodoBase } from '$lib/data/todo_type.svelte';
+import { locations_data } from "$lib/data/locations_data"
+import type { TodoBase } from '$lib/data/todo_type';
 
 class TodoListTracker {
     public constructor() {

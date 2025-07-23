@@ -1,6 +1,6 @@
 import { Game_Progress } from '$lib/stores/game_progress.svelte';
 import { stat_list } from "$lib/stores/stats.svelte";
-import { LocationTodo, type TodoBase } from '$lib/data/todo_type.svelte';
+import { LocationTodo, type TodoBase } from '$lib/data/todo_type';
 import { S_TO_MS } from '$lib/utils/utils';
 
 export const locations_data: TodoBase[] = [
@@ -95,7 +95,7 @@ export const locations_data: TodoBase[] = [
         150 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
         [{ which_stat: "Stamina", flat_gain_base: 7.5 },],
-        "Remember to wipe the equipment after using them, don\'t wanna end up being roasted by some gym bros online. Talking about ways to end your Idol career...",
+        "Remember to wipe the equipment after using them, don\'t wanna end up being cancelled by some gym bros online. Talking about ways to end your Idol career...",
         {
             custom_msg: "Location cards tend to be less efficient than Action cards in terms of gaining stats."
         },
@@ -110,7 +110,7 @@ export const locations_data: TodoBase[] = [
         300 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
         [{ which_stat: "Stamina", flat_gain_base: 15 },],
-        "Can I work as a waitress - wait, cat ears? Why? I guess it is kinda cute...?",
+        "\"Can I work as a waitress - wait, cat ears? Why? I guess it is kinda cute...?\"",
         {
             custom_msg: "You cannot lower the time needed to complete Purple and Yellow cards. However, their rewards tend to be dynamic."
         },
