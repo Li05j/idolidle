@@ -21,7 +21,7 @@
     let rightPercent = $derived(LiveBattleM.display_enemy_fans / total * 100);
 
     let fan_change = 0;
-    let is_won = $state(LiveBattleM.did_player_win)
+    let is_won = $derived(LiveBattleM.did_player_win)
 
     onMount(() => {
         fan_change = LiveBattleM.start_live();

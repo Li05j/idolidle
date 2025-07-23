@@ -31,7 +31,7 @@ class LiveBattleManager {
         RivalStatsM.init_stats[CPs.current_completed_checkpoint]();
 
         this._you = {
-            Fans: Math.floor(fans.final),
+            Fans: fans.final,
             Max_Stamina: Math.max(sta.final, 0.1),
             Curr_Stamina: Math.max(sta.final, 0.1),
             Sing: sing.final,
@@ -80,10 +80,10 @@ class LiveBattleManager {
         
         if (actor === "Player") {
             this.log(`[green]${actor} performed a ${move} move![/green]`, false)
-            this.log(`[green]${actor} poached ${dmg} fans![/green]`)
+            this.log(`[green]${actor} poached ${Math.ceil(dmg)} fans![/green]`)
         } else {
             this.log(`[darkorange]${actor} performed a ${move} move![/darkorange]`, false)
-            this.log(`[darkorange]${actor} poached ${dmg} fans![/darkorange]`)
+            this.log(`[darkorange]${actor} poached ${Math.ceil(dmg)} fans![/darkorange]`)
         }
     }
 
@@ -171,6 +171,7 @@ class LiveBattleManager {
         this.init()
         this.fight()
         let diff = this.post_fight()
+        fans.base += diff / fans.multi
         this.replay_fight()
 
         return diff;
