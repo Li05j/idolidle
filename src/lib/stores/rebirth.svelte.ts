@@ -4,6 +4,7 @@ import { TodoCardM } from "$lib/managers/todo_card_manager.svelte"
 import { CPs } from "$lib/stores/checkpoints.svelte"
 import { Game_Progress } from "$lib/stores/game_progress.svelte"
 import { stat_list, stat_list_reset } from "$lib/stores/stats.svelte"
+import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte"
 
 class RebirthStats {
     private _rebirth_count = $state(0)
@@ -25,8 +26,8 @@ class RebirthStats {
     public charm_multi_gain = $state(0)
     public pres_multi_gain = $state(0)
 
-    private BASE_RATIO = 0.03
-    private MULTI_RATIO = 0.0001
+    private BASE_RATIO = 0.075
+    private MULTI_RATIO = 0.0002
 
     private inherit_stats() {
         this.fan_base_gain += stat_list.fans.final * this.BASE_RATIO
@@ -78,6 +79,7 @@ class RebirthStats {
         this.inherit_stats()
         stat_list_reset()
         LiveBattleM.reset()
+        RivalStatsM.reset()
         TodoCardM.reset()
         CPs.reset()
         Game_Progress.reset()

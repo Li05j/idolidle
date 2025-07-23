@@ -31,7 +31,7 @@ class LiveBattleManager {
         RivalStatsM.init_stats[CPs.current_completed_checkpoint]();
 
         this._you = {
-            Fans: fans.final,
+            Fans: Math.floor(fans.final),
             Max_Stamina: Math.max(sta.final, 0.1),
             Curr_Stamina: Math.max(sta.final, 0.1),
             Sing: sing.final,

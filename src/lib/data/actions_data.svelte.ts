@@ -238,8 +238,9 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         let r = Math.random();
                         if (r < 0.1) {
                             let gain = 1
+                            let actual_gain = Math.floor(gain * fans.multi)
                             fans.base += gain
-                            logs.addEurekaLogs(`+${Math.floor(gain * fans.multi)} Fans`, 'You attracted a student to be a fan!')
+                            logs.addEurekaLogs(`+${actual_gain} Fans`, `You attracted ${actual_gain} student(s) to be fans!`)
                         }
                     },
                 },

@@ -67,8 +67,8 @@
     function updateLoop() {
         switch (repeat_val) {
             case 'x1': loop = 1; break
-            case 'x10': loop = 10; break
-            case 'x100': loop = 100; break
+            case 'x5': loop = 5; break
+            case 'x20': loop = 20; break
         }
     }
 

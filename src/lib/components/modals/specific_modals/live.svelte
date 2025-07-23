@@ -45,7 +45,6 @@
         // Update only after continue clicked, all transactions will be invalid if game stopped prematurely.
         CPs.advanceToNextCheckpoint()
         Rebirth.update_max_completed_checkpoints(CPs.current_completed_checkpoint)
-        fans.base = Math.abs(fan_change) / fans.multi;
 
         if (fan_change >= 0) {
             logs.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
@@ -99,8 +98,6 @@
 
     <div class="flex-1 flex justify-end">
         <div class="grid grid-cols-2 text-center gap-2 mx-auto">
-            <div class=''>Fans:</div> 
-            <div class="w-8 h-6 rounded" style={LiveInfo.fan_color}></div>
             <div class='text'>Stamina:</div> 
             <div class="w-8 h-6 rounded" style={LiveInfo.sta_color}></div>
             <div class=''>Sing:</div> 

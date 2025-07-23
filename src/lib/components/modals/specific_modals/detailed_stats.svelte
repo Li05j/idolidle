@@ -19,7 +19,7 @@
             <div class='col-span-4 grid grid-cols-4 text-center justify-center'>
                 {#each currency as stat}
                     <div class='text-sm'>{stat.name}</div>
-                    <div class='text-sm'>{stat.base.toFixed(0)}</div> 
+                    <div class='text-sm'>{Math.floor(stat.base)}</div> 
                     <div class='text-sm'>{stat.multi.toFixed(2)}</div> 
                     <div class='text-sm'>{stat.final_str}</div>
                 {/each}

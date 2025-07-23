@@ -108,27 +108,24 @@ class LiveEnemyStats {
     private _rival_cp1_stats = genEnemyStats(rival_cp1)
     private _rival_cp2_stats = genEnemyStats(rival_cp2)
 
-    public get_stats: { [key: number]: LiveBattleStats } = {
-        0: this._rival_cp0_stats,
-        1: this._rival_cp1_stats,
-        2: this._rival_cp2_stats,
+    public get_stats = (i: number): LiveBattleStats => {
+        switch (i) {
+            case 0: return this._rival_cp0_stats
+            case 1: return this._rival_cp1_stats
+            case 2: return this._rival_cp2_stats
+            
+            default: return this._rival_cp0_stats
+        }
     }
 
+
     public init_stats: { [key: number]: () => void } = {
-        0: () => this.stats = this._rival_cp0_stats,
-        1: () => this.stats = this._rival_cp1_stats,
-        2: () => this.stats = this._rival_cp2_stats,
+        0: () => this.stats = { ...this._rival_cp0_stats },
+        1: () => this.stats = { ...this._rival_cp1_stats },
+        2: () => this.stats = { ...this._rival_cp2_stats },
     }
 
     public reset() {
-        this.stats.Fans = 1;
-        this.stats.Max_Stamina = 1;
-        this.stats.Curr_Stamina = 1;
-        this.stats.Sing = 1;
-        this.stats.Dance = 1;
-        this.stats.Charm = 1;
-        this.stats.Presence = 1;
-
         this._rival_cp0_stats = genEnemyStats(rival_cp0)
         this._rival_cp1_stats = genEnemyStats(rival_cp1)
         this._rival_cp2_stats = genEnemyStats(rival_cp2)
