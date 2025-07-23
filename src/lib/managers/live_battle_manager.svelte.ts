@@ -3,6 +3,8 @@ import { stat_list } from "$lib/stores/stats.svelte";
 import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
 
+type Actor = "Player" | "Rival"
+
 class LiveBattleManager {
     public live_sim_complete: boolean = $state(false)
     public did_player_win: boolean = $state(false)
@@ -13,7 +15,10 @@ class LiveBattleManager {
     private _turns: LiveTurn[] = []
     private _replay_turns: LiveTurn[] = $state([])
     private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Speed: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, }
-    private _turn_order: ("Player" | "Rival")[] = [];
+
+    // Draw turns based on speed
+    private _timeline: Actor[] = [];
+    private _action_bar = [0, 0] // [Player, Rival]
 
     get battle_you() { return this._you; }
     get battle_enemy() { return RivalStatsM.stats; }
@@ -35,24 +40,26 @@ class LiveBattleManager {
 
         this.display_your_fans = stat_list.Fans.final
         this.display_enemy_fans = RivalStatsM.stats.Fans
+
+        this._action_bar[0] += 1 / this._you.Speed
+        this._action_bar[1] += 1 / RivalStatsM.stats.Speed
+
+        this.populate_timeline();
         
         this._turns.push({
             msg: "**LIVE start!**", 
             your_stats: { ...this._you }, 
             enemy_stats: { ...RivalStatsM.stats },
         })
-
-        this._turn_order = this._you.Fans >= RivalStatsM.stats.Fans
-            ? ["Player", "Rival"]
-            : ["Rival", "Player"]
     }
 
     private fight() {
         while(!this.battleOver()) {
-            for (const actor of this._turn_order) {
-                if (this.battleOver()) break
-                this.take_turn(actor)
+            if (this._timeline.length <= 0) {
+                this.populate_timeline()
             }
+            let actor = this._timeline.shift()
+            if (actor) this.take_turn(actor)
         }
 
         this.did_player_win = this._you.Fans > RivalStatsM.stats.Fans
@@ -60,7 +67,7 @@ class LiveBattleManager {
         this.log(`LIVE over! ${winner_str}`)
     }
 
-    private take_turn(actor: "Player" | "Rival") {
+    private take_turn(actor: Actor) {
         const attacker = actor === "Player" ? this._you : RivalStatsM.stats
         const defender = actor === "Player" ? RivalStatsM.stats : this._you
 
@@ -106,6 +113,18 @@ class LiveBattleManager {
 
             attacker.Curr_Stamina -= atk_stat / 2 + 0.1
             return [dmg, "Dance"];
+        }
+    }
+
+    private populate_timeline(how_many: number = 10) {
+        for (let i = 0; i < how_many; i++) {
+            if (this._action_bar[0] <= this._action_bar[1]) {
+                this._timeline.push("Player")
+                this._action_bar[0] += 1 / this._you.Speed
+            } else {
+                this._timeline.push("Rival")
+                this._action_bar[1] += 1 / RivalStatsM.stats.Speed
+            }
         }
     }
 
@@ -180,6 +199,8 @@ class LiveBattleManager {
         this.live_sim_complete = false;
         this._turns = []
         this._replay_turns = []
+        this._timeline= [];
+        this._action_bar = [0, 0]
         this.did_player_win = false;
         RivalStatsM.reset()
     }
@@ -187,6 +208,12 @@ class LiveBattleManager {
     debug_print_logs() {
         this._turns.forEach((l) => {
             console.log(l.msg + ", Your fans: " + l.your_stats?.Fans + ", Enemy fans: " + l.enemy_stats?.Fans)
+        })
+    }
+
+    debug_print_timeline() {
+        this._timeline.forEach((l) => {
+            console.log(l + ", ")
         })
     }
 }

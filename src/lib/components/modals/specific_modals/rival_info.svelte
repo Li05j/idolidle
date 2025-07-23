@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { CPs } from "$lib/stores/checkpoints.svelte";
 	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
+	import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
 
     $effect(() => {
         let overall_ratio = (
@@ -46,7 +48,7 @@
             <div class='text-lg'>Speed:</div> 
             <div class="flex justify-center items-center h-full">
                 <div class="w-8 h-6 rounded" style={LiveInfo.spd_color}></div>
-                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Speed}</div> -->
+                <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Speed}</div>
             </div>
 
             <div class='text-lg'>Sing:</div> 
