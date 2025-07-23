@@ -13,7 +13,7 @@ class RebirthStats {
     public fan_base_gain = $state(0)
     public moni_base_gain = $state(0)
     public sta_base_gain = $state(0)
-    public spd_base_gain = $state(0)
+    public agi_base_gain = $state(0)
     public sing_base_gain = $state(0)
     public dance_base_gain = $state(0)
     public charm_base_gain = $state(0)
@@ -22,7 +22,7 @@ class RebirthStats {
     public fan_multi_gain = $state(0)
     public moni_multi_gain = $state(0)
     public sta_multi_gain = $state(0)
-    public spd_multi_gain = $state(0)
+    public agi_multi_gain = $state(0)
     public sing_multi_gain = $state(0)
     public dance_multi_gain = $state(0)
     public charm_multi_gain = $state(0)
@@ -35,7 +35,7 @@ class RebirthStats {
         this.fan_base_gain      += stat_list.Fans.final         * this.BASE_RATIO
         this.moni_base_gain     += stat_list.Moni.final         * this.BASE_RATIO
         this.sta_base_gain      += stat_list.Stamina.final      * this.BASE_RATIO
-        this.spd_base_gain      += stat_list.Speed.final        * this.BASE_RATIO
+        this.agi_base_gain      += stat_list.Agility.final        * this.BASE_RATIO
         this.sing_base_gain     += stat_list.Sing.final         * this.BASE_RATIO
         this.dance_base_gain    += stat_list.Dance.final        * this.BASE_RATIO
         this.charm_base_gain    += stat_list.Charm.final        * this.BASE_RATIO
@@ -44,7 +44,7 @@ class RebirthStats {
         this.fan_multi_gain     += Math.min(stat_list.Fans.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
         this.moni_multi_gain    += Math.min(stat_list.Moni.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
         this.sta_multi_gain     += Math.min(stat_list.Stamina.final     * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.spd_multi_gain     += Math.min(stat_list.Speed.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.agi_multi_gain     += Math.min(stat_list.Agility.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
         this.sing_multi_gain    += Math.min(stat_list.Sing.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
         this.dance_multi_gain   += Math.min(stat_list.Dance.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
         this.charm_multi_gain   += Math.min(stat_list.Charm.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
@@ -55,7 +55,7 @@ class RebirthStats {
         stat_list.Fans.base         += this.fan_base_gain
         stat_list.Moni.base         += this.moni_base_gain
         stat_list.Stamina.base      += this.sta_base_gain
-        stat_list.Speed.base        += this.spd_base_gain
+        stat_list.Agility.base        += this.agi_base_gain
         stat_list.Sing.base         += this.sing_base_gain
         stat_list.Dance.base        += this.dance_base_gain
         stat_list.Charm.base        += this.charm_base_gain
@@ -64,7 +64,7 @@ class RebirthStats {
         stat_list.Fans.multi        += this.fan_multi_gain
         stat_list.Moni.multi        += this.moni_multi_gain
         stat_list.Stamina.multi     += this.sta_multi_gain
-        stat_list.Speed.multi       += this.sta_multi_gain
+        stat_list.Agility.multi       += this.sta_multi_gain
         stat_list.Sing.multi        += this.sing_multi_gain
         stat_list.Dance.multi       += this.dance_multi_gain
         stat_list.Charm.multi       += this.charm_multi_gain

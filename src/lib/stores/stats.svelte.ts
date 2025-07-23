@@ -49,7 +49,7 @@ function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
 	};
 }
 
-function createStat(name: string, baseInit = 10, multiInit = 1.0) {
+function createStat(name: string, baseInit = 0, multiInit = 1.0) {
 	const _name = name;
   	let base = $state(baseInit);
   	let multi = $state(multiInit);
@@ -79,7 +79,7 @@ const fans = createCurrency('Fans');
 const moni = createCurrency('Moni');
 
 const sta = createStat('Stamina');
-const spd = createStat('Speed');
+const agi = createStat('Agility');
 const sing = createStat('Sing');
 const dance = createStat('Dance');
 const charm = createStat('Charm');
@@ -89,7 +89,7 @@ export const stat_list = {
 	Fans: fans,
 	Moni: moni,
 	Stamina: sta,
-	Speed: spd,
+	Agility: agi,
 	Sing: sing,
 	Dance: dance,
 	Charm: charm,
@@ -100,7 +100,7 @@ export function stat_list_reset() {
 	fans.reset();
 	moni.reset();
 	sta.reset();
-	spd.reset();
+	agi.reset();
 	sing.reset();
 	dance.reset();
 	charm.reset();

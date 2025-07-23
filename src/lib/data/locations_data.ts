@@ -7,10 +7,10 @@ export const locations_data: TodoBase[] = [
     new LocationTodo(
         'Wake Up',
         1 * S_TO_MS,
-        [],
+        [{ which_stat: "Agility", effectiveness: 2 },],
         [
             { which_stat: "Stamina", flat_gain_base: 0.1 },
-            { which_stat: "Speed", flat_gain_base: 0.1 },
+            { which_stat: "Agility", flat_gain_base: 0.1 },
         ],
         "Time to wake up, silly. Everything starts here.",
         {
@@ -25,7 +25,7 @@ export const locations_data: TodoBase[] = [
     new LocationTodo(
         'Living Room',
         2 * S_TO_MS,
-        [{ which_stat: "Stamina", effectiveness: 1.0 },],
+        [{ which_stat: "Agility", effectiveness: 2 },],
         [{ which_stat: "Stamina", flat_gain_base: 0.1 },],
         "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one\'s watching (except maybe the cat). Meow.",
         {
@@ -40,7 +40,7 @@ export const locations_data: TodoBase[] = [
     new LocationTodo(
         'Park',
         3 * S_TO_MS,
-        [{ which_stat: "Stamina", effectiveness: 1.0 },],
+        [{ which_stat: "Agility", effectiveness: 2 },],
         [{ which_stat: "Stamina", flat_gain_base: 1.5 },],
         "Just your everyday neighborhood park. Nothing fancy, but it got it's place in your heart. Something always feels about to happen.",
         {
@@ -60,8 +60,8 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'School',
-        8 * S_TO_MS,
-        [{ which_stat: "Stamina", effectiveness: 1.0 },],
+        80 * S_TO_MS,
+        [{ which_stat: "Agility", effectiveness: 2 },],
         [{ which_stat: "Stamina", flat_gain_base: 4 },],
         "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
         {
@@ -75,9 +75,9 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'Mall',
-        240 * S_TO_MS,
-        [{ which_stat: "Stamina", effectiveness: 1.0 },],
-        [{ which_stat: "Stamina", flat_gain_base: 12 },],
+        200 * S_TO_MS,
+        [{ which_stat: "Agility", effectiveness: 2 },],
+        [{ which_stat: "Stamina", flat_gain_base: 10 },],
         "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
         {
             custom_msg: "All cards under Locations depends on Stamina. The more Stamina you have, the less time it takes to complete."
@@ -90,9 +90,9 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'Gym',
-        150 * S_TO_MS,
-        [{ which_stat: "Stamina", effectiveness: 1.0 },],
-        [{ which_stat: "Stamina", flat_gain_base: 7.5 },],
+        50 * S_TO_MS,
+        [{ which_stat: "Agility", effectiveness: 2 },],
+        [{ which_stat: "Stamina", flat_gain_base: 2.5 },],
         "Remember to wipe the equipment after using them, don\'t wanna end up being cancelled by some gym bros online. Talking about ways to end your Idol career...",
         {
             custom_msg: "Location cards tend to be less efficient than Action cards in terms of gaining stats."
@@ -105,9 +105,9 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'Maid Cafe',
-        300 * S_TO_MS,
-        [{ which_stat: "Stamina", effectiveness: 1.0 },],
-        [{ which_stat: "Stamina", flat_gain_base: 15 },],
+        240 * S_TO_MS,
+        [{ which_stat: "Agility", effectiveness: 2 },],
+        [{ which_stat: "Stamina", flat_gain_base: 12 },],
         "\"Can I work as a waitress - wait, cat ears? Why? I guess it is kinda cute...?\"",
         {
             custom_msg: "You cannot lower the time needed to complete Purple and Yellow cards. However, their rewards tend to be dynamic."

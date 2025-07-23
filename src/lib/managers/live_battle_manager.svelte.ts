@@ -14,9 +14,9 @@ class LiveBattleManager {
 
     private _turns: LiveTurn[] = []
     private _replay_turns: LiveTurn[] = $state([])
-    private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Speed: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, }
+    private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Agility: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, }
 
-    // Draw turns based on speed
+    // Draw turns based on agility
     private _timeline: Actor[] = [];
     private _action_bar = [0, 0] // [Player, Rival]
 
@@ -31,7 +31,7 @@ class LiveBattleManager {
             Fans: stat_list.Fans.final,
             Max_Stamina: Math.max(stat_list.Stamina.final, 0.1),
             Curr_Stamina: Math.max(stat_list.Stamina.final, 0.1),
-            Speed: stat_list.Speed.final,
+            Agility: stat_list.Agility.final,
             Sing: stat_list.Sing.final,
             Dance: stat_list.Dance.final,
             Charm: stat_list.Charm.final,
@@ -41,8 +41,8 @@ class LiveBattleManager {
         this.display_your_fans = stat_list.Fans.final
         this.display_enemy_fans = RivalStatsM.stats.Fans
 
-        this._action_bar[0] += 1 / this._you.Speed
-        this._action_bar[1] += 1 / RivalStatsM.stats.Speed
+        this._action_bar[0] += 1 / this._you.Agility
+        this._action_bar[1] += 1 / RivalStatsM.stats.Agility
 
         this.populate_timeline();
         
@@ -120,10 +120,10 @@ class LiveBattleManager {
         for (let i = 0; i < how_many; i++) {
             if (this._action_bar[0] <= this._action_bar[1]) {
                 this._timeline.push("Player")
-                this._action_bar[0] += 1 / this._you.Speed
+                this._action_bar[0] += 1 / this._you.Agility
             } else {
                 this._timeline.push("Rival")
-                this._action_bar[1] += 1 / RivalStatsM.stats.Speed
+                this._action_bar[1] += 1 / RivalStatsM.stats.Agility
             }
         }
     }

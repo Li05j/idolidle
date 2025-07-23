@@ -112,6 +112,10 @@ class ProgressHandlers {
         this._replace_action_collection('Living Room', 'Living Room+');
     }
 
+    public grade_report() {
+        this._remove_single_action('School', 'Collect Grade Report');
+    }
+
     public school_idol_club() {
         this._remove_single_action('School', 'Open Idol Club');
         this._add_actions_from('Idol Club', 'School');
@@ -119,7 +123,14 @@ class ProgressHandlers {
 
     public upgrade_gym() {
         this._remove_single_action('Gym', 'Purchase Gym VIP');
+        this._remove_single_action('Gym', 'Treadmill');
+        this._remove_single_action('Gym', 'Bench Press');
         this._add_actions_from('Gym VIP', 'Gym');
+    }
+
+    public maid_interview() {
+        this._remove_single_action('Maid Cafe', 'Maid Interview')
+        this._add_actions_from('Maid Employee', 'Maid Cafe');
     }
 }
 

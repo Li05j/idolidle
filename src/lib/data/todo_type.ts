@@ -85,12 +85,14 @@ export class ActionTodo extends TodoBase {
         desc: string,
         tooltip: PrereqTooltip,
         opts: {
+            one_off_flag?: boolean;
             extra_reward_fn?: () => void;
             then_fn?: () => void;
             check_disabled_fn?: (stats: StatList) => boolean;
         } = {}
     ) {
         super(name, "action", base_cost, desc, tooltip);
+        if (opts.one_off_flag) this.one_off = opts.one_off_flag;
         if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
         if (opts.then_fn) this.then = opts.then_fn;
         if (opts.check_disabled_fn) this.check_disabled = opts.check_disabled_fn;

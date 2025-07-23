@@ -106,5 +106,5 @@
             </div>
         </div>
     </div>
-    <div class="absolute bottom-4 right-4 text-gray-700 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
+    <div class="absolute bottom-4 right-4 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
 </div>
