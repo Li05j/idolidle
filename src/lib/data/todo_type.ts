@@ -3,6 +3,8 @@ import { stat_list } from "$lib/stores/stats.svelte";
 import type { Rewards, StatEffectPair, TodoType } from "$lib/types";
 import { handle_rewards, reward_string } from "$lib/utils/utils";
 
+let todo_id_counter = 0
+
 type StatList = typeof stat_list;
 export type PrereqTooltip =
     | { prereq?: string; dependsOn?: string; eureka?: string }   // all keys optional
@@ -20,6 +22,10 @@ export abstract class TodoBase {
 
     abstract spend_and_reward(): void;
     abstract get_spendings_rewards_string(): string;
+
+    private _id = ++todo_id_counter;
+
+    get id() { return this._id; }
 
     // Some don't have depends - and in this case their base cost cannot be lowered. So, we simply return empty array.
     get_depends(): StatEffectPair[] {

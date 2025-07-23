@@ -41,7 +41,7 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'Park',
-        30 * S_TO_MS,
+        3 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
         [{ which_stat: "Stamina", flat_gain_base: 1.5 },],
         "Just your everyday neighborhood park. Nothing fancy, but it got it's place in your heart. Something always feels about to happen.",
@@ -62,7 +62,7 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'School',
-        80 * S_TO_MS,
+        8 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
         [{ which_stat: "Stamina", flat_gain_base: 4 },],
         "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",

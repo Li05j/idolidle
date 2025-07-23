@@ -150,7 +150,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
         [
             new SpendCurrencyTodo(
                 'Open Idol Club',
-                60 * S_TO_MS,
+                6 * S_TO_MS,
                 Cost.idol_club.moni,
                 [
                     { which_stat: "Fans", flat_gain_base: 25 },

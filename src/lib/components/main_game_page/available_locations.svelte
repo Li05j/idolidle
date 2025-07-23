@@ -7,7 +7,7 @@
 <hr class="h-1 bg-black border-0 opacity-15 mb-4" />
 
 <div class="overflow-y-auto p-4 h-full">
-    {#each TD_List_Tracker.locations as todo}
+    {#each TD_List_Tracker.locations as todo (todo.id)}
         <LocationTodoCard {todo} />
     {/each}
 </div>

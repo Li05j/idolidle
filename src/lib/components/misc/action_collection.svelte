@@ -23,7 +23,7 @@
         </select>
     </legend>
     <div class="grid grid-cols-3">
-        {#each todos as todo}
+        {#each todos as todo (todo.id)}
             <div class="col-span-1 px-2">
                 <ActionTodoCard {todo} {repeat_val} />
             </div>

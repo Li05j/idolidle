@@ -7,8 +7,8 @@
 <hr class="h-1 bg-black border-0 opacity-15 mb-4" />
 
 <div class="overflow-y-auto p-4 h-full">
-    {#each [...TD_List_Tracker.actions] as action}
-        <div class="pb-4">
+    {#each [...TD_List_Tracker.actions] as action (action[0])}
+        <div class="pb-4 mb-2">
             <ActionCollection title={action[0]} todos={action[1]} />
         </div>
     {/each}
