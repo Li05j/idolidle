@@ -119,9 +119,11 @@ class LiveBattleManager {
     private populate_timeline(how_many: number = 10) {
         for (let i = 0; i < how_many; i++) {
             if (this._action_bar[0] <= this._action_bar[1]) {
+                if (this._you.Curr_Stamina <= 0) continue;
                 this._timeline.push("Player")
                 this._action_bar[0] += 1 / this._you.Agility
             } else {
+                if (RivalStatsM.stats.Curr_Stamina <= 0) continue;
                 this._timeline.push("Rival")
                 this._action_bar[1] += 1 / RivalStatsM.stats.Agility
             }
