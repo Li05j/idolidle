@@ -1,4 +1,4 @@
-import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
+import { stat_list } from "$lib/stores/stats.svelte";
 import { logs } from '$lib/stores/history.svelte'
 import { ActionTodo, GainCurrencyTodo, SpendCurrencyTodo, type TodoBase } from './todo_type';
 import { Game_Progress } from "$lib/stores/game_progress.svelte";
@@ -80,7 +80,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
         [
             new GainCurrencyTodo(
                 'Picking Bottles',
-                5 * S_TO_MS,
+                8 * S_TO_MS,
                 [
                     {which_stat: "Moni", flat_gain_base: 2, depends: [{ which_stat: "Stamina", effectiveness: 1.0 }], efficiency: "v_slow"},
                 ],
@@ -94,7 +94,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 30 * S_TO_MS,
                 [
                     {
-                        which_stat: "Fans", 
+                        which_stat: "Fans",
                         flat_gain_base: 2,
                         depends: [
                             { which_stat: "Sing", effectiveness: 0.25 },
@@ -104,9 +104,9 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     },
                     {
                         which_stat: "Moni",
-                        flat_gain_base: 3, 
+                        flat_gain_base: 4,
                         depends: [
-                            { which_stat: "Fans", effectiveness: 0.5 },
+                            { which_stat: "Fans", effectiveness: 0.55 },
                         ],
                         efficiency: "slow",
                     },
@@ -137,8 +137,8 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         let r = Math.random();
                         if (r < 0.1) {
                             let gain = 1
-                            let actual_gain = Math.floor(gain * fans.multi)
-                            fans.base += gain
+                            let actual_gain = Math.floor(gain * stat_list.Fans.multi)
+                            stat_list.Fans.base += gain
                             logs.addEurekaLogs(`+${actual_gain} Fans`, `You converted ${actual_gain} kid(s) into fans!`)
                         }
                     },
@@ -166,7 +166,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         logs.addHintLogs('You have unlocked some club activities under School, go check them out!')
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.fans.final >= Cost.idol_club.fans && stat_list.moni.final >= Cost.idol_club.moni) {
+                        if (stat_list.Fans.final >= Cost.idol_club.fans && stat_list.Moni.final >= Cost.idol_club.moni) {
                             return false;
                         }
                         return true;
@@ -199,20 +199,20 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         let d = Math.random();
                         let gain = 1.5;
                         if (a < 0.5) {
-                            sing.base += gain
-                            logs.addEurekaLogs(`+${(gain * sing.multi).toFixed(DECIMAL_PLACES)} Sing`)
+                            stat_list.Sing.base += gain
+                            logs.addEurekaLogs(`+${(gain * stat_list.Sing.multi).toFixed(DECIMAL_PLACES)} Sing`)
                         }
                         if (b < 0.5) {
-                            dance.base += gain
-                            logs.addEurekaLogs(`+${(gain * dance.multi).toFixed(DECIMAL_PLACES)} Dance`)
+                            stat_list.Dance.base += gain
+                            logs.addEurekaLogs(`+${(gain * stat_list.Dance.multi).toFixed(DECIMAL_PLACES)} Dance`)
                         }
                         if (c < 0.5) {
-                            charm.base += gain
-                            logs.addEurekaLogs(`+${(gain * charm.multi).toFixed(DECIMAL_PLACES)} Charm`)
+                            stat_list.Charm.base += gain
+                            logs.addEurekaLogs(`+${(gain * stat_list.Charm.multi).toFixed(DECIMAL_PLACES)} Charm`)
                         }
                         if (d < 0.5) {
-                            pres.base += gain
-                            logs.addEurekaLogs(`+${(gain * pres.multi).toFixed(DECIMAL_PLACES)} Presence`)
+                            stat_list.Presence.base += gain
+                            logs.addEurekaLogs(`+${(gain * stat_list.Presence.multi).toFixed(DECIMAL_PLACES)} Presence`)
                         }
                     },
                 },
@@ -245,8 +245,8 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         let r = Math.random();
                         if (r < 0.1) {
                             let gain = 1
-                            let actual_gain = Math.floor(gain * fans.multi)
-                            fans.base += gain
+                            let actual_gain = Math.floor(gain * stat_list.Fans.multi)
+                            stat_list.Fans.base += gain
                             logs.addEurekaLogs(`+${actual_gain} Fans`, `You attracted ${actual_gain} student(s) to be fans!`)
                         }
                     },
@@ -292,13 +292,13 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.1) {
-                            let gain = Math.round(fans.final * 0.1)
-                            fans.base += gain
+                            let gain = Math.round(stat_list.Fans.final * 0.1)
+                            stat_list.Fans.base += gain
                             logs.addEurekaLogs(`+${gain} Fans`, 'The concert was a BIG SUCCESS!')
                         }
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= Cost.idol_club_concert) {
+                        if (stat_list.Moni.final >= Cost.idol_club_concert) {
                             return false;
                         }
                         return true;
@@ -339,7 +339,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.1) {
-                            fans.multi += 0.01
+                            stat_list.Fans.multi += 0.01
                             logs.addEurekaLogs(`+0.01 Fans multi`, `You sparked interest among students!`)
                         }
                     },
@@ -365,7 +365,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         logs.addHintLogs('Your Living Room upgraded to Living Room+, give it a check!')
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= Cost.living_room_upgrarde) {
+                        if (stat_list.Moni.final >= Cost.living_room_upgrarde) {
                             return false;
                         }
                         return true;
@@ -385,7 +385,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 },
                 {
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 25) {
+                        if (stat_list.Moni.final >= 25) {
                             return false;
                         }
                         return true;
@@ -405,7 +405,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 },
                 {
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= 25) {
+                        if (stat_list.Moni.final >= 25) {
                             return false;
                         }
                         return true;
@@ -432,7 +432,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         logs.addHintLogs('You are now a VIP member of the Gym! All equipment costs are voided.')
                     },
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= Cost.gym_vip) {
+                        if (stat_list.Moni.final >= Cost.gym_vip) {
                             return false;
                         }
                         return true;
@@ -452,7 +452,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 },
                 {
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= Cost.gym_actions) {
+                        if (stat_list.Moni.final >= Cost.gym_actions) {
                             return false;
                         }
                         return true;
@@ -473,7 +473,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 },
                 {
                     check_disabled_fn: (stat_list) => {
-                        if (stat_list.moni.final >= Cost.gym_actions) {
+                        if (stat_list.Moni.final >= Cost.gym_actions) {
                             return false;
                         }
                         return true;
@@ -481,7 +481,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.1) {
-                            sta.multi += 0.01
+                            stat_list.Stamina.multi += 0.01
                             logs.addEurekaLogs(`+0.01 Stamina multi`, 'An unexpected breakthrough!')
                         }
                     },
@@ -508,7 +508,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 20 * S_TO_MS,
                 [{ which_stat: "Stamina", effectiveness: 0.8 },],
                 [
-                    { which_stat: "Stamina", flat_gain_base: 1.2 },
+                    { which_stat: "Stamina", flat_gain_base: 1.0 },
                 ],
                 "Ok like, muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it\'s free now.",
                 {
@@ -519,7 +519,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.2) {
-                            sta.multi += 0.01
+                            stat_list.Stamina.multi += 0.01
                             logs.addEurekaLogs(`+0.01 Stamina multi`, 'An unexpected breakthrough!')
                         }
                     },
@@ -531,14 +531,14 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
         [
             new GainCurrencyTodo(
                 'Maid Part-time',
-                55 * S_TO_MS,
+                50 * S_TO_MS,
                 [
-                    { which_stat: "Charm", flat_gain_base: 2 },
+                    { which_stat: "Charm", flat_gain_base: 4 },
                     { which_stat: 
                         "Moni",
-                        flat_gain_base: 8,
+                        flat_gain_base: 15,
                         depends: [
-                            { which_stat: "Charm", effectiveness: 1.2 },
+                            { which_stat: "Charm", effectiveness: 1.0 },
                         ],
                         efficiency: "mid",
                     },
@@ -552,9 +552,9 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.5) {
-                            let gain = 2
-                            let actual_gain = Math.floor(gain * fans.multi)
-                            fans.base += gain
+                            let gain = Math.random() * 5
+                            let actual_gain = Math.floor(gain * stat_list.Fans.multi)
+                            stat_list.Fans.base += gain
                             logs.addEurekaLogs(`+${actual_gain} Fans`, `You converted ${actual_gain} Otaku(s) into fans!`)
                         }
                     },
@@ -577,7 +577,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.1) {
-                            charm.multi += 0.01
+                            stat_list.Charm.multi += 0.01
                             logs.addEurekaLogs(`+0.01 Charm multi`, 'An unexpected breakthrough!')
                         }
                     },

@@ -13,6 +13,7 @@ class RebirthStats {
     public fan_base_gain = $state(0)
     public moni_base_gain = $state(0)
     public sta_base_gain = $state(0)
+    public spd_base_gain = $state(0)
     public sing_base_gain = $state(0)
     public dance_base_gain = $state(0)
     public charm_base_gain = $state(0)
@@ -21,6 +22,7 @@ class RebirthStats {
     public fan_multi_gain = $state(0)
     public moni_multi_gain = $state(0)
     public sta_multi_gain = $state(0)
+    public spd_multi_gain = $state(0)
     public sing_multi_gain = $state(0)
     public dance_multi_gain = $state(0)
     public charm_multi_gain = $state(0)
@@ -30,39 +32,43 @@ class RebirthStats {
     private MULTI_RATIO = 0.0002
 
     private inherit_stats() {
-        this.fan_base_gain += stat_list.fans.final * this.BASE_RATIO
-        this.moni_base_gain += stat_list.moni.final * this.BASE_RATIO
-        this.sta_base_gain += stat_list.sta.final * this.BASE_RATIO
-        this.sing_base_gain += stat_list.sing.final * this.BASE_RATIO
-        this.dance_base_gain += stat_list.dance.final * this.BASE_RATIO
-        this.charm_base_gain += stat_list.charm.final * this.BASE_RATIO
-        this.pres_base_gain += stat_list.pres.final * this.BASE_RATIO
+        this.fan_base_gain      += stat_list.Fans.final         * this.BASE_RATIO
+        this.moni_base_gain     += stat_list.Moni.final         * this.BASE_RATIO
+        this.sta_base_gain      += stat_list.Stamina.final      * this.BASE_RATIO
+        this.spd_base_gain      += stat_list.Speed.final        * this.BASE_RATIO
+        this.sing_base_gain     += stat_list.Sing.final         * this.BASE_RATIO
+        this.dance_base_gain    += stat_list.Dance.final        * this.BASE_RATIO
+        this.charm_base_gain    += stat_list.Charm.final        * this.BASE_RATIO
+        this.pres_base_gain     += stat_list.Presence.final     * this.BASE_RATIO
 
-        this.fan_multi_gain += Math.min(stat_list.fans.final * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.moni_multi_gain += Math.min(stat_list.moni.final * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.sta_multi_gain += Math.min(stat_list.sta.final * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.sing_multi_gain += Math.min(stat_list.sing.final * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.dance_multi_gain += Math.min(stat_list.dance.final * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.charm_multi_gain += Math.min(stat_list.charm.final * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.pres_multi_gain += Math.min(stat_list.pres.final * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.fan_multi_gain     += Math.min(stat_list.Fans.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.moni_multi_gain    += Math.min(stat_list.Moni.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.sta_multi_gain     += Math.min(stat_list.Stamina.final     * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.spd_multi_gain     += Math.min(stat_list.Speed.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.sing_multi_gain    += Math.min(stat_list.Sing.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.dance_multi_gain   += Math.min(stat_list.Dance.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.charm_multi_gain   += Math.min(stat_list.Charm.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        this.pres_multi_gain    += Math.min(stat_list.Presence.final    * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
     }
 
     private apply_gains_to_initial_stats() {
-        stat_list.fans.base += this.fan_base_gain
-        stat_list.moni.base += this.moni_base_gain
-        stat_list.sta.base += this.sta_base_gain
-        stat_list.sing.base += this.sing_base_gain
-        stat_list.dance.base += this.dance_base_gain
-        stat_list.charm.base += this.charm_base_gain
-        stat_list.pres.base += this.pres_base_gain
+        stat_list.Fans.base         += this.fan_base_gain
+        stat_list.Moni.base         += this.moni_base_gain
+        stat_list.Stamina.base      += this.sta_base_gain
+        stat_list.Speed.base        += this.spd_base_gain
+        stat_list.Sing.base         += this.sing_base_gain
+        stat_list.Dance.base        += this.dance_base_gain
+        stat_list.Charm.base        += this.charm_base_gain
+        stat_list.Presence.base     += this.pres_base_gain
 
-        stat_list.fans.multi += this.fan_multi_gain
-        stat_list.moni.multi += this.moni_multi_gain
-        stat_list.sta.multi += this.sta_multi_gain
-        stat_list.sing.multi += this.sing_multi_gain
-        stat_list.dance.multi += this.dance_multi_gain
-        stat_list.charm.multi += this.charm_multi_gain
-        stat_list.pres.multi += this.pres_multi_gain
+        stat_list.Fans.multi        += this.fan_multi_gain
+        stat_list.Moni.multi        += this.moni_multi_gain
+        stat_list.Stamina.multi     += this.sta_multi_gain
+        stat_list.Speed.multi       += this.sta_multi_gain
+        stat_list.Sing.multi        += this.sing_multi_gain
+        stat_list.Dance.multi       += this.dance_multi_gain
+        stat_list.Charm.multi       += this.charm_multi_gain
+        stat_list.Presence.multi    += this.pres_multi_gain
     }
 
     increment_rebirth_count() { this._rebirth_count++; }

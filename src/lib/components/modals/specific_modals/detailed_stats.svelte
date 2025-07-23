@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Rebirth } from "$lib/stores/rebirth.svelte";
-    import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
+    import { stat_list } from "$lib/stores/stats.svelte";
 
-    let currency = [fans, moni]
-    let other_stats = [sta, sing, dance, charm, pres]
+    let currency = [stat_list.Fans, stat_list.Moni]
+    let other_stats = [stat_list.Stamina, stat_list.Speed, stat_list.Sing, stat_list.Dance, stat_list.Charm, stat_list.Presence]
 </script>
 
 <div class="w-full p-4">

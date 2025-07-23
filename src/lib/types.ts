@@ -1,13 +1,14 @@
 type Only<T, U> = T & { [K in Exclude<keyof U, keyof T>]?: never };
 
 export type TodoType = "none" | "location" | "action" | "gain_currency" | "spend_currency";
-export type BasicStats = "Fans" | "Moni" | "Stamina" | "Sing" | "Dance" | "Charm" | "Presence";
+export type BasicStats = "Fans" | "Moni" | "Stamina" | "Speed" | "Sing" | "Dance" | "Charm" | "Presence";
 export type TrainingEfficiency = "v_slow" | "slow" | "mid" | "fast" | "v_fast" | "n/a";
 
 export type LiveBattleStats = {
     Fans: number,
     Max_Stamina: number,
     Curr_Stamina: number,
+    Speed: number,
     Sing: number,
     Dance: number,
     Charm: number,

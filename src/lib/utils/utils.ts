@@ -1,5 +1,5 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
-import { fans, moni, sta, sing, dance, charm, pres, dummy } from "$lib/stores/stats.svelte";
+import { stat_list, dummy } from "$lib/stores/stats.svelte";
 import type { PrereqTooltip } from '$lib/data/todo_type';
 
 export const DECIMAL_PLACES = 1;
@@ -27,7 +27,7 @@ export function parseText(text: string) {
         .join('<br>');
     }
 
-export function reward_string(rewards: Rewards[], stats = {fans, moni, sta, sing, dance, charm, pres}): string {
+export function reward_string(rewards: Rewards[]): string {
     let ret_str = ""
     rewards.forEach(r => {
         let temp = ``
@@ -40,7 +40,7 @@ export function reward_string(rewards: Rewards[], stats = {fans, moni, sta, sing
         }
         if (r.flat_gain_base) {
             let summed_flat_gain = r.flat_gain_base + depends_gain
-            let multi = find_stat_from_str(r.which_stat).multi
+            let multi = stat_list[r.which_stat].multi
             temp += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
         }
         else if (r.flat_gain_multi) {
@@ -54,7 +54,7 @@ export function reward_string(rewards: Rewards[], stats = {fans, moni, sta, sing
 
 export function handle_rewards(rewards: Rewards[]): void {
     rewards.forEach(r => {
-        let s = find_stat_from_str(r.which_stat);
+        let s = stat_list[r.which_stat];
         if (s) {
             let depends_gain = 0;
             if (r.depends && r.efficiency) {
@@ -100,23 +100,10 @@ export function tooltip_string(tooltip: PrereqTooltip, is_disabled: boolean,): s
     return ret_str;
 }
 
-export function find_stat_from_str(s: BasicStats) {
-    switch (s) {
-        case "Fans":        return fans;
-        case "Moni":        return moni;
-        case "Stamina":     return sta;
-        case "Sing":        return sing;
-        case "Dance":       return dance;
-        case "Charm":       return charm;
-        case "Presence":    return pres;
-        default:            return dummy;
-    }
-}
-
 export function calc_stat_effectiveness(depends: StatEffectPair[]): number {
     let r_stat = 0;
     depends.forEach((d) => {
-        let s = find_stat_from_str(d.which_stat);
+        let s = stat_list[d.which_stat];
         let normalization_factor = 1;
         if (d.which_stat === 'Fans') normalization_factor = 2;
         if (d.which_stat === 'Stamina') normalization_factor = 3;
@@ -138,7 +125,7 @@ function find_training_eff_from_str(s: TrainingEfficiency) {
 }
 
 function training_v_slow(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.42)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.35)), 1)
 }
 
 function training_slow(v: number) {
@@ -146,15 +133,15 @@ function training_slow(v: number) {
 }
 
 function training_mid(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.58)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.65)), 1)
 }
 
 function training_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.66)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.8)), 1)
 }
 
 function training_v_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.74)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.95)), 1)
 }
 
 function identity(i: any) {

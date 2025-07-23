@@ -1,5 +1,5 @@
 import { CPs } from "$lib/stores/checkpoints.svelte";
-import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
+import { stat_list } from "$lib/stores/stats.svelte";
 import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
 
@@ -12,15 +12,7 @@ class LiveBattleManager {
 
     private _turns: LiveTurn[] = []
     private _replay_turns: LiveTurn[] = $state([])
-    private _you: LiveBattleStats = {
-        Fans: fans.final,
-        Max_Stamina: sta.final,
-        Curr_Stamina: sta.final,
-        Sing: sing.final,
-        Dance: dance.final,
-        Charm: charm.final,
-        Presence: pres.final,
-    }
+    private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, }
     private _turn_order: ("Player" | "Rival")[] = [];
 
     get battle_you() { return this._you; }
@@ -87,7 +79,6 @@ class LiveBattleManager {
         }
     }
 
-    // Todo: Make this smarter
     private calc_and_log_damage(attacker: LiveBattleStats, defender: LiveBattleStats): [number, string] {
         let r = Math.random()
         if (r > 0.5) {
@@ -118,8 +109,15 @@ class LiveBattleManager {
     }
 
     private battleOver(): boolean {
-        return RivalStatsM.stats.Fans <= 0 || this._you.Fans <= 0 ||
-               (this._you.Curr_Stamina <= 0 && RivalStatsM.stats.Curr_Stamina <= 0)
+        const fan_cond = RivalStatsM.stats.Fans <= 0 || this._you.Fans <= 0
+        const sta_cond = this._you.Curr_Stamina <= 0 && RivalStatsM.stats.Curr_Stamina <= 0
+
+        if (fan_cond) {
+            this.log("[red]Someone has lost ALL their fans...[/red]", false)
+        } else if (sta_cond) {
+            this.log("[red]Both sides have no Stamina left![/red]", false)
+        }
+        return fan_cond || sta_cond;
     }
 
     private log(msg: string, auto_push_stats: boolean = true) {

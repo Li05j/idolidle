@@ -73,32 +73,34 @@ function createStat(name: string, baseInit = 0, multiInit = 1.0) {
 }
 
 export const trainings = createTrainings()
-
-export const fans = createCurrency('Fans');
-export const moni = createCurrency('Moni');
-
-export const sta = createStat('Stamina');
-export const sing = createStat('Sing');
-export const dance = createStat('Dance');
-export const charm = createStat('Charm');
-export const pres = createStat('Presence');
-
 export const dummy = createStat('Dummy');
 
+const fans = createCurrency('Fans');
+const moni = createCurrency('Moni');
+
+const sta = createStat('Stamina');
+const spd = createStat('Speed');
+const sing = createStat('Sing');
+const dance = createStat('Dance');
+const charm = createStat('Charm');
+const pres = createStat('Presence');
+
 export const stat_list = {
-	fans: fans,
-	moni: moni,
-	sta: sta,
-	sing: sing,
-	dance: dance,
-	charm: charm,
-	pres: pres,
+	Fans: fans,
+	Moni: moni,
+	Stamina: sta,
+	Speed: spd,
+	Sing: sing,
+	Dance: dance,
+	Charm: charm,
+	Presence: pres,
 }
 
 export function stat_list_reset() {
 	fans.reset();
 	moni.reset();
 	sta.reset();
+	spd.reset();
 	sing.reset();
 	dance.reset();
 	charm.reset();

@@ -8,7 +8,6 @@
 	import { ModalM } from "$lib/managers/modal_manager.svelte";
 	import { logs } from "$lib/stores/history.svelte";
 	import { Rebirth } from "$lib/stores/rebirth.svelte";
-	import { fans } from "$lib/stores/stats.svelte";
 	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
     
     let { onClose } = $props()

@@ -160,7 +160,7 @@ export class SpendCurrencyTodo extends TodoBase {
     }
 
     spend_and_reward() {
-        stat_list.moni.base -= this.spendings_moni / stat_list.moni.multi; // Divide multi to balance the gain out.
+        stat_list.Moni.base -= this.spendings_moni / stat_list.Moni.multi; // Divide multi to balance the gain out.
         handle_rewards(this.rewards);
         logs.addLogs(this);
         this.extra_reward?.();

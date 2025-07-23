@@ -10,21 +10,22 @@
 	import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte';
 	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
 	import { onMount } from 'svelte';
+	import { stat_list } from '$lib/stores/stats.svelte';
 
     function openModal(t: ModalType) {
         ModalM.set_modal_open(t); 
     }
-    // function closeModal(t: ModalType) { 
-    //     ModalM.set_modal_close(t); 
-    // }
 
     function cheat() {
-        // fans.base   += 1000;
-        // sta.base    += 1000;
-        // sing.base   += 1000;
-        // dance.base  += 1000;
-        // charm.base  += 1000;
-        // pres.base   += 1000;
+        stat_list.Fans.base   += 1000;
+        stat_list.Moni.base   += 1000;
+        stat_list.Stamina.base   += 1000;
+        stat_list.Speed.base   += 1000;
+        stat_list.Sing.base   += 1000;
+        stat_list.Dance.base   += 1000;
+        stat_list.Charm.base   += 1000;
+        stat_list.Presence.base   += 1000;
+
         openModal('settings')
         return
     }
