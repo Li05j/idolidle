@@ -12,7 +12,7 @@ class LiveBattleManager {
 
     private _turns: LiveTurn[] = []
     private _replay_turns: LiveTurn[] = $state([])
-    private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, }
+    private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Speed: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, }
     private _turn_order: ("Player" | "Rival")[] = [];
 
     get battle_you() { return this._you; }
@@ -23,16 +23,17 @@ class LiveBattleManager {
         RivalStatsM.init_stats[CPs.current_completed_checkpoint]();
 
         this._you = {
-            Fans: fans.final,
-            Max_Stamina: Math.max(sta.final, 0.1),
-            Curr_Stamina: Math.max(sta.final, 0.1),
-            Sing: sing.final,
-            Dance: dance.final,
-            Charm: charm.final,
-            Presence: pres.final,
+            Fans: stat_list.Fans.final,
+            Max_Stamina: Math.max(stat_list.Stamina.final, 0.1),
+            Curr_Stamina: Math.max(stat_list.Stamina.final, 0.1),
+            Speed: stat_list.Speed.final,
+            Sing: stat_list.Sing.final,
+            Dance: stat_list.Dance.final,
+            Charm: stat_list.Charm.final,
+            Presence: stat_list.Presence.final,
         }
 
-        this.display_your_fans = fans.final
+        this.display_your_fans = stat_list.Fans.final
         this.display_enemy_fans = RivalStatsM.stats.Fans
         
         this._turns.push({
@@ -55,7 +56,7 @@ class LiveBattleManager {
         }
 
         this.did_player_win = this._you.Fans > RivalStatsM.stats.Fans
-        const winner_str = this.did_player_win ? "You win!" : "Rival wins!"
+        const winner_str = this.did_player_win ? "[green]You win![/green]" : "[red]Rival wins![/red]"
         this.log(`LIVE over! ${winner_str}`)
     }
 
@@ -153,8 +154,8 @@ class LiveBattleManager {
     }
 
     private post_fight(): number {
-        let temp = fans.final
-        let difference = Math.floor(this._you.Fans / fans.multi) - temp
+        let temp = stat_list.Fans.final
+        let difference = Math.floor(this._you.Fans / stat_list.Fans.multi) - temp
 
         if (difference >= 0) {
             this.log(`LIVE has successfully concluded. You gained ${difference} fans!`, false)
@@ -169,7 +170,7 @@ class LiveBattleManager {
         this.init()
         this.fight()
         let diff = this.post_fight()
-        fans.base += diff / fans.multi
+        stat_list.Fans.base += diff / stat_list.Fans.multi
         this.replay_fight()
 
         return diff;

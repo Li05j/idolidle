@@ -29,7 +29,7 @@ class RebirthStats {
     public pres_multi_gain = $state(0)
 
     private BASE_RATIO = 0.075
-    private MULTI_RATIO = 0.0002
+    private MULTI_RATIO = 0.0003
 
     private inherit_stats() {
         this.fan_base_gain      += stat_list.Fans.final         * this.BASE_RATIO
