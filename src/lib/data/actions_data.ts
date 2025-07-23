@@ -82,7 +82,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Picking Bottles',
                 8 * S_TO_MS,
                 [
-                    {which_stat: "Moni", flat_gain_base: 2, depends: [{ which_stat: "Stamina", effectiveness: 1.0 }], efficiency: "v_slow"},
+                    {which_stat: "Moni", flat_gain_base: 3, depends: [{ which_stat: "Stamina", effectiveness: 1.0 }], efficiency: "v_slow"},
                 ],
                 "Being an Idol means starting somewhere, you know? Defo not working for the Moni - Just making sure the Park is clean and tidy.",
                 {
@@ -95,18 +95,18 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 [
                     {
                         which_stat: "Fans",
-                        flat_gain_base: 2,
+                        flat_gain_base: 1,
                         depends: [
-                            { which_stat: "Sing", effectiveness: 0.25 },
-                            { which_stat: "Dance", effectiveness: 0.25 },
+                            { which_stat: "Sing", effectiveness: 0.4 },
+                            { which_stat: "Dance", effectiveness: 0.4 },
                         ],
                         efficiency: "v_slow",
                     },
                     {
                         which_stat: "Moni",
-                        flat_gain_base: 4,
+                        flat_gain_base: 6,
                         depends: [
-                            { which_stat: "Fans", effectiveness: 0.55 },
+                            { which_stat: "Fans", effectiveness: 1.0 },
                         ],
                         efficiency: "slow",
                     },
@@ -270,6 +270,18 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 "You know when those anime girls standing near the school gate after school to try and advertise their idol activities? Yeah, that's you now.",
                 {
                     dependsOn: "Presence",
+                    eureka: "Tiny chance to gain some Fans"
+                },
+                {
+                    extra_reward_fn: () => {
+                        let r = Math.random();
+                        if (r < 0.1) {
+                            let gain = 2
+                            let actual_gain = Math.floor(gain * stat_list.Fans.multi)
+                            stat_list.Fans.base += gain
+                            logs.addEurekaLogs(`+${actual_gain} Fans`, `You attracted ${actual_gain} student(s) to be fans!`)
+                        }
+                    },
                 },
             ),
             new ActionTodo(
@@ -289,7 +301,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.1) {
-                            let gain = 1
+                            let gain = 2
                             let actual_gain = Math.floor(gain * stat_list.Fans.multi)
                             stat_list.Fans.base += gain
                             logs.addEurekaLogs(`+${actual_gain} Fans`, `You attracted ${actual_gain} student(s) to be fans!`)
@@ -339,7 +351,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         if (r < 0.1) {
                             let gain = Math.round(stat_list.Fans.final * 0.1)
                             stat_list.Fans.base += gain
-                            logs.addEurekaLogs(`+${gain * stat_list.Fans.multi} Fans`, 'The concert was a BIG SUCCESS!')
+                            logs.addEurekaLogs(`+${Math.floor(gain * stat_list.Fans.multi)} Fans`, 'The concert was a BIG SUCCESS!')
                         }
                     },
                     check_disabled_fn: (stat_list) => {
@@ -356,7 +368,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 [{ which_stat: "Moni",
                     flat_gain_base: 10,
                     depends: [
-                        { which_stat: "Fans", effectiveness: 1.0 },
+                        { which_stat: "Fans", effectiveness: 1.5 },
                     ],
                     efficiency: "slow",
                 },],
@@ -489,10 +501,10 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 10 * S_TO_MS,
                 Cost.gym_vip,
                 [],
-                "With just a 1 time fee, you no longer need to pay to use any equipment. What a deal!",
+                "With just a 1 time fee, you no longer need to pay to use the Gym. What a deal!",
                 {
                     prereq: `Moni ≥ ${Cost.gym_vip}`,
-                    eureka: "Void all equipment costs in Gym."
+                    eureka: "Void all training costs in Gym. Trainings are also slightly more efficient."
                 },
                 {
                     one_off_flag: true,
@@ -509,16 +521,15 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 },
             ),
             new SpendCurrencyTodo(
-                'Assault Bike',
-                25 * S_TO_MS,
+                'Bench Press',
+                20 * S_TO_MS,
                 Cost.gym_actions,
                 [
-                    { which_stat: "Agility", flat_gain_base: 1.2 },
+                    { which_stat: "Stamina", flat_gain_base: 3 },
                 ],
-                "You are not actually assulting a bike are you.",
+                "Is this the Idol meta nowadays?",
                 {
                     prereq: `Moni ≥ ${Cost.gym_actions}`,
-                    eureka: "Tiny chance to gain 0.01 Agility multi"
                 },
                 {
                     check_disabled_fn: (stat_list) => {
@@ -527,22 +538,35 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                         }
                         return true;
                     },
-                    extra_reward_fn: () => {
-                        let r = Math.random();
-                        if (r < 0.1) {
-                            stat_list.Agility.multi += 0.01
-                            logs.addEurekaLogs(`+0.01 Agility multi`, 'An unexpected breakthrough!')
+                },
+            ),
+            new SpendCurrencyTodo(
+                'Assault Bike',
+                20 * S_TO_MS,
+                Cost.gym_actions,
+                [
+                    { which_stat: "Agility", flat_gain_base: 3 },
+                ],
+                "You are not actually assulting a bike are you.",
+                {
+                    prereq: `Moni ≥ ${Cost.gym_actions}`,
+                },
+                {
+                    check_disabled_fn: (stat_list) => {
+                        if (stat_list.Moni.final >= Cost.gym_actions) {
+                            return false;
                         }
+                        return true;
                     },
                 },
             ),
             new SpendCurrencyTodo(
                 'Treadmill',
-                25 * S_TO_MS,
+                20 * S_TO_MS,
                 Cost.gym_actions,
                 [
-                    { which_stat: "Agility", flat_gain_base: 2 },
-                    { which_stat: "Stamina", flat_gain_base: 2 },
+                    { which_stat: "Agility", flat_gain_base: 1.5 },
+                    { which_stat: "Stamina", flat_gain_base: 1.5 },
                 ],
                 "\"...Why do I have to pay to run?\"",
                 {
@@ -557,44 +581,16 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     },
                 },
             ),
-            new SpendCurrencyTodo(
-                'Bench Press',
-                25 * S_TO_MS,
-                Cost.gym_actions,
-                [
-                    { which_stat: "Stamina", flat_gain_base: 1.2 },
-                ],
-                "Is this the Idol meta nowadays?",
-                {
-                    prereq: `Moni ≥ ${Cost.gym_actions}`,
-                    eureka: "Tiny chance to gain 0.01 Stamina multi"
-                },
-                {
-                    check_disabled_fn: (stat_list) => {
-                        if (stat_list.Moni.final >= Cost.gym_actions) {
-                            return false;
-                        }
-                        return true;
-                    },
-                    extra_reward_fn: () => {
-                        let r = Math.random();
-                        if (r < 0.1) {
-                            stat_list.Stamina.multi += 0.01
-                            logs.addEurekaLogs(`+0.01 Stamina multi`, 'An unexpected breakthrough!')
-                        }
-                    },
-                },
-            ),
         ]
     ],
     ["Gym VIP", 
         [
             new ActionTodo(
                 'Assault Bike',
-                25 * S_TO_MS,
+                20 * S_TO_MS,
                 [{ which_stat: "Stamina", effectiveness: 1.0 },],
                 [
-                    { which_stat: "Agility", flat_gain_base: 1.0 },
+                    { which_stat: "Agility", flat_gain_base: 3.0 },
                 ],
                 "Running.",
                 {
@@ -604,16 +600,16 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 {
                     extra_reward_fn: () => {
                         let r = Math.random();
-                        if (r < 0.2) {
+                        if (r < 0.1) {
                             stat_list.Agility.multi += 0.01
                             logs.addEurekaLogs(`+0.01 Agility multi`, 'An unexpected breakthrough!')
                         }
                     },
-                },
+                }
             ),
             new ActionTodo(
                 'Treadmill',
-                25 * S_TO_MS,
+                20 * S_TO_MS,
                 [
                     { which_stat: "Stamina", effectiveness: 0.5 },
                     { which_stat: "Agility", effectiveness: 0.5 },
@@ -632,7 +628,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 20 * S_TO_MS,
                 [{ which_stat: "Agility", effectiveness: 1.0 },],
                 [
-                    { which_stat: "Stamina", flat_gain_base: 1.0 },
+                    { which_stat: "Stamina", flat_gain_base: 3.0 },
                 ],
                 "Ok like, muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it\'s free now.",
                 {
@@ -642,12 +638,12 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 {
                     extra_reward_fn: () => {
                         let r = Math.random();
-                        if (r < 0.2) {
+                        if (r < 0.1) {
                             stat_list.Stamina.multi += 0.01
                             logs.addEurekaLogs(`+0.01 Stamina multi`, 'An unexpected breakthrough!')
                         }
                     },
-                },
+                }
             ),
         ]
     ],
@@ -680,12 +676,12 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 },
             ),
             new ActionTodo(
-                'Practice Moe Magic',
+                'Chant Moe Magic',
                 25 * S_TO_MS,
-                [{ which_stat: "Charm", effectiveness: 1.0 },],
+                [{ which_stat: "Sing", effectiveness: 1.0 },],
                 [
                     { which_stat: "Dance", flat_gain_base: 0.5 },
-                    { which_stat: "Charm", flat_gain_base: 3 },
+                    { which_stat: "Charm", flat_gain_base: 2.5 },
                 ],
                 "Otaku dances aren\'t real dances, but it sure is cute and lovely. And cute. And lovely~ Look at all these Otakus fawning at you, you could even start a cult at this rate.",
                 {
@@ -718,13 +714,13 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 {
                     one_off_flag: true,
                     then_fn: () => {
-                        Game_Progress.progress_handler.grade_report();
+                        Game_Progress.progress_handler.maid_hire();
                     },
                     extra_reward_fn: () => {
                         const m = Math.random() * 0.3 + 0.3;
                         let gain = stat_list.Charm.final * m
                         stat_list.Moni.base += gain
-                        logs.addEurekaLogs(`+${gain * stat_list.Moni.multi} Moni`, 'Free Moni~')
+                        logs.addEurekaLogs(`+${Math.floor(gain * stat_list.Moni.multi)} Moni`, 'Free Moni~')
                     },
                 },
             ),
@@ -732,10 +728,10 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                 'Maid Part-time',
                 45 * S_TO_MS,
                 [
-                    { which_stat: "Charm", flat_gain_base: 4.5 },
+                    { which_stat: "Presence", flat_gain_base: 3.5 },
                     { which_stat: 
                         "Moni",
-                        flat_gain_base: 15,
+                        flat_gain_base: 10,
                         depends: [
                             { which_stat: "Charm", effectiveness: 1.0 },
                         ],
@@ -751,7 +747,7 @@ export const actions_data: Map<string, TodoBase[]> = new Map([
                     extra_reward_fn: () => {
                         let r = Math.random();
                         if (r < 0.5) {
-                            let gain = Math.random() * 10
+                            let gain = Math.random() * 5
                             let actual_gain = Math.floor(gain * stat_list.Fans.multi)
                             stat_list.Fans.base += gain
                             logs.addEurekaLogs(`+${actual_gain} Fans`, `You converted ${actual_gain} Otaku(s) into fans!`)

@@ -2,7 +2,7 @@ import type { TodoBase } from "$lib/data/todo_type";
 import { DECIMAL_PLACES, calc_stat_effectiveness } from "$lib/utils/utils"
 
 class Trainings {
-	private _training_constant = $state(727);
+	private _training_constant = $state(650);
 
 	private _calc_stat(td: TodoBase): number {
 		let r = calc_stat_effectiveness(td.get_depends());

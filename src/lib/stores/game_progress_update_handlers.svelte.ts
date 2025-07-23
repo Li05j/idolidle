@@ -132,6 +132,10 @@ class ProgressHandlers {
         this._remove_single_action('Maid Cafe', 'Maid Interview')
         this._add_actions_from('Maid Employee', 'Maid Cafe');
     }
+
+    public maid_hire() {
+        this._remove_single_action('Maid Employee', 'New Hire Bonus!')
+    }
 }
 
 function createProgressHandlers() {

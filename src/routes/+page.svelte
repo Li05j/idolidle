@@ -17,14 +17,14 @@
     }
 
     function cheat() {
-        stat_list.Fans.base   += 1000;
-        stat_list.Moni.base   += 1000;
-        stat_list.Stamina.base   += 1000;
-        stat_list.Agility.base   += 1000;
-        stat_list.Sing.base   += 1000;
-        stat_list.Dance.base   += 1000;
-        stat_list.Charm.base   += 1000;
-        stat_list.Presence.base   += 1000;
+        // stat_list.Fans.base     += 100;
+        // stat_list.Moni.base     += 100;
+        // stat_list.Stamina.base  += 100;
+        // stat_list.Agility.base  += 100;
+        // stat_list.Sing.base     += 100;
+        // stat_list.Dance.base    += 100;
+        // stat_list.Charm.base    += 100;
+        // stat_list.Presence.base += 100;
 
         openModal('settings')
         return

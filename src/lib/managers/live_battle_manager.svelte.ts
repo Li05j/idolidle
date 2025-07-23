@@ -29,8 +29,8 @@ class LiveBattleManager {
 
         this._you = {
             Fans: stat_list.Fans.final,
-            Max_Stamina: Math.max(stat_list.Stamina.final, 0.1),
-            Curr_Stamina: Math.max(stat_list.Stamina.final, 0.1),
+            Max_Stamina: stat_list.Stamina.final,
+            Curr_Stamina: stat_list.Stamina.final,
             Agility: stat_list.Agility.final,
             Sing: stat_list.Sing.final,
             Dance: stat_list.Dance.final,
@@ -90,7 +90,7 @@ class LiveBattleManager {
     private calc_and_log_damage(attacker: LiveBattleStats, defender: LiveBattleStats): [number, string] {
         let r = Math.random()
         if (r > 0.5) {
-            let atk_stat = attacker.Sing
+            let atk_stat = attacker.Sing * (0.5 + attacker.Agility / defender.Agility * 0.5)
             let def_stat = defender.Charm * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5) // [0.5, 1]
 
             let fluctuation = 1 + (Math.random() * 0.6 - 0.3);
@@ -102,7 +102,7 @@ class LiveBattleManager {
             attacker.Curr_Stamina -= atk_stat / 2 + 0.1
             return [dmg, "Sing"];
         } else {
-            let atk_stat = attacker.Dance
+            let atk_stat = attacker.Dance * (0.5 + attacker.Agility / defender.Agility * 0.5)
             let def_stat = defender.Presence * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5)
 
             let fluctuation = 1 + (Math.random() * 0.4 - 0.2);
@@ -119,13 +119,13 @@ class LiveBattleManager {
     private populate_timeline(how_many: number = 10) {
         for (let i = 0; i < how_many; i++) {
             if (this._action_bar[0] <= this._action_bar[1]) {
+                this._action_bar[0] += 1 / this._you.Agility
                 if (this._you.Curr_Stamina <= 0) continue;
                 this._timeline.push("Player")
-                this._action_bar[0] += 1 / this._you.Agility
             } else {
+                this._action_bar[1] += 1 / RivalStatsM.stats.Agility
                 if (RivalStatsM.stats.Curr_Stamina <= 0) continue;
                 this._timeline.push("Rival")
-                this._action_bar[1] += 1 / RivalStatsM.stats.Agility
             }
         }
     }

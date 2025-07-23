@@ -125,23 +125,23 @@ function find_training_eff_from_str(s: TrainingEfficiency) {
 }
 
 function training_v_slow(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.35)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.4)), 1)
 }
 
 function training_slow(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.50)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.53)), 1)
 }
 
 function training_mid(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.65)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.66)), 1)
 }
 
 function training_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.8)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.79)), 1)
 }
 
 function training_v_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.95)), 1)
+    return Math.max(Math.floor(Math.pow(v, 0.92)), 1)
 }
 
 function identity(i: any) {
