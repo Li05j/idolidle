@@ -35,37 +35,37 @@
             <div class='text-lg'>Fans:</div> 
             <div class="flex justify-center items-center h-full">
                 <div class="w-8 h-6 rounded" style={LiveInfo.fan_color}></div>
-                <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Fans}</div>
+                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Fans}</div> -->
             </div>
 
             <div class='text-lg'>Stamina:</div> 
             <div class="flex justify-center items-center h-full">
                 <div class="w-8 h-6 rounded" style={LiveInfo.sta_color}></div>
-                <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Max_Stamina}</div>
+                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Max_Stamina}</div> -->
             </div>
 
             <div class='text-lg'>Sing:</div> 
             <div class="flex justify-center items-center h-full">
                 <div class="w-8 h-6 rounded" style={LiveInfo.sing_color}></div>
-                <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Sing}</div>
+                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Sing}</div> -->
             </div>
 
             <div class='text-lg'>Dance:</div> 
             <div class="flex justify-center items-center h-full">
                 <div class="w-8 h-6 rounded" style={LiveInfo.dance_color}></div>
-                <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Dance}</div>
+                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Dance}</div> -->
             </div>
 
             <div class='text-lg'>Charm:</div> 
             <div class="flex justify-center items-center h-full">
                 <div class="w-8 h-6 rounded" style={LiveInfo.charm_color}></div>
-                <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Charm}</div>
+                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Charm}</div> -->
             </div>
 
             <div class='text-lg'>Presence:</div> 
             <div class="flex justify-center items-center h-full">
                 <div class="w-8 h-6 rounded" style={LiveInfo.pres_color}></div>
-                <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Presence}</div>
+                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Presence}</div> -->
             </div>
         </div>
     </div>
