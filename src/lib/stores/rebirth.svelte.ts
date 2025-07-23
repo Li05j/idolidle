@@ -3,7 +3,7 @@ import { ModalM } from "$lib/managers/modal_manager.svelte"
 import { TodoCardM } from "$lib/managers/todo_card_manager.svelte"
 import { CPs } from "$lib/stores/checkpoints.svelte"
 import { Game_Progress } from "$lib/stores/game_progress.svelte"
-import { stat_list } from "$lib/stores/stats.svelte"
+import { stat_list, stat_list_reset } from "$lib/stores/stats.svelte"
 
 class RebirthStats {
     private _rebirth_count = $state(0)
@@ -76,6 +76,7 @@ class RebirthStats {
 
     on_rebirth() {
         this.inherit_stats()
+        stat_list_reset()
         LiveBattleM.reset()
         TodoCardM.reset()
         CPs.reset()

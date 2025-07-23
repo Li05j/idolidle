@@ -9,6 +9,7 @@
 	import { logs } from "$lib/stores/history.svelte";
 	import { Rebirth } from "$lib/stores/rebirth.svelte";
 	import { fans } from "$lib/stores/stats.svelte";
+	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
     
     let { onClose } = $props()
     const type = 'live'
@@ -81,16 +82,36 @@
     </div>
 </div>
 
-<div class="mt-2 flex justify-center">
-    <div 
-        bind:this={scrollContainer} 
-        class="p-4 text-center overflow-y-auto w-[80vh] h-[50vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]"
-    >
-        {#each LiveBattleM.turn_logs as log }
-            <div>
-                {@html parseText(log.msg)}
-            </div>
-        {/each}
+<div class="flex items-center">
+    <div class="flex-1"></div>
+    <div class="mt-2 mx-auto">
+        <div 
+            bind:this={scrollContainer} 
+            class="p-4 text-center overflow-y-auto w-[75vh] h-[55vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.2)]"
+        >
+            {#each LiveBattleM.turn_logs as log }
+                <div>
+                    {@html parseText(log.msg)}
+                </div>
+            {/each}
+        </div>
+    </div>
+
+    <div class="flex-1 flex justify-end">
+        <div class="grid grid-cols-2 text-center gap-2 mx-auto">
+            <div class=''>Fans:</div> 
+            <div class="w-8 h-6 rounded" style={LiveInfo.fan_color}></div>
+            <div class='text'>Stamina:</div> 
+            <div class="w-8 h-6 rounded" style={LiveInfo.sta_color}></div>
+            <div class=''>Sing:</div> 
+            <div class="w-8 h-6 rounded" style={LiveInfo.sing_color}></div>
+            <div class=''>Dance:</div> 
+            <div class="w-8 h-6 rounded" style={LiveInfo.dance_color}></div>
+            <div class='text'>Charm:</div> 
+            <div class="w-8 h-6 rounded" style={LiveInfo.charm_color}></div>
+            <div class='text'>Presence:</div> 
+            <div class="w-8 h-6 rounded" style={LiveInfo.pres_color}></div>
+        </div>
     </div>
 </div>
 

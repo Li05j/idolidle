@@ -1,48 +1,26 @@
 <script lang="ts">
-	import { CPs } from "$lib/stores/checkpoints.svelte";
-	import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
-	import { stat_list } from "$lib/stores/stats.svelte";
-
-    const HUE_CONST = 120;
-
-    let fan_ratio = $derived(stat_list.fans.final / RivalStatsM.get_stats[CPs.current_completed_checkpoint].Fans)
-    let fan_clamped = $derived(Math.max(0, Math.min(1, fan_ratio - 0.5))) // within [0,1]
-    let fan_color = $derived(`background-color: hsl(${fan_clamped * HUE_CONST}, 100%, 50%)`)
-
-    let sta_ratio = $derived(stat_list.sta.final / RivalStatsM.get_stats[CPs.current_completed_checkpoint].Max_Stamina)
-    let sta_clamped = $derived(Math.max(0, Math.min(1, sta_ratio - 0.5))) // within [0,1]
-    let sta_color = $derived(`background-color: hsl(${sta_clamped * HUE_CONST}, 100%, 50%)`)
-
-    let sing_ratio = $derived(stat_list.sing.final / RivalStatsM.get_stats[CPs.current_completed_checkpoint].Charm)
-    let sing_clamped = $derived(Math.max(0, Math.min(1, sing_ratio - 0.5))) // within [0,1]
-    let sing_color = $derived(`background-color: hsl(${sing_clamped * HUE_CONST}, 100%, 50%)`)
-
-    let dance_ratio = $derived(stat_list.dance.final / RivalStatsM.get_stats[CPs.current_completed_checkpoint].Presence)
-    let dance_clamped = $derived(Math.max(0, Math.min(1, dance_ratio - 0.5))) // within [0,1]
-    let dance_color = $derived(`background-color: hsl(${dance_clamped * HUE_CONST}, 100%, 50%)`)
-
-    let charm_ratio = $derived(stat_list.charm.final / RivalStatsM.get_stats[CPs.current_completed_checkpoint].Sing)
-    let charm_clamped = $derived(Math.max(0, Math.min(1, charm_ratio - 0.5))) // within [0,1]
-    let charm_color = $derived(`background-color: hsl(${charm_clamped * HUE_CONST}, 100%, 50%)`)
-
-    let pres_ratio = $derived(stat_list.pres.final / RivalStatsM.get_stats[CPs.current_completed_checkpoint].Dance)
-    let pres_clamped = $derived(Math.max(0, Math.min(1, pres_ratio - 0.5))) // within [0,1]
-    let pres_color = $derived(`background-color: hsl(${pres_clamped * HUE_CONST}, 100%, 50%)`)
-
-    let condition_text = $state("You're no match for Rival... are you even serious about being an Idol?")
+	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
 
     $effect(() => {
-        let overall_ratio = (fan_clamped+sta_clamped+sing_clamped+dance_clamped+charm_clamped+pres_clamped) / 6
+        let overall_ratio = (
+            LiveInfo.fan_clamped +
+            LiveInfo.sta_clamped +
+            LiveInfo.sing_clamped +
+            LiveInfo.dance_clamped +
+            LiveInfo.charm_clamped +
+            LiveInfo.pres_clamped
+        ) / 6
+
         if (overall_ratio >= 0.9) {
-            condition_text = "Looks like Rival doesn't stand a chance!"
+            LiveInfo.condition_text = "Looks like Rival doesn't stand a chance!"
         } else if (overall_ratio >= 0.7) {
-            condition_text = "You've got a solid shot at winning!"
+            LiveInfo.condition_text = "You've got a solid shot at winning!"
         } else if (overall_ratio >= 0.4) {
-            condition_text = "It's dicey - anyone could win!"
+            LiveInfo.condition_text = "It's dicey - anyone could win!"
         } else if (overall_ratio >= 0.25) {
-            condition_text = "Come on, you know you need just a little more training!"
+            LiveInfo.condition_text = "Come on, you know you need just a little more training!"
         } else {
-            condition_text = "You're no match for Rival... are you even serious about being an Idol?"
+            LiveInfo.condition_text = "You're no match for Rival... are you even serious about being an Idol?"
         }
     })
 
@@ -54,32 +32,32 @@
         <div class="grid grid-cols-2 text-center max-w-[24rem] mx-auto">
             <div class='text-lg'>Fans:</div> 
             <div class="flex justify-center items-center h-full">
-                <div class="w-8 h-6 rounded" style={fan_color}></div>
+                <div class="w-8 h-6 rounded" style={LiveInfo.fan_color}></div>
             </div>
 
             <div class='text-lg'>Stamina:</div> 
             <div class="flex justify-center items-center h-full">
-                <div class="w-8 h-6 rounded" style={sta_color}></div>
+                <div class="w-8 h-6 rounded" style={LiveInfo.sta_color}></div>
             </div>
 
             <div class='text-lg'>Sing:</div> 
             <div class="flex justify-center items-center h-full">
-                <div class="w-8 h-6 rounded" style={sing_color}></div>
+                <div class="w-8 h-6 rounded" style={LiveInfo.sing_color}></div>
             </div>
 
             <div class='text-lg'>Dance:</div> 
             <div class="flex justify-center items-center h-full">
-                <div class="w-8 h-6 rounded" style={dance_color}></div>
+                <div class="w-8 h-6 rounded" style={LiveInfo.dance_color}></div>
             </div>
 
             <div class='text-lg'>Charm:</div> 
             <div class="flex justify-center items-center h-full">
-                <div class="w-8 h-6 rounded" style={charm_color}></div>
+                <div class="w-8 h-6 rounded" style={LiveInfo.charm_color}></div>
             </div>
 
             <div class='text-lg'>Presence:</div> 
             <div class="flex justify-center items-center h-full">
-                <div class="w-8 h-6 rounded" style={pres_color}></div>
+                <div class="w-8 h-6 rounded" style={LiveInfo.pres_color}></div>
             </div>
         </div>
     </div>
@@ -91,7 +69,7 @@
         <p class='text-sm'>is bad.</p>
     </div>
         <div class="flex p-8 justify-center items-center">
-            <h1 class="text-xl font-bold">{condition_text}</h1>
+            <h1 class="text-xl font-bold">{LiveInfo.condition_text}</h1>
         </div>
     <!-- <hr class="h-1 bg-black border-0 opacity-15 mb-4" /> -->
 </div>

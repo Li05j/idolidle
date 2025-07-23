@@ -27,12 +27,16 @@ function createTrainings() {
 }
 
 // Currency floors while Stat can have decimals.
-function createCurrency(name: string, baseInit = 27, multiInit = 1.0) {
+function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
 	const _name = name;
     let base = $state(baseInit);
     let multi = $state(multiInit);
     const final = (() => Math.floor(base * multi));
 	const final_str = (() => final().toString())
+	const reset = () => {
+	  	base = baseInit;
+	  	multi = multiInit;
+	}
 
     return { 
 		get name() { return _name },
@@ -41,15 +45,21 @@ function createCurrency(name: string, baseInit = 27, multiInit = 1.0) {
 		// get final() { return Math.max(final() || 0, 0) }, in case of NaN
         get final() { return final() },
 		get final_str() { return final_str() },
+		reset,
 	};
 }
 
-function createStat(name: string, baseInit = 10, multiInit = 1.0) {
+function createStat(name: string, baseInit = 0, multiInit = 1.0) {
 	const _name = name;
   	let base = $state(baseInit);
   	let multi = $state(multiInit);
   	const final = (() => base * multi);
 	const final_str = (() => final().toFixed(DECIMAL_PLACES))
+	const reset = () => {
+	  	base = baseInit;
+	  	multi = multiInit;
+	}
+
 
   	return { 
 		get name() { return _name },
@@ -58,6 +68,7 @@ function createStat(name: string, baseInit = 10, multiInit = 1.0) {
         // get final() { return Math.max(final() || 0, 0) },
         get final() { return final() },
 		get final_str() { return final_str() },
+		reset,
 	};
 }
 
@@ -82,4 +93,14 @@ export const stat_list = {
 	dance: dance,
 	charm: charm,
 	pres: pres,
+}
+
+export function stat_list_reset() {
+	fans.reset();
+	moni.reset();
+	sta.reset();
+	sing.reset();
+	dance.reset();
+	charm.reset();
+	pres.reset();
 }

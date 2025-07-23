@@ -5,7 +5,7 @@ class Checkpoints {
 	public last_live_checkpoint_triggered = $state(-1)
 
 	private _checkpoints = [
-		1000 * S_TO_MS,
+		1 * S_TO_MS,
 		2500 * S_TO_MS,
 		4000 * S_TO_MS,
 		Infinity,
