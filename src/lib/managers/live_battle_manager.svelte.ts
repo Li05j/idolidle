@@ -84,9 +84,9 @@ class LiveBattleManager {
         let r = Math.random()
         if (r > 0.5) {
             let atk_stat = attacker.Sing
-            let def_stat = defender.Charm * (defender.Curr_Stamina / defender.Max_Stamina)
+            let def_stat = defender.Charm * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5) // [0.5, 1]
 
-            let fluctuation = 1 + (Math.random() * 0.4 - 0.2);
+            let fluctuation = 1 + (Math.random() * 0.6 - 0.3);
             let dmg = Math.max(Math.min(Math.ceil((atk_stat - def_stat) * fluctuation), defender.Fans), 0)
 
             attacker.Fans += dmg
@@ -96,7 +96,7 @@ class LiveBattleManager {
             return [dmg, "Sing"];
         } else {
             let atk_stat = attacker.Dance
-            let def_stat = defender.Presence * (defender.Curr_Stamina / defender.Max_Stamina)
+            let def_stat = defender.Presence * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5)
 
             let fluctuation = 1 + (Math.random() * 0.4 - 0.2);
             let dmg = Math.max(Math.min(Math.ceil((atk_stat - def_stat) * fluctuation), defender.Fans), 0)
