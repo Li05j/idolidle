@@ -1,6 +1,6 @@
 import { CPs } from "$lib/stores/checkpoints.svelte";
 import { fans, moni, sta, sing, dance, charm, pres } from "$lib/stores/stats.svelte";
-import { RivalStatsM } from "$lib/stores/live_enemy_stats.svelte";
+import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
 
 class LiveBattleManager {
