@@ -62,9 +62,9 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'School',
-        240 * S_TO_MS,
+        110 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
-        [{ which_stat: "Stamina", flat_gain_base: 12 },],
+        [{ which_stat: "Stamina", flat_gain_base: 5.5 },],
         "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
         {
             custom_msg: "When it is time for LIVE, you will need to prove that you are the better Idol. All of your stats (except Moni) will be taken into consideration. Make sure to train well!"
@@ -77,9 +77,9 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'Mall',
-        300 * S_TO_MS,
+        270 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
-        [{ which_stat: "Stamina", flat_gain_base: 15 },],
+        [{ which_stat: "Stamina", flat_gain_base: 13.5 },],
         "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
         {
             custom_msg: "All cards under Locations depends on Stamina. The more Stamina you have, the less time it takes to complete."
@@ -92,9 +92,9 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'Gym',
-        220 * S_TO_MS,
+        180 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
-        [{ which_stat: "Stamina", flat_gain_base: 11 },],
+        [{ which_stat: "Stamina", flat_gain_base: 9 },],
         "Remember to wipe the equipment after using them, don\'t wanna end up being roasted by some gym bros online. Talking about ways to end your Idol career...",
         {
             custom_msg: "Location cards tend to be less efficient than Action cards in terms of gaining stats."
@@ -107,9 +107,9 @@ export const locations_data: TodoBase[] = [
     ),
     new LocationTodo(
         'Maid Cafe',
-        400 * S_TO_MS,
+        320 * S_TO_MS,
         [{ which_stat: "Stamina", effectiveness: 1.0 },],
-        [{ which_stat: "Stamina", flat_gain_base: 20 },],
+        [{ which_stat: "Stamina", flat_gain_base: 16 },],
         "Can I work as a waitress - wait, cat ears? Why? I guess it is kinda cute...?",
         {
             custom_msg: "You cannot lower the time needed to complete Purple and Yellow cards. However, their rewards tend to be dynamic."
