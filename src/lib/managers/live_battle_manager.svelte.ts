@@ -175,8 +175,7 @@ class LiveBattleManager {
     }
 
     private post_fight(): number {
-        let temp = stat_list.Fans.final
-        let difference = Math.floor(this._you.Fans / stat_list.Fans.multi) - temp
+        let difference = this._you.Fans - stat_list.Fans.final
 
         if (difference >= 0) {
             this.log(`LIVE has successfully concluded. You gained ${difference} fans!`, false)
@@ -191,7 +190,7 @@ class LiveBattleManager {
         this.init()
         this.fight()
         let diff = this.post_fight()
-        stat_list.Fans.base += diff / stat_list.Fans.multi
+        stat_list.Fans.add_to_final(diff)
         this.replay_fight()
 
         return diff;

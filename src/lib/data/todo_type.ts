@@ -10,6 +10,48 @@ export type PrereqTooltip =
     | { prereq?: string; dependsOn?: string; eureka?: string }   // all keys optional
     | { custom_msg: string; prereq?: never; dependsOn?: never; extras?: never }; // only custom_msg allowed
 
+// export class TodoBase1 {
+//     constructor(
+//         public name: string,
+//         public type: TodoType,
+//         public base_cost: number,
+//         public depends: StatEffectPair[],
+//         public rewards: Rewards[],
+//         public desc: string,
+//         public tooltip: PrereqTooltip,
+//         public one_off: boolean = false,
+//         opts: {
+//             one_off_flag?: boolean;
+//             extra_reward_fn?: () => void;
+//             then_fn?: () => void;
+//             check_disabled_fn?: (stats: StatList) => boolean;
+//         } = {},
+//     ) {}
+
+//     spend_and_reward(): void;
+//     get_spendings_rewards_string(): string;
+
+//     private _id = ++todo_id_counter;
+
+//     get id() { return this._id; }
+
+//     // Some don't have depends - and in this case their base cost cannot be lowered. So, we simply return empty array.
+//     get_depends(): StatEffectPair[] {
+//         if ('depends' in this) {
+//             return (this as { depends: StatEffectPair[] }).depends;
+//         } else {
+//             return [];
+//         }
+//     }
+
+//     extra_reward?(): void;
+//     then?(): void;
+
+//     check_disabled(stats = stat_list): boolean {
+//         return false;
+//     }
+// }
+
 export abstract class TodoBase {
     constructor(
         public name: string,
@@ -162,7 +204,7 @@ export class SpendCurrencyTodo extends TodoBase {
     }
 
     spend_and_reward() {
-        stat_list.Moni.base -= this.spendings_moni / stat_list.Moni.multi; // Divide multi to balance the gain out.
+        stat_list.Moni.add_to_final(this.spendings_moni)
         handle_rewards(this.rewards);
         logs.addLogs(this);
         this.extra_reward?.();
@@ -173,4 +215,3 @@ export class SpendCurrencyTodo extends TodoBase {
         return ret_str + reward_string(this.rewards)
     }
 }
-

@@ -27,6 +27,11 @@ export function parseText(text: string) {
         .join('<br>');
     }
 
+export function truncate_to_decimal(v: number, decimals: number = 1) {
+    const d = Math.pow(10, decimals)
+    return Math.floor(v * d) / d;
+}
+
 export function reward_string(rewards: Rewards[]): string {
     let ret_str = ""
     rewards.forEach(r => {

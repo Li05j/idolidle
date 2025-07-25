@@ -1,5 +1,5 @@
 import type { TodoBase } from "$lib/data/todo_type";
-import { DECIMAL_PLACES, calc_stat_effectiveness } from "$lib/utils/utils"
+import { DECIMAL_PLACES, calc_stat_effectiveness, truncate_to_decimal } from "$lib/utils/utils"
 
 class Trainings {
 	private _training_constant = $state(650);
@@ -18,7 +18,7 @@ class Trainings {
 	}
 
 	public get_final_training_time(td: TodoBase): number {
-		return td.base_cost * Math.exp(-this._calc_stat(td) / this._training_constant)
+		return truncate_to_decimal(td.base_cost * Math.exp(-this._calc_stat(td) / this._training_constant))
 	}
 }
 
@@ -31,6 +31,7 @@ function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
 	const _name = name;
     let base = $state(baseInit);
     let multi = $state(multiInit);
+	const add_to_final = ((v: number) => base += Math.floor(v / multi))
     const final = (() => Math.floor(base * multi));
 	const final_str = (() => final().toString())
 	const reset = () => {
@@ -42,7 +43,7 @@ function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
 		get name() { return _name },
 		get base() { return base }, set base(v) { base = v },
         get multi() { return multi }, set multi(v) { multi = v },
-		// get final() { return Math.max(final() || 0, 0) }, in case of NaN
+		add_to_final,
         get final() { return final() },
 		get final_str() { return final_str() },
 		reset,
@@ -53,7 +54,8 @@ function createStat(name: string, baseInit = 0, multiInit = 1.0) {
 	const _name = name;
   	let base = $state(baseInit);
   	let multi = $state(multiInit);
-  	const final = (() => base * multi);
+	const add_to_final = ((v: number) => base += truncate_to_decimal(v / multi))
+  	const final = (() => truncate_to_decimal(base * multi));
 	const final_str = (() => final().toFixed(DECIMAL_PLACES))
 	const reset = () => {
 	  	base = baseInit;
@@ -65,7 +67,7 @@ function createStat(name: string, baseInit = 0, multiInit = 1.0) {
 		get name() { return _name },
 		get base() { return base }, set base(v) { base = v },
         get multi() { return multi }, set multi(v) { multi = v },
-        // get final() { return Math.max(final() || 0, 0) },
+        add_to_final,
         get final() { return final() },
 		get final_str() { return final_str() },
 		reset,
