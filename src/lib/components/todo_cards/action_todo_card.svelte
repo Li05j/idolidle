@@ -24,7 +24,7 @@
     $effect(() => {
         let b: number = NaN;
         if (todo.type === 'gain_currency') {
-            b = todo.base_cost
+            b = todo.base_time
         }
         else {
             b = trainings.get_final_training_time(todo);

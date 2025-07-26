@@ -20,7 +20,7 @@
         // stat_list.Fans.base     += 100;
         // stat_list.Moni.base     += 100;
         // stat_list.Stamina.base  += 100;
-        // stat_list.Agility.base  += 100;
+        // stat_list.Haste.base  += 100;
         // stat_list.Sing.base     += 100;
         // stat_list.Dance.base    += 100;
         // stat_list.Charm.base    += 100;

@@ -1,217 +1,100 @@
 import { logs } from "$lib/stores/history.svelte";
-import { stat_list } from "$lib/stores/stats.svelte";
-import type { Rewards, StatEffectPair, TodoType } from "$lib/types";
+import { stat_list, stat_list_get } from "$lib/stores/stats.svelte";
+import type { BasicStats, Rewards, TodoType } from "$lib/types";
 import { handle_rewards, reward_string } from "$lib/utils/utils";
 
-let todo_id_counter = 0
+let todo_id_counter = 0;
 
 type StatList = typeof stat_list;
 export type PrereqTooltip =
-    | { prereq?: string; dependsOn?: string; eureka?: string }   // all keys optional
-    | { custom_msg: string; prereq?: never; dependsOn?: never; extras?: never }; // only custom_msg allowed
+    | { prereq?: string; dependsOn?: string; eureka?: string }
+    | { custom_msg: string; prereq?: never; dependsOn?: never; extras?: never };
 
-// export class TodoBase1 {
-//     constructor(
-//         public name: string,
-//         public type: TodoType,
-//         public base_cost: number,
-//         public depends: StatEffectPair[],
-//         public rewards: Rewards[],
-//         public desc: string,
-//         public tooltip: PrereqTooltip,
-//         public one_off: boolean = false,
-//         opts: {
-//             one_off_flag?: boolean;
-//             extra_reward_fn?: () => void;
-//             then_fn?: () => void;
-//             check_disabled_fn?: (stats: StatList) => boolean;
-//         } = {},
-//     ) {}
+type ConstructorParams = {
+    name: string;
+    type: TodoType;
+    base_time: number;
+    desc: string;
+    tooltip: PrereqTooltip;
+    rewards: Rewards[];
+    one_off?: boolean;
+    haste_efficiency?: number;
+    spendings?: { stat_name: string; value: number }[];
+    extra_reward_fn?: () => void;
+    then_fn?: () => void;
+    check_disabled_fn?: (stats?: StatList) => boolean;
+};
 
-//     spend_and_reward(): void;
-//     get_spendings_rewards_string(): string;
-
-//     private _id = ++todo_id_counter;
-
-//     get id() { return this._id; }
-
-//     // Some don't have depends - and in this case their base cost cannot be lowered. So, we simply return empty array.
-//     get_depends(): StatEffectPair[] {
-//         if ('depends' in this) {
-//             return (this as { depends: StatEffectPair[] }).depends;
-//         } else {
-//             return [];
-//         }
-//     }
-
-//     extra_reward?(): void;
-//     then?(): void;
-
-//     check_disabled(stats = stat_list): boolean {
-//         return false;
-//     }
-// }
-
-export abstract class TodoBase {
-    constructor(
-        public name: string,
-        public type: TodoType,
-        public base_cost: number,
-        public desc: string,
-        public tooltip: PrereqTooltip,
-        public one_off: boolean = false,
-    ) {}
-
-    abstract spend_and_reward(): void;
-    abstract get_spendings_rewards_string(): string;
+export class TodoBase {
+    name: string;
+    type: TodoType;
+    base_time: number;
+    desc: string;
+    tooltip: PrereqTooltip;
+    rewards: Rewards[];
+    one_off: boolean;
+    haste_efficiency: number;
+    spendings?: { stat_name: string; value: number }[];
 
     private _id = ++todo_id_counter;
+    check_disabled: (stats?: StatList) => boolean = () => false;
+    extra_reward?: () => void;
+    then?: () => void;
 
-    get id() { return this._id; }
+    constructor({
+        name,
+        type,
+        base_time,
+        desc,
+        tooltip,
+        rewards,
+        one_off = false,
+        haste_efficiency = 1.0,
+        spendings,
+        extra_reward_fn,
+        then_fn,
+        check_disabled_fn
+    }: ConstructorParams) {
+        this.name = name;
+        this.type = type;
+        this.base_time = base_time;
+        this.desc = desc;
+        this.tooltip = tooltip;
+        this.rewards = rewards;
+        this.one_off = one_off;
+        this.haste_efficiency = haste_efficiency;
+        this.spendings = spendings;
 
-    // Some don't have depends - and in this case their base cost cannot be lowered. So, we simply return empty array.
-    get_depends(): StatEffectPair[] {
-        if ('depends' in this) {
-            return (this as { depends: StatEffectPair[] }).depends;
-        } else {
-            return [];
+        if (extra_reward_fn) this.extra_reward = extra_reward_fn;
+        if (then_fn) this.then = then_fn;
+        if (check_disabled_fn) this.check_disabled = check_disabled_fn;
+    }
+
+    get id() {
+        return this._id;
+    }
+
+    spend_and_reward() {
+        if (this.type === 'spend_currency' && this.spendings) {
+            this.spendings.forEach(obj => {
+                stat_list_get(obj.stat_name).add_to_final(-obj.value);
+            });
         }
-    }
 
-    extra_reward?(): void;
-    then?(): void;
-
-    check_disabled(stats = stat_list): boolean {
-        return false;
-    }
-}
-
-export class LocationTodo extends TodoBase {
-    constructor(
-        name: string,
-        base_cost: number,
-        public depends: StatEffectPair[],
-        public rewards: Rewards[],
-        desc: string,
-        tooltip: PrereqTooltip,
-        opts: {
-            extra_reward_fn?: () => void;
-            then_fn?: () => void;
-            check_disabled_fn?: (stats: StatList) => boolean;
-        } = {}
-    ) {
-        super(name, "location", base_cost, desc, tooltip);
-        this.one_off = true;
-        if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
-        if (opts.then_fn) this.then = opts.then_fn;
-        if (opts.check_disabled_fn) this.check_disabled = opts.check_disabled_fn;
-    }
-
-    spend_and_reward() {
         handle_rewards(this.rewards);
         logs.addLogs(this);
         this.extra_reward?.();
     }
 
-    get_spendings_rewards_string() {
-        return reward_string(this.rewards)
-    }
-}
-
-export class ActionTodo extends TodoBase {
-    constructor(
-        name: string,
-        base_cost: number,
-        public depends: StatEffectPair[],
-        public rewards: Rewards[],
-        desc: string,
-        tooltip: PrereqTooltip,
-        opts: {
-            one_off_flag?: boolean;
-            extra_reward_fn?: () => void;
-            then_fn?: () => void;
-            check_disabled_fn?: (stats: StatList) => boolean;
-        } = {}
-    ) {
-        super(name, "action", base_cost, desc, tooltip);
-        if (opts.one_off_flag) this.one_off = opts.one_off_flag;
-        if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
-        if (opts.then_fn) this.then = opts.then_fn;
-        if (opts.check_disabled_fn) this.check_disabled = opts.check_disabled_fn;
-    }
-
-    spend_and_reward() {
-        handle_rewards(this.rewards);
-        logs.addLogs(this);
-        this.extra_reward?.();
-    }
-
-    get_spendings_rewards_string() {
-        return reward_string(this.rewards)
-    }
-}
-
-export class GainCurrencyTodo extends TodoBase {
-    constructor(
-        name: string,
-        base_cost: number,
-        public rewards: Rewards[],
-        desc: string,
-        tooltip: PrereqTooltip,
-        opts: {
-            extra_reward_fn?: () => void;
-            then_fn?: () => void;
-            check_disabled_fn?: (stats: StatList) => boolean;
-        } = {}
-    ) {
-        super(name, "gain_currency", base_cost, desc, tooltip);
-        if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
-        if (opts.then_fn) this.then = opts.then_fn;
-        if (opts.check_disabled_fn) this.check_disabled = opts.check_disabled_fn;
-    }
-
-    spend_and_reward() {
-        handle_rewards(this.rewards);
-        logs.addLogs(this);
-        this.extra_reward?.();
-    }
-
-    get_spendings_rewards_string() {
-        return reward_string(this.rewards)
-    }
-}
-
-export class SpendCurrencyTodo extends TodoBase {
-    constructor(
-        name: string,
-        base_cost: number,
-        public spendings_moni: number,
-        public rewards: Rewards[],
-        desc: string,
-        tooltip: PrereqTooltip,
-        opts: {
-            one_off_flag?: boolean;
-            extra_reward_fn?: () => void;
-            then_fn?: () => void;
-            check_disabled_fn?: (stats: StatList) => boolean;
-        } = {}
-    ) {
-        super(name, "spend_currency", base_cost, desc, tooltip);
-        if (opts.one_off_flag) this.one_off = opts.one_off_flag;
-        if (opts.extra_reward_fn) this.extra_reward = opts.extra_reward_fn;
-        if (opts.then_fn) this.then = opts.then_fn;
-        if (opts.check_disabled_fn) this.check_disabled = opts.check_disabled_fn;
-    }
-
-    spend_and_reward() {
-        stat_list.Moni.add_to_final(this.spendings_moni)
-        handle_rewards(this.rewards);
-        logs.addLogs(this);
-        this.extra_reward?.();
-    }
-
-    get_spendings_rewards_string() {
-        let ret_str = `-${this.spendings_moni} Moni `;
-        return ret_str + reward_string(this.rewards)
+    get_spendings_rewards_string(): string {
+        if (this.type === 'spend_currency') {
+            let ret_str = ``;
+            this.spendings?.forEach(obj => {
+                ret_str += `-${obj.value} ${obj.stat_name} `;
+            });
+            return ret_str + reward_string(this.rewards);
+        } else {
+            return reward_string(this.rewards);
+        }
     }
 }

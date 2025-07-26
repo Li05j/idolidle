@@ -7,7 +7,7 @@
         let overall_ratio = (
             LiveInfo.fan_clamped +
             LiveInfo.sta_clamped +
-            LiveInfo.agi_clamped +
+            LiveInfo.haste_clamped +
             LiveInfo.sing_clamped +
             LiveInfo.dance_clamped +
             LiveInfo.charm_clamped +
@@ -45,10 +45,10 @@
                 <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Max_Stamina}</div> -->
             </div>
 
-            <div class='text-lg'>Agility:</div> 
+            <div class='text-lg'>Haste:</div> 
             <div class="flex justify-center items-center h-full">
-                <div class="w-8 h-6 rounded" style={LiveInfo.agi_color}></div>
-                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Agility}</div> -->
+                <div class="w-8 h-6 rounded" style={LiveInfo.haste_color}></div>
+                <!-- <div>{RivalStatsM.get_stats(CPs.current_completed_checkpoint).Haste}</div> -->
             </div>
 
             <div class='text-lg'>Sing:</div> 

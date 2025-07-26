@@ -3,7 +3,7 @@
     import { stat_list } from "$lib/stores/stats.svelte";
 
     let currency = [stat_list.Fans, stat_list.Moni]
-    let other_stats = [stat_list.Stamina, stat_list.Agility, stat_list.Sing, stat_list.Dance, stat_list.Charm, stat_list.Presence]
+    let other_stats = [stat_list.Stamina, stat_list.Haste, stat_list.Sing, stat_list.Dance, stat_list.Charm, stat_list.Presence]
 </script>
 
 <div class="w-full p-4">

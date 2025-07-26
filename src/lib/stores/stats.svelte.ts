@@ -1,24 +1,16 @@
 import type { TodoBase } from "$lib/data/todo_type";
-import { DECIMAL_PLACES, calc_stat_effectiveness, truncate_to_decimal } from "$lib/utils/utils"
+import { DECIMAL_PLACES, truncate_to_decimal } from "$lib/utils/utils"
 
 class Trainings {
 	private _training_constant = $state(650);
 
 	private _calc_stat(td: TodoBase): number {
-		let r = calc_stat_effectiveness(td.get_depends());
+		let r = stat_list.Haste.final * td.haste_efficiency;
 		return r;
 	}
 
-	get training_constant() {
-		return this._training_constant
-	}
-
-	set training_constant(c: number) {
-		this._training_constant = c
-	}
-
 	public get_final_training_time(td: TodoBase): number {
-		return truncate_to_decimal(td.base_cost * Math.exp(-this._calc_stat(td) / this._training_constant))
+		return truncate_to_decimal(td.base_time * Math.exp(-this._calc_stat(td) / this._training_constant))
 	}
 }
 
@@ -81,7 +73,7 @@ const fans = createCurrency('Fans');
 const moni = createCurrency('Moni');
 
 const sta = createStat('Stamina');
-const agi = createStat('Agility');
+const haste = createStat('Haste');
 const sing = createStat('Sing');
 const dance = createStat('Dance');
 const charm = createStat('Charm');
@@ -91,18 +83,32 @@ export const stat_list = {
 	Fans: fans,
 	Moni: moni,
 	Stamina: sta,
-	Agility: agi,
+	Haste: haste,
 	Sing: sing,
 	Dance: dance,
 	Charm: charm,
 	Presence: pres,
 }
 
+export function stat_list_get(s: string) {
+	switch (s) {
+		case "Fans": 		return fans;
+		case "Moni": 		return moni;
+		case "Stamina": 	return sta;
+		case "Haste": 		return haste;
+		case "Sing": 		return sing;
+		case "Dance": 		return dance;
+		case "Charm": 		return charm;
+		case "Presence": 	return pres;
+		default:			return dummy;
+	}
+}
+
 export function stat_list_reset() {
 	fans.reset();
 	moni.reset();
 	sta.reset();
-	agi.reset();
+	haste.reset();
 	sing.reset();
 	dance.reset();
 	charm.reset();

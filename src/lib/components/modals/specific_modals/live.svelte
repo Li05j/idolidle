@@ -99,8 +99,8 @@
         <div class="grid grid-cols-2 text-center gap-2 mx-auto">
             <div class='text'>Stamina:</div> 
             <div class="w-8 h-6 rounded" style={LiveInfo.sta_color}></div>
-            <div class=''>Agility:</div> 
-            <div class="w-8 h-6 rounded" style={LiveInfo.agi_color}></div>
+            <div class=''>Haste:</div> 
+            <div class="w-8 h-6 rounded" style={LiveInfo.haste_color}></div>
             <div class=''>Sing:</div> 
             <div class="w-8 h-6 rounded" style={LiveInfo.sing_color}></div>
             <div class=''>Dance:</div> 

@@ -13,9 +13,9 @@ class PlayerRivalCompare {
     public sta_clamped = $derived(Math.max(0, Math.min(1, this.sta_ratio / 2))) // within [0,1]
     public sta_color = $derived(`background-color: hsl(${this.sta_clamped * HUE_CONST}, 100%, 50%)`)
     
-    private agi_ratio = $derived(stat_list.Agility.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Agility)
-    public agi_clamped = $derived(Math.max(0, Math.min(1, this.agi_ratio / 2))) // within [0,1]
-    public agi_color = $derived(`background-color: hsl(${this.agi_clamped * HUE_CONST}, 100%, 50%)`)
+    private haste_ratio = $derived(stat_list.Haste.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Haste)
+    public haste_clamped = $derived(Math.max(0, Math.min(1, this.haste_ratio / 2))) // within [0,1]
+    public haste_color = $derived(`background-color: hsl(${this.haste_clamped * HUE_CONST}, 100%, 50%)`)
     
     private sing_ratio = $derived(stat_list.Sing.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Charm)
     public sing_clamped = $derived(Math.max(0, Math.min(1, this.sing_ratio / 2))) // within [0,1]
