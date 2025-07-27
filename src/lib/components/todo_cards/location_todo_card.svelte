@@ -9,8 +9,6 @@
     let { todo }: { todo: TodoBase } = $props();
 
     const card_id = TodoCardM.generateCardId()
-
-    const MIN_TRAINING_TIME = 100; // ms
     const timer = createTodoTimer();
 
     let todo_actual_duration: number = $state(0.0)
@@ -22,9 +20,7 @@
     let hovered = $state(false)
 
     $effect(() => {
-        let b: number = trainings.get_final_training_time(todo);
-        if (b < MIN_TRAINING_TIME) b = MIN_TRAINING_TIME;
-        todo_actual_duration = b;
+        todo_actual_duration = trainings.get_final_training_time(todo);
     })
 
     $effect(() => {

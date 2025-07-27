@@ -79,7 +79,7 @@ export function handle_rewards(rewards: Rewards[]): void {
 
 export function tooltip_string(tooltip: PrereqTooltip, is_disabled: boolean,): string {
     if ('custom_msg' in tooltip) {
-        return tooltip.custom_msg;
+        return "💡" + tooltip.custom_msg;
     }
 
     let ret_str = '';

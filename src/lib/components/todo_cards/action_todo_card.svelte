@@ -23,14 +23,12 @@
 
     $effect(() => {
         let b: number = NaN;
-        if (todo.type === 'gain_currency') {
-            b = todo.base_time
+        if (todo.type === 'gain_currency' || todo.type === 'spend_currency') {
+            todo_actual_duration = todo.base_time
         }
         else {
-            b = trainings.get_final_training_time(todo);
+            todo_actual_duration = trainings.get_final_training_time(todo);
         }
-        if (b < MIN_TRAINING_TIME) b = MIN_TRAINING_TIME;
-        todo_actual_duration = b;
     })
 
     $effect(() => {

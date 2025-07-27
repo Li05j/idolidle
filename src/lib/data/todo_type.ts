@@ -1,4 +1,4 @@
-import { logs } from "$lib/stores/history.svelte";
+import { history } from "$lib/stores/history.svelte";
 import { stat_list, stat_list_get } from "$lib/stores/stats.svelte";
 import type { BasicStats, Rewards, TodoType } from "$lib/types";
 import { handle_rewards, reward_string } from "$lib/utils/utils";
@@ -19,7 +19,7 @@ type ConstructorParams = {
     rewards: Rewards[];
     one_off?: boolean;
     haste_efficiency?: number;
-    spendings?: { stat_name: string; value: number }[];
+    spendings?: { stat_name: BasicStats; value: number }[];
     extra_reward_fn?: () => void;
     then_fn?: () => void;
     check_disabled_fn?: (stats?: StatList) => boolean;
@@ -82,7 +82,7 @@ export class TodoBase {
         }
 
         handle_rewards(this.rewards);
-        logs.addLogs(this);
+        history.addLogs(this);
         this.extra_reward?.();
     }
 

@@ -3,6 +3,7 @@ import { DECIMAL_PLACES, truncate_to_decimal } from "$lib/utils/utils"
 
 class Trainings {
 	private _training_constant = $state(650);
+	private _min_training_time = $state(100); // ms
 
 	private _calc_stat(td: TodoBase): number {
 		let r = stat_list.Haste.final * td.haste_efficiency;
@@ -10,7 +11,8 @@ class Trainings {
 	}
 
 	public get_final_training_time(td: TodoBase): number {
-		return truncate_to_decimal(td.base_time * Math.exp(-this._calc_stat(td) / this._training_constant))
+		let t = truncate_to_decimal(td.base_time * Math.exp(-this._calc_stat(td) / this._training_constant))
+		return Math.max(t, this._min_training_time);
 	}
 }
 

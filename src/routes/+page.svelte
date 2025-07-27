@@ -52,7 +52,7 @@
     <div class="flex-auto p-2 bg-gray-50 overflow-hidden">
         <div class="grid grid-cols-5 overflow-hidden h-full">
 
-            <!-- Stats and Logs -->
+            <!-- Stats and History -->
             <div class="flex flex-col col-span-1 h-full overflow-hidden">
                 <Stats />
                 <div class="flex-1 overflow-y-auto">

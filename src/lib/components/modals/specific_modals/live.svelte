@@ -6,7 +6,7 @@
 	import GenericButton from "$lib/components/misc/generic_button.svelte";
 	import { CPs } from "$lib/stores/checkpoints.svelte";
 	import { ModalM } from "$lib/managers/modal_manager.svelte";
-	import { logs } from "$lib/stores/history.svelte";
+	import { history } from "$lib/stores/history.svelte";
 	import { Rebirth } from "$lib/stores/rebirth.svelte";
 	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
     
@@ -46,9 +46,9 @@
         Rebirth.update_max_completed_checkpoints(CPs.current_completed_checkpoint)
 
         if (fan_change >= 0) {
-            logs.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
+            history.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
         } else {
-            logs.addHintLogs(`LIVE has concluded. You lost ${-fan_change} fans!`, true)
+            history.addHintLogs(`LIVE has concluded. You lost ${-fan_change} fans!`, true)
         }
         onClose(type)
     }

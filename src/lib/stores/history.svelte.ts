@@ -5,7 +5,7 @@ type StringPair = { 1: string, 2: string}
 type LogEntry = { data: StringPair, timestamp: number }
 
 // Generate default logs for a specific action.
-function createLogs() {
+function createHistory() {
     const MAX_LOGS = 1000;
     const MAX_AGE_HOURS = 1;
     let _logs: LogEntry[] = $state([])
@@ -79,4 +79,4 @@ function createLogs() {
     };
 }
 
-export const logs = createLogs()
+export const history = createHistory()
