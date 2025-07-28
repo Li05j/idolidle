@@ -80,14 +80,14 @@ class LiveBattleManager {
         
         if (actor === "Player") {
             this.log(`[green]${actor} performed a ${move} move![/green]`, false)
-            this.log(`[green]${actor} poached ${Math.ceil(dmg)} fans![/green]`)
+            this.log(`[green]${actor} poached ${dmg} fans![/green]`)
         } else {
             this.log(`[darkorange]${actor} performed a ${move} move![/darkorange]`, false)
-            this.log(`[darkorange]${actor} poached ${Math.ceil(dmg)} fans![/darkorange]`)
+            this.log(`[darkorange]${actor} poached ${dmg} fans![/darkorange]`)
         }
     }
 
-    private calc_and_log_damage(attacker: LiveBattleStats, defender: LiveBattleStats): [number, string] {
+    private calc_and_log_damage(attacker: LiveBattleStats, defender: LiveBattleStats): [string, string] {
         let r = Math.random()
         if (r > 0.5) {
             let atk_stat = attacker.Sing * (0.75 + attacker.Haste / defender.Haste * 0.5)
@@ -100,7 +100,7 @@ class LiveBattleManager {
             defender.Fans -= dmg
 
             attacker.Curr_Stamina -= atk_stat / 2 + 0.1
-            return [dmg, "Sing"];
+            return [dmg.toFixed(0), "Sing"];
         } else {
             let atk_stat = attacker.Dance * (0.75 + attacker.Haste / defender.Haste * 0.5)
             let def_stat = defender.Presence * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5)
@@ -112,7 +112,7 @@ class LiveBattleManager {
             defender.Fans -= dmg
 
             attacker.Curr_Stamina -= atk_stat / 2 + 0.1
-            return [dmg, "Dance"];
+            return [dmg.toFixed(0), "Dance"];
         }
     }
 
@@ -176,11 +176,12 @@ class LiveBattleManager {
 
     private post_fight(): number {
         let difference = this._you.Fans - stat_list.Fans.final
+        let diff_str = difference.toFixed(0)
 
         if (difference >= 0) {
-            this.log(`LIVE has successfully concluded. You gained ${difference} fans!`, false)
+            this.log(`LIVE has successfully concluded. You gained ${diff_str} fans!`, false)
         } else {
-            this.log(`LIVE has concluded. You lost ${-difference} fans!`, false)
+            this.log(`LIVE has concluded. You lost ${diff_str} fans!`, false)
         }
 
         return difference;
