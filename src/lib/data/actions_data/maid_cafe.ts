@@ -42,8 +42,8 @@ export const a_maid_worker: TodoBase[] = [
         desc: "New maid, new Idol life.",
         tooltip: {},
         rewards:[                    
-            { which_stat: "Charm", flat_gain_multi: 0.01 },
-            { which_stat: "Presence", flat_gain_multi: 0.01 },
+            { which_stat: "Charm", flat_gain_multi: 0.02 },
+            { which_stat: "Presence", flat_gain_multi: 0.02 },
         ],
         one_off: true,
         then_fn: then_maid_hire,
@@ -53,7 +53,10 @@ export const a_maid_worker: TodoBase[] = [
         type: 'gain_currency',
         base_time: 45 * S_TO_MS,
         desc: "\"Moe Moe Kyun Moe Moe Kyun Moe Moe Kyun Oishikuna-re~!!\"",
-        tooltip: {eureka: "Good chance to gain a few Fans"},
+        tooltip: {
+            dependsOn: "Charm ➤ Moni",
+            eureka: "Good chance to gain a few Fans"
+        },
         rewards:[                    
             { which_stat: "Presence", flat_gain_base: 3.5 },
             { which_stat: 

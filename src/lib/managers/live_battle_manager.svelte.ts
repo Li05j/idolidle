@@ -99,7 +99,7 @@ class LiveBattleManager {
             attacker.Fans += dmg
             defender.Fans -= dmg
 
-            attacker.Curr_Stamina -= atk_stat / 2 + 0.1
+            attacker.Curr_Stamina -= attacker.Sing / 2 + 0.1
             return [dmg.toFixed(0), "Sing"];
         } else {
             let atk_stat = attacker.Dance * (0.75 + attacker.Haste / defender.Haste * 0.5)
@@ -111,7 +111,7 @@ class LiveBattleManager {
             attacker.Fans += dmg
             defender.Fans -= dmg
 
-            attacker.Curr_Stamina -= atk_stat / 2 + 0.1
+            attacker.Curr_Stamina -= attacker.Dance / 2 + 0.1
             return [dmg.toFixed(0), "Dance"];
         }
     }

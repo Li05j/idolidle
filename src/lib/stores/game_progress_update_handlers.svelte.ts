@@ -139,7 +139,7 @@ class ProgressHandlers {
     }
 
     public maid_hire() {
-        this._remove_single_action('Maid Worker', 'New Hire Bonus!')
+        this._remove_single_action('Maid Cafe', 'New Hire Bonus!')
     }
 }
 

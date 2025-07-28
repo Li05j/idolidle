@@ -121,7 +121,7 @@ export const a_idol_club: TodoBase[] = [
         type: 'gain_currency',
         base_time: 25 * S_TO_MS,
         desc: "Overpriced? Scam? What do you mean? It\'s them who chose to spend the Moni...",
-        tooltip: { dependsOn: "Fans ➤ Moni" },
+        tooltip: { dependsOn: "Presence ➤ Moni" },
         rewards: [{ 
             which_stat: "Moni",
             flat_gain_base: 9,
@@ -134,7 +134,7 @@ export const a_idol_club: TodoBase[] = [
     new TodoBase({
         name: 'Club Promoter',
         type: 'action',
-        base_time: 32 * S_TO_MS,
+        base_time: 30 * S_TO_MS,
         desc: "Idol isn\'t all about performing on stage, getting your name out there is also important. But people will only notice you if you are actually good...",
         tooltip: { eureka: "Tiny chance to gain 0.01 Fans multi" },
         rewards:[{ which_stat: "Presence", flat_gain_base: 4 },],

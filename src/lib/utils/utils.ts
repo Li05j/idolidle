@@ -49,7 +49,7 @@ export function reward_string(rewards: Rewards[]): string {
             temp += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
         }
         else if (r.flat_gain_multi) {
-            temp += ` +${(r.flat_gain_multi + depends_gain).toFixed(fixed_at)} ${r.which_stat} Multi`;
+            temp += ` +${(r.flat_gain_multi + depends_gain).toFixed(2)} ${r.which_stat} Multi`;
         }
         ret_str += temp;
     })
