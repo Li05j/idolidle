@@ -102,12 +102,12 @@ export const a_idol_club: TodoBase[] = [
         },
         rewards:[
             { which_stat: "Fans",
-                flat_gain_base: 15, 
+                flat_gain_base: 20, 
                 depends: [
                     { which_stat: "Sing", effectiveness: 0.5 },
                     { which_stat: "Dance", effectiveness: 0.5 },
                 ],
-                efficiency: "mid",
+                efficiency: "fast",
             },
             { which_stat: "Charm", flat_gain_base: 5 },
             { which_stat: "Presence", flat_gain_base: 5 },
