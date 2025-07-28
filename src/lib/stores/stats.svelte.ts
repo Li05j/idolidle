@@ -26,6 +26,7 @@ function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
     let base = $state(baseInit);
     let multi = $state(multiInit);
 	const add_to_final = ((v: number) => base += Math.floor(v / multi))
+	const get_final_gain_str = ((v: number) => { return Math.floor(v * multi).toString() })
     const final = (() => Math.floor(base * multi));
 	const final_str = (() => final().toString())
 	const reset = () => {
@@ -38,6 +39,7 @@ function createCurrency(name: string, baseInit = 0, multiInit = 1.0) {
 		get base() { return base }, set base(v) { base = v },
         get multi() { return multi }, set multi(v) { multi = v },
 		add_to_final,
+		get_final_gain_str,
         get final() { return final() },
 		get final_str() { return final_str() },
 		reset,
@@ -49,6 +51,7 @@ function createStat(name: string, baseInit = 0, multiInit = 1.0) {
   	let base = $state(baseInit);
   	let multi = $state(multiInit);
 	const add_to_final = ((v: number) => base += truncate_to_decimal(v / multi))
+	const get_final_gain_str = ((v: number) => { return truncate_to_decimal(v * multi).toString() })
   	const final = (() => truncate_to_decimal(base * multi));
 	const final_str = (() => final().toFixed(DECIMAL_PLACES))
 	const reset = () => {
@@ -62,6 +65,7 @@ function createStat(name: string, baseInit = 0, multiInit = 1.0) {
 		get base() { return base }, set base(v) { base = v },
         get multi() { return multi }, set multi(v) { multi = v },
         add_to_final,
+		get_final_gain_str,
         get final() { return final() },
 		get final_str() { return final_str() },
 		reset,

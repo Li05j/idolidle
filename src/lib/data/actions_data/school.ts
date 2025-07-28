@@ -23,10 +23,7 @@ export const a_school: TodoBase[] = [
         rewards:[
             { which_stat: "Fans", flat_gain_base: 25 },
         ],
-        spendings: [
-            {stat_name: "Fans", value: 100}, 
-            {stat_name: "Moni", value: 500},
-        ],
+        spendings: [{stat_name: "Moni", value: Cost.idol_club.moni},],
         one_off: true,
         then_fn: then_open_idol_club,
         check_disabled_fn: check_disabled_open_idol_club,
@@ -91,8 +88,6 @@ export const a_school: TodoBase[] = [
     }),
 ]
 
-
-
 export const a_idol_club: TodoBase[] = [
     new TodoBase({
         name: 'Host School Concert',
@@ -116,7 +111,7 @@ export const a_idol_club: TodoBase[] = [
             { which_stat: "Charm", flat_gain_base: 4 },
             { which_stat: "Presence", flat_gain_base: 4 },
         ],
-        spendings: [{stat_name: "Moni", value: 100}],
+        spendings: [{stat_name: "Moni", value: Cost.idol_club_concert}],
         extra_reward_fn: extra_host_school_concert,
         check_disabled_fn: check_disabled_host_school_concert,
     }),
