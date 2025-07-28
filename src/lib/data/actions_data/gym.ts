@@ -13,9 +13,7 @@ export const a_gym: TodoBase[] = [
             prereq: `Moni ≥ ${Cost.gym_vip}`,
             eureka: "Void all training costs in Gym. Trainings will also be slightly more efficient." 
         },
-        rewards:[
-            { which_stat: "Fans", flat_gain_base: 25 },
-        ],
+        rewards:[],
         spendings: [{stat_name: "Moni", value: Cost.gym_vip},],
         one_off: true,
         then_fn: then_gym_vip,

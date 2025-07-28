@@ -151,7 +151,7 @@ export function extra_club_promoter() {
 }
 
 export function extra_mini_lottery() {
-    const grade_thresholds = [0.025, 0.1, 0.25, 0.55, 1.0]; // 2.5%, 7.5%, 15%, 30%, 45%
+    const grade_thresholds = [0.05, 0.2, 0.5, 0.75, 1.0]; // 5%, 15%, 30%, 25%, 25%
     const grades = ['S', 'A', 'B', 'C', 'D'];
     let r = Math.random();
     const grade_index = grade_thresholds.findIndex(t => r <= t)
@@ -243,7 +243,6 @@ export function then_upgrade_living_room() {
 
 export function then_mini_lottery() {
     Game_Progress.progress_handler.mini_lottery();
-    history.addHintLogs('You tried the mini lottery... Pray to the Idol Gods!')
 }
 
 export function then_gym_vip() {

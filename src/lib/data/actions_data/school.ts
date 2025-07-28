@@ -101,15 +101,15 @@ export const a_idol_club: TodoBase[] = [
         },
         rewards:[
             { which_stat: "Fans",
-                flat_gain_base: 10, 
+                flat_gain_base: 15, 
                 depends: [
                     { which_stat: "Sing", effectiveness: 0.5 },
                     { which_stat: "Dance", effectiveness: 0.5 },
                 ],
                 efficiency: "mid",
             },
-            { which_stat: "Charm", flat_gain_base: 4 },
-            { which_stat: "Presence", flat_gain_base: 4 },
+            { which_stat: "Charm", flat_gain_base: 5 },
+            { which_stat: "Presence", flat_gain_base: 5 },
         ],
         spendings: [{stat_name: "Moni", value: Cost.idol_club_concert}],
         extra_reward_fn: extra_host_school_concert,
@@ -125,7 +125,7 @@ export const a_idol_club: TodoBase[] = [
             which_stat: "Moni",
             flat_gain_base: 9,
             depends: [
-                { which_stat: "Fans", effectiveness: 1.2 },
+                { which_stat: "Presence", effectiveness: 1.2 },
             ],
             efficiency: "slow",
         },],

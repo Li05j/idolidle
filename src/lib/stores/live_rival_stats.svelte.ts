@@ -3,7 +3,7 @@ import type { LiveBattleStats } from "$lib/types";
 type StatRange = { 
     fans_range:     [number, number], 
     sta_range:      [number, number], 
-    haste_range:      [number, number], 
+    haste_range:    [number, number], 
     sing_range:     [number, number], 
     dance_range:    [number, number], 
     charm_range:    [number, number], 
@@ -16,7 +16,7 @@ const MIN_STAT_PERCENT = 0.5;
 const rival_cp0: StatRange = {
     fans_range      : [20, 32],
     sta_range       : [30, 48],
-    haste_range       : [5, 20],
+    haste_range     : [5, 20],
     sing_range      : [10, 16],
     dance_range     : [10, 16],
     charm_range     : [8, 15],
@@ -27,7 +27,7 @@ const cp1_multi = 5
 const rival_cp1: StatRange = {
     fans_range      : [rival_cp0.fans_range[0]  * (cp1_multi + 1),  rival_cp0.fans_range[1] * (cp1_multi + 1)],
     sta_range       : [rival_cp0.sta_range[0]   * cp1_multi,    rival_cp0.sta_range[1]      * cp1_multi],
-    haste_range       : [rival_cp0.haste_range[0]   * cp1_multi,    rival_cp0.haste_range[1]      * cp1_multi],
+    haste_range     : [rival_cp0.haste_range[0] * cp1_multi,    rival_cp0.haste_range[1]    * cp1_multi],
     sing_range      : [rival_cp0.sing_range[0]  * cp1_multi,    rival_cp0.sing_range[1]     * cp1_multi],
     dance_range     : [rival_cp0.dance_range[0] * cp1_multi,    rival_cp0.dance_range[1]    * cp1_multi],
     charm_range     : [rival_cp0.charm_range[0] * cp1_multi,    rival_cp0.charm_range[1]    * cp1_multi],
@@ -39,7 +39,7 @@ const cp2_multi = 12
 const rival_cp2: StatRange = {
     fans_range      : [rival_cp0.fans_range[0]  * (cp2_multi + 2), rival_cp0.fans_range[1]  * (cp2_multi + 2)],
     sta_range       : [rival_cp0.sta_range[0]   * cp2_multi,    rival_cp0.sta_range[1]      * cp2_multi],
-    haste_range       : [rival_cp0.haste_range[0]   * cp2_multi,    rival_cp0.haste_range[1]      * cp2_multi],
+    haste_range     : [rival_cp0.haste_range[0] * cp2_multi,    rival_cp0.haste_range[1]    * cp2_multi],
     sing_range      : [rival_cp0.sing_range[0]  * cp2_multi,    rival_cp0.sing_range[1]     * cp2_multi],
     dance_range     : [rival_cp0.dance_range[0] * cp2_multi,    rival_cp0.dance_range[1]    * cp2_multi],
     charm_range     : [rival_cp0.charm_range[0] * cp2_multi,    rival_cp0.charm_range[1]    * cp2_multi],
@@ -89,7 +89,7 @@ function genEnemyStats(r: StatRange): LiveBattleStats {
         Fans            : roll[0],
         Max_Stamina     : roll[1],
         Curr_Stamina    : roll[1],
-        Haste         : roll[2],
+        Haste           : roll[2],
         Sing            : roll[3],
         Dance           : roll[4],
         Charm           : roll[5],

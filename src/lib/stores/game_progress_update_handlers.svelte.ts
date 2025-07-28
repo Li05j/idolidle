@@ -113,7 +113,7 @@ class ProgressHandlers {
     }
 
     public mini_lottery() {
-        this._remove_single_action('Mall', 'Mini Lotter');
+        this._remove_single_action('Mall', 'Mini Lottery');
     }
 
     public grade_report() {
@@ -129,16 +129,17 @@ class ProgressHandlers {
         this._remove_single_action('Gym', 'Purchase Gym VIP');
         this._remove_single_action('Gym', 'Treadmill');
         this._remove_single_action('Gym', 'Bench Press');
+        this._remove_single_action('Gym', 'Assault Bike');
         this._add_actions_from('Gym VIP', 'Gym');
     }
 
     public maid_interview() {
         this._remove_single_action('Maid Cafe', 'Maid Interview')
-        this._add_actions_from('Maid Employee', 'Maid Cafe');
+        this._add_actions_from('Maid Worker', 'Maid Cafe');
     }
 
     public maid_hire() {
-        this._remove_single_action('Maid Employee', 'New Hire Bonus!')
+        this._remove_single_action('Maid Worker', 'New Hire Bonus!')
     }
 }
 
