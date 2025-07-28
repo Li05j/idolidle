@@ -6,7 +6,7 @@
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";
 	import type { TodoBase } from "$lib/data/todo_type";
 	
-    let { todo, repeat_val }: { todo: TodoBase, repeat_val?: string } = $props();
+    let { todo, repeat_val, is_collapse }: { todo: TodoBase, repeat_val: string, is_collapse: boolean } = $props();
 
     const card_id = TodoCardM.generateCardId()
 
@@ -126,14 +126,14 @@
 </script>
 
 <div 
-    class="{bg_color} {border} transition-all duration-300 pl-6 pr-6 pt-4 rounded-lg shadow-md h-48 relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'}" 
+    class="{bg_color} {border} transition-all duration-300 pl-6 pr-6 pt-4 rounded-lg shadow-md relative overflow-hidden mb-4 {(disabled && !timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'} {is_collapse ? 'h-32' : 'h-48'}" 
     onclick={timer.is_paused ? startTodo : pauseTodo}
     onmouseenter={() => hovered = true}
     onmouseleave={() => hovered = false}
 >
     <!-- Watermark -->
-    <div class="absolute bottom-4 right-4 flex pointer-events-none">
-        <span class="text-7xl font-bold text-teal-800 opacity-20 transform rotate-12 select-none">
+    <div class="absolute bottom-4 right-4 flex pointer-events-none z-5">
+        <span class="text-7xl font-bold text-teal-800 opacity-15 transform rotate-12 select-none">
             {#if todo.one_off}
                 ONCE
             {:else}
@@ -163,14 +163,16 @@
         </div>
 
         <!-- Hover -->
-        <div class="relative text-xs h-full">
-            <div class="transition-opacity duration-300 text-gray-700" style="opacity: {hovered ? 0 : 1};">
-                <i>{@html parseText(todo.desc)}</i>
+        {#if !is_collapse}
+            <div class="relative text-xs h-full">
+                <div class="transition-opacity duration-300 text-gray-700" style="opacity: {hovered ? 0 : 1};">
+                    <i>{@html parseText(todo.desc)}</i>
+                </div>
+                <div class="absolute top-0 left-0 rounded transition-opacity duration-300 h-2/5 w-full" style="opacity: {hovered ? 1 : 0};">
+                    <p>{@html parseText(tooltip_string(todo.tooltip, disabled))}</p>
+                </div>
             </div>
-            <div class="absolute top-0 left-0 rounded transition-opacity duration-300 h-2/5 w-full" style="opacity: {hovered ? 1 : 0};">
-                <p>{@html parseText(tooltip_string(todo.tooltip, disabled))}</p>
-            </div>
-        </div>
+        {/if}
     </div>
 
     <div class="absolute bottom-4 right-4 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>

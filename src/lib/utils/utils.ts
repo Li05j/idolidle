@@ -1,5 +1,5 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
-import { stat_list, dummy } from "$lib/stores/stats.svelte";
+import { stat_list, dummy, stat_list_get } from "$lib/stores/stats.svelte";
 import type { PrereqTooltip } from '$lib/data/todo_type';
 
 export const DECIMAL_PLACES = 1;
@@ -45,7 +45,7 @@ export function reward_string(rewards: Rewards[]): string {
         }
         if (r.flat_gain_base) {
             let summed_flat_gain = r.flat_gain_base + depends_gain
-            let multi = stat_list[r.which_stat].multi
+            let multi = stat_list_get(r.which_stat).multi
             temp += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
         }
         else if (r.flat_gain_multi) {
@@ -59,7 +59,7 @@ export function reward_string(rewards: Rewards[]): string {
 
 export function handle_rewards(rewards: Rewards[]): void {
     rewards.forEach(r => {
-        let s = stat_list[r.which_stat];
+        let s = stat_list_get(r.which_stat);
         if (s) {
             let depends_gain = 0;
             if (r.depends && r.efficiency) {
@@ -108,7 +108,7 @@ export function tooltip_string(tooltip: PrereqTooltip, is_disabled: boolean,): s
 export function calc_stat_effectiveness(depends: StatEffectPair[]): number {
     let r_stat = 0;
     depends.forEach((d) => {
-        let s = stat_list[d.which_stat];
+        let s = stat_list_get(d.which_stat);
         let normalization_factor = 1;
         if (d.which_stat === 'Fans') normalization_factor = 2;
         if (d.which_stat === 'Stamina') normalization_factor = 3;

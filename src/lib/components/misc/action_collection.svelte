@@ -4,11 +4,18 @@
 
     let { title, todos } = $props()
     let repeat_val = $state('x1');
+    let is_collapse = $state(false);
+
+    function toggle_collapse() {
+        is_collapse = !is_collapse;
+    }
 </script>
 
 <fieldset class="border border-gray-300 rounded-lg p-4">
     <legend class="px-2 text-lg font-semibold">
-        {title}
+        <button onclick={toggle_collapse} class="appearance-none bg-transparent border-none p-0 m-0 text-inherit font-inherit cursor-pointer">
+            {title}
+        </button>
         <select 
             bind:value={repeat_val} 
             disabled={TodoCardM.is_active}
@@ -25,7 +32,7 @@
     <div class="grid grid-cols-3">
         {#each todos as todo (todo.id)}
             <div class="col-span-1 px-2">
-                <ActionTodoCard {todo} {repeat_val} />
+                <ActionTodoCard {todo} {repeat_val} {is_collapse} />
             </div>
         {/each}
     </div>

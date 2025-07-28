@@ -123,9 +123,9 @@ export const a_idol_club: TodoBase[] = [
         tooltip: { dependsOn: "Fans ➤ Moni" },
         rewards: [{ 
             which_stat: "Moni",
-            flat_gain_base: 10,
+            flat_gain_base: 9,
             depends: [
-                { which_stat: "Fans", effectiveness: 1.5 },
+                { which_stat: "Fans", effectiveness: 1.0 },
             ],
             efficiency: "slow",
         },],

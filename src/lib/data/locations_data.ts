@@ -33,13 +33,13 @@ export const locations_data: TodoBase[] = [
     new TodoBase({
         name: 'Park',
         type: 'location',
-        base_time: 30 * S_TO_MS,
+        base_time: 20 * S_TO_MS,
         desc: "Just your everyday neighborhood park. Nothing fancy, but it got it's place in your heart. Something always feels about to happen.",
         tooltip: {
             prereq: "Sing + Dance ≥ 3.0",
         },
         rewards: [
-            { which_stat: "Stamina", flat_gain_base: 1.5 },
+            { which_stat: "Stamina", flat_gain_base: 1.0 },
         ],
         check_disabled_fn: loc_fns.check_disabled_park,
         then_fn: loc_fns.then_park,
