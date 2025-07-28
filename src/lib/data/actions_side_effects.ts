@@ -77,7 +77,7 @@ function uniform_rand_stat_flat_reward (
     let actual_gain = '';
 
     if (which === 'multi') {
-        actual_gain = gain.toString()
+        actual_gain = gain.toFixed()
     } else if (which === 'base') {
         actual_gain = stat.get_final_gain_str(gain)
     }
@@ -94,7 +94,7 @@ export function extra_play_with_kids() {
 }
 
 export function extra_grade_report() {
-    let [stat_name, actual_gain] = uniform_rand_stat_flat_reward('base', 5, 5);
+    let [stat_name, actual_gain] = uniform_rand_stat_flat_reward('base', 5, 10);
     history.addEurekaLogs(`+${actual_gain} ${stat_name}`, `The Grade Report has enlightened you.`)
 }
 
@@ -194,7 +194,7 @@ export function extra_mini_lottery() {
             gain *= grade_multiplier[grade_index]
             stat.multi += gain
             
-            history.addHintLogs(`+${gain} ${stat_name} multi!`)
+            history.addHintLogs(`+${gain.toFixed(2)} ${stat_name} multi!`)
         }
     }
 }
@@ -239,6 +239,11 @@ export function then_grade_report() {
 export function then_upgrade_living_room() {
     Game_Progress.progress_handler.upgrade_living_room();
     history.addHintLogs('Your Living Room upgraded to Living Room+, give it a check!')
+}
+
+export function then_mini_lottery() {
+    Game_Progress.progress_handler.mini_lottery();
+    history.addHintLogs('You tried the mini lottery... Pray to the Idol Gods!')
 }
 
 export function then_gym_vip() {

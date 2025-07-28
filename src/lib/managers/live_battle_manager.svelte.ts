@@ -90,7 +90,7 @@ class LiveBattleManager {
     private calc_and_log_damage(attacker: LiveBattleStats, defender: LiveBattleStats): [number, string] {
         let r = Math.random()
         if (r > 0.5) {
-            let atk_stat = attacker.Sing * (0.5 + attacker.Haste / defender.Haste * 0.5)
+            let atk_stat = attacker.Sing * (0.75 + attacker.Haste / defender.Haste * 0.5)
             let def_stat = defender.Charm * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5) // [0.5, 1]
 
             let fluctuation = 1 + (Math.random() * 0.6 - 0.3);
@@ -102,7 +102,7 @@ class LiveBattleManager {
             attacker.Curr_Stamina -= atk_stat / 2 + 0.1
             return [dmg, "Sing"];
         } else {
-            let atk_stat = attacker.Dance * (0.5 + attacker.Haste / defender.Haste * 0.5)
+            let atk_stat = attacker.Dance * (0.75 + attacker.Haste / defender.Haste * 0.5)
             let def_stat = defender.Presence * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5)
 
             let fluctuation = 1 + (Math.random() * 0.4 - 0.2);

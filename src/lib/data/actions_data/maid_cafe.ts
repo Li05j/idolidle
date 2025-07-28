@@ -40,7 +40,7 @@ export const a_maid_worker: TodoBase[] = [
         type: 'gain_currency',
         base_time: 45 * S_TO_MS,
         desc: "\"Moe Moe Kyun Moe Moe Kyun Moe Moe Kyun Oishikuna-re~!!\"",
-        tooltip: {eureka: "Good chance to gain some Fans"},
+        tooltip: {eureka: "Good chance to gain a few Fans"},
         rewards:[                    
             { which_stat: "Presence", flat_gain_base: 3.5 },
             { which_stat: 

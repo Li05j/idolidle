@@ -81,7 +81,7 @@ export const a_school: TodoBase[] = [
         type: 'action',
         base_time: 20 * S_TO_MS,
         desc: "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
-        tooltip: { eureka: "Tiny chance to gain 3 Fans" },
+        tooltip: {},
         rewards:[
             { which_stat: "Stamina", flat_gain_base: 2.0 },
         ],
@@ -97,7 +97,7 @@ export const a_idol_club: TodoBase[] = [
         tooltip: {
             prereq: `Moni ≥ ${Cost.idol_club_concert}`,
             dependsOn: "Sing, Dance ➤ Fans",
-            eureka: "Tiny chance for Big Success."
+            eureka: "Tiny chance for Big Success"
         },
         rewards:[
             { which_stat: "Fans",
@@ -125,7 +125,7 @@ export const a_idol_club: TodoBase[] = [
             which_stat: "Moni",
             flat_gain_base: 9,
             depends: [
-                { which_stat: "Fans", effectiveness: 1.0 },
+                { which_stat: "Fans", effectiveness: 1.2 },
             ],
             efficiency: "slow",
         },],
@@ -135,7 +135,7 @@ export const a_idol_club: TodoBase[] = [
         type: 'action',
         base_time: 32 * S_TO_MS,
         desc: "Idol isn\'t all about performing on stage, getting your name out there is also important. But people will only notice you if you are actually good...",
-        tooltip: { eureka: "Tiny chance to gain some Fans" },
+        tooltip: { eureka: "Tiny chance to gain 0.01 Fans multi" },
         rewards:[{ which_stat: "Presence", flat_gain_base: 4 },],
         extra_reward_fn: extra_club_promoter,
     }),

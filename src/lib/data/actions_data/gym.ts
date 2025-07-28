@@ -47,7 +47,10 @@ export const a_gym: TodoBase[] = [
         base_time: 20 * S_TO_MS,
         desc: "\"...Why do I have to pay to run?\"",
         tooltip: { prereq: `Moni ≥ ${Cost.gym_actions}`, },
-        rewards:[{ which_stat: "Haste", flat_gain_base: 3 },],
+        rewards:[            
+            { which_stat: "Stamina", flat_gain_base: 1.5 },
+            { which_stat: "Haste", flat_gain_base: 1.5 },
+        ],
         spendings: [{stat_name: "Moni", value: Cost.gym_actions},],
         check_disabled_fn: check_disabled_gym_actions,
     }),

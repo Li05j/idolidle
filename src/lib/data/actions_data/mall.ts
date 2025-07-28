@@ -5,6 +5,7 @@ import {
     check_disabled_outfit, 
     check_disabled_upgrade_living_room, 
     extra_mini_lottery, 
+    then_mini_lottery, 
     then_upgrade_living_room 
 } from '../actions_side_effects';
 import { Cost } from '../cost_constants';
@@ -34,6 +35,7 @@ export const a_mall: TodoBase[] = [
         rewards:[],
         spendings: [{stat_name: "Moni", value: Cost.mini_lottery}],
         one_off: true,
+        then_fn: then_mini_lottery,
         extra_reward_fn: extra_mini_lottery,
         check_disabled_fn: check_disabled_mini_lottery,
     }),

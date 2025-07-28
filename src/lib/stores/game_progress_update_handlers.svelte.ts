@@ -112,6 +112,10 @@ class ProgressHandlers {
         this._replace_action_collection('Living Room', 'Living Room+');
     }
 
+    public mini_lottery() {
+        this._remove_single_action('Mall', 'Mini Lotter');
+    }
+
     public grade_report() {
         this._remove_single_action('School', 'Collect Grade Report');
     }
