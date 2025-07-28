@@ -6,6 +6,7 @@ import {
     extra_attend_class, 
     extra_club_promoter, 
     extra_grade_report, 
+    extra_hallway_flash_mob, 
     extra_host_school_concert, 
     extra_yell_on_wooden_box, 
     then_grade_report, 
@@ -58,7 +59,7 @@ export const a_school: TodoBase[] = [
         type: 'action',
         base_time: 20 * S_TO_MS,
         desc: "You know when those anime girls standing near the school gate after school to try and advertise their idol activities? Yeah, that's you now.",
-        tooltip: { eureka: "Tiny chance to gain 3 Fans" },
+        tooltip: { eureka: "Tiny chance to gain 5 Fans" },
         rewards:[
             { which_stat: "Fans", flat_gain_base: 2 },
         ],
@@ -69,12 +70,12 @@ export const a_school: TodoBase[] = [
         type: 'action',
         base_time: 20 * S_TO_MS,
         desc: "Your school doesn't seem to understand your value to provide you with a suitable stage. But as an serious Idol, anywhere is your stage to shine in!",
-        tooltip: { eureka: "Tiny chance to gain 3 Fans" },
+        tooltip: { eureka: "Tiny chance to gain 5 Fans" },
         rewards:[
             { which_stat: "Dance", flat_gain_base: 0.5 },
             { which_stat: "Presence", flat_gain_base: 1.5 },
         ],
-        extra_reward_fn: extra_yell_on_wooden_box,
+        extra_reward_fn: extra_hallway_flash_mob,
     }),
     new TodoBase({
         name: 'Climbing the Stairs',

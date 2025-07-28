@@ -1,6 +1,6 @@
 import { TodoBase } from '$lib/data/todo_type';
 import { S_TO_MS } from '$lib/utils/utils';
-import { check_disabled_maid_interview, extra_maid_part_time, extra_moe_magic, then_maid_interview } from '../actions_side_effects';
+import { check_disabled_maid_interview, extra_maid_part_time, extra_moe_magic, then_maid_hire, then_maid_interview } from '../actions_side_effects';
 import { Cost } from '../cost_constants';
 
 export const a_maid_cafe: TodoBase[] = [
@@ -35,6 +35,19 @@ export const a_maid_cafe: TodoBase[] = [
 ]
 
 export const a_maid_worker: TodoBase[] = [
+    new TodoBase({
+        name: 'New Hire Bonus!',
+        type: 'action',
+        base_time: 10 * S_TO_MS,
+        desc: "New maid, new Idol life.",
+        tooltip: {},
+        rewards:[                    
+            { which_stat: "Charm", flat_gain_multi: 0.01 },
+            { which_stat: "Presence", flat_gain_multi: 0.01 },
+        ],
+        one_off: true,
+        then_fn: then_maid_hire,
+    }),
     new TodoBase({
         name: 'Maid Part-time',
         type: 'gain_currency',

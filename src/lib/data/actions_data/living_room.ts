@@ -34,7 +34,7 @@ export const a_living_room_upgrarde: TodoBase[] = [
         tooltip: {},
         rewards:[
             { which_stat: "Stamina", flat_gain_base: 0.5},
-            { which_stat: "Sing", flat_gain_base: 4.5},
+            { which_stat: "Sing", flat_gain_base: 5},
         ],
     }),
     new TodoBase({
@@ -45,7 +45,7 @@ export const a_living_room_upgrarde: TodoBase[] = [
         tooltip: {},
         rewards:[
             { which_stat: "Stamina", flat_gain_base: 0.5},
-            { which_stat: "Dance", flat_gain_base: 4.5},
+            { which_stat: "Dance", flat_gain_base: 5},
         ],
     }),
 ]

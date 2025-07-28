@@ -123,14 +123,14 @@ export function extra_attend_class() {
 }
 
 export function extra_yell_on_wooden_box() {
-    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 3)
+    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 5)
     if (is_success) {
         history.addEurekaLogs(`+${value} Fans`, `You attracted ${value} student(s) to be fans!`);
     }
 }
 
 export function extra_hallway_flash_mob() {
-    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 3)
+    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 5)
     if (is_success) {
         history.addEurekaLogs(`+${value} Fans`, `You attracted ${value} student(s) to be fans!`);
     }
@@ -253,6 +253,11 @@ export function then_gym_vip() {
 export function then_maid_interview() {
     Game_Progress.progress_handler.maid_interview();
     history.addHintLogs('You are now a Maid!')
+}
+
+export function then_maid_hire() {
+    Game_Progress.progress_handler.maid_hire();
+    // history.addHintLogs('You are now a Maid!')
 }
 
 export function check_disabled_open_idol_club() {
