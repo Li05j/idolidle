@@ -1,38 +1,23 @@
-# sv
+# Idol Idle
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+An idle game where you manage your idol to reach the top and get as many fans as possible!
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- [Idle features]
+- [Rival battles for hard stat-checks]
+- [Rebirth to start over but stronger]
 
-```bash
-# create a new project in the current directory
-npx sv create
+### Requirements
 
-# create a new project in my-app
-npx sv create my-app
-```
+- Node.js (v20)
+- npm
+- SvelteKit (Svelte 5)
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Install & Run
 
 ```bash
+git clone https://github.com/Li05j/idolidle.git
+cd your-repo
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
