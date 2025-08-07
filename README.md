@@ -8,6 +8,9 @@ An idle game where you manage your idol to reach the top and get as many fans as
 - [Rival battles for hard stat-checks]
 - [Rebirth to start over but stronger]
 
+## Screenshots
+![screenshot1](screenshots/ss1.png)  
+
 ### Requirements
 
 - Node.js (v20)
