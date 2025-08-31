@@ -9,6 +9,7 @@
 	import { history } from "$lib/stores/history.svelte";
 	import { Rebirth } from "$lib/stores/rebirth.svelte";
 	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
+    import { stat_list } from "$lib/stores/stats.svelte";
     
     let { onClose } = $props()
     const type = 'live'
@@ -19,12 +20,8 @@
     let leftPercent = $derived(LiveBattleM.display_your_fans / total * 100);
     let rightPercent = $derived(LiveBattleM.display_enemy_fans / total * 100);
 
-    let fan_change = 0;
+    // let fan_change = 0;
     let is_won = $derived(LiveBattleM.did_player_win)
-
-    onMount(() => {
-        fan_change = LiveBattleM.start_live();
-    })
 
     $effect(() => {
         LiveBattleM.turn_logs.length // Force reactivity
@@ -40,22 +37,31 @@
     })
 
     function on_continue_clicked() {
-        LiveBattleM.reset()
         // Update only after continue clicked, all transactions will be invalid if game stopped prematurely.
         CPs.advanceToNextCheckpoint()
         Rebirth.update_max_completed_checkpoints(CPs.current_completed_checkpoint)
 
-        if (fan_change >= 0) {
-            history.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
-        } else {
-            history.addHintLogs(`LIVE has concluded. You lost ${-fan_change} fans!`, true)
+        if (LiveBattleM.final_fan_difference != null) {
+            const fan_change = LiveBattleM.final_fan_difference
+            stat_list.Fans.add_to_final(fan_change)
+            if (fan_change >= 0) {
+                history.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
+            } else {
+                history.addHintLogs(`LIVE has concluded. You lost ${-fan_change} fans!`, true)
+            }
         }
+
+        LiveBattleM.reset()
         onClose(type)
     }
 
     function on_rebirth_clicked() {
         ModalM.set_modal_open('rebirth_alert')
     }
+
+    onMount(() => {
+        LiveBattleM.start_live()
+    })
 </script>
 
 <div class="w-full flex justify-center">
