@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { stat_list, trainings } from "$lib/stores/stats.svelte"
+    import { stat_list, trainings } from "$lib/stores/game_state/stats.svelte"
     import { msToSecF, parseText, tooltip_string } from "$lib/utils/utils"
     import { createTodoTimer } from "$lib/stores/todo_timer.svelte";
     import { TodoCardM } from "$lib/managers/todo_card_manager.svelte";

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { stat_list } from "$lib/stores/stats.svelte";
+    import { stat_list } from "$lib/stores/game_state/stats.svelte";
 </script>
 
 <h3 class="text-lg font-bold mb-4 justify-center text-center">Your Stats</h3>

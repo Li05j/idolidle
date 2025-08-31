@@ -1,5 +1,5 @@
-import { stat_list } from "$lib/stores/stats.svelte";
-import { CPs } from "$lib/stores/checkpoints.svelte";
+import { stat_list } from "$lib/stores/game_state/stats.svelte";
+import { CPs } from "$lib/stores/game_state/checkpoints.svelte";
 import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
 
 const HUE_CONST = 120;

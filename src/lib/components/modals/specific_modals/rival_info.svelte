@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CPs } from "$lib/stores/checkpoints.svelte";
+	import { CPs } from "$lib/stores/game_state/checkpoints.svelte";
 	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
 	import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
 

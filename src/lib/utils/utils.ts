@@ -1,5 +1,5 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
-import { stat_list, dummy, stat_list_get } from "$lib/stores/stats.svelte";
+import { stat_list, dummy, stat_list_get } from "$lib/stores/game_state/stats.svelte";
 import type { PrereqTooltip } from '$lib/data/todo_type';
 
 export const DECIMAL_PLACES = 1;

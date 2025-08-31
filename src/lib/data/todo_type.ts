@@ -1,5 +1,5 @@
 import { history } from "$lib/stores/history.svelte";
-import { stat_list, stat_list_get } from "$lib/stores/stats.svelte";
+import { stat_list, stat_list_get } from "$lib/stores/game_state/stats.svelte";
 import type { BasicStats, Rewards, TodoType } from "$lib/types";
 import { handle_rewards, reward_string } from "$lib/utils/utils";
 

@@ -1,4 +1,4 @@
-import { CPs } from "$lib/stores/checkpoints.svelte";
+import { CPs } from "$lib/stores/game_state/checkpoints.svelte";
 import { DECIMAL_PLACES } from "$lib/utils/utils"
 
 export interface TodoTimer {

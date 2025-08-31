@@ -1,6 +1,6 @@
 <script lang="ts">
 	import GenericButton from "$lib/components/misc/generic_button.svelte";
-	import { Rebirth } from "$lib/stores/rebirth.svelte";
+	import { Rebirth } from "$lib/stores/game_state/rebirth.svelte";
 
     let { onClose } = $props()
     const type = 'rebirth_alert'

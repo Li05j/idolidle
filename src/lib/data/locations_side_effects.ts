@@ -1,5 +1,5 @@
 import { Game_Progress } from "$lib/stores/game_progress.svelte"
-import { stat_list } from "$lib/stores/stats.svelte";
+import { stat_list } from "$lib/stores/game_state/stats.svelte";
 
 export function then_wake_up(): void {
     Game_Progress.progress_handler.wake_up()

@@ -1,9 +1,9 @@
 import { LiveBattleM } from "$lib/managers/live_battle_manager.svelte"
 import { ModalM } from "$lib/managers/modal_manager.svelte"
 import { TodoCardM } from "$lib/managers/todo_card_manager.svelte"
-import { CPs } from "$lib/stores/checkpoints.svelte"
+import { CPs } from "$lib/stores/game_state/checkpoints.svelte"
 import { Game_Progress } from "$lib/stores/game_progress.svelte"
-import { stat_list, stat_list_reset } from "$lib/stores/stats.svelte"
+import { stat_list, stat_list_reset } from "$lib/stores/game_state/stats.svelte"
 import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte"
 
 class RebirthStats {

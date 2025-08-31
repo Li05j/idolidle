@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ModalM } from "$lib/managers/modal_manager.svelte";
-    import { CPs } from "$lib/stores/checkpoints.svelte";
+    import { CPs } from "$lib/stores/game_state/checkpoints.svelte";
     import { msToSecF, DECIMAL_PLACES } from "$lib/utils/utils"
 	import GenericButton from "../misc/generic_button.svelte";
 

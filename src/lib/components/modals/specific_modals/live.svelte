@@ -4,12 +4,12 @@
 
     import { parseText } from "$lib/utils/utils";
 	import GenericButton from "$lib/components/misc/generic_button.svelte";
-	import { CPs } from "$lib/stores/checkpoints.svelte";
+	import { CPs } from "$lib/stores/game_state/checkpoints.svelte";
 	import { ModalM } from "$lib/managers/modal_manager.svelte";
 	import { history } from "$lib/stores/history.svelte";
-	import { Rebirth } from "$lib/stores/rebirth.svelte";
+	import { Rebirth } from "$lib/stores/game_state/rebirth.svelte";
 	import { LiveInfo } from "$lib/stores/live_rival_info.svelte";
-    import { stat_list } from "$lib/stores/stats.svelte";
+    import { stat_list } from "$lib/stores/game_state/stats.svelte";
     
     let { onClose } = $props()
     const type = 'live'

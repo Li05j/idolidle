@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Rebirth } from "$lib/stores/rebirth.svelte";
-    import { stat_list } from "$lib/stores/stats.svelte";
+	import { Rebirth } from "$lib/stores/game_state/rebirth.svelte";
+    import { stat_list } from "$lib/stores/game_state/stats.svelte";
 
     let currency = [stat_list.Fans, stat_list.Moni]
     let other_stats = [stat_list.Stamina, stat_list.Haste, stat_list.Sing, stat_list.Dance, stat_list.Charm, stat_list.Presence]

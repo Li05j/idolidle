@@ -10,7 +10,7 @@
 	import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte';
 	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
 	import { onMount } from 'svelte';
-	import { stat_list } from '$lib/stores/stats.svelte';
+	import { stat_list } from '$lib/stores/game_state/stats.svelte';
 
     function openModal(t: ModalType) {
         ModalM.set_modal_open(t); 

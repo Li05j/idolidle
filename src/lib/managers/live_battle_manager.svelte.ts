@@ -1,5 +1,5 @@
-import { CPs } from "$lib/stores/checkpoints.svelte";
-import { stat_list } from "$lib/stores/stats.svelte";
+import { CPs } from "$lib/stores/game_state/checkpoints.svelte";
+import { stat_list } from "$lib/stores/game_state/stats.svelte";
 import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
 
