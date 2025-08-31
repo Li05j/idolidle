@@ -14,11 +14,11 @@
     function getVariantStyle(): string {
         switch (variant) {
             case 'primary':
-                return 'bg-blue-500 text-sm text-white rounded hover:bg-blue-600 disabled:bg-gray-400 relative group inline-block'
+                return 'bg-blue-500 text-sm text-white rounded hover:bg-blue-700 disabled:bg-gray-400 transition-all duration-300 relative group inline-block'
             case 'secondary':
-                return 'bg-zinc-500 text-sm text-white rounded hover:bg-zinc-600 disabled:bg-gray-400'
+                return 'bg-zinc-500 text-sm text-white rounded hover:bg-zinc-700 disabled:bg-gray-400 transition-all duration-300'
             case 'cute':
-                return 'bg-pink-500 text-sm text-white rounded hover:bg-pink-600 disabled:bg-gray-400'
+                return 'bg-pink-500 text-sm text-white rounded hover:bg-pink-700 disabled:bg-gray-400 transition-all duration-300'
             case "none":
                 return ''
         }

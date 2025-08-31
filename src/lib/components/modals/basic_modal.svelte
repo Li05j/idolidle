@@ -2,8 +2,8 @@
     import { type ModalType } from '$lib/managers/modal_manager.svelte'
     import { svgCross } from '$lib/data/icons';
     import GenericButton from "$lib/components/misc/generic_button.svelte";
-	import DetailedStats from '$lib/components/modals/specific_modals/detailed_stats.svelte';
 	import RivalInfo from './specific_modals/rival_info.svelte';
+	import MultiTabModal from './specific_modals/stats_multi_tab_modal.svelte';
 
     interface Props {
         type: ModalType;
@@ -36,7 +36,7 @@
     role="dialog"
     aria-modal="true"
 >
-    <div class="relative min-w-3/4 min-h-3/4 overflow-auto bg-white rounded-lg shadow-xl" onclick={(e) => e.stopPropagation()}>
+    <div class="relative w-3/4 h-3/4 bg-white rounded-lg shadow-xl overflow-hidden" onclick={(e) => e.stopPropagation()}>
         <div class='absolute top-4 right-4'>
             <GenericButton svg={svgCross} onclick={onClose} variant='secondary' class={'w-8 h-8 rounded-full flex items-center justify-center'}/>
         </div>
@@ -45,7 +45,7 @@
         {:else if type === 'settings'}
             <div class="p-6 font-bold">Settings under construction.</div>
         {:else if type === 'stats'}
-            <DetailedStats />
+            <MultiTabModal />
         {:else if type === 'rival_info'}
             <RivalInfo />
         {/if}

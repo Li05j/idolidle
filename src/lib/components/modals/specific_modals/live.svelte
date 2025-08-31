@@ -101,7 +101,7 @@
         </div>
     </div>
 
-    <div class="flex-1 flex justify-end">
+    <div class="flex-1 justify-end">
         <div class="grid grid-cols-2 text-center gap-2 mx-auto">
             <div class='text'>Stamina:</div> 
             <div class="w-8 h-6 rounded" style={LiveInfo.sta_color}></div>

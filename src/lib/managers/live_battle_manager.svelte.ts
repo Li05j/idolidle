@@ -193,7 +193,7 @@ class LiveBattleManager {
 
             this.final_fan_difference = difference;
         } else {
-            this.log("[red]You do not have enough Fans left...[/red]", false)
+            this.log("[red]Your Rival ended your Idol career...[/red]", false)
         }
     }
 
