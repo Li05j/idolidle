@@ -1,6 +1,6 @@
 import type { Skill } from "$lib/types";
 
-function createSkillContainer() {
+function createSkillManager() {
 	const all_skills: Map<string, Skill> = new Map()
 	let unlearned_skills: Map<string, Skill> = $state(new Map())
     let learned_skills: Map<string, Skill> = $state(new Map())
@@ -13,8 +13,8 @@ function createSkillContainer() {
         all_skills.set(s.name, s);
     }
 
-    const learn_skill = (s: Skill) => {
-        const skill = unlearned_skills.get(s.name)
+    const learn_skill = (n: string) => {
+        const skill = unlearned_skills.get(n)
         if (skill) {
             learned_skills.set(skill.name, skill);
             unlearned_skills.delete(skill.name)
@@ -37,66 +37,82 @@ function createSkillContainer() {
     }
 }
 
-export const skill_container = createSkillContainer();
+export let skill_unlock_conditions = {
+    living_room_actions: 0
+}
 
-skill_container.add_skill(
+export function skill_unlock_conditions_reset() {
+    skill_unlock_conditions = {
+        living_room_actions: 0
+    }
+}
+
+export const SkillM = createSkillManager();
+
+SkillM.add_skill(
     {
-        name: "Cool skill",
-        triggers: [],
-        chance: 0,
-        cond_string: '',
-        eff_string: '',
-     }
+        name: "Go-Home Club",
+        triggers: ["turn_start"],
+        chance: 1,
+        unlock_string: 'Unlock by doing stuff at home.',
+        cond_string: 'Stamina < 25%',
+        eff_string: 'Restore 25% Stamina.',
+    }
 )
 
-skill_container.add_skill(
+SkillM.add_skill(
     {
-        name: "Cool skill",
-        triggers: [],
-        chance: 0,
-        cond_string: '',
-        eff_string: '',
-     }
+        name: "Underdog",
+        triggers: ["turn_start"],
+        chance: 1,
+        unlock_string: 'Unlock by busking.',
+        cond_string: 'Your Fans < Rival Fans',
+        eff_string: 'Your next move will pouch 50% more Fans.',
+    }
 )
 
-skill_container.add_skill(
+SkillM.add_skill(
     {
-        name: "Cool skill1",
-        triggers: [],
-        chance: 0,
-        cond_string: '',
-        eff_string: '',
-     }
+        name: "Idol Executive",
+        triggers: ["live_start"],
+        chance: 1,
+        unlock_string: 'Unlock by hosting a school concert.',
+        cond_string: 'Always',
+        eff_string: 'Drain 10% Fans from Rival before LIVE starts.',
+    }
 )
 
-skill_container.add_skill(
+SkillM.add_skill(
     {
-        name: "Cool skill2",
-        triggers: [],
-        chance: 0,
-        cond_string: '',
-        eff_string: '',
-     }
+        name: "Good Student",
+        triggers: ["before_taking_dmg"],
+        chance: 1,
+        unlock_string: 'Unlock by being a good student in class.',
+        cond_string: 'Rival performs a move.',
+        eff_string: 'Reduce Fans loss by 50%.',
+    }
 )
 
-skill_container.add_skill(
+SkillM.add_skill(
     {
-        name: "Cool skill3",
-        triggers: [],
-        chance: 0,
-        cond_string: '',
-        eff_string: '',
-     }
+        name: "Flashy Outfit",
+        triggers: ["live_start"],
+        chance: 1,
+        unlock_string: 'Unlock by spending Moni on clothes.',
+        cond_string: 'Always',
+        eff_string: 'Reduce Rival Stamina by 10%.',
+    }
 )
 
-skill_container.add_skill(
+SkillM.add_skill(
     {
-        name: "Cool skill4",
-        triggers: [],
-        chance: 0,
-        cond_string: '',
-        eff_string: '',
-     }
+        name: "Moe Kyun~!",
+        triggers: ["before_taking_dmg"],
+        chance: 1,
+        unlock_string: 'Unlock by working at the Maid Cafe.',
+        cond_string: 'Rival performs a Sing move.',
+        eff_string: 'Increase Charm by 50%. If Rival failed to pouch any Fans from you, Rival loses 10% Fans.',
+    }
 )
 
-skill_container.init()
+SkillM.init()

@@ -1,5 +1,6 @@
 import { TodoBase } from '$lib/data/todo_type';
 import { S_TO_MS } from '$lib/utils/utils';
+import { skill_go_home_club } from '../actions_side_effects';
 
 export const a_living_room: TodoBase[] = [
     new TodoBase({
@@ -11,6 +12,7 @@ export const a_living_room: TodoBase[] = [
         rewards:[
             { which_stat: "Sing", flat_gain_base: 0.5},
         ],
+        extra_reward_fn: skill_go_home_club,
     }),
     new TodoBase({
         name: 'Dancing Practice',
@@ -21,6 +23,7 @@ export const a_living_room: TodoBase[] = [
         rewards:[
             { which_stat: "Dance", flat_gain_base: 0.5},
         ],
+        extra_reward_fn: skill_go_home_club,
     }),
 
 ]
@@ -36,6 +39,7 @@ export const a_living_room_upgrarde: TodoBase[] = [
             { which_stat: "Stamina", flat_gain_base: 0.5},
             { which_stat: "Sing", flat_gain_base: 5},
         ],
+        extra_reward_fn: skill_go_home_club,
     }),
     new TodoBase({
         name: 'Dancing Practice+',
@@ -47,5 +51,6 @@ export const a_living_room_upgrarde: TodoBase[] = [
             { which_stat: "Stamina", flat_gain_base: 0.5},
             { which_stat: "Dance", flat_gain_base: 5},
         ],
+        extra_reward_fn: skill_go_home_club,
     }),
 ]

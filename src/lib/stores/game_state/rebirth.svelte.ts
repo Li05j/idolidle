@@ -5,6 +5,7 @@ import { CPs } from "$lib/stores/game_state/checkpoints.svelte"
 import { Game_Progress } from "$lib/stores/game_progress.svelte"
 import { stat_list, stat_list_reset } from "$lib/stores/game_state/stats.svelte"
 import { RivalStatsM } from "$lib/stores/live_rival_stats.svelte"
+import { skill_unlock_conditions_reset, SkillM } from "$lib/stores/game_state/skills.svelte"
 
 class RebirthStats {
     private _rebirth_count = $state(0)
@@ -90,6 +91,8 @@ class RebirthStats {
         CPs.reset()
         Game_Progress.reset()
         ModalM.reset()
+        SkillM.reset()
+        skill_unlock_conditions_reset()
         this.increment_rebirth_count()
         this.apply_gains_to_initial_stats()
     }

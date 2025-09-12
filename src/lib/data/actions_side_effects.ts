@@ -4,6 +4,7 @@ import { stat_list, stat_list_get } from "$lib/stores/game_state/stats.svelte";
 import type { BasicStats } from "$lib/types";
 import { truncate_to_decimal } from "$lib/utils/utils";
 import { Cost } from "./cost_constants";
+import { skill_unlock_conditions, SkillM } from "$lib/stores/game_state/skills.svelte";
 
 type Chance = 'Tiny' | 'Slight' | 'Good' | 'Great' // 0.1, 0.25, 0.5, 0.75
 
@@ -84,6 +85,18 @@ function uniform_rand_stat_flat_reward (
 
     stat[which] += gain;
     return [stat_name, actual_gain]
+}
+
+export function skill_go_home_club() {
+    skill_unlock_conditions.living_room_actions++
+    if (SkillM.learned_skills.has("Go-Home Club")) {
+        return;
+    }
+    const rand = Math.random();
+    if (rand < skill_unlock_conditions.living_room_actions / 10) {
+        SkillM.learn_skill("Go-Home Club");
+        history.addEurekaLogs(`a new skill: Go-Home Club!`)
+    }
 }
 
 export function extra_play_with_kids() {
