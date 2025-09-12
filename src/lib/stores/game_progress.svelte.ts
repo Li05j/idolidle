@@ -1,5 +1,5 @@
 import { TD_List_Tracker } from "$lib/stores/todos_list_tracker.svelte";
-import { P_Handler } from "$lib/stores/game_state/game_progress_update_handlers.svelte";
+import { P_Handler } from "$lib/stores/game_progress_update_handlers.svelte";
 
 class GameProgress {
     public progress_handler = P_Handler;

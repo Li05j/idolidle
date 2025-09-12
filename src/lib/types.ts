@@ -56,3 +56,13 @@ type RewardDynamicMulti = Only<{
 }, RewardsCommon>;
 
 export type Rewards = RewardFlatBase | RewardFlatMulti | RewardDynamicBase | RewardDynamicMulti;
+
+export type Skill = {
+    name: string,
+    triggers: string[],
+    chance: number,
+    cond_string: string,
+    eff_string: string,
+    condition?: (ctx) => boolean,
+    effect?: (ctx) => void,
+}

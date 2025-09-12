@@ -44,10 +44,12 @@
         if (LiveBattleM.final_fan_difference != null) {
             const fan_change = LiveBattleM.final_fan_difference
             stat_list.Fans.add_to_final(fan_change)
+
+            const fan_change_str = fan_change.toFixed(0)
             if (fan_change >= 0) {
-                history.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change} fans!`, true)
+                history.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change_str} fans!`, true)
             } else {
-                history.addHintLogs(`LIVE has concluded. You lost ${-fan_change} fans!`, true)
+                history.addHintLogs(`LIVE has concluded. You lost ${-fan_change_str} fans!`, true)
             }
         }
 

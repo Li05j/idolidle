@@ -6,7 +6,7 @@
 
     let active = $state<Tabs>('stats')
 
-    const tabs: {id: Tabs, label: String}[] = [
+    const tabs: {id: Tabs, label: string}[] = [
         { id: 'stats', label: 'Stats' },
         { id: 'skills', label: 'Skills' },
         { id: 'dreams', label: 'Dreams' }
