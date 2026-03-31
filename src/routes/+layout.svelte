@@ -1,5 +1,6 @@
 <script>
 	import '../app.postcss';
+	import './layout.css';
 </script>
 
 <div class="flex">

@@ -1,0 +1,58 @@
+/*
+ * IdolIdle Design Tokens
+ * =====================
+ *
+ * Card colors: Each todo card type has a base and hover color.
+ *   --card-{type}         → default background
+ *   --card-{type}-hover   → hovered background
+ *
+ * Card borders: Active cards get a highlighted outline.
+ *   --card-border-active   → solid orange outline when running
+ *   --card-border-inactive → faint outline when idle
+ *
+ * Progress bars: Consistent green fill across all progress indicators.
+ *   --progress-fill → green bar color
+ *   --progress-bg   → gray track color
+ *
+ * Button variants: primary (blue), secondary (zinc), cute (pink).
+ *   --btn-{variant}       → default background
+ *   --btn-{variant}-hover → hovered background
+ *   --btn-disabled        → disabled background (shared)
+ *
+ * Battle bar: LIVE battle fan comparison bar.
+ *   --battle-player → player side (green)
+ *   --battle-rival  → rival side (orange)
+ */
+
+:root {
+    /* Card type backgrounds */
+    --card-action: theme(colors.white);
+    --card-action-hover: theme(colors.stone.100);
+    --card-gain-currency: theme(colors.purple.100);
+    --card-gain-currency-hover: theme(colors.purple.200);
+    --card-spend-currency: theme(colors.yellow.100);
+    --card-spend-currency-hover: theme(colors.yellow.200);
+    --card-location: theme(colors.pink.100);
+    --card-location-hover: theme(colors.pink.200);
+
+    /* Card borders */
+    --card-border-active: theme(colors.orange.400);
+    --card-border-inactive: theme(colors.orange.300 / 10%);
+
+    /* Progress bars */
+    --progress-fill: theme(colors.green.500);
+    --progress-bg: theme(colors.gray.200);
+
+    /* Button variants */
+    --btn-primary: theme(colors.blue.500);
+    --btn-primary-hover: theme(colors.blue.700);
+    --btn-secondary: theme(colors.zinc.500);
+    --btn-secondary-hover: theme(colors.zinc.700);
+    --btn-cute: theme(colors.pink.500);
+    --btn-cute-hover: theme(colors.pink.700);
+    --btn-disabled: theme(colors.gray.400);
+
+    /* Battle bar */
+    --battle-player: theme(colors.green.500);
+    --battle-rival: theme(colors.orange.500);
+}

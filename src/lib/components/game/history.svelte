@@ -1,0 +1,36 @@
+<script lang="ts">
+    import { history } from '$lib/state/history.svelte'
+    
+    let scrollContainer: HTMLElement
+
+    $effect(() => {
+        history.logs.length // Force reactivity
+        if (scrollContainer) {
+            const { scrollTop, scrollHeight, clientHeight } = scrollContainer
+            // Only force auto scroll when scroll is already near the bottom
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 150
+
+            if (isNearBottom) {
+                scrollContainer.scrollTop = scrollHeight
+            }
+        }
+    })
+</script>
+
+<div class="p-4 h-full">
+    <div 
+        bind:this={scrollContainer}
+        class="overflow-y-auto overflow-hidden h-full pt-6 px-4 py-4 text-left rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]"
+    >
+        {#each history.logs as log}
+        <div class="grid grid-cols-9 gap-x-4">
+            <div class='col-span-2'>
+                <p class='text-xs'> {@html log[1]} </p>
+            </div>
+            <div class='col-span-7'>
+                <p class='text-xs'> {@html log[2]} </p>
+            </div>
+        </div>
+        {/each}
+    </div>
+</div>

@@ -1,37 +1,32 @@
 <script lang="ts">
-    import AvailableLocations from '$lib/components/main_game_page/available_locations.svelte';
-    import AvailableActions from '$lib/components/main_game_page/available_actions.svelte';
-    import CheckpointTopBar from '$lib/components/main_game_page/checkpoint_top_bar.svelte';
-    import Stats from '$lib/components/main_game_page/stats.svelte';
-	import History from '$lib/components/main_game_page/history.svelte';
-	import GenericButton from '$lib/components/misc/generic_button.svelte';
-	import GenericModal from '$lib/components/modals/generic_modal.svelte';
+    import AvailableLocations from '$lib/components/game/available_locations.svelte';
+    import AvailableActions from '$lib/components/game/available_actions.svelte';
+    import CheckpointTopBar from '$lib/components/game/checkpoint_top_bar.svelte';
+    import Stats from '$lib/components/game/stats.svelte';
+    import History from '$lib/components/game/history.svelte';
+    import GenericButton from '$lib/components/shared/generic_button.svelte';
+    import ModalShell from '$lib/components/modals/modal_shell.svelte';
 
-	import { ModalM, type ModalType } from '$lib/managers/modal_manager.svelte';
-	import { TodoCardM } from '$lib/managers/todo_card_manager.svelte';
-	import { onMount } from 'svelte';
+    import { ModalM } from '$lib/state/modal_manager.svelte';
+    import { TodoCardM } from '$lib/state/todo_card_manager.svelte';
+    import '$lib/state/progression_engine.svelte';
+    import { onMount } from 'svelte';
 
-    function openModal(t: ModalType) {
-        ModalM.set_modal_open(t); 
+    import MultiTabModal from '$lib/components/modals/content/stats_multi_tab_modal.svelte';
+    import Live from '$lib/components/modals/content/live.svelte';
+
+    function openSettings() {
+        // Settings placeholder — opens as a simple lg modal
+        ModalM.open({ component: MultiTabModal, size: 'lg', closeable: true });
     }
 
-    function cheat() {
-        // stat_list.Fans.base     += 100;
-        // stat_list.Moni.base     += 100;
-        // stat_list.Stamina.base  += 100;
-        // stat_list.Haste.base  += 100;
-        // stat_list.Sing.base     += 100;
-        // stat_list.Dance.base    += 100;
-        // stat_list.Charm.base    += 100;
-        // stat_list.Presence.base += 100;
-
-        openModal('settings')
-        return
+    function openStats() {
+        ModalM.open({ component: MultiTabModal, size: 'lg', closeable: true });
     }
 
     function handle_live() {
-        TodoCardM.deactivateCurrentActiveCard()
-        openModal('live')
+        TodoCardM.deactivateCurrentActiveCard();
+        ModalM.open({ component: Live, size: 'worker', closeable: false });
     }
 
     onMount(() => {
@@ -40,9 +35,7 @@
     });
 </script>
 
-{#each ModalM.modals as m}
-    <GenericModal type={m} />
-{/each}
+<ModalShell />
 
 <div class="h-screen flex flex-col">
     <div class="top-0 bg-white">
@@ -58,8 +51,8 @@
                     <History />
                 </div>
                 <div class="grid grid-cols-2 justify-center p-4 gap-x-4">
-                    <GenericButton name={"Settings"} onclick={cheat} variant='secondary' class={"px-4 py-2 w-full"}/>
-                    <GenericButton name={"Detailed Stats..."} onclick={() => openModal('stats')} class={"px-4 py-2 w-full"}/> 
+                    <GenericButton name={"Settings"} onclick={openSettings} variant='secondary' class={"px-4 py-2 w-full"}/>
+                    <GenericButton name={"Detailed Stats..."} onclick={openStats} class={"px-4 py-2 w-full"}/>
                 </div>
             </div>
 

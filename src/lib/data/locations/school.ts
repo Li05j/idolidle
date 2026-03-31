@@ -1,0 +1,214 @@
+import { history } from '$lib/state/history.svelte';
+import { stat_list } from '$lib/state/stats.svelte';
+import { truncate_to_decimal } from '$lib/utils/utils';
+import { simple_flat_stat_reward, simple_percent_stat_reward, uniform_rand_stat_flat_reward } from '$lib/utils/reward_helpers';
+import type { LocationDefinition } from './location_definition';
+
+const IDOL_CLUB_COST = { fans: 100, moni: 500 };
+const IDOL_CLUB_CONCERT_COST = 100;
+
+function extra_grade_report() {
+    let [stat_name, actual_gain] = uniform_rand_stat_flat_reward('base', 5, 10);
+    history.addEurekaLogs(`+${actual_gain} ${stat_name}`, `The Grade Report has enlightened you.`);
+}
+
+function extra_attend_class() {
+    let a = Math.random();
+    let b = Math.random();
+    let c = Math.random();
+    let d = Math.random();
+    let gain = 1.2;
+    if (a < 0.5) {
+        stat_list.Sing.base += gain;
+        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Sing.multi)} Sing`);
+    }
+    if (b < 0.5) {
+        stat_list.Dance.base += gain;
+        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Dance.multi)} Dance`);
+    }
+    if (c < 0.5) {
+        stat_list.Charm.base += gain;
+        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Charm.multi)} Charm`);
+    }
+    if (d < 0.5) {
+        stat_list.Presence.base += gain;
+        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Presence.multi)} Presence`);
+    }
+}
+
+function extra_yell_on_wooden_box() {
+    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 5);
+    if (is_success) {
+        history.addEurekaLogs(`+${value} Fans`, `You attracted ${value} student(s) to be fans!`);
+    }
+}
+
+function extra_hallway_flash_mob() {
+    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 5);
+    if (is_success) {
+        history.addEurekaLogs(`+${value} Fans`, `You attracted ${value} student(s) to be fans!`);
+    }
+}
+
+function extra_host_school_concert() {
+    let [is_success, value] = simple_percent_stat_reward("Fans", "base", "Tiny", 0.1);
+    if (is_success) {
+        history.addEurekaLogs(`+${value} Fans`, `The concert was a BIG SUCCESS!`);
+    }
+}
+
+function extra_club_promoter() {
+    let [is_success, value] = simple_flat_stat_reward("Fans", "multi", "Tiny", 0.01);
+    if (is_success) {
+        history.addEurekaLogs(`+${value} Fans multi`, `You sparked interest among students!`);
+    }
+}
+
+export const school: LocationDefinition = {
+    location: {
+        name: 'School',
+        base_time: 80,
+        desc: "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
+        tooltip: {
+            custom_msg: "When it is time for LIVE, you will need to prove that you are the better Idol. All of your stats (except Moni) will be taken into consideration. Make sure to train well!",
+        },
+        rewards: [
+            { which_stat: "Stamina", flat_gain_base: 4 },
+        ],
+    },
+    unlocks: ['Gym', 'Maid Cafe'],
+    actions: [
+        {
+            name: 'Open Idol Club',
+            type: 'spend_currency',
+            base_time: 30,
+            desc: "On your way to become the ultimate school idol. One step closer to becoming the star you've always dreamed of.",
+            tooltip: { prereq: `Fans ≥ ${IDOL_CLUB_COST.fans}, Moni ≥ ${IDOL_CLUB_COST.moni}` },
+            rewards: [
+                { which_stat: "Fans", flat_gain_base: 25 },
+            ],
+            spendings: [{ stat_name: "Moni", value: IDOL_CLUB_COST.moni }],
+            one_off: true,
+            check_disabled_fn: () => stat_list.Fans.final < IDOL_CLUB_COST.fans || stat_list.Moni.final < IDOL_CLUB_COST.moni,
+        },
+        {
+            name: 'Collect Grade Report',
+            type: 'action',
+            base_time: 10,
+            desc: "Somehow you didn't bother to take your Grade Report from last year back home... How clumsy of you. Better collect it now.",
+            tooltip: { eureka: "Randomly increase a stat by a small amount" },
+            rewards: [],
+            one_off: true,
+            extra_reward_fn: extra_grade_report,
+        },
+        {
+            name: 'Attend Class',
+            type: 'action',
+            base_time: 60,
+            desc: "You still gotta study alright; elite idol and elite student? That's the spirit.",
+            tooltip: { eureka: "Good chance to double stat gains" },
+            rewards: [
+                { which_stat: "Sing", flat_gain_base: 1.2 },
+                { which_stat: "Dance", flat_gain_base: 1.2 },
+                { which_stat: "Charm", flat_gain_base: 1.2 },
+                { which_stat: "Presence", flat_gain_base: 1.2 },
+            ],
+            extra_reward_fn: extra_attend_class,
+        },
+        {
+            name: 'Yell on Wooden Box',
+            type: 'action',
+            base_time: 20,
+            desc: "You know when those anime girls standing near the school gate after school to try and advertise their idol activities? Yeah, that's you now.",
+            tooltip: { eureka: "Tiny chance to gain 5 Fans" },
+            rewards: [
+                { which_stat: "Fans", flat_gain_base: 2 },
+            ],
+            extra_reward_fn: extra_yell_on_wooden_box,
+        },
+        {
+            name: 'Hallway Flash Mob',
+            type: 'action',
+            base_time: 20,
+            desc: "Your school doesn't seem to understand your value to provide you with a suitable stage. But as an serious Idol, anywhere is your stage to shine in!",
+            tooltip: { eureka: "Tiny chance to gain 5 Fans" },
+            rewards: [
+                { which_stat: "Dance", flat_gain_base: 0.5 },
+                { which_stat: "Presence", flat_gain_base: 1.5 },
+            ],
+            extra_reward_fn: extra_hallway_flash_mob,
+        },
+        {
+            name: 'Climbing the Stairs',
+            type: 'action',
+            base_time: 20,
+            desc: "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
+            tooltip: {},
+            rewards: [
+                { which_stat: "Stamina", flat_gain_base: 2.0 },
+            ],
+        },
+    ],
+    upgrades: [
+        {
+            trigger_action: 'Open Idol Club',
+            add_actions: [
+                {
+                    name: 'Host School Concert',
+                    type: 'spend_currency',
+                    base_time: 45,
+                    desc: "Finally, a real stage. The lighting, the music, the fans...! Is this what it feels like to be in the spotlight? The tickets are free though.",
+                    tooltip: {
+                        prereq: `Moni ≥ ${IDOL_CLUB_CONCERT_COST}`,
+                        dependsOn: "Sing, Dance ➤ Fans",
+                        eureka: "Tiny chance for Big Success",
+                    },
+                    rewards: [
+                        {
+                            which_stat: "Fans",
+                            flat_gain_base: 20,
+                            depends: [
+                                { which_stat: "Sing", effectiveness: 0.5 },
+                                { which_stat: "Dance", effectiveness: 0.5 },
+                            ],
+                            efficiency: "fast",
+                        },
+                        { which_stat: "Charm", flat_gain_base: 5 },
+                        { which_stat: "Presence", flat_gain_base: 5 },
+                    ],
+                    spendings: [{ stat_name: "Moni", value: IDOL_CLUB_CONCERT_COST }],
+                    extra_reward_fn: extra_host_school_concert,
+                    check_disabled_fn: () => stat_list.Moni.final < IDOL_CLUB_CONCERT_COST,
+                },
+                {
+                    name: 'Sell Merch',
+                    type: 'gain_currency',
+                    base_time: 25,
+                    desc: "Overpriced? Scam? What do you mean? It's them who chose to spend the Moni...",
+                    tooltip: { dependsOn: "Presence ➤ Moni" },
+                    rewards: [{
+                        which_stat: "Moni",
+                        flat_gain_base: 9,
+                        depends: [{ which_stat: "Presence", effectiveness: 1.2 }],
+                        efficiency: "slow",
+                    }],
+                },
+                {
+                    name: 'Club Promoter',
+                    type: 'action',
+                    base_time: 30,
+                    desc: "Idol isn't all about performing on stage, getting your name out there is also important. But people will only notice you if you are actually good...",
+                    tooltip: { eureka: "Tiny chance to gain 0.01 Fans multi" },
+                    rewards: [{ which_stat: "Presence", flat_gain_base: 4 }],
+                    extra_reward_fn: extra_club_promoter,
+                },
+            ],
+            on_trigger: () => {
+                history.addHintLogs('You have unlocked some club activities under School, go check them out!');
+            },
+        },
+        {
+            trigger_action: 'Collect Grade Report',
+        },
+    ],
+};

@@ -1,14 +1,8 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
-import { stat_list, dummy, stat_list_get } from "$lib/stores/game_state/stats.svelte";
+import { stat_list, dummy, stat_list_get } from "$lib/state/stats.svelte";
 import type { PrereqTooltip } from '$lib/data/todo_type';
 
 export const DECIMAL_PLACES = 1;
-export const S_TO_MS = 1
-
-// export function toFixedNumber(num: number, digits: number = DECIMAL_PLACES, base: number = 10) {
-//     const pow = Math.pow(base, digits);
-//     return Math.round(num * pow) / pow;
-// }
 
 // convert ms to seconds in a string, formatted to always display digits decimal places.
 export function msToSecF(ms: number, digits: number = DECIMAL_PLACES): string {
