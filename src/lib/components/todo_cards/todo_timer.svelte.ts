@@ -77,7 +77,7 @@ export function createTodoTimer(): TodoTimer {
 
     function pause() {
         state = 'paused';
-        cancelAnimationFrame(raf_id);
+        if (raf_id) cancelAnimationFrame(raf_id);
         raf_id = 0;
     }
 
@@ -89,7 +89,7 @@ export function createTodoTimer(): TodoTimer {
     }
 
     function clear() {
-        cancelAnimationFrame(raf_id);
+        if (raf_id) cancelAnimationFrame(raf_id);
         raf_id = 0;
         loop_count = 0;
         progress_percent = 0;
