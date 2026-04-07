@@ -1,7 +1,7 @@
 import { stat_list } from '$lib/state/stats.svelte';
 import { createTodoTimer } from './todo_timer.svelte';
-import { TodoCardM } from '$lib/state/todo_card_manager.svelte';
-import { Progression } from '$lib/state/progression_engine.svelte';
+import { TodoCardM } from '$lib/runtime/todo_card_manager.svelte';
+import { Progression } from '$lib/runtime/progression_engine.svelte';
 import { locationMap } from '$lib/data/locations/index';
 import { history } from '$lib/state/history.svelte';
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';

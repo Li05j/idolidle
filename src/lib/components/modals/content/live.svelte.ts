@@ -1,5 +1,5 @@
-import { LiveBattleM } from '$lib/state/live_battle_manager.svelte';
-import { ModalM } from '$lib/state/modal_manager.svelte';
+import { LiveBattleM } from '$lib/runtime/live_battle_manager.svelte';
+import { ModalM } from '$lib/runtime/modal_manager.svelte';
 import RebirthAlert from './rebirth_alert.svelte';
 
 export class LiveVM {

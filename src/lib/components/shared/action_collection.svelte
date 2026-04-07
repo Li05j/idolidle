@@ -1,6 +1,6 @@
 <script lang="ts">
     import TodoCard from '$lib/components/todo_cards/todo_card.svelte';
-    import { TodoCardM } from "$lib/state/todo_card_manager.svelte";
+    import { TodoCardM } from "$lib/runtime/todo_card_manager.svelte";
 
     let { title, actionNames }: { title: string, actionNames: string[] } = $props();
     let repeat_val = $state('x1');

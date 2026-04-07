@@ -1,9 +1,9 @@
 <script lang="ts">
-    import { LiveBattleM } from "$lib/state/live_battle_manager.svelte";
+    import { LiveBattleM } from "$lib/runtime/live_battle_manager.svelte";
     import { onMount } from "svelte";
     import { parseText } from "$lib/utils/utils";
     import GenericButton from "$lib/components/shared/generic_button.svelte";
-    import { LiveInfo } from "$lib/state/live_rival_info.svelte";
+    import { LiveInfo } from "$lib/runtime/live_rival_info.svelte";
     import { LiveVM } from "./live.svelte.ts";
 
     let { onClose } = $props();

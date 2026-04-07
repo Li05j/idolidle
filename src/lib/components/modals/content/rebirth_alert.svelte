@@ -1,6 +1,6 @@
 <script lang="ts">
 	import GenericButton from "$lib/components/shared/generic_button.svelte";
-	import { Rebirth } from "$lib/state/rebirth.svelte";
+	import { performRebirth } from "$lib/runtime/rebirth_orchestrator.svelte";
 
     let { onClose }: { onClose: () => void } = $props()
 
@@ -9,7 +9,7 @@
     }
 
     function on_yes() {
-        Rebirth.on_rebirth()
+        performRebirth()
         onClose()
     }
 </script>

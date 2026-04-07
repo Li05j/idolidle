@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ModalM } from "$lib/state/modal_manager.svelte";
+	import { ModalM } from "$lib/runtime/modal_manager.svelte";
     import { CPs } from "$lib/state/checkpoints.svelte";
     import { msToSecF, DECIMAL_PLACES } from "$lib/utils/utils"
 	import GenericButton from "../shared/generic_button.svelte";

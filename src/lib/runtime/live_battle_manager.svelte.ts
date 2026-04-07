@@ -1,6 +1,6 @@
 import { CPs } from "$lib/state/checkpoints.svelte";
 import { stat_list } from "$lib/state/stats.svelte";
-import { RivalStatsM } from "$lib/state/live_rival_stats.svelte";
+import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
 import { Rebirth } from "$lib/state/rebirth.svelte";
 import { history } from "$lib/state/history.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";

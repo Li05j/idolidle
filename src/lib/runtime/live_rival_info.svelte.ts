@@ -1,6 +1,6 @@
 import { stat_list } from "$lib/state/stats.svelte";
 import { CPs } from "$lib/state/checkpoints.svelte";
-import { RivalStatsM } from "$lib/state/live_rival_stats.svelte";
+import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
 import type { LiveBattleStats } from "$lib/types";
 
 type StatKey = keyof typeof stat_list;

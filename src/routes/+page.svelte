@@ -7,9 +7,9 @@
     import GenericButton from '$lib/components/shared/generic_button.svelte';
     import ModalShell from '$lib/components/modals/modal_shell.svelte';
 
-    import { ModalM } from '$lib/state/modal_manager.svelte';
-    import { TodoCardM } from '$lib/state/todo_card_manager.svelte';
-    import '$lib/state/progression_engine.svelte';
+    import { ModalM } from '$lib/runtime/modal_manager.svelte';
+    import { TodoCardM } from '$lib/runtime/todo_card_manager.svelte';
+    import '$lib/runtime/progression_engine.svelte';
     import { onMount } from 'svelte';
 
     import MultiTabModal from '$lib/components/modals/content/stats_multi_tab_modal.svelte';

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LiveInfo } from "$lib/state/live_rival_info.svelte";
+	import { LiveInfo } from "$lib/runtime/live_rival_info.svelte";
 </script>
 
 <div class="w-full p-4">

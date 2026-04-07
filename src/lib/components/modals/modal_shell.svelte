@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ModalM, type ModalConfig } from '$lib/state/modal_manager.svelte';
+    import { ModalM, type ModalConfig } from '$lib/runtime/modal_manager.svelte';
     import { svgCross } from '$lib/data/icons';
     import GenericButton from '$lib/components/shared/generic_button.svelte';
 
