@@ -1,12 +1,12 @@
 <script lang="ts">
     import { onMount, onDestroy } from "svelte";
-    import { msToSecF, parseText, tooltip_string } from "$lib/utils/utils";
-    import type { TodoBase } from "$lib/data/todo_type";
-    import { ActionTodoCardVM } from "./action_todo_card.svelte.ts";
+    import { msToSecF, parseText, tooltipString } from "$lib/utils/utils";
+    import { TodoCardVM } from "./todo_card.svelte.ts";
 
-    let { todo, repeat_val, is_collapse }: { todo: TodoBase, repeat_val: string, is_collapse: boolean } = $props();
+    let { locationName, actionName, repeat_val, is_collapse }:
+        { locationName: string, actionName?: string, repeat_val?: string, is_collapse?: boolean } = $props();
 
-    const vm = new ActionTodoCardVM(todo);
+    const vm = new TodoCardVM(locationName, actionName);
 
     $effect(() => {
         if (repeat_val) vm.updateLoop(repeat_val);
@@ -22,18 +22,18 @@
     onmouseenter={() => vm.hovered = true}
     onmouseleave={() => vm.hovered = false}
 >
-    <!-- Watermark -->
-    <div class="absolute bottom-4 right-4 flex pointer-events-none z-5">
-        <span class="text-7xl font-bold text-teal-800 opacity-15 transform rotate-12 select-none">
-            {#if todo.one_off}
-                ONCE
-            {:else}
-                x{vm.loop}
-            {/if}
-        </span>
-    </div>
+    {#if !vm.is_location}
+        <div class="absolute bottom-4 right-4 flex pointer-events-none z-5">
+            <span class="text-7xl font-bold text-teal-800 opacity-15 transform rotate-12 select-none">
+                {#if vm.has_uses}
+                    ONCE
+                {:else}
+                    x{vm.loop}
+                {/if}
+            </span>
+        </div>
+    {/if}
 
-    <!-- Watermark Line -->
     {#if (vm.disabled && !vm.timer.is_active)}
         <div class="absolute inset-0 pointer-events-none z-10">
             <div class="w-full h-full">
@@ -46,25 +46,24 @@
 
     <div class="relative h-full">
         <div class="flex justify-between items-center mb-4">
-            <div class="text-base font-medium">{todo.name}</div>
+            <div class="text-base font-medium">{vm.name}</div>
             <div class="text-gray-600 text-sm">{msToSecF(vm.timer.elapsed)}/{msToSecF(vm.todo_actual_duration)}s</div>
         </div>
         <div class="w-full bg-[var(--progress-bg)] rounded-full h-4 mb-4">
             <div class="h-4 bg-[var(--progress-fill)] rounded transition-all duration-100" style="width: {vm.timer.progress_percent}%"></div>
         </div>
 
-        <!-- Hover -->
         {#if !is_collapse}
             <div class="relative text-xs h-full">
                 <div class="transition-opacity duration-300 text-gray-700" style="opacity: {vm.hovered ? 0 : 1};">
-                    <i>{@html parseText(todo.desc)}</i>
+                    <i>{@html parseText(vm.desc)}</i>
                 </div>
                 <div class="absolute top-0 left-0 rounded transition-opacity duration-300 h-2/5 w-full" style="opacity: {vm.hovered ? 1 : 0};">
-                    <p>{@html parseText(tooltip_string(todo.tooltip, vm.disabled))}</p>
+                    <p>{@html parseText(tooltipString(vm.def, vm.disabled))}</p>
                 </div>
             </div>
         {/if}
     </div>
 
-    <div class="absolute bottom-4 right-4 text-xs pt-2 text-right"> {todo.get_spendings_rewards_string()} </div>
+    <div class="absolute bottom-4 right-4 text-xs pt-2 text-right"> {vm.rewardText} </div>
 </div>

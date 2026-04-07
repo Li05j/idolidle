@@ -86,7 +86,7 @@ class RebirthStats {
         this.inherit_stats()
         stat_list_reset()
         LiveBattleM.reset()
-        RivalStatsM.reset()
+        RivalStatsM.reroll()
         TodoCardM.reset()
         CPs.reset()
         Progression.reset()

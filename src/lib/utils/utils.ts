@@ -1,6 +1,6 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
 import { stat_list, dummy, stat_list_get } from "$lib/state/stats.svelte";
-import type { PrereqTooltip } from '$lib/data/todo_type';
+import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 
 export const DECIMAL_PLACES = 1;
 
@@ -71,31 +71,59 @@ export function handle_rewards(rewards: Rewards[]): void {
     });
 }
 
-export function tooltip_string(tooltip: PrereqTooltip, is_disabled: boolean,): string {
-    if ('custom_msg' in tooltip) {
-        return "💡" + tooltip.custom_msg;
+export function actionRewardText(def: ActionDef): string {
+    let ret_str = '';
+    if (def.costs) {
+        def.costs.forEach(c => {
+            ret_str += `-${c.amount} ${c.stat} `;
+        });
+    }
+    return ret_str + reward_string(def.rewards);
+}
+
+export function executeAction(def: ActionDef, log: (name: string, text: string) => void): void {
+    if (def.costs) {
+        def.costs.forEach(c => {
+            stat_list_get(c.stat).add_to_final(-c.amount);
+        });
+    }
+
+    handle_rewards(def.rewards);
+    log(def.name, actionRewardText(def));
+    def.on_complete?.fn();
+}
+
+function deriveDependsOn(def: ActionDef): string | null {
+    const deps = def.rewards
+        .filter(r => r.depends?.length)
+        .map(r => {
+            const sources = r.depends!.map(d => d.which_stat).join(', ');
+            return `${sources} ➤ ${r.which_stat}`;
+        });
+    return deps.length ? deps.join('. ') : null;
+}
+
+export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean): string {
+    if ('hint' in def && def.hint && !('kind' in def)) {
+        return "💡" + def.hint;
     }
 
     let ret_str = '';
-    if ('prereq' in tooltip) {
-        const prereq = tooltip.prereq;
-        if (prereq) {
-            if (is_disabled) ret_str += `[red]**!! Prereq: ${prereq}.**[/red]\n`
-            else ret_str += `Prereq: ${prereq}.\n`
+    if (def.requires) {
+        if (is_disabled) ret_str += `[red]**!! Prereq: ${def.requires.text}.**[/red]\n`
+        else ret_str += `Prereq: ${def.requires.text}.\n`
+    }
+
+    if ('kind' in def) {
+        const depends = deriveDependsOn(def);
+        if (depends) {
+            ret_str += `Depends: ${depends}.\n`
+        }
+        if (def.on_complete?.hint) {
+            ret_str += `[blue]⭐ ${def.on_complete.hint}.[/blue]\n`
         }
     }
-    if ('dependsOn' in tooltip) {
-        const depends_on = tooltip.dependsOn;
-        if (depends_on) {
-            ret_str += `Depends: ${depends_on}.\n`
-        }
-    }
-    if ('eureka' in tooltip) {
-        const eureka = tooltip.eureka;
-        if (eureka) {
-            ret_str += `[blue]⭐ ${eureka}.[/blue]\n`
-        }
-    }
+
     return ret_str;
 }
 

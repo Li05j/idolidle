@@ -10,6 +10,7 @@
 
     const vm = new LiveVM(onClose);
     let scrollContainer: HTMLElement;
+    const sidebar_stats = $derived(LiveInfo.comparisons.filter(c => c.label !== "Fans"));
 
     $effect(() => {
         LiveBattleM.turn_logs.length;
@@ -64,18 +65,10 @@
 
     <div class="flex-1 justify-end">
         <div class="grid grid-cols-2 text-center gap-2 mx-auto">
-            <div class='text'>Stamina:</div>
-            <div class="w-8 h-6 rounded" style={LiveInfo.sta_color}></div>
-            <div class=''>Haste:</div>
-            <div class="w-8 h-6 rounded" style={LiveInfo.haste_color}></div>
-            <div class=''>Sing:</div>
-            <div class="w-8 h-6 rounded" style={LiveInfo.sing_color}></div>
-            <div class=''>Dance:</div>
-            <div class="w-8 h-6 rounded" style={LiveInfo.dance_color}></div>
-            <div class='text'>Charm:</div>
-            <div class="w-8 h-6 rounded" style={LiveInfo.charm_color}></div>
-            <div class='text'>Presence:</div>
-            <div class="w-8 h-6 rounded" style={LiveInfo.pres_color}></div>
+            {#each sidebar_stats as comp}
+                <div>{comp.label}:</div>
+                <div class="w-8 h-6 rounded" style={comp.color}></div>
+            {/each}
         </div>
     </div>
 </div>

@@ -1,38 +1,47 @@
-import type { PrereqTooltip } from '$lib/data/todo_type';
-import type { Rewards, TodoType } from '$lib/types';
+import type { BasicStats, Rewards } from '$lib/types';
 
-export type ActionParams = {
+export type ActionKind = 'training' | 'earning' | 'spending';
+
+export type ActionDef = {
     name: string;
-    type: TodoType;
-    base_time: number;
     desc: string;
-    tooltip: PrereqTooltip;
+    base_time: number;
+    kind: ActionKind;
+    uses?: number;
+
     rewards: Rewards[];
-    one_off?: boolean;
-    haste_efficiency?: number;
-    spendings?: { stat_name: string; value: number }[];
-    extra_reward_fn?: () => void;
-    check_disabled_fn?: (stats?: any) => boolean;
+    costs?: { stat: BasicStats; amount: number }[];
+
+    requires?: {
+        text: string;
+        check: () => boolean;
+    };
+
+    on_complete?: {
+        fn: () => void;
+        hint?: string;
+    };
 };
 
-export type UpgradeDefinition = {
+export type UpgradeDef = {
     trigger_action: string;
     remove_actions?: string[];
-    add_actions?: ActionParams[];
+    add_actions?: ActionDef[];
     replace_all?: boolean;
     on_trigger?: () => void;
 };
 
-export type LocationDefinition = {
-    location: {
-        name: string;
-        base_time: number;
-        desc: string;
-        tooltip: PrereqTooltip;
-        rewards: Rewards[];
-        check_disabled_fn?: (stats?: any) => boolean;
+export type LocationDef = {
+    name: string;
+    desc: string;
+    base_time: number;
+    hint?: string;
+    rewards: Rewards[];
+    requires?: {
+        text: string;
+        check: () => boolean;
     };
     unlocks: string[];
-    actions: ActionParams[];
-    upgrades?: UpgradeDefinition[];
+    actions: ActionDef[];
+    upgrades?: UpgradeDef[];
 };

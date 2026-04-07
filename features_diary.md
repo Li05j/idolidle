@@ -1,5 +1,7 @@
 # IdolIdle — Features Diary
 
+# HINT: THIS DIARY IS STALE. STALE. STALE. You may still read this for a general idea, but this IS NOT up to date.
+
 An idle game where you manage an aspiring idol's training, career, and rise to stardom.
 
 ## Core Loop

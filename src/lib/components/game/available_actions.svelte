@@ -7,9 +7,9 @@
 <hr class="h-1 bg-black border-0 opacity-15 mb-4" />
 
 <div class="overflow-y-auto h-full">
-    {#each [...TD_List_Tracker.actions] as action (action[0])}
+    {#each [...TD_List_Tracker.actions] as [locName, actionNames] (locName)}
         <div class="pb-2">
-            <ActionCollection title={action[0]} todos={action[1]} />
+            <ActionCollection title={locName} {actionNames} />
         </div>
     {/each}
     <!-- cheating for now -->

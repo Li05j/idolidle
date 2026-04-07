@@ -1,8 +1,6 @@
-import type { TodoBase } from '$lib/data/todo_type';
-
 class TodoListTracker {
-    public locations: TodoBase[] = $state([]);
-    public actions: Map<string, TodoBase[]> = $state(new Map());
+    public locations: string[] = $state([]);
+    public actions: Map<string, string[]> = $state(new Map());
 
     public reset() {
         this.locations = [];

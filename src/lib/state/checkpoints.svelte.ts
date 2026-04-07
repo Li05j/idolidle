@@ -1,58 +1,52 @@
+type CheckpointDef = { time: number; multi: number };
 
 class Checkpoints {
 	public current_time_spent = $state(0)
-	public last_live_checkpoint_triggered = $state(-1)
 
-	private _checkpoints = [
-		1000,
-		2500,
-		4000,
-		Infinity,
-	]
-	private _max_idx = this._checkpoints.length
-	private _multi = $state([1.0, 1.0, 1.0])
-	private _current_idx = $state(0)
+	private _defs: CheckpointDef[] = $state([
+		{ time: 1000,     multi: 1.0 },
+		{ time: 2500,     multi: 1.0 },
+		{ time: 4000,     multi: 1.0 },
+		{ time: Infinity, multi: 1.0 },
+	])
+	private _idx = $state(0)
+	private _last_triggered = -1
 
-	private getFinalTotalTime(idx: number): number {
-		return idx < this._max_idx ? this._checkpoints[idx] * this._multi[idx] : NaN
+	get current_completed_checkpoint() {
+		return this._idx
 	}
 
-	get current_completed_checkpoint() { 
-		return this._current_idx;
+	get current_multi() {
+		return this._defs[this._idx].multi
 	}
 
-	get current_multi() { 
-		return this._multi[this._current_idx] 
+	setMulti(idx: number, val: number) {
+		if (this._defs[idx]) this._defs[idx].multi = val
 	}
 
-	setMulti(idx: number, val: number) { 
-		this._multi[idx] = val 
+	get current_total_time() {
+		return this._defs[this._idx].time * this._defs[this._idx].multi
 	}
 
-	get current_total_time() { 
-		return this.getFinalTotalTime(this._current_idx) 
-	}
-
-	get next_total_time() { 
-		return this.getFinalTotalTime(this._current_idx + 1) 
+	shouldTriggerLive(): boolean {
+		if (this._last_triggered === this._idx) return false
+		if (this.current_time_spent < this.current_total_time) return false
+		this._last_triggered = this._idx
+		return true
 	}
 
 	advanceToNextCheckpoint() {
-		if (this._current_idx < this._max_idx - 1) {
-			this._current_idx++
+		if (this._idx < this._defs.length - 1) {
+			this._idx++
 			this.current_time_spent = 0
 		}
 	}
 
 	reset() {
-		this._current_idx = 0
+		this._idx = 0
 		this.current_time_spent = 0
-		this.last_live_checkpoint_triggered = -1
+		this._last_triggered = -1
 	}
 }
 
-function createCheckpoints() {
-	return new Checkpoints()
-}
-
-export const CPs = createCheckpoints()
+export const CPs = new Checkpoints()

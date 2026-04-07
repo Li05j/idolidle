@@ -1,8 +1,8 @@
 <script lang="ts">
-    import ActionTodoCard from '$lib/components/todo_cards/action_todo_card.svelte';
+    import TodoCard from '$lib/components/todo_cards/todo_card.svelte';
     import { TodoCardM } from "$lib/state/todo_card_manager.svelte";
 
-    let { title, todos } = $props()
+    let { title, actionNames }: { title: string, actionNames: string[] } = $props();
     let repeat_val = $state('x1');
     let is_collapse = $state(false);
 
@@ -30,9 +30,9 @@
         </select>
     </legend>
     <div class="grid grid-cols-3">
-        {#each todos as todo (todo.id)}
+        {#each actionNames as actName (actName)}
             <div class="col-span-1 px-2">
-                <ActionTodoCard {todo} {repeat_val} {is_collapse} />
+                <TodoCard locationName={title} actionName={actName} {repeat_val} {is_collapse} />
             </div>
         {/each}
     </div>

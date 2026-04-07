@@ -10,8 +10,7 @@
     let progress_percent = $derived(Math.min((CPs.current_time_spent / CPs.current_total_time) * 100, 100));
 
     $effect(() => {
-        if (CPs.last_live_checkpoint_triggered != CPs.current_completed_checkpoint && CPs.current_time_spent >= CPs.current_total_time) {
-            CPs.last_live_checkpoint_triggered = CPs.current_completed_checkpoint
+        if (CPs.shouldTriggerLive()) {
             handle_live();
         }
     })

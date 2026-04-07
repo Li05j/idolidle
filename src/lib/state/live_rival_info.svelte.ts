@@ -1,39 +1,41 @@
 import { stat_list } from "$lib/state/stats.svelte";
 import { CPs } from "$lib/state/checkpoints.svelte";
 import { RivalStatsM } from "$lib/state/live_rival_stats.svelte";
+import type { LiveBattleStats } from "$lib/types";
 
-const HUE_CONST = 120;
+type StatKey = keyof typeof stat_list;
+type RivalKey = keyof LiveBattleStats;
 
-class PlayerRivalCompare {
-    private fan_ratio = $derived(stat_list.Fans.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Fans)
-    public fan_clamped = $derived(Math.max(0, Math.min(1, this.fan_ratio / 2))) // clamp [0,2] within [0,1]
-    public fan_color = $derived(`background-color: hsl(${this.fan_clamped * HUE_CONST}, 100%, 50%)`)
-    
-    private sta_ratio = $derived(stat_list.Stamina.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Max_Stamina)
-    public sta_clamped = $derived(Math.max(0, Math.min(1, this.sta_ratio / 2))) // within [0,1]
-    public sta_color = $derived(`background-color: hsl(${this.sta_clamped * HUE_CONST}, 100%, 50%)`)
-    
-    private haste_ratio = $derived(stat_list.Haste.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Haste)
-    public haste_clamped = $derived(Math.max(0, Math.min(1, this.haste_ratio / 2))) // within [0,1]
-    public haste_color = $derived(`background-color: hsl(${this.haste_clamped * HUE_CONST}, 100%, 50%)`)
-    
-    private sing_ratio = $derived(stat_list.Sing.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Charm)
-    public sing_clamped = $derived(Math.max(0, Math.min(1, this.sing_ratio / 2))) // within [0,1]
-    public sing_color = $derived(`background-color: hsl(${this.sing_clamped * HUE_CONST}, 100%, 50%)`)
-    
-    private dance_ratio = $derived(stat_list.Dance.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Presence)
-    public dance_clamped = $derived(Math.max(0, Math.min(1, this.dance_ratio / 2))) // within [0,1]
-    public dance_color = $derived(`background-color: hsl(${this.dance_clamped * HUE_CONST}, 100%, 50%)`)
-    
-    private charm_ratio = $derived(stat_list.Charm.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Sing)
-    public charm_clamped = $derived(Math.max(0, Math.min(1, this.charm_ratio / 2))) // within [0,1]
-    public charm_color = $derived(`background-color: hsl(${this.charm_clamped * HUE_CONST}, 100%, 50%)`)
-    
-    private pres_ratio = $derived(stat_list.Presence.final / RivalStatsM.get_stats(CPs.current_completed_checkpoint).Dance)
-    public pres_clamped = $derived(Math.max(0, Math.min(1, this.pres_ratio / 2))) // within [0,1]
-    public pres_color = $derived(`background-color: hsl(${this.pres_clamped * HUE_CONST}, 100%, 50%)`)
-    
-    public condition_text = $state("You're no match for Rival... are you even serious about being an Idol?")
+const COMBAT_PAIRS: [StatKey, RivalKey, string][] = [
+    ["Fans",     "Fans",        "Fans"],
+    ["Stamina",  "Max_Stamina", "Stamina"],
+    ["Haste",    "Haste",       "Haste"],
+    ["Sing",     "Charm",       "Sing"],
+    ["Dance",    "Presence",    "Dance"],
+    ["Charm",    "Sing",        "Charm"],
+    ["Presence", "Dance",       "Presence"],
+];
+
+export type StatComparison = { label: string; clamped: number; color: string };
+
+class RivalComparison {
+    public comparisons: StatComparison[] = $derived.by(() => {
+        const rival = RivalStatsM.preview(CPs.current_completed_checkpoint);
+        return COMBAT_PAIRS.map(([playerKey, rivalKey, label]) => {
+            const ratio = stat_list[playerKey].final / rival[rivalKey];
+            const clamped = Math.max(0, Math.min(1, ratio / 2));
+            return { label, clamped, color: `background-color: hsl(${clamped * 120}, 100%, 50%)` };
+        });
+    });
+
+    public condition_text: string = $derived.by(() => {
+        const avg = this.comparisons.reduce((sum, c) => sum + c.clamped, 0) / this.comparisons.length;
+        if (avg >= 0.9) return "Looks like Rival doesn't stand a chance!";
+        if (avg >= 0.6) return "You've got a solid shot at winning!";
+        if (avg >= 0.4) return "It's anyone's game!";
+        if (avg >= 0.25) return "Come on, you know you need just a little more training!";
+        return "You're no match for Rival... are you even serious about being an Idol?";
+    });
 }
 
-export const LiveInfo = new PlayerRivalCompare();
+export const LiveInfo = new RivalComparison();
