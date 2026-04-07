@@ -9,7 +9,7 @@ const IDOL_CLUB_CONCERT_COST = 100;
 
 function extra_grade_report() {
     let [stat_name, actual_gain] = uniform_rand_stat_flat_reward('base', 5, 10);
-    history.addEurekaLogs(`+${actual_gain} ${stat_name}`, `The Grade Report has enlightened you.`);
+    history.addSystemLog(`Eureka! The Grade Report has enlightened you. +${actual_gain} ${stat_name}!`);
 }
 
 function extra_attend_class() {
@@ -20,47 +20,47 @@ function extra_attend_class() {
     let gain = 1.2;
     if (a < 0.5) {
         stat_list.Sing.base += gain;
-        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Sing.multi)} Sing`);
+        history.addSystemLog(`Eureka! You gained +${truncate_to_decimal(gain * stat_list.Sing.multi)} Sing!`);
     }
     if (b < 0.5) {
         stat_list.Dance.base += gain;
-        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Dance.multi)} Dance`);
+        history.addSystemLog(`Eureka! You gained +${truncate_to_decimal(gain * stat_list.Dance.multi)} Dance!`);
     }
     if (c < 0.5) {
         stat_list.Charm.base += gain;
-        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Charm.multi)} Charm`);
+        history.addSystemLog(`Eureka! You gained +${truncate_to_decimal(gain * stat_list.Charm.multi)} Charm!`);
     }
     if (d < 0.5) {
         stat_list.Presence.base += gain;
-        history.addEurekaLogs(`+${truncate_to_decimal(gain * stat_list.Presence.multi)} Presence`);
+        history.addSystemLog(`Eureka! You gained +${truncate_to_decimal(gain * stat_list.Presence.multi)} Presence!`);
     }
 }
 
 function extra_yell_on_wooden_box() {
     let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 5);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Fans`, `You attracted ${value} student(s) to be fans!`);
+        history.addSystemLog(`Eureka! You attracted ${value} student(s) to be fans! +${value} Fans!`);
     }
 }
 
 function extra_hallway_flash_mob() {
     let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 5);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Fans`, `You attracted ${value} student(s) to be fans!`);
+        history.addSystemLog(`Eureka! You attracted ${value} student(s) to be fans! +${value} Fans!`);
     }
 }
 
 function extra_host_school_concert() {
     let [is_success, value] = simple_percent_stat_reward("Fans", "base", "Tiny", 0.1);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Fans`, `The concert was a BIG SUCCESS!`);
+        history.addSystemLog(`Eureka! The concert was a BIG SUCCESS! +${value} Fans!`);
     }
 }
 
 function extra_club_promoter() {
     let [is_success, value] = simple_flat_stat_reward("Fans", "multi", "Tiny", 0.01);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Fans multi`, `You sparked interest among students!`);
+        history.addSystemLog(`Eureka! You sparked interest among students! +${value} Fans multi!`);
     }
 }
 
@@ -211,7 +211,7 @@ export const school: LocationDef = {
                 },
             ],
             on_trigger: () => {
-                history.addHintLogs('You have unlocked some club activities under School, go check them out!');
+                history.addSystemLog('You have unlocked some club activities under School, go check them out!');
             },
         },
         {

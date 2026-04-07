@@ -9,14 +9,14 @@ const GYM_ACTION_COST = 5;
 function extra_bench_press() {
     let [is_success, value] = simple_flat_stat_reward("Stamina", "multi", "Slight", 0.01);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Stamina multi`, 'An unexpected breakthrough!');
+        history.addSystemLog(`Eureka! An unexpected breakthrough! +${value} Stamina multi!`);
     }
 }
 
 function extra_assault_bike() {
     let [is_success, value] = simple_flat_stat_reward("Haste", "multi", "Slight", 0.01);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Haste multi`, 'An unexpected breakthrough!');
+        history.addSystemLog(`Eureka! An unexpected breakthrough! +${value} Haste multi!`);
     }
 }
 
@@ -126,7 +126,7 @@ export const gym: LocationDef = {
                 },
             ],
             on_trigger: () => {
-                history.addHintLogs('You are now a VIP member of the Gym! All equipment costs are voided.');
+                history.addSystemLog('You are now a VIP member of the Gym! All equipment costs are voided.');
             },
         },
     ],

@@ -6,7 +6,7 @@ import type { LocationDef } from './location_definition';
 function extra_play_with_kids() {
     let [is_success, actual_gain] = simple_flat_stat_reward('Fans', 'base', 'Slight', 1);
     if (is_success) {
-        history.addEurekaLogs(`+${actual_gain} Fans`, `You converted ${actual_gain} kid(s) into fans!`);
+        history.addSystemLog(`Eureka! You converted ${actual_gain} kid(s) into fans! +${actual_gain} Fans!`);
     }
 }
 

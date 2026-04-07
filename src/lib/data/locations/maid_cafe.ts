@@ -8,14 +8,14 @@ const MAID_INTERVIEW_COST = { fans: 150, charm: 75 };
 function extra_moe_magic() {
     let [is_success, value] = simple_flat_stat_reward("Charm", "multi", "Tiny", 0.01);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Charm multi`, 'An unexpected breakthrough!');
+        history.addSystemLog(`Eureka! An unexpected breakthrough! +${value} Charm multi!`);
     }
 }
 
 function extra_maid_part_time() {
     let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Good", 1, 5);
     if (is_success) {
-        history.addEurekaLogs(`+${value} Fans`, `You converted ${value} Otaku(s) into fans!`);
+        history.addSystemLog(`Eureka! You converted ${value} Otaku(s) into fans! +${value} Fans!`);
     }
 }
 
@@ -98,7 +98,7 @@ export const maid_cafe: LocationDef = {
                 },
             ],
             on_trigger: () => {
-                history.addHintLogs('You are now a Maid!');
+                history.addSystemLog('You are now a Maid!');
             },
         },
         {

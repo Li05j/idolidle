@@ -1,5 +1,5 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
-import { stat_list, dummy, stat_list_get } from "$lib/state/stats.svelte";
+import { stat_list } from "$lib/state/stats.svelte";
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 
 export const DECIMAL_PLACES = 1;
@@ -39,7 +39,7 @@ export function reward_string(rewards: Rewards[]): string {
         }
         if (r.flat_gain_base) {
             let summed_flat_gain = r.flat_gain_base + depends_gain
-            let multi = stat_list_get(r.which_stat).multi
+            let multi = stat_list[r.which_stat].multi
             temp += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
         }
         else if (r.flat_gain_multi) {
@@ -53,20 +53,18 @@ export function reward_string(rewards: Rewards[]): string {
 
 export function handle_rewards(rewards: Rewards[]): void {
     rewards.forEach(r => {
-        let s = stat_list_get(r.which_stat);
-        if (s) {
-            let depends_gain = 0;
-            if (r.depends && r.efficiency) {
-                depends_gain = find_training_eff_from_str(r.efficiency)(calc_stat_effectiveness(r.depends))
-            }
-            if (r.flat_gain_base) {
-                s.base += r.flat_gain_base;
-                s.base += depends_gain;
-            }
-            else if (r.flat_gain_multi) {
-                s.multi += r.flat_gain_multi;
-                s.multi += depends_gain;
-            }
+        let s = stat_list[r.which_stat];
+        let depends_gain = 0;
+        if (r.depends && r.efficiency) {
+            depends_gain = find_training_eff_from_str(r.efficiency)(calc_stat_effectiveness(r.depends))
+        }
+        if (r.flat_gain_base) {
+            s.base += r.flat_gain_base;
+            s.base += depends_gain;
+        }
+        else if (r.flat_gain_multi) {
+            s.multi += r.flat_gain_multi;
+            s.multi += depends_gain;
         }
     });
 }
@@ -84,7 +82,7 @@ export function actionRewardText(def: ActionDef): string {
 export function executeAction(def: ActionDef, log: (name: string, text: string) => void): void {
     if (def.costs) {
         def.costs.forEach(c => {
-            stat_list_get(c.stat).add_to_final(-c.amount);
+            stat_list[c.stat].add_base_from_final(-c.amount);
         });
     }
 
@@ -130,12 +128,12 @@ export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean
 export function calc_stat_effectiveness(depends: StatEffectPair[]): number {
     let r_stat = 0;
     depends.forEach((d) => {
-        let s = stat_list_get(d.which_stat);
+        let s = stat_list[d.which_stat];
         let normalization_factor = 1;
         if (d.which_stat === 'Fans') normalization_factor = 2;
         if (d.which_stat === 'Stamina') normalization_factor = 3;
 
-        if (s) r_stat += s.final * d.effectiveness / normalization_factor;
+        r_stat += s.final * d.effectiveness / normalization_factor;
     })
     return r_stat
 }

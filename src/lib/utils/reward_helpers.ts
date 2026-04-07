@@ -1,4 +1,4 @@
-import { stat_list_get } from "$lib/state/stats.svelte";
+import { stat_list } from "$lib/state/stats.svelte";
 import type { BasicStats } from "$lib/types";
 
 type Chance = 'Tiny' | 'Slight' | 'Good' | 'Great'; // 0.1, 0.25, 0.5, 0.75
@@ -23,12 +23,12 @@ export function simple_flat_stat_reward(
     if (r < map_chance_to_number(chance)) {
         gain = Math.random() * range + gain;
 
-        let stat = stat_list_get(stat_name);
+        let stat = stat_list[stat_name];
         let actual_gain = '';
         if (which === 'multi') {
             actual_gain = gain.toString();
         } else if (which === 'base') {
-            actual_gain = stat.get_final_gain_str(gain);
+            actual_gain = stat.format_final_gain(gain);
         }
         stat[which] += gain;
         return [true, actual_gain];
@@ -44,14 +44,14 @@ export function simple_percent_stat_reward(
 ): [boolean, string] {
     let r = Math.random();
     if (r < map_chance_to_number(chance)) {
-        let stat = stat_list_get(stat_name);
+        let stat = stat_list[stat_name];
         let actual_gain = '';
         const gain = stat[which] * portion;
         stat[which] += gain;
         if (which === 'multi') {
             actual_gain = gain.toString();
         } else if (which === 'base') {
-            actual_gain = stat.get_final_gain_str(gain);
+            actual_gain = stat.format_final_gain(gain);
         }
         return [true, actual_gain];
     }
@@ -67,7 +67,7 @@ export function uniform_rand_stat_flat_reward(
     const r = Math.random();
     const index = Math.floor(r * stat_names.length);
     const stat_name = stat_names[index];
-    const stat = stat_list_get(stat_name);
+    const stat = stat_list[stat_name];
 
     const gain = Math.random() * (max - min) + min;
     let actual_gain = '';
@@ -75,7 +75,7 @@ export function uniform_rand_stat_flat_reward(
     if (which === 'multi') {
         actual_gain = gain.toFixed();
     } else if (which === 'base') {
-        actual_gain = stat.get_final_gain_str(gain);
+        actual_gain = stat.format_final_gain(gain);
     }
 
     stat[which] += gain;

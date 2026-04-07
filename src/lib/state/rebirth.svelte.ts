@@ -6,70 +6,37 @@ import { Progression } from "$lib/state/progression_engine.svelte"
 import { stat_list, stat_list_reset } from "$lib/state/stats.svelte"
 import { RivalStatsM } from "$lib/state/live_rival_stats.svelte"
 import { skill_unlock_conditions_reset, SkillM } from "$lib/state/skills.svelte"
+import type { BasicStats } from "$lib/types"
+
+function zero_record(): Record<BasicStats, number> {
+    return { Fans: 0, Moni: 0, Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
+}
+
+const STAT_KEYS = Object.keys(stat_list) as BasicStats[]
 
 class RebirthStats {
     private _rebirth_count = $state(0)
     private _max_completed_checkpoints = $state(0)
 
-    public fan_base_gain = $state(0)
-    public moni_base_gain = $state(0)
-    public sta_base_gain = $state(0)
-    public haste_base_gain = $state(0)
-    public sing_base_gain = $state(0)
-    public dance_base_gain = $state(0)
-    public charm_base_gain = $state(0)
-    public pres_base_gain = $state(0)
-
-    public fan_multi_gain = $state(0)
-    public moni_multi_gain = $state(0)
-    public sta_multi_gain = $state(0)
-    public haste_multi_gain = $state(0)
-    public sing_multi_gain = $state(0)
-    public dance_multi_gain = $state(0)
-    public charm_multi_gain = $state(0)
-    public pres_multi_gain = $state(0)
+    private base_gains: Record<BasicStats, number> = $state(zero_record())
+    private multi_gains: Record<BasicStats, number> = $state(zero_record())
 
     private BASE_RATIO = 0.075
     private MULTI_RATIO = 0.0003
 
     private inherit_stats() {
-        this.fan_base_gain      += stat_list.Fans.final         * this.BASE_RATIO
-        this.moni_base_gain     += stat_list.Moni.final         * this.BASE_RATIO
-        this.sta_base_gain      += stat_list.Stamina.final      * this.BASE_RATIO
-        this.haste_base_gain      += stat_list.Haste.final        * this.BASE_RATIO
-        this.sing_base_gain     += stat_list.Sing.final         * this.BASE_RATIO
-        this.dance_base_gain    += stat_list.Dance.final        * this.BASE_RATIO
-        this.charm_base_gain    += stat_list.Charm.final        * this.BASE_RATIO
-        this.pres_base_gain     += stat_list.Presence.final     * this.BASE_RATIO
-
-        this.fan_multi_gain     += Math.min(stat_list.Fans.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.moni_multi_gain    += Math.min(stat_list.Moni.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.sta_multi_gain     += Math.min(stat_list.Stamina.final     * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.haste_multi_gain     += Math.min(stat_list.Haste.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.sing_multi_gain    += Math.min(stat_list.Sing.final        * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.dance_multi_gain   += Math.min(stat_list.Dance.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.charm_multi_gain   += Math.min(stat_list.Charm.final       * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
-        this.pres_multi_gain    += Math.min(stat_list.Presence.final    * this.MULTI_RATIO, 0.01 * (CPs.current_completed_checkpoint + 1))
+        const multi_cap = 0.01 * (CPs.current_completed_checkpoint + 1)
+        for (const key of STAT_KEYS) {
+            this.base_gains[key] += stat_list[key].final * this.BASE_RATIO
+            this.multi_gains[key] += Math.min(stat_list[key].final * this.MULTI_RATIO, multi_cap)
+        }
     }
 
     private apply_gains_to_initial_stats() {
-        stat_list.Fans.base         += this.fan_base_gain
-        stat_list.Moni.base         += this.moni_base_gain
-        stat_list.Stamina.base      += this.sta_base_gain
-        stat_list.Haste.base        += this.haste_base_gain
-        stat_list.Sing.base         += this.sing_base_gain
-        stat_list.Dance.base        += this.dance_base_gain
-        stat_list.Charm.base        += this.charm_base_gain
-        stat_list.Presence.base     += this.pres_base_gain
-
-        stat_list.Fans.multi        += this.fan_multi_gain
-        stat_list.Moni.multi        += this.moni_multi_gain
-        stat_list.Stamina.multi     += this.sta_multi_gain
-        stat_list.Haste.multi       += this.sta_multi_gain
-        stat_list.Sing.multi        += this.sing_multi_gain
-        stat_list.Dance.multi       += this.dance_multi_gain
-        stat_list.Charm.multi       += this.charm_multi_gain
-        stat_list.Presence.multi    += this.pres_multi_gain
+        for (const key of STAT_KEYS) {
+            stat_list[key].base += this.base_gains[key]
+            stat_list[key].multi += this.multi_gains[key]
+        }
     }
 
     increment_rebirth_count() { this._rebirth_count++; }
@@ -98,8 +65,4 @@ class RebirthStats {
     }
 }
 
-function createRebirth() {
-    return new RebirthStats()
-}
-
-export const Rebirth = createRebirth()
+export const Rebirth = new RebirthStats()

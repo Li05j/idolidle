@@ -211,13 +211,13 @@ class LiveBattleManager {
 
         if (this.final_fan_difference != null) {
             const fan_change = this.final_fan_difference;
-            stat_list.Fans.add_to_final(fan_change);
+            stat_list.Fans.add_base_from_final(fan_change);
 
             const fan_change_str = fan_change.toFixed(0);
             if (fan_change >= 0) {
-                history.addHintLogs(`LIVE has successfully concluded. You gained ${fan_change_str} fans!`, true);
+                history.addSystemLog(`LIVE has successfully concluded. You gained ${fan_change_str} fans!`, true);
             } else {
-                history.addHintLogs(`LIVE has concluded. You lost ${-fan_change_str} fans!`, true);
+                history.addSystemLog(`LIVE has concluded. You lost ${-fan_change_str} fans!`, true);
             }
         }
     }

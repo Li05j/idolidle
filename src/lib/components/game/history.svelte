@@ -25,10 +25,10 @@
         {#each history.logs as log}
         <div class="grid grid-cols-9 gap-x-4">
             <div class='col-span-2'>
-                <p class='text-xs'> {@html log[1]} </p>
+                <p class='text-xs'> {@html log.time} </p>
             </div>
             <div class='col-span-7'>
-                <p class='text-xs'> {@html log[2]} </p>
+                <p class='text-xs'> {@html log.message} </p>
             </div>
         </div>
         {/each}

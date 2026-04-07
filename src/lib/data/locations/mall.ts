@@ -1,5 +1,5 @@
 import { history } from '$lib/state/history.svelte';
-import { stat_list, stat_list_get } from '$lib/state/stats.svelte';
+import { stat_list } from '$lib/state/stats.svelte';
 import type { BasicStats } from '$lib/types';
 import type { LocationDef } from './location_definition';
 
@@ -8,7 +8,7 @@ const MINI_LOTTERY_COST = 50;
 const OUTFIT_COST = 25;
 
 function extra_mini_lottery() {
-    const grade_thresholds = [0.05, 0.2, 0.5, 0.75, 1.0];
+    const grade_thresholds = [0.12, 0.34, 0.56, 0.78, 1.0];
     const grades = ['S', 'A', 'B', 'C', 'D'];
     let r = Math.random();
     const grade_index = grade_thresholds.findIndex(t => r <= t);
@@ -19,18 +19,18 @@ function extra_mini_lottery() {
     const loop = grade === 'S' ? 3 : 2;
 
     if (grade !== 'S') {
-        history.addHintLogs(`You got some prizes!`);
+        history.addSystemLog(`You got some prizes!`);
     } else {
-        history.addHintLogs(`...Is this the ultimate Idol luck!?!!?!`);
+        history.addSystemLog(`...Is this the ultimate Idol luck!?!!?!`);
     }
 
-    const grade_multiplier = [4, 4, 3, 2, 1];
+    const grade_multiplier = [5, 4, 3, 2, 1];
 
     for (let i = 0; i < loop; i++) {
         r = Math.random();
         let index = Math.floor(r * grades.length);
         const stat_name = stat_names[index];
-        const stat = stat_list_get(stat_name);
+        const stat = stat_list[stat_name];
 
         r = Math.random();
         const w = r <= 0.5 ? 'base' : 'multi';
@@ -40,14 +40,14 @@ function extra_mini_lottery() {
             let gain = Math.random() * (range[1] - range[0]) + range[0];
             gain *= grade_multiplier[grade_index];
             stat.base += gain;
-            const actual_gain_str = stat.get_final_gain_str(gain);
-            history.addHintLogs(`+${actual_gain_str} ${stat_name}!`);
+            const actual_gain_str = stat.format_final_gain(gain);
+            history.addSystemLog(`+${actual_gain_str} ${stat_name}!`);
         } else {
             const range = [0.01, 0.02];
             let gain = Math.random() * (range[1] - range[0]) + range[0];
             gain *= grade_multiplier[grade_index];
             stat.multi += gain;
-            history.addHintLogs(`+${gain.toFixed(2)} ${stat_name} multi!`);
+            history.addSystemLog(`+${gain.toFixed(2)} ${stat_name} multi!`);
         }
     }
 }

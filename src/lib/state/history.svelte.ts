@@ -1,78 +1,51 @@
 import { parseText } from '$lib/utils/utils'
 
-type StringPair = { 1: string, 2: string}
-type LogEntry = { data: StringPair, timestamp: number }
+type LogDisplay = { time: string; message: string }
+type LogEntry = { display: LogDisplay; timestamp: number }
+
+function formatTime(): string {
+    const now = new Date();
+    return `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
+}
 
 function createHistory() {
     const MAX_LOGS = 250;
-    const MAX_AGE_HOURS = 1;
+    const MAX_AGE_MS = 1 * 60 * 60 * 1000;
     let _logs: LogEntry[] = $state([])
 
     function cleanupLogs() {
         const now = Date.now();
-        const maxAge = MAX_AGE_HOURS * 60 * 60 * 1000;
-        
-        while (_logs.length > MAX_LOGS && now - _logs[0].timestamp > maxAge) {
+        while (_logs.length > 0 && now - _logs[0].timestamp > MAX_AGE_MS) {
+            _logs.shift();
+        }
+        while (_logs.length > MAX_LOGS) {
             _logs.shift();
         }
     }
 
+    function push(display: LogDisplay, timestamp: number) {
+        _logs.push({ display, timestamp })
+        cleanupLogs();
+    }
+
     function addLogs(name: string, rewardText: string) {
-        const now = new Date();
-        const timestamp = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
-        
-        let log = parseText(`_${name}_ ${rewardText}`)
-        _logs.push({
-            data: {1: timestamp, 2: log},
-            timestamp: now.getTime()
-        })
-        
-        cleanupLogs();
+        push(
+            { time: formatTime(), message: parseText(`_${name}_ ${rewardText}`) },
+            Date.now(),
+        )
     }
 
-    function addEurekaLogs(reward: string, custom_msg?: string) {
-        let log = ''
-        if (custom_msg) {
-            log = parseText(`[red]Eureka! ${custom_msg} ${reward}![/red]`)
-        }
-        else {
-            log = parseText(`[red]Eureka! You gained ${reward}![/red]`)
-        }
-
-        _logs.push({
-            data: {1: '', 2: log},
-            timestamp: Date.now()
-        })
-        
-        cleanupLogs();
-    }
-
-    function addHintLogs(custom_msg: string, add_date: boolean = false) {
-        let log = parseText(`[red]${custom_msg}[/red]`)
-        
-        if (add_date) {
-            const now = new Date();
-            const timestamp = `[${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}]`;
-
-            _logs.push({
-                data: {1: timestamp, 2: log},
-                timestamp: Date.now()
-            })
-        } else {
-            _logs.push({
-                data: {1: '', 2: log},
-                timestamp: Date.now()
-            })
-        }
-        
-        cleanupLogs();
+    function addSystemLog(message: string, showTime = false) {
+        push(
+            { time: showTime ? formatTime() : '', message: parseText(`[red]${message}[/red]`) },
+            Date.now(),
+        )
     }
 
     return { 
-        get logs() { return _logs.map(entry => entry.data) },
+        get logs() { return _logs.map(entry => entry.display) },
         addLogs,
-        addEurekaLogs,
-        addHintLogs,
+        addSystemLog,
     };
 }
 

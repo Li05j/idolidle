@@ -1,101 +1,45 @@
 import { DECIMAL_PLACES, truncate_to_decimal } from "$lib/utils/utils"
+import type { BasicStats } from "$lib/types"
 
-// Currency floors while Stat can have decimals.
-function createCurrency(name: string, baseInit = 35, multiInit = 1.0) {
-	const _name = name;
-    let base = $state(baseInit);
-    let multi = $state(multiInit);
-	const add_to_final = ((v: number) => base += Math.floor(v / multi))
-	const get_final_gain_str = ((v: number) => { return Math.floor(v * multi).toString() })
-    const final = (() => Math.floor(base * multi));
-	const final_str = (() => final().toString())
-	const reset = () => {
-	  	base = baseInit;
-	  	multi = multiInit;
-	}
+type RoundFn = (v: number) => number;
 
-    return { 
-		get name() { return _name },
+function createStat(name: string, round: RoundFn, formatFinal: (v: number) => string, baseInit: number, multiInit: number) {
+	let base = $state(baseInit);
+	let multi = $state(multiInit);
+
+	return {
+		get name() { return name },
 		get base() { return base }, set base(v) { base = v },
-        get multi() { return multi }, set multi(v) { multi = v },
-		add_to_final,
-		get_final_gain_str,
-        get final() { return final() },
-		get final_str() { return final_str() },
-		reset,
+		get multi() { return multi }, set multi(v) { multi = v },
+		add_base_from_final(v: number) { base += round(v / multi) },
+		format_final_gain(v: number) { return round(v * multi).toString() },
+		get final() { return round(base * multi) },
+		get final_str() { return formatFinal(round(base * multi)) },
+		reset() {
+			base = baseInit;
+			multi = multiInit;
+		},
 	};
 }
 
-function createStat(name: string, baseInit = 15, multiInit = 1.0) {
-	const _name = name;
-  	let base = $state(baseInit);
-  	let multi = $state(multiInit);
-	const add_to_final = ((v: number) => base += truncate_to_decimal(v / multi))
-	const get_final_gain_str = ((v: number) => { return truncate_to_decimal(v * multi).toString() })
-  	const final = (() => truncate_to_decimal(base * multi));
-	const final_str = (() => final().toFixed(DECIMAL_PLACES))
-	const reset = () => {
-	  	base = baseInit;
-	  	multi = multiInit;
-	}
+export type Stat = ReturnType<typeof createStat>;
 
+const floor = Math.floor;
+const truncate = truncate_to_decimal;
+const intFormat = (v: number) => v.toString();
+const decFormat = (v: number) => v.toFixed(DECIMAL_PLACES);
 
-  	return { 
-		get name() { return _name },
-		get base() { return base }, set base(v) { base = v },
-        get multi() { return multi }, set multi(v) { multi = v },
-        add_to_final,
-		get_final_gain_str,
-        get final() { return final() },
-		get final_str() { return final_str() },
-		reset,
-	};
-}
-
-export const dummy = createStat('Dummy');
-
-const fans = createCurrency('Fans');
-const moni = createCurrency('Moni');
-
-const sta = createStat('Stamina');
-const haste = createStat('Haste');
-const sing = createStat('Sing');
-const dance = createStat('Dance');
-const charm = createStat('Charm');
-const pres = createStat('Presence');
-
-export const stat_list = {
-	Fans: fans,
-	Moni: moni,
-	Stamina: sta,
-	Haste: haste,
-	Sing: sing,
-	Dance: dance,
-	Charm: charm,
-	Presence: pres,
-}
-
-export function stat_list_get(s: string) {
-	switch (s) {
-		case "Fans": 		return fans;
-		case "Moni": 		return moni;
-		case "Stamina": 	return sta;
-		case "Haste": 		return haste;
-		case "Sing": 		return sing;
-		case "Dance": 		return dance;
-		case "Charm": 		return charm;
-		case "Presence": 	return pres;
-		default:			return dummy;
-	}
-}
+export const stat_list: Record<BasicStats, Stat> = {
+	Fans:     createStat('Fans',     floor,    intFormat, 35, 1.0),
+	Moni:     createStat('Moni',     floor,    intFormat, 35, 1.0),
+	Stamina:  createStat('Stamina',  truncate, decFormat, 15, 1.0),
+	Haste:    createStat('Haste',    truncate, decFormat, 15, 1.0),
+	Sing:     createStat('Sing',     truncate, decFormat, 15, 1.0),
+	Dance:    createStat('Dance',    truncate, decFormat, 15, 1.0),
+	Charm:    createStat('Charm',    truncate, decFormat, 15, 1.0),
+	Presence: createStat('Presence', truncate, decFormat, 15, 1.0),
+};
 
 export function stat_list_reset() {
-	fans.reset();
-	moni.reset();
-	sta.reset();
-	haste.reset();
-	sing.reset();
-	dance.reset();
-	charm.reset();
-	pres.reset();
+	for (const s of Object.values(stat_list)) s.reset();
 }

@@ -10,7 +10,7 @@ function skill_go_home_club() {
     const rand = Math.random();
     if (rand < skill_unlock_conditions.living_room_actions / 10) {
         SkillM.learn_skill("Go-Home Club");
-        history.addEurekaLogs(`a new skill: Go-Home Club!`);
+        history.addSystemLog(`Eureka! You gained a new skill: Go-Home Club!`);
     }
 }
 
@@ -74,7 +74,7 @@ export const living_room: LocationDef = {
                 },
             ],
             on_trigger: () => {
-                history.addHintLogs('Your Living Room upgraded to Living Room+, give it a check!');
+                history.addSystemLog('Your Living Room upgraded to Living Room+, give it a check!');
             },
         },
     ],
