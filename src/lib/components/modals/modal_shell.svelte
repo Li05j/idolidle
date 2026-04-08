@@ -1,7 +1,6 @@
 <script lang="ts">
     import { ModalM, type ModalConfig } from '$lib/runtime/modal_manager.svelte';
-    import { svgCross } from '$lib/data/icons';
-    import GenericButton from '$lib/components/shared/generic_button.svelte';
+    import X from '$lib/components/shared/x_button.svelte';
 
     const SIZE_CLASSES = {
         sm: 'relative min-w-1/4 min-h-1/4 bg-[var(--surface-card)] rounded-2xl shadow-xl',
@@ -30,8 +29,8 @@
         >
             <div class={SIZE_CLASSES[config.size]} onclick={(e) => e.stopPropagation()}>
                 {#if config.closeable}
-                    <div class="absolute top-4 right-4 z-10">
-                        <GenericButton svg={svgCross} onclick={() => ModalM.close()} variant='secondary' class={'w-8 h-8 rounded-full flex items-center justify-center'}/>
+                    <div class="absolute top-2 right-2 z-10">
+                        <X onclick={() => ModalM.close()} />
                     </div>
                 {/if}
                 <config.component onClose={() => ModalM.close()} {...config.props ?? {}} />

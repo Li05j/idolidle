@@ -14,10 +14,10 @@
 </script>
 
 <div class="grid grid-cols-[1fr_9fr] h-full">
-    <div class="flex flex-col gap-2 pt-4 pl-3 h-full">
+    <div class="flex flex-col gap-2 pt-4 pl-2 pr-2 h-full">
         {#each tabs as t}
             <button
-                class="px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200 origin-right
+                class="px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 origin-right
                     {active === t.id 
                     ? 'text-white shadow-md' 
                     : 'bg-[var(--surface-inset)] text-[var(--text-muted)] hover:bg-[var(--progress-bg)] translate-x-0.5'}"
