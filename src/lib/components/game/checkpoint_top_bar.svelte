@@ -20,16 +20,16 @@
     }
 </script>
 
-<div class="bg-[var(--surface-card)] p-4 rounded-b-2xl shadow-md mb-1 w-full h-32">
-    <div class="flex justify-between items-center mb-3">
-        <div class="pl-2 text-lg font-bold text-[var(--text-primary)]">Time till next LIVE!</div>
-        <GenericButton name={"LIVE info..."} onclick={open_rival_info} variant='cute' class={"px-6 py-2"}/>
+<div class="bg-[var(--surface-card)] p-3 rounded-b-2xl shadow-md mb-1 w-full">
+    <div class="flex justify-between items-center mb-2">
+        <div class="pl-2 pb-1 text-base font-bold text-[var(--text-primary)]">Time till next LIVE!</div>
+        <GenericButton name={"LIVE info..."} onclick={open_rival_info} variant='cute' class={"px-4 py-1 text-xs"}/>
     </div>
-    <div class="w-full bg-[var(--progress-bg)] rounded-full h-4 mb-3 overflow-hidden">
+    <div class="w-full bg-[var(--progress-bg)] rounded-full h-3 mb-2 overflow-hidden">
         <div
-            class="h-4 rounded-full transition-all duration-100"
+            class="h-3 rounded-full transition-all duration-100"
             style="width: {progress_percent}%; background: linear-gradient(90deg, var(--progress-from), var(--progress-to));"
         ></div>
     </div>
-    <div class="text-center text-sm text-[var(--text-muted)]">{msToSecF(CPs.current_time_spent)}/{msToSecF(CPs.current_total_time)}s</div>
+    <div class="text-center text-xs text-[var(--text-muted)]">{msToSecF(CPs.current_time_spent)}/{msToSecF(CPs.current_total_time)}s</div>
 </div>
