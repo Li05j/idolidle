@@ -1,6 +1,7 @@
 import { CPs } from "$lib/state/checkpoints.svelte"
 import { stat_list, stat_list_reset } from "$lib/state/stats.svelte"
 import type { BasicStats } from "$lib/types"
+import { CFG } from '$lib/config'
 
 function zero_record(): Record<BasicStats, number> {
     return { Fans: 0, Moni: 0, Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
@@ -15,8 +16,8 @@ class RebirthStats {
     private base_gains: Record<BasicStats, number> = $state(zero_record())
     private multi_gains: Record<BasicStats, number> = $state(zero_record())
 
-    private BASE_RATIO = 0.075
-    private MULTI_RATIO = 0.0003
+	private BASE_RATIO = CFG.rebirth_base_ratio
+	private MULTI_RATIO = CFG.rebirth_multi_ratio
 
     inherit_stats() {
         const multi_cap = 0.01 * (CPs.current_completed_checkpoint + 1)

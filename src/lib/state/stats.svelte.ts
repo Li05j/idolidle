@@ -1,5 +1,6 @@
 import { DECIMAL_PLACES, truncate_to_decimal } from "$lib/utils/utils"
 import type { BasicStats } from "$lib/types"
+import { CFG } from '$lib/config'
 
 type RoundFn = (v: number) => number;
 
@@ -29,15 +30,18 @@ const truncate = truncate_to_decimal;
 const intFormat = (v: number) => v.toString();
 const decFormat = (v: number) => v.toFixed(DECIMAL_PLACES);
 
+const A = CFG.stat_init_add_value;
+const B = CFG.stat_init_multi;
+
 export const stat_list: Record<BasicStats, Stat> = {
-	Fans:     createStat('Fans',     floor,    intFormat, 35, 1.0),
-	Moni:     createStat('Moni',     floor,    intFormat, 35, 1.0),
-	Stamina:  createStat('Stamina',  truncate, decFormat, 15, 1.0),
-	Haste:    createStat('Haste',    truncate, decFormat, 15, 1.0),
-	Sing:     createStat('Sing',     truncate, decFormat, 15, 1.0),
-	Dance:    createStat('Dance',    truncate, decFormat, 15, 1.0),
-	Charm:    createStat('Charm',    truncate, decFormat, 15, 1.0),
-	Presence: createStat('Presence', truncate, decFormat, 15, 1.0),
+	Fans:     createStat('Fans',     floor,    intFormat, (1 + A) * B, 1.0),
+	Moni:     createStat('Moni',     floor,    intFormat, (0 + A) * B, 1.0),
+	Stamina:  createStat('Stamina',  truncate, decFormat, (1 + A) * B, 1.0),
+	Haste:    createStat('Haste',    truncate, decFormat, (1 + A) * B, 1.0),
+	Sing:     createStat('Sing',     truncate, decFormat, (1 + A) * B, 1.0),
+	Dance:    createStat('Dance',    truncate, decFormat, (1 + A) * B, 1.0),
+	Charm:    createStat('Charm',    truncate, decFormat, (1 + A) * B, 1.0),
+	Presence: createStat('Presence', truncate, decFormat, (1 + A) * B, 1.0),
 };
 
 export function stat_list_reset() {

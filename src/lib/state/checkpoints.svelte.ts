@@ -1,3 +1,5 @@
+import { CFG } from '$lib/config';
+
 type CheckpointDef = { time: number; multi: number };
 
 class Checkpoints {
@@ -25,7 +27,7 @@ class Checkpoints {
 	}
 
 	get current_total_time() {
-		return this._defs[this._idx].time * this._defs[this._idx].multi
+		return this._defs[this._idx].time * CFG.time_scale * this._defs[this._idx].multi
 	}
 
 	shouldTriggerLive(): boolean {

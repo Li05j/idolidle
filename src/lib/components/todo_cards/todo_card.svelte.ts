@@ -6,6 +6,7 @@ import { locationMap } from '$lib/data/locations/index';
 import { history } from '$lib/state/history.svelte';
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { executeAction, actionRewardText, handle_rewards, reward_string } from '$lib/utils/utils';
+import { CFG } from '$lib/config';
 
 const ACTION_BG = {
     training: { normal: 'bg-[var(--card-action)]',         hover: 'bg-[var(--card-action-hover)]' },
@@ -19,7 +20,7 @@ const BORDER_ACTIVE = 'outline outline-3 outline-[var(--card-border-active)] sha
 const BORDER_INACTIVE = 'outline outline-2 outline-[var(--card-border-inactive)]';
 
 function getActualDuration(base_time: number): number {
-    return base_time;
+    return Math.max(base_time * CFG.time_scale, CFG.min_action_time);
 }
 
 export class TodoCardVM {
