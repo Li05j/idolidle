@@ -4,15 +4,15 @@
     import GenericButton from '$lib/components/shared/generic_button.svelte';
 
     const SIZE_CLASSES = {
-        sm: 'relative min-w-1/4 min-h-1/4 bg-white rounded-lg shadow-xl',
-        lg: 'relative w-3/4 h-3/4 bg-white rounded-lg shadow-xl overflow-hidden',
-        worker: 'relative min-w-3/4 min-h-3/4 overflow-hidden bg-white rounded-lg shadow-xl',
+        sm: 'relative min-w-1/4 min-h-1/4 bg-[var(--surface-card)] rounded-2xl shadow-xl',
+        lg: 'relative w-3/4 h-3/4 bg-[var(--surface-card)] rounded-2xl shadow-xl overflow-hidden',
+        worker: 'relative min-w-3/4 min-h-3/4 overflow-hidden bg-[var(--surface-card)] rounded-2xl shadow-xl',
     };
 
-    let modalElements: Map<number, HTMLDivElement> = new Map();
+    let backdropEls: HTMLDivElement[] = $state([]);
 
     function handleBackdropClick(e: MouseEvent, index: number, config: ModalConfig) {
-        if (config.closeable && e.target === modalElements.get(index)) {
+        if (config.closeable && e.target === backdropEls[index]) {
             ModalM.close();
         }
     }
@@ -22,8 +22,8 @@
     <div class="z-100">
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <div
-            bind:this={modalElements[i]}
-            class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            bind:this={backdropEls[i]}
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
             onclick={(e) => handleBackdropClick(e, i, config)}
             role="dialog"
             aria-modal="true"

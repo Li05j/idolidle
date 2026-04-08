@@ -64,6 +64,6 @@ export type Skill = {
     unlock_string: string,
     cond_string: string,
     eff_string: string,
-    condition?: (ctx) => boolean,
-    effect?: (ctx) => void,
+    condition?: (ctx: { you: LiveBattleStats; rival: LiveBattleStats }) => boolean,
+    effect?: (ctx: { you: LiveBattleStats; rival: LiveBattleStats }) => void,
 }

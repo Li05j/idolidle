@@ -1,6 +1,5 @@
 <script lang="ts">
     import { LiveBattleM } from "$lib/runtime/live_battle_manager.svelte";
-    import { onMount } from "svelte";
     import { parseText } from "$lib/utils/utils";
     import GenericButton from "$lib/components/shared/generic_button.svelte";
     import { LiveInfo } from "$lib/runtime/live_rival_info.svelte";
@@ -23,26 +22,25 @@
         }
     });
 
-    onMount(() => vm.startBattle());
+    $effect(() => {
+        vm.startBattle();
+    });
 </script>
 
 <div class="w-full flex justify-center">
-    <div class="relative w-2/3 h-6 bg-[var(--progress-bg)] rounded my-8">
-        <!-- Left -->
+    <div class="relative w-2/3 h-6 bg-[var(--progress-bg)] rounded-full my-8 overflow-hidden">
         <div
-            class="absolute top-0 left-0 h-full bg-[var(--battle-player)] transition-all duration-300 rounded"
-            style="width: {vm.leftPercent}%"
+            class="absolute top-0 left-0 h-full transition-all duration-300 rounded-full"
+            style="width: {vm.leftPercent}%; background: var(--battle-player);"
         ></div>
 
-        <!-- Right part -->
         <div
-            class="absolute top-0 right-0 h-full bg-[var(--battle-rival)] transition-all duration-300 rounded"
-            style="width: {vm.rightPercent}%"
+            class="absolute top-0 right-0 h-full transition-all duration-300 rounded-full"
+            style="width: {vm.rightPercent}%; background: var(--battle-rival);"
         ></div>
 
-        <!-- Divider line -->
         <div
-          class="absolute top-[-75%] h-[250%] w-1 bg-gradient-to-b from-transparent via-gray-800 to-transparent shadow-[0_0_6px_rgba(0,0,0,0.3)] transition-all duration-300"
+          class="absolute top-[-75%] h-[250%] w-0.5 bg-gradient-to-b from-transparent via-[var(--text-primary)] to-transparent transition-all duration-300"
           style="left: {vm.leftPercent-0.3}%"
         ></div>
     </div>
@@ -53,10 +51,10 @@
     <div class="mt-2 mx-auto">
         <div
             bind:this={scrollContainer}
-            class="p-4 text-center overflow-y-auto w-[75vh] h-[55vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.2)]"
+            class="p-4 text-center overflow-y-auto w-[75vh] h-[55vh] rounded-xl bg-[var(--surface-inset)]"
         >
             {#each LiveBattleM.turn_logs as log }
-                <div>
+                <div class="py-0.5">
                     {@html parseText(log.msg)}
                 </div>
             {/each}
@@ -66,8 +64,8 @@
     <div class="flex-1 justify-end">
         <div class="grid grid-cols-2 text-center gap-2 mx-auto">
             {#each sidebar_stats as comp}
-                <div>{comp.label}:</div>
-                <div class="w-8 h-6 rounded" style={comp.color}></div>
+                <div class="text-sm text-[var(--text-primary)]">{comp.label}:</div>
+                <div class="w-8 h-6 rounded-md" style={comp.color}></div>
             {/each}
         </div>
     </div>

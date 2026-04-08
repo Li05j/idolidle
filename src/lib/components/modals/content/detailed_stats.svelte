@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Rebirth } from "$lib/state/rebirth.svelte";
+    import { Rebirth } from "$lib/state/rebirth.svelte";
     import { stat_list } from "$lib/state/stats.svelte";
 
     let currency = [stat_list.Fans, stat_list.Moni]
@@ -7,35 +7,37 @@
 </script>
 
 <div class="w-full p-4">
-    <div class="rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]">
-        <div class="grid grid-cols-4 px-4 py-4 text-center justify-center gap-y-2">
-            <div class='font-semibold text-lg'>Name</div>
-            <div class='font-semibold text-lg'>Base Stat</div> 
-            <div class='font-semibold text-lg'>Multiplier</div> 
-            <div class='font-semibold text-lg'>Final Stat</div>
+    <div class="rounded-xl bg-[var(--surface-inset)]">
+        <div class="grid grid-cols-4 px-4 py-4 text-center gap-y-2">
+            <div class='font-bold text-sm text-[var(--text-primary)]'>Name</div>
+            <div class='font-bold text-sm text-[var(--text-primary)]'>Base</div> 
+            <div class='font-bold text-sm text-[var(--text-primary)]'>Multi</div> 
+            <div class='font-bold text-sm text-[var(--text-primary)]'>Final</div>
 
-            <div class='col-span-4 grid grid-cols-4 text-center justify-center'>
+            <div class='col-span-4 h-px bg-gradient-to-r from-transparent via-[var(--progress-from)] to-transparent'></div>
+
+            <div class='col-span-4 grid grid-cols-4 text-center gap-y-1'>
                 {#each currency as stat}
-                    <div class='text-sm'>{stat.name}</div>
-                    <div class='text-sm'>{Math.floor(stat.base)}</div> 
-                    <div class='text-sm'>{stat.multi.toFixed(2)}</div> 
-                    <div class='text-sm'>{stat.final_str}</div>
+                    <div class='text-sm text-[var(--text-primary)]'>{stat.name}</div>
+                    <div class='text-sm text-[var(--text-muted)]'>{Math.floor(stat.base)}</div> 
+                    <div class='text-sm text-[var(--text-muted)]'>{stat.multi.toFixed(2)}</div> 
+                    <div class='text-sm font-semibold text-[var(--text-primary)]'>{stat.final_str}</div>
                 {/each}
                 {#each other_stats as stat}
-                    <div class='text-sm'>{stat.name}</div>
-                    <div class='text-sm'>{stat.base.toFixed(2)}</div> 
-                    <div class='text-sm'>{stat.multi.toFixed(2)}</div> 
-                    <div class='text-sm'>{stat.final_str}</div>
+                    <div class='text-sm text-[var(--text-primary)]'>{stat.name}</div>
+                    <div class='text-sm text-[var(--text-muted)]'>{stat.base.toFixed(2)}</div> 
+                    <div class='text-sm text-[var(--text-muted)]'>{stat.multi.toFixed(2)}</div> 
+                    <div class='text-sm font-semibold text-[var(--text-primary)]'>{stat.final_str}</div>
                 {/each}
             </div>
         </div>
     </div>
-    <div class="rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)] mt-2">
-        <div class="grid grid-cols-4 px-4 py-4 text-center justify-center gap-y-2">
-            <div class='font-semibold text-lg'>Total Dreams:</div>
-            <div class='text-sm'>{Rebirth.rebirth_count}</div>
-            <div class='font-semibold text-lg'>Max LIVE Wins:</div> 
-            <div class='text-sm'>{Rebirth.max_completed_checkpoints}</div>
+    <div class="rounded-xl bg-[var(--surface-inset)] mt-3">
+        <div class="grid grid-cols-4 px-4 py-4 text-center gap-y-2">
+            <div class='font-bold text-sm text-[var(--text-primary)]'>Total Dreams:</div>
+            <div class='text-sm text-[var(--text-muted)]'>{Rebirth.rebirth_count}</div>
+            <div class='font-bold text-sm text-[var(--text-primary)]'>Max LIVE Wins:</div> 
+            <div class='text-sm text-[var(--text-muted)]'>{Rebirth.max_completed_checkpoints}</div>
         </div>
     </div>
 </div>

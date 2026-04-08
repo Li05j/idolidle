@@ -1,10 +1,13 @@
-<script>
+<script lang="ts">
 	import '../app.postcss';
 	import './layout.css';
+	import type { Snippet } from 'svelte';
+
+	let { children }: { children: Snippet } = $props();
 </script>
 
-<div class="flex">
-	<div style="background-color: #ffffff" class="flex-1">
-		<slot></slot> <!-- Page content will be injected here -->
+<div class="flex min-h-screen bg-[var(--surface-base)]">
+	<div class="flex-1">
+		{@render children()}
 	</div>
 </div>

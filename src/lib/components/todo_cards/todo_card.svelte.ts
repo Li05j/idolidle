@@ -15,8 +15,8 @@ const ACTION_BG = {
 
 const LOCATION_BG = { normal: 'bg-[var(--card-location)]', hover: 'bg-[var(--card-location-hover)]' };
 
-const BORDER_ACTIVE = 'outline outline-4 outline-[var(--card-border-active)]';
-const BORDER_INACTIVE = 'outline outline-4 outline-[var(--card-border-inactive)]';
+const BORDER_ACTIVE = 'outline outline-3 outline-[var(--card-border-active)] shadow-[var(--glow-active)]';
+const BORDER_INACTIVE = 'outline outline-2 outline-[var(--card-border-inactive)]';
 
 function getActualDuration(base_time: number): number {
     return base_time;

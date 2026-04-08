@@ -3,16 +3,13 @@
     import ActionCollection from '$lib/components/shared/action_collection.svelte';
 </script>
 
-<h1 class="text-lg font-bold mb-4 justify-center text-center">Actions</h1>
-<hr class="h-1 bg-black border-0 opacity-15 mb-4" />
+<h1 class="text-base font-bold mb-2 text-center text-[var(--text-primary)]">Actions</h1>
+<div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-to)] to-transparent mb-3"></div>
 
-<div class="overflow-y-auto h-full">
+<div class="overflow-y-auto h-full pb-16">
     {#each [...TD_List_Tracker.actions] as [locName, actionNames] (locName)}
-        <div class="pb-2">
+        <div class="pb-3">
             <ActionCollection title={locName} {actionNames} />
         </div>
     {/each}
-    <!-- cheating for now -->
-    <hr class="h-1 bg-black border-0 opacity-0 mb-4" />
-    <hr class="h-1 bg-black border-0 opacity-0 mb-4" />
 </div>

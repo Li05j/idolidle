@@ -11,17 +11,15 @@
     }
 </script>
 
-<fieldset class="border border-gray-300 rounded-lg p-4">
-    <legend class="px-2 text-lg font-semibold">
+<fieldset class="border border-[var(--card-border-inactive)] rounded-xl p-4 bg-[var(--surface-card)]/50">
+    <legend class="px-3 py-1 text-sm font-bold text-[var(--text-primary)] bg-[var(--surface-base)] rounded-full border border-[var(--card-border-inactive)]">
         <button onclick={toggle_collapse} class="appearance-none bg-transparent border-none p-0 m-0 text-inherit font-inherit cursor-pointer">
             {title}
         </button>
         <select 
             bind:value={repeat_val} 
             disabled={TodoCardM.is_active}
-            class:cursor-not-allowed={TodoCardM.is_active}
-            class:bg-gray-300={TodoCardM.is_active}
-            class="border border-gray-300 rounded-lg text-center text-sm text-gray-600 w-32 mx-2"
+            class="border border-[var(--card-border-inactive)] rounded-full text-center text-xs text-[var(--text-muted)] w-28 mx-2 py-0.5 bg-[var(--surface-base)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
             <option value="x1">Repeat x1</option>
             <option value="x5">Repeat x5</option>

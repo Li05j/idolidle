@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount, onDestroy } from "svelte";
     import { msToSecF, parseText, tooltipString } from "$lib/utils/utils";
     import { TodoCardVM } from "./todo_card.svelte.ts";
 
@@ -12,19 +11,21 @@
         if (repeat_val) vm.updateLoop(repeat_val);
     });
 
-    onMount(() => vm.init());
-    onDestroy(() => vm.destroy());
+    $effect(() => {
+        vm.init();
+        return () => vm.destroy();
+    });
 </script>
 
 <div
-    class="{vm.bg_color} {vm.border} transition-all duration-300 pl-6 pr-6 pt-4 rounded-lg shadow-md relative overflow-hidden mb-4 {(vm.disabled && !vm.timer.is_active) ? 'cursor-not-allowed' : 'cursor-pointer'} {is_collapse ? 'h-32' : 'h-48'}"
+    class="{vm.bg_color} {vm.border} transition-all duration-200 pl-5 pr-5 pt-4 rounded-[var(--border-radius-card)] shadow-sm relative overflow-hidden mb-3 hover:shadow-md hover:scale-[1.01] {(vm.disabled && !vm.timer.is_active) ? 'cursor-not-allowed opacity-60 saturate-50' : 'cursor-pointer'} {is_collapse ? 'h-28' : 'h-44'}"
     onclick={() => vm.toggle(repeat_val)}
     onmouseenter={() => vm.hovered = true}
     onmouseleave={() => vm.hovered = false}
 >
     {#if !vm.is_location}
-        <div class="absolute bottom-4 right-4 flex pointer-events-none z-5">
-            <span class="text-7xl font-bold text-teal-800 opacity-15 transform rotate-12 select-none">
+        <div class="absolute bottom-3 right-4 flex pointer-events-none z-5">
+            <span class="text-6xl font-extrabold text-[var(--text-primary)] opacity-[0.07] transform rotate-12 select-none">
                 {#if vm.has_uses}
                     ONCE
                 {:else}
@@ -34,36 +35,29 @@
         </div>
     {/if}
 
-    {#if (vm.disabled && !vm.timer.is_active)}
-        <div class="absolute inset-0 pointer-events-none z-10">
-            <div class="w-full h-full">
-                <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <line x1="0" y1="0" x2="100%" y2="100%" stroke="red" stroke-opacity="0.2" stroke-width="4" />
-                </svg>
-            </div>
-        </div>
-    {/if}
-
     <div class="relative h-full">
-        <div class="flex justify-between items-center mb-4">
-            <div class="text-base font-medium">{vm.name}</div>
-            <div class="text-gray-600 text-sm">{msToSecF(vm.timer.elapsed)}/{msToSecF(vm.todo_actual_duration)}s</div>
+        <div class="flex justify-between items-center mb-3">
+            <div class="text-sm font-bold text-[var(--text-primary)]">{vm.name}</div>
+            <div class="text-[var(--text-muted)] text-xs">{msToSecF(vm.timer.elapsed)}/{msToSecF(vm.todo_actual_duration)}s</div>
         </div>
-        <div class="w-full bg-[var(--progress-bg)] rounded-full h-4 mb-4">
-            <div class="h-4 bg-[var(--progress-fill)] rounded transition-all duration-100" style="width: {vm.timer.progress_percent}%"></div>
+        <div class="w-full bg-[var(--progress-bg)] rounded-full h-3 mb-3 overflow-hidden">
+            <div
+                class="h-3 rounded-full transition-all duration-100"
+                style="width: {vm.timer.progress_percent}%; background: linear-gradient(90deg, var(--progress-from), var(--progress-to));"
+            ></div>
         </div>
 
         {#if !is_collapse}
             <div class="relative text-xs h-full">
-                <div class="transition-opacity duration-300 text-gray-700" style="opacity: {vm.hovered ? 0 : 1};">
+                <div class="transition-opacity duration-300 text-[var(--text-muted)]" style="opacity: {vm.hovered ? 0 : 1};">
                     <i>{@html parseText(vm.desc)}</i>
                 </div>
-                <div class="absolute top-0 left-0 rounded transition-opacity duration-300 h-2/5 w-full" style="opacity: {vm.hovered ? 1 : 0};">
+                <div class="absolute top-0 left-0 rounded-lg transition-opacity duration-300 h-2/5 w-full text-[var(--text-primary)]" style="opacity: {vm.hovered ? 1 : 0};">
                     <p>{@html parseText(tooltipString(vm.def, vm.disabled))}</p>
                 </div>
             </div>
         {/if}
     </div>
 
-    <div class="absolute bottom-4 right-4 text-xs pt-2 text-right"> {vm.rewardText} </div>
+    <div class="absolute bottom-3 right-4 text-xs text-[var(--text-muted)] pt-2 text-right"> {vm.rewardText} </div>
 </div>

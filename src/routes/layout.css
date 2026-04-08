@@ -2,57 +2,85 @@
  * IdolIdle Design Tokens
  * =====================
  *
- * Card colors: Each todo card type has a base and hover color.
+ * Surface layers: base page background, elevated card surfaces, inset containers.
+ *   --surface-base  → page background (warm cream)
+ *   --surface-card  → elevated card/modal surface
+ *   --surface-inset → recessed containers (stats, history, skill panels)
+ *
+ * Text:
+ *   --text-primary → main text (warm dark)
+ *   --text-muted   → secondary/descriptive text
+ *
+ * Card colors: Each card type has a base and hover color.
  *   --card-{type}         → default background
  *   --card-{type}-hover   → hovered background
  *
- * Card borders: Active cards get a highlighted outline.
- *   --card-border-active   → solid orange outline when running
- *   --card-border-inactive → faint outline when idle
+ * Card borders: Active cards get a golden glow, inactive a faint tint.
+ *   --card-border-active   → golden outline + glow when running
+ *   --card-border-inactive → faint rose outline when idle
+ *   --glow-active          → box-shadow for active card glow
  *
- * Progress bars: Consistent green fill across all progress indicators.
- *   --progress-fill → green bar color
- *   --progress-bg   → gray track color
+ * Progress bars: Gradient fill across all progress indicators.
+ *   --progress-from → gradient start (pink)
+ *   --progress-to   → gradient end (violet)
+ *   --progress-bg   → track color (soft rose)
  *
- * Button variants: primary (blue), secondary (zinc), cute (pink).
+ * Button variants: primary (violet-pink gradient), secondary (slate-lavender), cute (pink-rose gradient).
  *   --btn-{variant}       → default background
  *   --btn-{variant}-hover → hovered background
  *   --btn-disabled        → disabled background (shared)
  *
  * Battle bar: LIVE battle fan comparison bar.
- *   --battle-player → player side (green)
- *   --battle-rival  → rival side (orange)
+ *   --battle-player → player side (soft green)
+ *   --battle-rival  → rival side (warm coral)
+ *
+ * Misc:
+ *   --border-radius-card → consistent card roundedness
  */
 
 :root {
+    /* Surfaces */
+    --surface-base: #FFF6F0;
+    --surface-card: #FFFFFF;
+    --surface-inset: #FFF0E8;
+
+    /* Text */
+    --text-primary: #3D2C2E;
+    --text-muted: #8C7A7D;
+
     /* Card type backgrounds */
-    --card-action: theme(colors.white);
-    --card-action-hover: theme(colors.stone.100);
-    --card-gain-currency: theme(colors.purple.100);
-    --card-gain-currency-hover: theme(colors.purple.200);
-    --card-spend-currency: theme(colors.yellow.100);
-    --card-spend-currency-hover: theme(colors.yellow.200);
-    --card-location: theme(colors.pink.100);
-    --card-location-hover: theme(colors.pink.200);
+    --card-action: #EFF6FF;
+    --card-action-hover: #DBEAFE;
+    --card-gain-currency: #F3E8FF;
+    --card-gain-currency-hover: #E9D5FF;
+    --card-spend-currency: #FFF7ED;
+    --card-spend-currency-hover: #FFEDD5;
+    --card-location: #FFF1F2;
+    --card-location-hover: #FFE4E6;
 
     /* Card borders */
-    --card-border-active: theme(colors.orange.400);
-    --card-border-inactive: theme(colors.orange.300 / 10%);
+    --card-border-active: #F59E0B;
+    --card-border-inactive: rgba(244, 163, 196, 0.2);
+    --glow-active: 0 0 12px rgba(245, 158, 11, 0.4), 0 0 4px rgba(245, 158, 11, 0.2);
 
     /* Progress bars */
-    --progress-fill: theme(colors.green.500);
-    --progress-bg: theme(colors.gray.200);
+    --progress-from: #F472B6;
+    --progress-to: #A78BFA;
+    --progress-bg: #FCE4EC;
 
     /* Button variants */
-    --btn-primary: theme(colors.blue.500);
-    --btn-primary-hover: theme(colors.blue.700);
-    --btn-secondary: theme(colors.zinc.500);
-    --btn-secondary-hover: theme(colors.zinc.700);
-    --btn-cute: theme(colors.pink.500);
-    --btn-cute-hover: theme(colors.pink.700);
-    --btn-disabled: theme(colors.gray.400);
+    --btn-primary: linear-gradient(135deg, #A78BFA, #F472B6);
+    --btn-primary-hover: linear-gradient(135deg, #8B5CF6, #EC4899);
+    --btn-secondary: #94889B;
+    --btn-secondary-hover: #6D5F75;
+    --btn-cute: linear-gradient(135deg, #F472B6, #FB7185);
+    --btn-cute-hover: linear-gradient(135deg, #EC4899, #F43F5E);
+    --btn-disabled: #C4B5C8;
 
     /* Battle bar */
-    --battle-player: theme(colors.green.500);
-    --battle-rival: theme(colors.orange.500);
+    --battle-player: #4ADE80;
+    --battle-rival: #FB923C;
+
+    /* Shared radius */
+    --border-radius-card: 0.875rem;
 }

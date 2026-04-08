@@ -3,10 +3,10 @@
     import TodoCard from '$lib/components/todo_cards/todo_card.svelte';
 </script>
 
-<h1 class="text-lg font-bold mb-4 justify-center text-center">Locations</h1>
-<hr class="h-1 bg-black border-0 opacity-15 mb-4" />
+<h1 class="text-base font-bold mb-2 text-center text-[var(--text-primary)]">Locations</h1>
+<div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-from)] to-transparent mb-3"></div>
 
-<div class="overflow-y-auto p-4 h-full">
+<div class="overflow-y-auto p-3 h-full">
     {#each TD_List_Tracker.locations as locName (locName)}
         <TodoCard locationName={locName} />
     {/each}

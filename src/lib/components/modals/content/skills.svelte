@@ -1,45 +1,42 @@
 <script lang="ts">
-	import { Rebirth } from "$lib/state/rebirth.svelte";
-	import { SkillM } from "$lib/state/skills.svelte";
-    import { stat_list } from "$lib/state/stats.svelte";
-	import type { Skill } from "$lib/types";
+    import { SkillM } from "$lib/state/skills.svelte";
+    import type { Skill } from "$lib/types";
 
     let active: Skill | null = $state(null)
 </script>
 
-<div class="h-[35vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)] overflow-auto">
-    <div class="grid grid-cols-4 px-4 py-4 text-center justify-center gap-y-2">
-        <div class='col-span-4 grid grid-cols-4 text-center justify-center'>
-            {#each SkillM.learned_skills as skill}
-                <button 
-                    class="px-4 py-2 rounded shadow-md m-2 bg-pink-500 font-bold text-white rounded hover:bg-pink-700 disabled:bg-gray-400
-                    {active?.name === skill[0]
-                    ? 'outline outline-4 outline-orange-300 '
-                    : ' '}" 
-                    onclick={() => active = skill[1]}
-                >
-                    {skill[0]}
-                </button>
-            {/each}
-            {#each SkillM.unlearned_skills as skill}
-                <button 
-                    class="px-4 py-2 rounded shadow-md m-2 bg-zinc-200 text-zinc-800 rounded hover:bg-zinc-400 disabled:bg-gray-400
-                    {active?.name === skill[0]
-                    ? 'outline outline-4 outline-orange-300 '
-                    : ' '}" 
-                    onclick={() => active = skill[1]}
-                >
-                    {skill[0]}
-                </button>
-            {/each}
-        </div>
+<div class="h-[35vh] rounded-xl bg-[var(--surface-inset)] overflow-auto">
+    <div class="grid grid-cols-4 px-4 py-4 text-center gap-2">
+        {#each SkillM.learned_skills as skill}
+            <button 
+                class="px-3 py-2 rounded-full shadow-sm text-sm font-semibold text-white transition-all duration-200 hover:scale-[1.03]
+                {active?.name === skill[0]
+                ? 'outline outline-3 outline-[var(--card-border-active)] shadow-[var(--glow-active)]'
+                : ''}" 
+                style="background: var(--btn-cute);"
+                onclick={() => active = skill[1]}
+            >
+                {skill[0]}
+            </button>
+        {/each}
+        {#each SkillM.unlearned_skills as skill}
+            <button 
+                class="px-3 py-2 rounded-full shadow-sm text-sm font-semibold text-[var(--text-muted)] bg-[var(--surface-base)] transition-all duration-200 hover:bg-[var(--progress-bg)] hover:scale-[1.03]
+                {active?.name === skill[0]
+                ? 'outline outline-3 outline-[var(--card-border-active)] shadow-[var(--glow-active)]'
+                : ''}" 
+                onclick={() => active = skill[1]}
+            >
+                {skill[0]}
+            </button>
+        {/each}
     </div>
 </div>
                         
-<div class="h-[35vh] rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)] mt-2 overflow-auto p-4">
+<div class="h-[35vh] rounded-xl bg-[var(--surface-inset)] mt-3 overflow-auto p-4">
     {#if active === null}
-        <div class='font-semibold text-lg'>Click on a Skill above to view its details.</div>
+        <div class='font-semibold text-base text-[var(--text-muted)]'>Click on a Skill above to view its details.</div>
     {:else if SkillM.unlearned_skills.has(active.name)}
-        <div class='font-semibold text-lg'>{active.unlock_string}</div>
+        <div class='font-semibold text-base text-[var(--text-primary)]'>{active.unlock_string}</div>
     {/if}
 </div>

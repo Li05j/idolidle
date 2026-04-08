@@ -2,13 +2,14 @@
     import { stat_list } from "$lib/state/stats.svelte";
 </script>
 
-<h3 class="text-lg font-bold mb-4 justify-center text-center">Your Stats</h3>
-<hr class="h-1 bg-black border-0 opacity-15 mb-4" />
+<div class="bg-[var(--surface-card)] rounded-xl p-4 shadow-sm">
+    <h3 class="text-base font-bold mb-2 text-center text-[var(--text-primary)]">Your Stats</h3>
+    <div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-from)] to-transparent mb-3"></div>
 
-<div class="p-4">
-    <div class="grid grid-cols-2 gap-x-4 pt-6 px-4 py-4 text-center justify-center rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]">
+    <div class="grid grid-cols-2 gap-x-4 gap-y-1 px-3 py-3 text-center rounded-xl bg-[var(--surface-inset)]">
         {#each Object.entries(stat_list) as [name, stat]}
-            <div>{name}:</div>    <div>{stat.final_str}</div>
+            <div class="text-sm font-semibold text-[var(--text-primary)]">{name}</div>
+            <div class="text-sm text-[var(--text-muted)]">{stat.final_str}</div>
         {/each}
     </div>
 </div>

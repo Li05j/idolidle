@@ -4,10 +4,9 @@
     let scrollContainer: HTMLElement
 
     $effect(() => {
-        history.logs.length // Force reactivity
+        history.logs.length
         if (scrollContainer) {
             const { scrollTop, scrollHeight, clientHeight } = scrollContainer
-            // Only force auto scroll when scroll is already near the bottom
             const isNearBottom = scrollTop + clientHeight >= scrollHeight - 150
 
             if (isNearBottom) {
@@ -17,18 +16,19 @@
     })
 </script>
 
-<div class="p-4 h-full">
+<div class="bg-[var(--surface-card)] rounded-xl p-3 shadow-sm h-full flex flex-col">
+    <h3 class="text-sm font-bold text-center text-[var(--text-muted)] mb-2">Log</h3>
     <div 
         bind:this={scrollContainer}
-        class="overflow-y-auto overflow-hidden h-full pt-6 px-4 py-4 text-left rounded shadow-[inset_0_0px_6px_rgba(0,0,0,0.1)]"
+        class="overflow-y-auto flex-1 px-3 py-2 rounded-lg bg-[var(--surface-inset)]"
     >
-        {#each history.logs as log}
-        <div class="grid grid-cols-9 gap-x-4">
+        {#each history.logs as log, i}
+        <div class="grid grid-cols-9 gap-x-3 py-0.5 {i % 2 === 0 ? '' : 'bg-[var(--surface-base)]/50'} rounded">
             <div class='col-span-2'>
-                <p class='text-xs'> {@html log.time} </p>
+                <p class='text-xs text-[var(--text-muted)]'> {@html log.time} </p>
             </div>
             <div class='col-span-7'>
-                <p class='text-xs'> {@html log.message} </p>
+                <p class='text-xs text-[var(--text-primary)]'> {@html log.message} </p>
             </div>
         </div>
         {/each}
