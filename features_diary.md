@@ -4,7 +4,7 @@ An idle game where you train an aspiring idol and battle rival idols in LIVE sho
 
 ## Core Loop
 
-Complete **locations** (timed cards) to unlock new areas with **actions**. Actions run on timers and grant stat rewards. A checkpoint bar fills passively — when full, a **LIVE battle** triggers against a rival idol. Win the LIVE to advance; optionally **rebirth** afterward to carry over stat bonuses.
+Complete **locations** to unlock new areas with **actions**. Actions run on timers and grant stat rewards. A checkpoint bar fills passively — when full, a **LIVE battle** triggers against a rival idol. Win the LIVE to advance; optionally **rebirth** afterward to carry over stat bonuses.
 
 ## Locations & Actions
 
