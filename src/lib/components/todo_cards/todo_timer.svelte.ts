@@ -10,7 +10,7 @@ export interface TodoTimer {
     progress_percent: number;
     progress_text: string;
     loop_count: number;
-    repeat: (loop_count: number, durationMs: number, onComplete: () => void, onAllComplete: () => void) => void;
+    repeat: (loop_count: number, getDuration: () => number, onComplete: () => void, onAllComplete: () => void) => void;
     pause: () => void;
     stop: () => void;
     clear: () => void;
@@ -25,7 +25,7 @@ export function createTodoTimer(): TodoTimer {
     let loop_count = 0;
     let raf_id = 0;
     let last_frame_time = 0;
-    let duration = 0;
+    let getDuration: () => number = () => 0;
     let checkpoint_base = 0;
     let onCompleteCallback: (() => void) | null = null;
     let onAllCompleteCallback: (() => void) | null = null;
@@ -39,32 +39,33 @@ export function createTodoTimer(): TodoTimer {
         elapsed += delta;
         CPs.current_time_spent += delta;
 
-        while (elapsed >= duration) {
+        let dur = getDuration();
+        while (elapsed >= dur) {
             onCompleteCallback?.();
 
             if (loop_count > 0) {
-                // Carry overshoot into next loop
-                elapsed -= duration;
+                elapsed -= dur;
                 loop_count--;
-                checkpoint_base += duration;
+                checkpoint_base += dur;
                 CPs.current_time_spent = checkpoint_base + elapsed;
+                dur = getDuration();
             } else {
                 stop();
                 return;
             }
         }
 
-        progress_percent = (elapsed / duration) * 100;
+        progress_percent = (elapsed / dur) * 100;
         progress_text = `${progress_percent.toFixed(DECIMAL_PLACES)}% complete`;
 
         raf_id = requestAnimationFrame(tick);
     }
 
-    function repeat(loops: number, durationMs: number, onComplete: () => void, onAllComplete: () => void = () => {}) {
+    function repeat(loops: number, getDurationFn: () => number, onComplete: () => void, onAllComplete: () => void = () => {}) {
         if (state === 'running') return;
 
         loop_count = loops - 1;
-        duration = durationMs;
+        getDuration = getDurationFn;
         onCompleteCallback = onComplete;
         onAllCompleteCallback = onAllComplete;
         checkpoint_base = CPs.current_time_spent;
@@ -82,8 +83,7 @@ export function createTodoTimer(): TodoTimer {
     }
 
     function stop() {
-        // Snap checkpoint to exact expected value — no accumulated drift
-        CPs.current_time_spent = checkpoint_base + duration;
+        CPs.current_time_spent = checkpoint_base + getDuration();
         onAllCompleteCallback?.();
         clear();
     }
@@ -95,7 +95,7 @@ export function createTodoTimer(): TodoTimer {
         progress_percent = 0;
         elapsed = 0;
         checkpoint_base = 0;
-        duration = 0;
+        getDuration = () => 0;
         state = 'idle';
         onCompleteCallback = null;
         onAllCompleteCallback = null;

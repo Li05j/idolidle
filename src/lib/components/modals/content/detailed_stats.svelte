@@ -38,6 +38,8 @@
             <div class='text-sm text-[var(--text-muted)]'>{Rebirth.rebirth_count}</div>
             <div class='font-bold text-sm text-[var(--text-primary)]'>Max LIVE Wins:</div> 
             <div class='text-sm text-[var(--text-muted)]'>{Rebirth.max_completed_checkpoints}</div>
+            <div class='font-bold text-sm text-[var(--text-primary)]'>Dream Points:</div>
+            <div class='text-sm text-[var(--text-muted)]'>{Rebirth.rebirth_points}</div>
         </div>
     </div>
 </div>

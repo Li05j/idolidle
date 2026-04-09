@@ -29,7 +29,7 @@ export const park: LocationDef = {
             base_time: 8,
             desc: "Being an Idol means starting somewhere, you know? Defo not working for the Moni - Just making sure the Park is clean and tidy.",
             rewards: [
-                { which_stat: "Moni", flat_gain_base: 3, depends: [{ which_stat: "Haste", effectiveness: 1.0 }], efficiency: "v_slow" },
+                { which_stat: "Moni", flat_gain_base: 1, depends: [{ which_stat: "Haste", effectiveness: 1.0 }], efficiency: "v_slow" },
             ],
         },
         {

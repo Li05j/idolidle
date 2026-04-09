@@ -12,6 +12,7 @@ const STAT_KEYS = Object.keys(stat_list) as BasicStats[]
 class RebirthStats {
     private _rebirth_count = $state(0)
     private _max_completed_checkpoints = $state(0)
+    private _rebirth_points = $state(0)
 
     private base_gains: Record<BasicStats, number> = $state(zero_record())
     private multi_gains: Record<BasicStats, number> = $state(zero_record())
@@ -34,6 +35,10 @@ class RebirthStats {
         }
     }
 
+    award_rebirth_points() {
+        this._rebirth_points += CPs.current_completed_checkpoint + 1;
+    }
+
     increment_rebirth_count() { this._rebirth_count++; }
     update_max_completed_checkpoints(c: number) {
         if (c > this._max_completed_checkpoints) {
@@ -42,6 +47,7 @@ class RebirthStats {
     }
 
     get rebirth_count() { return this._rebirth_count; }
+    get rebirth_points() { return this._rebirth_points; }
     get max_completed_checkpoints() { return this._max_completed_checkpoints; }
 }
 

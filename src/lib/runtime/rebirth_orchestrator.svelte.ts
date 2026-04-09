@@ -10,6 +10,7 @@ import { Rebirth } from "$lib/state/rebirth.svelte"
 
 export function performRebirth() {
     Rebirth.inherit_stats()
+    Rebirth.award_rebirth_points()
     stat_list_reset()
     LiveBattleM.reset()
     RivalStatsM.reroll()

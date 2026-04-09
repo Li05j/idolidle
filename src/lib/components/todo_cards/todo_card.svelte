@@ -1,6 +1,7 @@
 <script lang="ts">
     import { msToSecF, parseText, tooltipString } from "$lib/utils/utils";
     import { TodoCardVM } from "./todo_card.svelte.ts";
+    import { Mastery } from "$lib/state/mastery.svelte";
 
     let { locationName, actionName, repeat_val, is_collapse }:
         { locationName: string, actionName?: string, repeat_val?: string, is_collapse?: boolean } = $props();
@@ -53,7 +54,7 @@
                     <i>{@html parseText(vm.desc)}</i>
                 </div>
                 <div class="absolute top-0 left-0 rounded-lg transition-opacity duration-300 h-2/5 w-full text-[var(--text-primary)]" style="opacity: {vm.hovered ? 1 : 0};">
-                    <p>{@html parseText(tooltipString(vm.def, vm.disabled))}</p>
+                    <p>{@html parseText(tooltipString(vm.def, vm.disabled, vm.is_location ? undefined : Mastery.completions(vm.mastery_id)))}</p>
                 </div>
             </div>
         {/if}

@@ -1,6 +1,7 @@
 import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
 import { stat_list } from "$lib/state/stats.svelte";
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
+import { CFG } from '$lib/config';
 
 export const DECIMAL_PLACES = 1;
 
@@ -101,7 +102,7 @@ function deriveDependsOn(def: ActionDef): string | null {
     return deps.length ? deps.join('. ') : null;
 }
 
-export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean): string {
+export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean, mastery_completions?: number): string {
     if ('hint' in def && def.hint && !('kind' in def)) {
         return "💡" + def.hint;
     }
@@ -119,6 +120,11 @@ export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean
         }
         if (def.on_complete?.hint) {
             ret_str += `[blue]⭐ ${def.on_complete.hint}.[/blue]\n`
+        }
+        if (mastery_completions !== undefined && mastery_completions > 0) {
+            const factor = Math.min(1, 1 / (1 + CFG.mastery_rate * Math.sqrt(mastery_completions)) + CFG.mastery_offset);
+            const pct = ((1 - factor) * 100).toFixed(0);
+            ret_str += `Mastery: ${mastery_completions}x done (−${pct}% time)\n`
         }
     }
 

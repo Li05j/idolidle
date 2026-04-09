@@ -11,8 +11,8 @@ Complete **locations** to unlock new areas with **actions**. Actions run on time
 Locations unlock sequentially via each location's `unlocks` list. Arriving at a location grants its rewards (typically Stamina) and reveals its actions. Some locations have prerequisites (stat thresholds).
 
 Actions come in three kinds:
-- **training** — stat gains, duration shortened by Haste.
-- **earning** — Moni income, rewards can scale with stats via `depends`/`efficiency`.
+- **training** — stat gains.
+- **earning** — Moni income. All earners scale via `depends`/`efficiency` (sublinear power curves: v_slow ^0.4 through v_fast ^0.92). Later earners have better tiers and outscale early ones at high stats.
 - **spending** — costs Moni.
 
 Some actions are **one-off** (`uses: 1`) — they disappear after completion and can trigger **upgrades** (swap/add/remove actions in that location). Eureka events (`on_complete`) give random bonus procs.
@@ -20,6 +20,8 @@ Some actions are **one-off** (`uses: 1`) — they disappear after completion and
 ## Stats
 
 Fans, Moni, Stamina, Haste, Sing, Dance, Charm, Presence. Each has a `base` and `multi`; final = base × multi.
+
+Canonical gain rates per second at 1.0x value: Stamina 0.05/s, Fans 0.1/s, Moni 0.3/s, all others 0.1/s. An action's **value** = `sum(reward / rate) / base_time`. Defined in `BASE_RATE` in `config.ts`.
 
 ## LIVE Battles
 
@@ -35,9 +37,15 @@ Defined in `src/lib/state/skills.svelte.ts`. Each skill has a trigger timing (`l
 
 Defined as `{ time, multi }` entries in `src/lib/state/checkpoints.svelte.ts`. The checkpoint bar fills while actions are running. Each checkpoint corresponds 1:1 to a rival template in `src/lib/data/rival_stats.ts`.
 
+## Action Mastery
+
+Each action tracks total completions across all rebirths. More completions = shorter action time via a diminishing-returns curve: `min(1, 1/(1 + rate * sqrt(completions)) + offset)`. The offset creates a dead zone where early completions have no effect; the sqrt provides a gentler ramp than log. Action timers are reactive — mastery gains apply immediately to subsequent loops. Upgraded actions can share a mastery track via `mastery_id` (e.g. "Singing Practice+" shares mastery with "Singing Practice"). Mastery info shows on card hover.
+
 ## Rebirth
 
 After a LIVE, you can "dream" (rebirth). This resets all progress but permanently carries over a portion of your current stats as base/multi bonuses. The multi carry-over is capped proportionally to your furthest completed checkpoint. Ratios are configured in `RebirthStats` (`BASE_RATIO`, `MULTI_RATIO`).
+
+Each rebirth also awards **Dream Points** (`checkpoint_completed + 1`). Points accumulate permanently. They currently have no gameplay effect but are tracked for future use.
 
 ---
 
@@ -65,4 +73,8 @@ Single file: `src/lib/data/rival_stats.ts`. Edit `BASE` template ranges or adjus
 
 ### Edit rebirth bonuses
 
-Single file: `src/lib/state/rebirth.svelte.ts`. Adjust `BASE_RATIO`, `MULTI_RATIO`, or the carry-over logic in `inherit_stats()`.
+Single file: `src/lib/state/rebirth.svelte.ts`. Adjust `BASE_RATIO`, `MULTI_RATIO`, carry-over logic in `inherit_stats()`.
+
+### Edit mastery curve
+
+Mastery curve is `mastery_rate` (sqrt coefficient) and `mastery_offset` (additive constant clamped to 1.0) in `config.ts`. Completion tracking lives in `src/lib/state/mastery.svelte.ts`. To link upgraded actions to a shared mastery track, set `mastery_id` on the `ActionDef`.

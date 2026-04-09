@@ -52,6 +52,7 @@ export const living_room: LocationDef = {
             add_actions: [
                 {
                     name: 'Singing Practice+',
+                    mastery_id: 'Singing Practice',
                     kind: 'training',
                     base_time: 30,
                     desc: "At least your cat won't faint anymore, that's what we call improvement.",
@@ -63,6 +64,7 @@ export const living_room: LocationDef = {
                 },
                 {
                     name: 'Dancing Practice+',
+                    mastery_id: 'Dancing Practice',
                     kind: 'training',
                     base_time: 30,
                     desc: "No more kisses with the floor you just mopped. More calm, more peace. Going with the flow.",

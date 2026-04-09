@@ -86,7 +86,7 @@ export const maid_cafe: LocationDef = {
                         { which_stat: "Presence", flat_gain_base: 3.5 },
                         {
                             which_stat: "Moni",
-                            flat_gain_base: 10,
+                            flat_gain_base: 12,
                             depends: [{ which_stat: "Charm", effectiveness: 1.0 }],
                             efficiency: "mid",
                         },

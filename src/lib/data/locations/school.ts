@@ -194,7 +194,7 @@ export const school: LocationDef = {
                     rewards: [{
                         which_stat: "Moni",
                         flat_gain_base: 9,
-                        depends: [{ which_stat: "Presence", effectiveness: 1.2 }],
+                        depends: [{ which_stat: "Presence", effectiveness: 1.0 }],
                         efficiency: "slow",
                     }],
                 },

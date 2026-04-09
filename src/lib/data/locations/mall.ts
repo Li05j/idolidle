@@ -56,7 +56,7 @@ export const mall: LocationDef = {
     name: 'Mall',
     base_time: 200,
     desc: "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
-    hint: "All Location cards and white Action cards relies on Haste. The more Haste you have, the less time it takes for it to complete.",
+    hint: "All Location cards and white Action cards will take less time to complete the more you do them. Keep up your trainings!",
     rewards: [
         { which_stat: "Stamina", flat_gain_base: 10 },
     ],

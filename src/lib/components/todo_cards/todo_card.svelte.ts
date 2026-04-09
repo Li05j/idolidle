@@ -7,6 +7,8 @@ import { history } from '$lib/state/history.svelte';
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { executeAction, actionRewardText, handle_rewards, reward_string } from '$lib/utils/utils';
 import { CFG } from '$lib/config';
+import { Mastery } from '$lib/state/mastery.svelte';
+
 
 const ACTION_BG = {
     training: { normal: 'bg-[var(--card-action)]',         hover: 'bg-[var(--card-action-hover)]' },
@@ -19,8 +21,12 @@ const LOCATION_BG = { normal: 'bg-[var(--card-location)]', hover: 'bg-[var(--car
 const BORDER_ACTIVE = 'outline outline-3 outline-[var(--card-border-active)] shadow-[var(--glow-active)]';
 const BORDER_INACTIVE = 'outline outline-2 outline-[var(--card-border-inactive)]';
 
-function getActualDuration(base_time: number): number {
+function getLocationDuration(base_time: number): number {
     return Math.max(base_time * CFG.time_scale, CFG.min_action_time);
+}
+
+function getActionDuration(base_time: number, mastery_id: string): number {
+    return Math.max(base_time * Mastery.factor(mastery_id) * CFG.time_scale, CFG.min_action_time);
 }
 
 export class TodoCardVM {
@@ -66,6 +72,12 @@ export class TodoCardVM {
         return this.actionDef?.uses !== undefined;
     }
 
+    get mastery_id(): string {
+        if (this.is_location) return this.locationName;
+        const def = this.actionDef;
+        return def?.mastery_id ?? def?.name ?? this.actionName!;
+    }
+
     constructor(locationName: string, actionName?: string) {
         this.locationName = locationName;
         this.actionName = actionName;
@@ -79,7 +91,11 @@ export class TodoCardVM {
         this.disabled = $derived.by(() => checkDisabled());
 
         $effect(() => {
-            this.todo_actual_duration = getActualDuration(this.def.base_time);
+            if (this.is_location) {
+                this.todo_actual_duration = getLocationDuration(this.def.base_time);
+            } else {
+                this.todo_actual_duration = getActionDuration(this.def.base_time, this.mastery_id);
+            }
         });
 
         $effect(() => {
@@ -126,7 +142,8 @@ export class TodoCardVM {
     private startLocation() {
         TodoCardM.activateCard(this.card_id);
         const locDef = this.locationDef!;
-        this.timer.repeat(1, this.todo_actual_duration,
+        const dur = this.todo_actual_duration;
+        this.timer.repeat(1, () => dur,
             () => {
                 handle_rewards(locDef.rewards);
                 history.addLogs(locDef.name, reward_string(locDef.rewards));
@@ -143,19 +160,26 @@ export class TodoCardVM {
         TodoCardM.activateCard(this.card_id);
         const actDef = this.actionDef!;
 
+        const mid = this.mastery_id;
+        const getDur = () => getActionDuration(actDef.base_time, mid);
+
         if (actDef.uses !== undefined) {
-            this.timer.repeat(1, this.todo_actual_duration,
-                () => { executeAction(actDef, history.addLogs); },
+            this.timer.repeat(1, getDur,
+                () => {
+                    executeAction(actDef, history.addLogs);
+                    Mastery.increment(mid);
+                },
                 () => {
                     TodoCardM.deactivateCard(this.card_id);
                     Progression.onUsesExhausted(this.locationName, actDef.name);
                 },
             );
         } else {
-            this.timer.repeat(this.loop, this.todo_actual_duration,
+            this.timer.repeat(this.loop, getDur,
                 () => {
                     this.loop--;
                     executeAction(actDef, history.addLogs);
+                    Mastery.increment(mid);
                     if (this.disabled) this.timer.loop_count = 0;
                 },
                 () => {
