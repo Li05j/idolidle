@@ -5,12 +5,18 @@
 <div class="w-full p-6">
     <div class="rounded-xl bg-[var(--surface-inset)] p-5">
         <h3 class="text-xl font-bold mb-4 text-center text-[var(--text-primary)]">Your Rival</h3>
-        <div class="grid grid-cols-2 text-center max-w-[24rem] mx-auto gap-y-2">
+        <div class="grid grid-cols-[1fr_auto_auto_auto_1fr] items-center gap-x-3 gap-y-2 max-w-[28rem] mx-auto">
+            <div class="text-sm font-semibold text-[var(--text-muted)] text-right">You</div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div class="text-sm font-semibold text-[var(--text-muted)] text-left">Rival</div>
             {#each LiveInfo.comparisons as comp}
-                <div class='text-base text-[var(--text-primary)]'>{comp.label}:</div>
-                <div class="flex justify-center items-center h-full">
-                    <div class="w-8 h-6 rounded-md" style={comp.color}></div>
-                </div>
+                <div class="text-base text-[var(--text-primary)] text-right tabular-nums">{comp.playerValue}</div>
+                <div class="text-sm text-[var(--text-muted)] text-center">{comp.label}</div>
+                <div class="flex justify-center"><div class="w-8 h-6 rounded-md" style={comp.color}></div></div>
+                <div class="text-sm text-[var(--text-muted)] text-center">{comp.rivalLabel}</div>
+                <div class="text-base text-[var(--text-primary)] text-left tabular-nums">{comp.rivalValue}</div>
             {/each}
         </div>
     </div>

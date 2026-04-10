@@ -16,15 +16,25 @@ const COMBAT_PAIRS: [StatKey, RivalKey, string][] = [
     ["Presence", "Dance",       "Presence"],
 ];
 
-export type StatComparison = { label: string; clamped: number; color: string };
+export type StatComparison = { label: string; clamped: number; color: string; playerValue: string; rivalValue: string; rivalLabel: string };
 
 class RivalComparison {
     public comparisons: StatComparison[] = $derived.by(() => {
         const rival = RivalStatsM.preview(CPs.current_completed_checkpoint);
         return COMBAT_PAIRS.map(([playerKey, rivalKey, label]) => {
-            const ratio = stat_list[playerKey].final / rival[rivalKey];
+            const pv = stat_list[playerKey].final;
+            const rv = rival[rivalKey] as number;
+            const ratio = pv / rv;
             const clamped = Math.max(0, Math.min(1, ratio / 2));
-            return { label, clamped, color: `background-color: hsl(${clamped * 120}, 100%, 50%)` };
+            const fmt = (v: number) => playerKey === 'Fans' || playerKey === 'Moni' ? Math.floor(v).toString() : v.toFixed(1);
+            return {
+                label,
+                clamped,
+                color: `background-color: hsl(${clamped * 120}, 100%, 50%)`,
+                playerValue: fmt(pv),
+                rivalValue: fmt(rv),
+                rivalLabel: rivalKey === 'Max_Stamina' ? 'Stamina' : rivalKey,
+            };
         });
     });
 
