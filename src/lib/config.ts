@@ -1,6 +1,6 @@
 import type { BasicStats } from '$lib/types';
 
-const DEV = 1
+export const DEV = 0
 
 const dev = {
 	time_scale: 10.0,
