@@ -136,8 +136,8 @@ export const school: LocationDef = {
             base_time: 20,
             desc: "Your school doesn't seem to understand your value to provide you with a suitable stage. But as an serious Idol, anywhere is your stage to shine in!",
             rewards: [
-                { which_stat: "Dance", flat_gain_base: 0.5 },
-                { which_stat: "Presence", flat_gain_base: 1.5 },
+                { which_stat: "Dance", flat_gain_base: 1.0 },
+                { which_stat: "Presence", flat_gain_base: 1.0 },
             ],
             on_complete: {
                 fn: extra_hallway_flash_mob,
@@ -147,10 +147,11 @@ export const school: LocationDef = {
         {
             name: 'Climbing the Stairs',
             kind: 'training',
-            base_time: 20,
+            base_time: 6,
             desc: "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
             rewards: [
-                { which_stat: "Stamina", flat_gain_base: 2.0 },
+                { which_stat: "Stamina", flat_gain_base: 0.4 },
+                { which_stat: "Presence", flat_gain_base: 0.2 },
             ],
         },
     ],
@@ -173,8 +174,8 @@ export const school: LocationDef = {
                             ],
                             efficiency: "fast",
                         },
-                        { which_stat: "Charm", flat_gain_base: 5 },
-                        { which_stat: "Presence", flat_gain_base: 5 },
+                        { which_stat: "Charm", flat_gain_base: 5.0 },
+                        { which_stat: "Presence", flat_gain_base: 5.0 },
                     ],
                     costs: [{ stat: "Moni", amount: IDOL_CLUB_CONCERT_COST }],
                     requires: {
@@ -193,8 +194,8 @@ export const school: LocationDef = {
                     desc: "Overpriced? Scam? What do you mean? It's them who chose to spend the Moni...",
                     rewards: [{
                         which_stat: "Moni",
-                        flat_gain_base: 9,
-                        depends: [{ which_stat: "Presence", effectiveness: 1.0 }],
+                        flat_gain_base: 5,
+                        depends: [{ which_stat: "Presence", effectiveness: 1.2 }],
                         efficiency: "slow",
                     }],
                 },
@@ -203,7 +204,7 @@ export const school: LocationDef = {
                     kind: 'training',
                     base_time: 30,
                     desc: "Idol isn't all about performing on stage, getting your name out there is also important. But people will only notice you if you are actually good...",
-                    rewards: [{ which_stat: "Presence", flat_gain_base: 4 }],
+                    rewards: [{ which_stat: "Presence", flat_gain_base: 3.0 }],
                     on_complete: {
                         fn: extra_club_promoter,
                         hint: "Tiny chance to gain 0.01 Fans multi",

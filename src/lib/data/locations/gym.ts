@@ -20,6 +20,13 @@ function extra_assault_bike() {
     }
 }
 
+function extra_treadmill() {
+    let [is_success, value] = simple_flat_stat_reward("Stamina", "base", "Slight", 0.01);
+    if (is_success) {
+        history.addSystemLog(`Eureka! An unexpected breakthrough! +${value} Haste multi!`);
+    }
+}
+
 export const gym: LocationDef = {
     name: 'Gym',
     base_time: 70,
@@ -50,9 +57,9 @@ export const gym: LocationDef = {
         {
             name: 'Bench Press',
             kind: 'spending',
-            base_time: 20,
+            base_time: 30,
             desc: "Is this the Idol meta nowadays?",
-            rewards: [{ which_stat: "Stamina", flat_gain_base: 3 }],
+            rewards: [{ which_stat: "Stamina", flat_gain_base: 3.0 }],
             costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
             requires: {
                 text: `Moni ≥ ${GYM_ACTION_COST}`,
@@ -62,9 +69,9 @@ export const gym: LocationDef = {
         {
             name: 'Assault Bike',
             kind: 'spending',
-            base_time: 20,
+            base_time: 30,
             desc: "You are not actually assulting a bike are you.",
-            rewards: [{ which_stat: "Haste", flat_gain_base: 3 }],
+            rewards: [{ which_stat: "Haste", flat_gain_base: 3.0 }],
             costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
             requires: {
                 text: `Moni ≥ ${GYM_ACTION_COST}`,
@@ -74,7 +81,7 @@ export const gym: LocationDef = {
         {
             name: 'Treadmill',
             kind: 'spending',
-            base_time: 20,
+            base_time: 30,
             desc: "\"...Why do I have to pay to run?\"",
             rewards: [
                 { which_stat: "Stamina", flat_gain_base: 1.5 },
@@ -95,9 +102,9 @@ export const gym: LocationDef = {
                 {
                     name: 'Bench Press',
                     kind: 'training',
-                    base_time: 20,
+                    base_time: 40,
                     desc: "Muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it's free now.",
-                    rewards: [{ which_stat: "Stamina", flat_gain_base: 3.0 }],
+                    rewards: [{ which_stat: "Stamina", flat_gain_base: 4.0 }],
                     on_complete: {
                         fn: extra_bench_press,
                         hint: "Slight chance to gain 0.01 Stamina multi",
@@ -106,9 +113,9 @@ export const gym: LocationDef = {
                 {
                     name: 'Assault Bike',
                     kind: 'training',
-                    base_time: 20,
+                    base_time: 40,
                     desc: "Biking.",
-                    rewards: [{ which_stat: "Haste", flat_gain_base: 3.0 }],
+                    rewards: [{ which_stat: "Haste", flat_gain_base: 4.0 }],
                     on_complete: {
                         fn: extra_assault_bike,
                         hint: "Slight chance to gain 0.01 Haste multi",
@@ -117,12 +124,16 @@ export const gym: LocationDef = {
                 {
                     name: 'Treadmill',
                     kind: 'training',
-                    base_time: 20,
+                    base_time: 40,
                     desc: "Running.",
                     rewards: [
-                        { which_stat: "Stamina", flat_gain_base: 2 },
-                        { which_stat: "Haste", flat_gain_base: 2 },
+                        { which_stat: "Stamina", flat_gain_base: 2.0 },
+                        { which_stat: "Haste", flat_gain_base: 2.0 },
                     ],
+                    on_complete: {
+                        fn: extra_treadmill,
+                        hint: "Slight chance to gain 1 Stamina or Haste",
+                    },
                 },
             ],
             on_trigger: () => {
