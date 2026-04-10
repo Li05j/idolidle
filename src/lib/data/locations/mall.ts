@@ -99,6 +99,10 @@ export const mall: LocationDef = {
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
             rewards: [{ which_stat: "Charm", flat_gain_base: 8 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
+            equip_drops: {
+                chance: 0.05,
+                table: [{ equip_id: 'designer_jacket', weight: 1 }],
+            },
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
                 check: () => stat_list.Moni.final < OUTFIT_COST,
@@ -111,6 +115,10 @@ export const mall: LocationDef = {
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
             rewards: [{ which_stat: "Presence", flat_gain_base: 8 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
+            equip_drops: {
+                chance: 0.05,
+                table: [{ equip_id: 'designer_jacket', weight: 1 }],
+            },
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
                 check: () => stat_list.Moni.final < OUTFIT_COST,

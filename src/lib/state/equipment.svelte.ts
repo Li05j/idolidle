@@ -1,0 +1,164 @@
+import { EQUIP_REGISTRY } from '$lib/data/equipment';
+import {
+    type Rarity,
+    type EquipSlot,
+    EQUIP_CONFIG,
+    RARITY_ORDER,
+    rarity_index,
+    exp_to_next_level,
+    effective_bonus,
+} from '$lib/data/equipment/equipment_definition';
+import { stat_list } from '$lib/state/stats.svelte';
+import { history } from '$lib/state/history.svelte';
+import type { BasicStats } from '$lib/types';
+
+export type OwnedEquip = {
+    equip_id: string;
+    rarity: Rarity;
+    level: number;
+    exp: number;
+};
+
+export type EquipSlotKey = 'hat' | 'top' | 'bottom' | 'shoes' | 'accessory_1' | 'accessory_2';
+
+const SLOT_TO_EQUIP_SLOT: Record<EquipSlotKey, EquipSlot> = {
+    hat: 'hat',
+    top: 'top',
+    bottom: 'bottom',
+    shoes: 'shoes',
+    accessory_1: 'accessory',
+    accessory_2: 'accessory',
+};
+
+function empty_slots(): Record<EquipSlotKey, string | null> {
+    return { hat: null, top: null, bottom: null, shoes: null, accessory_1: null, accessory_2: null };
+}
+
+class EquipmentManager {
+    private _inventory: Map<string, OwnedEquip> = $state(new Map());
+    private _equipped: Record<EquipSlotKey, string | null> = $state(empty_slots());
+
+    get inventory() { return this._inventory; }
+    get equipped() { return this._equipped; }
+
+    get_owned(equip_id: string): OwnedEquip | undefined {
+        return this._inventory.get(equip_id);
+    }
+
+    get_all_equipped(): OwnedEquip[] {
+        return (Object.values(this._equipped) as (string | null)[])
+            .filter((id): id is string => id !== null)
+            .map(id => this._inventory.get(id)!)
+            .filter(Boolean);
+    }
+
+    get_equipped_in_slot(slot: EquipSlotKey): OwnedEquip | null {
+        const id = this._equipped[slot];
+        return id ? this._inventory.get(id) ?? null : null;
+    }
+
+    receive_equipment(equip_id: string, rolled_rarity: Rarity): void {
+        const def = EQUIP_REGISTRY.get(equip_id);
+        if (!def) return;
+
+        const existing = this._inventory.get(equip_id);
+        if (!existing) {
+            this._inventory.set(equip_id, {
+                equip_id,
+                rarity: rolled_rarity,
+                level: 1,
+                exp: 0,
+            });
+            const color = EQUIP_CONFIG.rarity_color[rolled_rarity];
+            history.addSystemLog(`[${color}]New equipment obtained: ${def.name} (${rolled_rarity})![/${color}]`);
+            return;
+        }
+
+        const existing_idx = rarity_index(existing.rarity);
+        const new_idx = rarity_index(rolled_rarity);
+
+        if (new_idx > existing_idx) {
+            existing.rarity = rolled_rarity;
+            const color = EQUIP_CONFIG.rarity_color[rolled_rarity];
+            history.addSystemLog(`[${color}]${def.name} rarity upgraded to ${rolled_rarity}![/${color}]`);
+            this.recalculate_equip_stats();
+        } else {
+            const exp_gain = EQUIP_CONFIG.dupe_exp[rolled_rarity];
+            this._add_exp(existing, exp_gain);
+        }
+    }
+
+    equip(equip_id: string, slot: EquipSlotKey): boolean {
+        const item = this._inventory.get(equip_id);
+        if (!item) return false;
+
+        const def = EQUIP_REGISTRY.get(equip_id);
+        if (!def) return false;
+
+        if (SLOT_TO_EQUIP_SLOT[slot] !== def.slot) return false;
+
+        // Unequip whatever is in that slot first
+        this._equipped[slot] = equip_id;
+        this.recalculate_equip_stats();
+        return true;
+    }
+
+    unequip(slot: EquipSlotKey): void {
+        this._equipped[slot] = null;
+        this.recalculate_equip_stats();
+    }
+
+    recalculate_equip_stats(): void {
+        const stat_keys = Object.keys(stat_list) as BasicStats[];
+        for (const key of stat_keys) {
+            stat_list[key].equip_base = 0;
+            stat_list[key].equip_multi = 0;
+        }
+
+        for (const item of this.get_all_equipped()) {
+            const def = EQUIP_REGISTRY.get(item.equip_id);
+            if (!def) continue;
+
+            for (const bonus of def.stat_bonuses) {
+                const value = effective_bonus(bonus, item.level, item.rarity, def);
+                if (bonus.target === 'base') {
+                    stat_list[bonus.stat].equip_base += value;
+                } else {
+                    stat_list[bonus.stat].equip_multi += value;
+                }
+            }
+        }
+    }
+
+    private _add_exp(item: OwnedEquip, amount: number): void {
+        if (item.level >= EQUIP_CONFIG.level_cap) return;
+
+        const def = EQUIP_REGISTRY.get(item.equip_id);
+        item.exp += amount;
+
+        let leveled = false;
+        while (item.level < EQUIP_CONFIG.level_cap) {
+            const needed = exp_to_next_level(item.level);
+            if (item.exp < needed) break;
+            item.exp -= needed;
+            item.level++;
+            leveled = true;
+        }
+
+        if (item.level >= EQUIP_CONFIG.level_cap) {
+            item.exp = 0;
+        }
+
+        if (leveled && def) {
+            history.addSystemLog(`${def.name} leveled up to Lv.${item.level}!`);
+            this.recalculate_equip_stats();
+        }
+    }
+
+    reset_for_rebirth(): void {
+        // Equipment persists — just reapply bonuses after stat reset
+        this.recalculate_equip_stats();
+    }
+}
+
+export const EquipM = new EquipmentManager();

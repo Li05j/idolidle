@@ -1,4 +1,5 @@
 import type { BasicStats, Rewards } from '$lib/types';
+import type { EquipDropTable } from '$lib/data/equipment/equipment_definition';
 
 export type ActionKind = 'training' | 'earning' | 'spending';
 
@@ -12,6 +13,7 @@ export type ActionDef = {
 
     rewards: Rewards[];
     costs?: { stat: BasicStats; amount: number }[];
+    equip_drops?: EquipDropTable;
 
     requires?: {
         text: string;

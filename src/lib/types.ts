@@ -56,14 +56,3 @@ type RewardDynamicMulti = Only<{
 
 export type Rewards = RewardFlatBase | RewardFlatMulti | RewardDynamicBase | RewardDynamicMulti;
 
-type Triggers = "live_start" | "turn_start" | "before_taking_dmg"
-export type Skill = {
-    name: string,
-    triggers: Triggers[],
-    chance: number,
-    unlock_string: string,
-    cond_string: string,
-    eff_string: string,
-    condition?: (ctx: { you: LiveBattleStats; rival: LiveBattleStats }) => boolean,
-    effect?: (ctx: { you: LiveBattleStats; rival: LiveBattleStats }) => void,
-}

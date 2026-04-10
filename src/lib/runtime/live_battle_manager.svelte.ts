@@ -4,6 +4,9 @@ import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
 import { Rebirth } from "$lib/state/rebirth.svelte";
 import { history } from "$lib/state/history.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
+import type { BattleTrigger } from "$lib/data/equipment/equipment_definition";
+import { EQUIP_REGISTRY } from "$lib/data/equipment";
+import { EquipM } from "$lib/state/equipment.svelte";
 
 type Actor = "Player" | "Rival"
 
@@ -64,6 +67,8 @@ class LiveBattleManager {
             your_stats: { ...this._you },
             enemy_stats: { ...this._rival },
         })
+
+        this.fire_skills('live_start');
     }
 
     private next_actor(): Actor {
@@ -91,6 +96,10 @@ class LiveBattleManager {
 
         if (attacker.Curr_Stamina <= 0) return
 
+        if (actor === "Player") {
+            this.fire_skills('turn_start');
+        }
+
         this.basic_attack(actor, attacker, defender)
     }
 
@@ -107,9 +116,18 @@ class LiveBattleManager {
         const fatigue = BATTLE_TUNING.FATIGUE_FLOOR + (1 - BATTLE_TUNING.FATIGUE_FLOOR) * stamina_ratio
         const effective_def = raw_def * fatigue
 
+        // Fire before_taking_dmg skills when player is defending
+        this._dmg_reduction = 0;
+        if (actor === "Rival") {
+            this.fire_skills('before_taking_dmg');
+        }
+
         // Subtraction-based damage with variance
         const variance = (1 - BATTLE_TUNING.VARIANCE) + Math.random() * BATTLE_TUNING.VARIANCE * 2
-        const raw_damage = (raw_atk - effective_def) * variance
+        let raw_damage = (raw_atk - effective_def) * variance
+        if (this._dmg_reduction > 0) {
+            raw_damage *= (1 - this._dmg_reduction);
+        }
         const fans_stolen = Math.ceil(Math.min(Math.max(raw_damage, 1), defender.Fans))
 
         // Transfer fans
@@ -130,6 +148,27 @@ class LiveBattleManager {
             this.log(`[red]${loser} has lost ALL their fans...[/red]`, false)
         } else if (attacker.Curr_Stamina <= 0) {
             this.log(`[red]${actor} has no Stamina left![/red]`, false)
+        }
+    }
+
+    private _dmg_reduction = 0;
+
+    private fire_skills(trigger: BattleTrigger): void {
+        const ctx = {
+            you: this._you,
+            rival: this._rival,
+            set_dmg_reduction: (amount: number) => { this._dmg_reduction = Math.max(this._dmg_reduction, amount); },
+        };
+
+        for (const item of EquipM.get_all_equipped()) {
+            const def = EQUIP_REGISTRY.get(item.equip_id);
+            if (!def?.skill) continue;
+            if (!def.skill.triggers.includes(trigger)) continue;
+            if (Math.random() > def.skill.chance) continue;
+            if (!def.skill.condition(ctx)) continue;
+
+            def.skill.effect(ctx);
+            this.log(`[blue]${def.skill.name} activated![/blue]`, false);
         }
     }
 
@@ -232,6 +271,7 @@ class LiveBattleManager {
         this._replay_turns = []
         this._action_bar = [0, 0]
         this.did_player_win = false;
+        this._dmg_reduction = 0;
         RivalStatsM.reroll()
     }
 }

@@ -7,18 +7,23 @@ type RoundFn = (v: number) => number;
 function createStat(name: string, round: RoundFn, formatFinal: (v: number) => string, baseInit: number, multiInit: number) {
 	let base = $state(baseInit);
 	let multi = $state(multiInit);
+	let equip_base = $state(0);
+	let equip_multi = $state(0);
 
 	return {
 		get name() { return name },
 		get base() { return base }, set base(v) { base = v },
 		get multi() { return multi }, set multi(v) { multi = v },
-		add_base_from_final(v: number) { base += round(v / multi) },
-		format_final_gain(v: number) { return round(v * multi).toString() },
-		get final() { return round(base * multi) },
-		get final_str() { return formatFinal(round(base * multi)) },
+		get equip_base() { return equip_base }, set equip_base(v) { equip_base = v },
+		get equip_multi() { return equip_multi }, set equip_multi(v) { equip_multi = v },
+		add_base_from_final(v: number) { base += round(v / (multi + equip_multi)) },
+		format_final_gain(v: number) { return round(v * (multi + equip_multi)).toString() },
+		get final() { return round((base + equip_base) * (multi + equip_multi)) },
+		get final_str() { return formatFinal(round((base + equip_base) * (multi + equip_multi))) },
 		reset() {
 			base = baseInit;
 			multi = multiInit;
+			// equip_base/equip_multi NOT reset — recomputed from equipment state
 		},
 	};
 }

@@ -112,9 +112,16 @@ export const school: LocationDef = {
                 { which_stat: "Charm", flat_gain_base: 1.2 },
                 { which_stat: "Presence", flat_gain_base: 1.2 },
             ],
+            equip_drops: {
+                chance: 0.03,
+                table: [
+                    { equip_id: 'reading_glasses', weight: 2 },
+                    { equip_id: 'stage_microphone', weight: 1 },
+                ],
+            },
             on_complete: {
                 fn: extra_attend_class,
-                hint: "Good chance to double stat gains",
+                hint: "Good chance to double stat gains. May drop equipment.",
             },
         },
         {
@@ -182,9 +189,16 @@ export const school: LocationDef = {
                         text: `Moni ≥ ${IDOL_CLUB_CONCERT_COST}`,
                         check: () => stat_list.Moni.final < IDOL_CLUB_CONCERT_COST,
                     },
+                    equip_drops: {
+                        chance: 0.03,
+                        table: [
+                            { equip_id: 'stage_microphone', weight: 2 },
+                            { equip_id: 'reading_glasses', weight: 1 },
+                        ],
+                    },
                     on_complete: {
                         fn: extra_host_school_concert,
-                        hint: "Tiny chance for Big Success",
+                        hint: "Tiny chance for Big Success. May drop equipment.",
                     },
                 },
                 {

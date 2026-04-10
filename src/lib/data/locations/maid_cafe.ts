@@ -56,9 +56,13 @@ export const maid_cafe: LocationDef = {
                 { which_stat: "Dance", flat_gain_base: 0.5 },
                 { which_stat: "Charm", flat_gain_base: 2.0 },
             ],
+            equip_drops: {
+                chance: 0.04,
+                table: [{ equip_id: 'cat_ear_headband', weight: 1 }],
+            },
             on_complete: {
                 fn: extra_moe_magic,
-                hint: "Tiny chance to gain 0.01 Charm multi",
+                hint: "Tiny chance to gain 0.01 Charm multi. May drop equipment.",
             },
         },
     ],
@@ -91,9 +95,13 @@ export const maid_cafe: LocationDef = {
                             efficiency: "slow",
                         },
                     ],
+                    equip_drops: {
+                        chance: 0.04,
+                        table: [{ equip_id: 'cat_ear_headband', weight: 1 }],
+                    },
                     on_complete: {
                         fn: extra_maid_part_time,
-                        hint: "Good chance to gain a few Fans",
+                        hint: "Good chance to gain a few Fans. May drop equipment.",
                     },
                 },
             ],

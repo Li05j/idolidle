@@ -2,6 +2,7 @@ import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$l
 import { stat_list } from "$lib/state/stats.svelte";
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { CFG } from '$lib/config';
+import { roll_equip_drop } from '$lib/utils/equip_drop';
 
 export const DECIMAL_PLACES = 1;
 
@@ -88,6 +89,7 @@ export function executeAction(def: ActionDef, log: (name: string, text: string) 
     }
 
     handle_rewards(def.rewards);
+    roll_equip_drop(def.equip_drops);
     log(def.name, actionRewardText(def));
     def.on_complete?.fn();
 }

@@ -106,9 +106,13 @@ export const gym: LocationDef = {
                     base_time: 40,
                     desc: "Muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it's free now.",
                     rewards: [{ which_stat: "Stamina", flat_gain_base: 4.0 }],
+                    equip_drops: {
+                        chance: 0.04,
+                        table: [{ equip_id: 'training_shorts', weight: 1 }],
+                    },
                     on_complete: {
                         fn: extra_bench_press,
-                        hint: "Slight chance to gain 0.01 Stamina multi",
+                        hint: "Slight chance to gain 0.01 Stamina multi. May drop equipment.",
                     },
                 },
                 {
@@ -117,9 +121,13 @@ export const gym: LocationDef = {
                     base_time: 40,
                     desc: "Biking.",
                     rewards: [{ which_stat: "Haste", flat_gain_base: 4.0 }],
+                    equip_drops: {
+                        chance: 0.04,
+                        table: [{ equip_id: 'training_shorts', weight: 1 }],
+                    },
                     on_complete: {
                         fn: extra_assault_bike,
-                        hint: "Slight chance to gain 0.01 Haste multi",
+                        hint: "Slight chance to gain 0.01 Haste multi. May drop equipment.",
                     },
                 },
                 {
@@ -131,9 +139,13 @@ export const gym: LocationDef = {
                         { which_stat: "Stamina", flat_gain_base: 2.0 },
                         { which_stat: "Haste", flat_gain_base: 2.0 },
                     ],
+                    equip_drops: {
+                        chance: 0.04,
+                        table: [{ equip_id: 'training_shorts', weight: 1 }],
+                    },
                     on_complete: {
                         fn: extra_treadmill,
-                        hint: "Slight chance to gain 1 Stamina or Haste",
+                        hint: "Slight chance to gain 1 Stamina or Haste. May drop equipment.",
                     },
                 },
             ],

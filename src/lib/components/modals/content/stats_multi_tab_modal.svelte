@@ -1,14 +1,14 @@
 <script lang="ts">
     import DetailedStats from "./detailed_stats.svelte";
-    import Skills from "./skills.svelte";
+    import Equipment from "./equipment.svelte";
 
-    type Tabs = 'stats' | 'skills' | 'dreams'
+    type Tabs = 'stats' | 'equipment' | 'dreams'
 
     let active = $state<Tabs>('stats')
 
     const tabs: {id: Tabs, label: string}[] = [
         { id: 'stats', label: 'Stats' },
-        { id: 'skills', label: 'Skills' },
+        { id: 'equipment', label: 'Equipment' },
         { id: 'dreams', label: 'Dreams' }
     ]
 </script>
@@ -36,8 +36,8 @@
         <div class="ml-6">
             {#if active === 'stats'}
                 <DetailedStats />
-            {:else if active === 'skills'}
-                <Skills />
+            {:else if active === 'equipment'}
+                <Equipment />
             {:else if active === 'dreams'}
                 <h2 class="text-xl font-semibold text-[var(--text-muted)] mb-2">Not done yet.</h2>
             {/if}

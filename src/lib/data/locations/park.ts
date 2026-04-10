@@ -46,6 +46,10 @@ export const park: LocationDef = {
                     efficiency: "slow",
                 },
             ],
+            equip_drops: {
+                chance: 0.05,
+                table: [{ equip_id: 'buskers_cap', weight: 1 }],
+            },
         },
         {
             name: 'Play Tag with Kids',
@@ -56,9 +60,13 @@ export const park: LocationDef = {
                 { which_stat: "Haste", flat_gain_base: 0.6 },
                 { which_stat: "Charm", flat_gain_base: 0.6 },
             ],
+            equip_drops: {
+                chance: 0.05,
+                table: [{ equip_id: 'buskers_cap', weight: 1 }],
+            },
             on_complete: {
                 fn: extra_play_with_kids,
-                hint: "Slight chance to gain 1 Fan(s)",
+                hint: "Slight chance to gain 1 Fan(s). May drop equipment.",
             },
         },
     ],

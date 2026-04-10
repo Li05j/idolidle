@@ -1,18 +1,10 @@
 import { history } from '$lib/state/history.svelte';
-import { skill_unlock_conditions, SkillM } from '$lib/state/skills.svelte';
 import type { LocationDef } from './location_definition';
 
-function skill_go_home_club() {
-    skill_unlock_conditions.living_room_actions++;
-    if (SkillM.learned_skills.has("Go-Home Club")) {
-        return;
-    }
-    const rand = Math.random();
-    if (rand < skill_unlock_conditions.living_room_actions / 10) {
-        SkillM.learn_skill("Go-Home Club");
-        history.addSystemLog(`Eureka! You gained a new skill: Go-Home Club!`);
-    }
-}
+const LIVING_ROOM_DROPS = {
+    chance: 0.08,
+    table: [{ equip_id: 'comfy_slippers', weight: 1 }],
+};
 
 export const living_room: LocationDef = {
     name: 'Living Room',
@@ -32,7 +24,7 @@ export const living_room: LocationDef = {
             rewards: [
                 { which_stat: "Sing", flat_gain_base: 0.5 },
             ],
-            on_complete: { fn: skill_go_home_club },
+            equip_drops: LIVING_ROOM_DROPS,
         },
         {
             name: 'Dancing Practice',
@@ -42,7 +34,7 @@ export const living_room: LocationDef = {
             rewards: [
                 { which_stat: "Dance", flat_gain_base: 0.5 },
             ],
-            on_complete: { fn: skill_go_home_club },
+            equip_drops: LIVING_ROOM_DROPS,
         },
     ],
     upgrades: [
@@ -60,7 +52,7 @@ export const living_room: LocationDef = {
                         { which_stat: "Stamina", flat_gain_base: 0.5 },
                         { which_stat: "Sing", flat_gain_base: 5 },
                     ],
-                    on_complete: { fn: skill_go_home_club },
+                    equip_drops: LIVING_ROOM_DROPS,
                 },
                 {
                     name: 'Dancing Practice+',
@@ -72,7 +64,7 @@ export const living_room: LocationDef = {
                         { which_stat: "Stamina", flat_gain_base: 0.5 },
                         { which_stat: "Dance", flat_gain_base: 5 },
                     ],
-                    on_complete: { fn: skill_go_home_club },
+                    equip_drops: LIVING_ROOM_DROPS,
                 },
             ],
             on_trigger: () => {

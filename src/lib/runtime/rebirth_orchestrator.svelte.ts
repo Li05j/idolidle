@@ -5,7 +5,7 @@ import { CPs } from "$lib/state/checkpoints.svelte"
 import { Progression } from "$lib/runtime/progression_engine.svelte"
 import { stat_list_reset } from "$lib/state/stats.svelte"
 import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte"
-import { skill_unlock_conditions_reset, SkillM } from "$lib/state/skills.svelte"
+import { EquipM } from "$lib/state/equipment.svelte"
 import { Rebirth } from "$lib/state/rebirth.svelte"
 
 export function performRebirth() {
@@ -18,8 +18,7 @@ export function performRebirth() {
     CPs.reset()
     Progression.reset()
     ModalM.reset()
-    SkillM.reset()
-    skill_unlock_conditions_reset()
     Rebirth.increment_rebirth_count()
     Rebirth.apply_gains_to_initial_stats()
+    EquipM.recalculate_equip_stats()
 }
