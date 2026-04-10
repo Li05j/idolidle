@@ -43,7 +43,7 @@
         </div>
         <div class="w-full bg-[var(--progress-bg)] rounded-full h-3 mb-3 overflow-hidden">
             <div
-                class="h-3 rounded-full transition-all duration-100"
+                class="h-3 rounded-full"
                 style="width: {vm.timer.progress_percent}%; background: linear-gradient(90deg, var(--progress-from), var(--progress-to));"
             ></div>
         </div>
