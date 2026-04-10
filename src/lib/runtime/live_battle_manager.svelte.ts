@@ -7,6 +7,18 @@ import type { LiveTurn, LiveBattleStats } from "$lib/types";
 
 type Actor = "Player" | "Rival"
 
+/** Tuning constants for battle balance. Adjust these to micro-tune combat feel. */
+export const BATTLE_TUNING = {
+    /** Multiplier on ATK stat for stamina cost per action. Higher = shorter battles. */
+    STAMINA_COST_MULT: 0.2,
+    /** Defense effectiveness at 0 stamina. 0.5 = half defense, 1.0 = no penalty. */
+    FATIGUE_FLOOR: 0.5,
+    /** Damage variance range: [1 - VARIANCE, 1 + VARIANCE]. */
+    VARIANCE: 0.2,
+    /** Max turns before force-ending the battle. */
+    MAX_TURNS: 120,
+}
+
 class LiveBattleManager {
     public final_fan_difference: number | null = $state(null)
     public did_player_win: boolean = $state(false)
@@ -21,8 +33,8 @@ class LiveBattleManager {
     private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
     private _rival: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
 
-    private _timeline: Actor[] = [];
     private _action_bar = [0, 0]
+    private _replay_interval: ReturnType<typeof setInterval> | null = null
 
     get turn_logs() { return this._replay_turns; }
 
@@ -31,7 +43,7 @@ class LiveBattleManager {
         this._rival = { ...RivalStatsM.battle };
 
         this._you = {
-            Fans: stat_list.Fans.final,
+            Fans: Math.round(stat_list.Fans.final),
             Max_Stamina: stat_list.Stamina.final,
             Curr_Stamina: stat_list.Stamina.final,
             Haste: stat_list.Haste.final,
@@ -44,10 +56,8 @@ class LiveBattleManager {
         this.display_your_fans = this._you.Fans
         this.display_enemy_fans = this._rival.Fans
 
-        this._action_bar[0] += 1 / this._you.Haste
-        this._action_bar[1] += 1 / this._rival.Haste
-
-        this.populate_timeline();
+        this._action_bar[0] = 1 / this._you.Haste
+        this._action_bar[1] = 1 / this._rival.Haste
 
         this._real_turns.push({
             msg: "**LIVE start!**",
@@ -56,13 +66,22 @@ class LiveBattleManager {
         })
     }
 
+    private next_actor(): Actor {
+        if (this._action_bar[0] <= this._action_bar[1]) {
+            this._action_bar[0] += 1 / this._you.Haste
+            return "Player"
+        } else {
+            this._action_bar[1] += 1 / this._rival.Haste
+            return "Rival"
+        }
+    }
+
     private fight() {
-        while (!this.battleOver()) {
-            if (this._timeline.length <= 0) {
-                this.populate_timeline()
-            }
-            let actor = this._timeline.shift()
-            if (actor) this.take_turn(actor)
+        let turns = 0
+        while (!this.battleOver() && turns < BATTLE_TUNING.MAX_TURNS) {
+            turns++
+            const actor = this.next_actor()
+            this.take_turn(actor)
         }
     }
 
@@ -70,79 +89,59 @@ class LiveBattleManager {
         const attacker = actor === "Player" ? this._you : this._rival
         const defender = actor === "Player" ? this._rival : this._you
 
-        if (attacker.Curr_Stamina <= 0) { return }
+        if (attacker.Curr_Stamina <= 0) return
 
         this.basic_attack(actor, attacker, defender)
     }
 
     private basic_attack(actor: string, attacker: LiveBattleStats, defender: LiveBattleStats) {
-        let r = Math.random()
-        let atk_stat_name: keyof LiveBattleStats = r > 0.5 ? "Sing" : "Dance"
-        let def_stat_name: keyof LiveBattleStats = r > 0.5 ? "Charm" : "Presence"
+        const r = Math.random()
+        const atk_type: keyof LiveBattleStats = r > 0.5 ? "Sing" : "Dance"
+        const def_type: keyof LiveBattleStats = r > 0.5 ? "Charm" : "Presence"
 
-        // High Haste gives attack bonus [0.75, 1.25+]
-        let atk_stat = attacker[atk_stat_name] * (0.75 + attacker.Haste / defender.Haste * 0.5)
-        // Low Stamina weakens defense [0.5, 1.0]
-        let def_stat = defender[def_stat_name] * ((defender.Curr_Stamina / defender.Max_Stamina) * 0.5 + 0.5)
+        const raw_atk = attacker[atk_type] as number
+        const raw_def = defender[def_type] as number
 
-        let fluctuation = 1 + (Math.random() * 0.6 - 0.3);
-        let dmg = Math.max(Math.min(Math.ceil((atk_stat - def_stat) * fluctuation), defender.Fans), 0)
+        // Defense weakens as stamina drops: [FATIGUE_FLOOR, 1.0]
+        const stamina_ratio = defender.Curr_Stamina / defender.Max_Stamina
+        const fatigue = BATTLE_TUNING.FATIGUE_FLOOR + (1 - BATTLE_TUNING.FATIGUE_FLOOR) * stamina_ratio
+        const effective_def = raw_def * fatigue
 
-        attacker.Fans += dmg
-        defender.Fans -= dmg
+        // Subtraction-based damage with variance
+        const variance = (1 - BATTLE_TUNING.VARIANCE) + Math.random() * BATTLE_TUNING.VARIANCE * 2
+        const raw_damage = (raw_atk - effective_def) * variance
+        const fans_stolen = Math.ceil(Math.min(Math.max(raw_damage, 1), defender.Fans))
 
-        attacker.Curr_Stamina -= attacker[atk_stat_name] / 2 + 0.1
+        // Transfer fans
+        attacker.Fans += fans_stolen
+        defender.Fans -= fans_stolen
 
-        if (actor === "Player") {
-            this.log(`[green]${actor} performed a ${atk_stat_name} move![/green]`, false)
-            this.log(`[green]${actor} poached ${dmg.toFixed(0)} fans![/green]`)
-        } else {
-            this.log(`[darkorange]${actor} performed a ${atk_stat_name} move![/darkorange]`, false)
-            this.log(`[darkorange]${actor} poached ${dmg.toFixed(0)} fans![/darkorange]`)
-        }
+        // Pay stamina
+        const stamina_cost = raw_atk * BATTLE_TUNING.STAMINA_COST_MULT + 1
+        attacker.Curr_Stamina = Math.max(attacker.Curr_Stamina - stamina_cost, 0)
+
+        // Log
+        const color = actor === "Player" ? "green" : "darkorange"
+        this.log(`[${color}]${actor} performed a ${atk_type} move![/${color}]`, false)
+        this.log(`[${color}]${actor} poached ${fans_stolen} fans![/${color}]`)
 
         if (defender.Fans <= 0) {
-            let who = actor === "Player" ? "Rival" : "Player"
-            this.log(`[red]${who} has lost ALL their fans...[/red]`, false)
-            return
-        }
-
-        if (attacker.Curr_Stamina <= 0) {
+            const loser = actor === "Player" ? "Rival" : "Player"
+            this.log(`[red]${loser} has lost ALL their fans...[/red]`, false)
+        } else if (attacker.Curr_Stamina <= 0) {
             this.log(`[red]${actor} has no Stamina left![/red]`, false)
         }
     }
 
-    private populate_timeline(how_many: number = 10) {
-        if (this._you.Curr_Stamina <= 0) {
-            for (let i = 0; i < how_many; i++) {
-                this._timeline.push("Rival")
-            }
-        }
-        else if (this._rival.Curr_Stamina <= 0) {
-            for (let i = 0; i < how_many; i++) {
-                this._timeline.push("Player")
-            }
-        }
-
-        for (let i = 0; i < how_many; i++) {
-            if (this._action_bar[0] <= this._action_bar[1]) {
-                this._action_bar[0] += 1 / this._you.Haste
-                this._timeline.push("Player")
-            } else {
-                this._action_bar[1] += 1 / this._rival.Haste
-                this._timeline.push("Rival")
-            }
-        }
-    }
-
     private battleOver(): boolean {
-        const fan_cond = this._rival.Fans <= 0 || this._you.Fans <= 0
-        const sta_cond = this._you.Curr_Stamina <= 0 && this._rival.Curr_Stamina <= 0
+        if (this._you.Fans <= 0 || this._rival.Fans <= 0) return true
 
-        if (sta_cond && !fan_cond) {
+        if (this._you.Curr_Stamina <= 0 && this._rival.Curr_Stamina <= 0) {
             this.log("[red]Both sides have no Stamina left![/red]", false)
+            return true
         }
-        return fan_cond || sta_cond;
+
+        return false
     }
 
     private log(msg: string, auto_push_stats: boolean = true) {
@@ -158,9 +157,9 @@ class LiveBattleManager {
     }
 
     private push_over_time(source: LiveTurn[], target: LiveTurn[], intervalMs: number = 500) {
-        const interval = setInterval(() => {
+        this._replay_interval = setInterval(() => {
             if (source.length === 0) {
-                clearInterval(interval);
+                clearInterval(this._replay_interval!);
                 this.live_sim_complete = true;
                 return;
             }
@@ -223,11 +222,14 @@ class LiveBattleManager {
     }
 
     reset() {
+        if (this._replay_interval) {
+            clearInterval(this._replay_interval);
+            this._replay_interval = null;
+        }
         this.live_sim_complete = false;
         this.final_fan_difference = null;
         this._real_turns = []
         this._replay_turns = []
-        this._timeline = [];
         this._action_bar = [0, 0]
         this.did_player_win = false;
         RivalStatsM.reroll()

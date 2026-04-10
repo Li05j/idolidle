@@ -48,7 +48,6 @@ class TodoCardManager {
 
     reset() {
         this.deactivateCurrentActiveCard();
-        this._pause_card_callbacks.clear();
     }
 }
 

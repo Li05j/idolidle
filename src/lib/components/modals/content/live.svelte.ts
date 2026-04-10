@@ -5,6 +5,11 @@ import RebirthAlert from './rebirth_alert.svelte';
 export class LiveVM {
     private onClose: () => void;
 
+    phase: 'preview' | 'fighting' = $state('preview');
+    effectivePhase = $derived(
+        this.phase === 'fighting' && LiveBattleM.live_sim_complete ? 'done' : this.phase
+    );
+
     total = $derived(LiveBattleM.display_your_fans + LiveBattleM.display_enemy_fans);
     leftPercent = $derived(LiveBattleM.display_your_fans / this.total * 100);
     rightPercent = $derived(LiveBattleM.display_enemy_fans / this.total * 100);
@@ -15,6 +20,7 @@ export class LiveVM {
     }
 
     startBattle() {
+        this.phase = 'fighting';
         LiveBattleM.start_live();
     }
 

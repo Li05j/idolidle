@@ -10,7 +10,8 @@
     let progress_percent = $derived(Math.min((CPs.current_time_spent / CPs.current_total_time) * 100, 100));
 
     $effect(() => {
-        if (CPs.shouldTriggerLive()) {
+        if (CPs.shouldTrigger) {
+            CPs.markTriggered();
             handle_live();
         }
     })

@@ -12,7 +12,7 @@ class Checkpoints {
 		{ time: Infinity, multi: 1.0 },
 	])
 	private _idx = $state(0)
-	private _last_triggered = -1
+	private _last_triggered = $state(-1)
 
 	get current_completed_checkpoint() {
 		return this._idx
@@ -30,11 +30,13 @@ class Checkpoints {
 		return this._defs[this._idx].time * CFG.time_scale * this._defs[this._idx].multi
 	}
 
-	shouldTriggerLive(): boolean {
-		if (this._last_triggered === this._idx) return false
-		if (this.current_time_spent < this.current_total_time) return false
+	readonly shouldTrigger = $derived(
+		this._last_triggered !== this._idx &&
+		this.current_time_spent >= this.current_total_time
+	)
+
+	markTriggered() {
 		this._last_triggered = this._idx
-		return true
 	}
 
 	advanceToNextCheckpoint() {

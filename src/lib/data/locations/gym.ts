@@ -21,9 +21,10 @@ function extra_assault_bike() {
 }
 
 function extra_treadmill() {
-    let [is_success, value] = simple_flat_stat_reward("Stamina", "base", "Slight", 0.01);
+    const stat = Math.random() > 0.5 ? "Stamina" : "Haste";
+    let [is_success, value] = simple_flat_stat_reward(stat, "base", "Slight", 1.0);
     if (is_success) {
-        history.addSystemLog(`Eureka! An unexpected breakthrough! +${value} Haste multi!`);
+        history.addSystemLog(`Eureka! An unexpected breakthrough! +${value} ${stat}!`);
     }
 }
 

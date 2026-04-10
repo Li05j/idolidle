@@ -35,7 +35,7 @@ export const maid_cafe: LocationDef = {
             base_time: 30,
             desc: "So you want to be a maid? Prove your Charm.",
             rewards: [
-                { which_stat: "Presence", flat_gain_base: 5 },
+                { which_stat: "Presence", flat_gain_base: 3.0 },
             ],
             uses: 1,
             requires: {
@@ -54,7 +54,7 @@ export const maid_cafe: LocationDef = {
             desc: "Otaku dances aren't real dances, but it sure is cute and lovely. And cute. And lovely~ Look at all these Otakus fawning at you, you could even start a cult at this rate.",
             rewards: [
                 { which_stat: "Dance", flat_gain_base: 0.5 },
-                { which_stat: "Charm", flat_gain_base: 2.5 },
+                { which_stat: "Charm", flat_gain_base: 2.0 },
             ],
             on_complete: {
                 fn: extra_moe_magic,
@@ -86,9 +86,9 @@ export const maid_cafe: LocationDef = {
                         { which_stat: "Presence", flat_gain_base: 3.5 },
                         {
                             which_stat: "Moni",
-                            flat_gain_base: 12,
-                            depends: [{ which_stat: "Charm", effectiveness: 1.0 }],
-                            efficiency: "mid",
+                            flat_gain_base: 9,
+                            depends: [{ which_stat: "Charm", effectiveness: 1.2 }],
+                            efficiency: "slow",
                         },
                     ],
                     on_complete: {
