@@ -33,6 +33,14 @@ Rival stats are generated from `RivalTemplate` ranges per checkpoint, with a min
 
 Defined in `src/lib/state/skills.svelte.ts`. Each skill has a trigger timing (`live_start`, `turn_start`, `before_taking_dmg`), a proc chance, and condition/effect descriptions. Skills are unlocked by performing specific actions. On rebirth, all skills reset to unlearned.
 
+## Equipment
+
+Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory), stat bonuses, and optionally a battle skill. On drop, rarity is rolled (N/R/SR/UR) — higher rarity multiplies stat bonuses. Duplicates grant EXP toward leveling; a dupe with higher rarity upgrades the item's rarity instead. Leveling adds 10% bonus per level. Six equip slots: hat, top, bottom, shoes, accessory ×2.
+
+Global tuning (rarity weights, stat multipliers, leveling curve) lives in `EQUIP_CONFIG` in `src/lib/data/equipment/equipment_definition.ts`. Per-action drop chances are defined inline on each action's `equip_drops` field in the location files.
+
+Some equipment grants a passive skill that triggers during LIVE battles (e.g. restore stamina, steal extra fans, reduce damage).
+
 ## Checkpoints
 
 Defined as `{ time, multi }` entries in `src/lib/state/checkpoints.svelte.ts`. The checkpoint bar fills while actions are running. Each checkpoint corresponds 1:1 to a rival template in `src/lib/data/rival_stats.ts`.
@@ -74,6 +82,18 @@ Single file: `src/lib/data/rival_stats.ts`. Edit `BASE` template ranges or adjus
 ### Edit rebirth bonuses
 
 Single file: `src/lib/state/rebirth.svelte.ts`. Adjust `BASE_RATIO`, `MULTI_RATIO`, carry-over logic in `inherit_stats()`.
+
+### Add new equipment
+
+1. Define the item in `src/lib/data/equipment/<location>_equipment.ts` — export an `EquipDef` with slot, stat bonuses, and optional skill.
+2. Register it in `src/lib/data/equipment/index.ts`.
+3. Add it to an action's `equip_drops` table in the relevant location file (`{ chance, table: [{ equip_id, weight }] }`).
+
+### Edit equipment rates / stats
+
+- **Global rarity weights, stat multipliers, leveling**: `EQUIP_CONFIG` in `src/lib/data/equipment/equipment_definition.ts`.
+- **Per-action drop chance**: `equip_drops.chance` on the action in its location file.
+- **Per-item stat bonuses**: `stat_bonuses` in the item's definition file.
 
 ### Edit mastery curve
 

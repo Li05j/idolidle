@@ -1,6 +1,6 @@
 import type { BasicStats } from '$lib/types';
 
-export const DEV = 0
+export const DEV = 1
 
 const dev = {
 	time_scale: 10.0,
@@ -11,6 +11,7 @@ const dev = {
 	min_action_time: 100,
 	mastery_rate: 0.02,
 	mastery_offset: 0.04,
+	equip_drop_mult: 10,
 } as const;
 
 const prod = {
@@ -22,6 +23,7 @@ const prod = {
 	min_action_time: 100,
 	mastery_rate: 0.02,
 	mastery_offset: 0.04,
+	equip_drop_mult: 1,
 } as const;
 
 export const CFG = DEV ? dev : prod;

@@ -33,7 +33,7 @@ export const park: LocationDef = {
             ],
         },
         {
-            name: 'Busker',
+            name: 'Busking',
             kind: 'earning',
             base_time: 30,
             desc: "It's quite embarrassing doing this in public... But at least it's somewhat better than collecting bottles?",
