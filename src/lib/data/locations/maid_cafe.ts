@@ -2,6 +2,7 @@ import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
+import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 
 const MAID_INTERVIEW_COST = { fans: 150, charm: 75 };
 
@@ -27,12 +28,14 @@ export const maid_cafe: LocationDef = {
     rewards: [
         { which_stat: "Stamina", flat_gain_base: 15 },
     ],
+    equip_drops: LOCATION_DROPS['Maid Cafe'],
     unlocks: [],
     actions: [
         {
             name: 'Maid Interview',
             kind: 'training',
             base_time: 30,
+            no_drops: true,
             desc: "So you want to be a maid? Prove your Charm.",
             rewards: [
                 { which_stat: "Presence", flat_gain_base: 3.0 },
@@ -56,10 +59,6 @@ export const maid_cafe: LocationDef = {
                 { which_stat: "Dance", flat_gain_base: 0.5 },
                 { which_stat: "Charm", flat_gain_base: 2.0 },
             ],
-            equip_drops: {
-                chance: 0.04,
-                table: [{ equip_id: 'cat_ear_headband', weight: 1 }],
-            },
             on_complete: {
                 fn: extra_moe_magic,
                 hint: "Tiny chance to gain 0.01 Charm multi. May drop equipment.",
@@ -74,6 +73,7 @@ export const maid_cafe: LocationDef = {
                     name: 'New Hire Bonus!',
                     kind: 'training',
                     base_time: 10,
+                    no_drops: true,
                     desc: "New maid, new Idol life.",
                     rewards: [
                         { which_stat: "Charm", flat_gain_multi: 0.02 },
@@ -95,10 +95,6 @@ export const maid_cafe: LocationDef = {
                             efficiency: "slow",
                         },
                     ],
-                    equip_drops: {
-                        chance: 0.04,
-                        table: [{ equip_id: 'cat_ear_headband', weight: 1 }],
-                    },
                     on_complete: {
                         fn: extra_maid_part_time,
                         hint: "Good chance to gain a few Fans. May drop equipment.",

@@ -3,6 +3,7 @@ import { stat_list } from "$lib/state/stats.svelte";
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { CFG } from '$lib/config';
 import { roll_equip_drop } from '$lib/utils/equip_drop';
+import type { EquipDropTable } from '$lib/data/equipment/equipment_definition';
 
 export const DECIMAL_PLACES = 1;
 
@@ -81,7 +82,7 @@ export function actionRewardText(def: ActionDef): string {
     return ret_str + reward_string(def.rewards);
 }
 
-export function executeAction(def: ActionDef, log: (name: string, text: string) => void): void {
+export function executeAction(def: ActionDef, log: (name: string, text: string) => void, location_drops?: EquipDropTable): void {
     if (def.costs) {
         def.costs.forEach(c => {
             stat_list[c.stat].add_base_from_final(-c.amount);
@@ -90,7 +91,7 @@ export function executeAction(def: ActionDef, log: (name: string, text: string) 
 
     handle_rewards(def.rewards);
     log(def.name, actionRewardText(def));
-    roll_equip_drop(def.equip_drops);
+    if (!def.no_drops) roll_equip_drop(def.equip_drops ?? location_drops);
     def.on_complete?.fn();
 }
 

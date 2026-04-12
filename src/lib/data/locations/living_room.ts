@@ -1,10 +1,6 @@
 import { history } from '$lib/state/history.svelte';
 import type { LocationDef } from './location_definition';
-
-const LIVING_ROOM_DROPS = {
-    chance: 0.08,
-    table: [{ equip_id: 'comfy_slippers', weight: 1 }],
-};
+import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 
 export const living_room: LocationDef = {
     name: 'Living Room',
@@ -14,6 +10,7 @@ export const living_room: LocationDef = {
     rewards: [
         { which_stat: "Stamina", flat_gain_base: 0.2 },
     ],
+    equip_drops: LOCATION_DROPS['Living Room'],
     unlocks: ['Park', 'School'],
     actions: [
         {
@@ -24,7 +21,7 @@ export const living_room: LocationDef = {
             rewards: [
                 { which_stat: "Sing", flat_gain_base: 0.5 },
             ],
-            equip_drops: LIVING_ROOM_DROPS,
+
         },
         {
             name: 'Dancing Practice',
@@ -34,7 +31,7 @@ export const living_room: LocationDef = {
             rewards: [
                 { which_stat: "Dance", flat_gain_base: 0.5 },
             ],
-            equip_drops: LIVING_ROOM_DROPS,
+
         },
     ],
     upgrades: [
@@ -52,7 +49,7 @@ export const living_room: LocationDef = {
                         { which_stat: "Stamina", flat_gain_base: 0.5 },
                         { which_stat: "Sing", flat_gain_base: 5 },
                     ],
-                    equip_drops: LIVING_ROOM_DROPS,
+        
                 },
                 {
                     name: 'Dancing Practice+',
@@ -64,7 +61,7 @@ export const living_room: LocationDef = {
                         { which_stat: "Stamina", flat_gain_base: 0.5 },
                         { which_stat: "Dance", flat_gain_base: 5 },
                     ],
-                    equip_drops: LIVING_ROOM_DROPS,
+        
                 },
             ],
             on_trigger: () => {

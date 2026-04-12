@@ -2,6 +2,7 @@ import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import type { BasicStats } from '$lib/types';
 import type { LocationDef } from './location_definition';
+import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 
 const LIVING_ROOM_UPGRADE_COST = 500;
 const MINI_LOTTERY_COST = 50;
@@ -60,12 +61,14 @@ export const mall: LocationDef = {
     rewards: [
         { which_stat: "Stamina", flat_gain_base: 10 },
     ],
+    equip_drops: LOCATION_DROPS['Mall'],
     unlocks: [],
     actions: [
         {
             name: 'Upgrade Living Room',
             kind: 'spending',
             base_time: 60,
+            no_drops: true,
             desc: "Tired of the shitty environment at home? Well, hopefully this little upgrade will make it better.",
             rewards: [],
             costs: [{ stat: 'Moni', amount: LIVING_ROOM_UPGRADE_COST }],
@@ -79,6 +82,7 @@ export const mall: LocationDef = {
             name: 'Mini Lottery',
             kind: 'spending',
             base_time: 10,
+            no_drops: true,
             desc: "We do NOT encourage the behavior of gambling. You see, this is gacha, it's different.",
             rewards: [],
             costs: [{ stat: "Moni", amount: MINI_LOTTERY_COST }],
@@ -99,10 +103,6 @@ export const mall: LocationDef = {
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
             rewards: [{ which_stat: "Charm", flat_gain_base: 8 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
-            equip_drops: {
-                chance: 0.05,
-                table: [{ equip_id: 'designer_jacket', weight: 1 }],
-            },
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
                 check: () => stat_list.Moni.final < OUTFIT_COST,
@@ -115,10 +115,6 @@ export const mall: LocationDef = {
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
             rewards: [{ which_stat: "Presence", flat_gain_base: 8 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
-            equip_drops: {
-                chance: 0.05,
-                table: [{ equip_id: 'designer_jacket', weight: 1 }],
-            },
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
                 check: () => stat_list.Moni.final < OUTFIT_COST,

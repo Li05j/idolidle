@@ -2,6 +2,7 @@ import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
+import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 
 const GYM_VIP_COST = 500;
 const GYM_ACTION_COST = 5;
@@ -36,12 +37,14 @@ export const gym: LocationDef = {
     rewards: [
         { which_stat: "Stamina", flat_gain_base: 3.5 },
     ],
+    equip_drops: LOCATION_DROPS['Gym'],
     unlocks: [],
     actions: [
         {
             name: 'Purchase Gym VIP',
             kind: 'spending',
             base_time: 10,
+            no_drops: true,
             desc: "With just a 1 time fee, you no longer need to pay to use the Gym. What a deal!",
             rewards: [],
             costs: [{ stat: "Moni", amount: GYM_VIP_COST }],
@@ -59,6 +62,7 @@ export const gym: LocationDef = {
             name: 'Bench Press',
             kind: 'spending',
             base_time: 30,
+            no_drops: true,
             desc: "Is this the Idol meta nowadays?",
             rewards: [{ which_stat: "Stamina", flat_gain_base: 3.0 }],
             costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
@@ -71,6 +75,7 @@ export const gym: LocationDef = {
             name: 'Assault Bike',
             kind: 'spending',
             base_time: 30,
+            no_drops: true,
             desc: "You are not actually assulting a bike are you.",
             rewards: [{ which_stat: "Haste", flat_gain_base: 3.0 }],
             costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
@@ -83,6 +88,7 @@ export const gym: LocationDef = {
             name: 'Treadmill',
             kind: 'spending',
             base_time: 30,
+            no_drops: true,
             desc: "\"...Why do I have to pay to run?\"",
             rewards: [
                 { which_stat: "Stamina", flat_gain_base: 1.5 },
@@ -106,10 +112,7 @@ export const gym: LocationDef = {
                     base_time: 40,
                     desc: "Muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it's free now.",
                     rewards: [{ which_stat: "Stamina", flat_gain_base: 4.0 }],
-                    equip_drops: {
-                        chance: 0.04,
-                        table: [{ equip_id: 'training_shorts', weight: 1 }],
-                    },
+
                     on_complete: {
                         fn: extra_bench_press,
                         hint: "Slight chance to gain 0.01 Stamina multi. May drop equipment.",
@@ -121,10 +124,7 @@ export const gym: LocationDef = {
                     base_time: 40,
                     desc: "Biking.",
                     rewards: [{ which_stat: "Haste", flat_gain_base: 4.0 }],
-                    equip_drops: {
-                        chance: 0.04,
-                        table: [{ equip_id: 'training_shorts', weight: 1 }],
-                    },
+
                     on_complete: {
                         fn: extra_assault_bike,
                         hint: "Slight chance to gain 0.01 Haste multi. May drop equipment.",
@@ -139,10 +139,7 @@ export const gym: LocationDef = {
                         { which_stat: "Stamina", flat_gain_base: 2.0 },
                         { which_stat: "Haste", flat_gain_base: 2.0 },
                     ],
-                    equip_drops: {
-                        chance: 0.04,
-                        table: [{ equip_id: 'training_shorts', weight: 1 }],
-                    },
+
                     on_complete: {
                         fn: extra_treadmill,
                         hint: "Slight chance to gain 1 Stamina or Haste. May drop equipment.",

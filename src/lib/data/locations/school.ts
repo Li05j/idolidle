@@ -3,6 +3,7 @@ import { stat_list } from '$lib/state/stats.svelte';
 import { truncate_to_decimal } from '$lib/utils/utils';
 import { simple_flat_stat_reward, simple_percent_stat_reward, uniform_rand_stat_flat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
+import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 
 const IDOL_CLUB_COST = { fans: 100, moni: 500 };
 const IDOL_CLUB_CONCERT_COST = 100;
@@ -72,12 +73,14 @@ export const school: LocationDef = {
     rewards: [
         { which_stat: "Stamina", flat_gain_base: 4 },
     ],
+    equip_drops: LOCATION_DROPS['School'],
     unlocks: ['Gym', 'Maid Cafe'],
     actions: [
         {
             name: 'Open Idol Club',
             kind: 'spending',
             base_time: 30,
+            no_drops: true,
             desc: "On your way to become the ultimate school idol. One step closer to becoming the star you've always dreamed of.",
             rewards: [
                 { which_stat: "Fans", flat_gain_base: 25 },
@@ -93,6 +96,7 @@ export const school: LocationDef = {
             name: 'Collect Grade Report',
             kind: 'training',
             base_time: 10,
+            no_drops: true,
             desc: "Somehow you didn't bother to take your Grade Report from last year back home... How clumsy of you. Better collect it now.",
             rewards: [],
             uses: 1,
@@ -112,13 +116,6 @@ export const school: LocationDef = {
                 { which_stat: "Charm", flat_gain_base: 1.2 },
                 { which_stat: "Presence", flat_gain_base: 1.2 },
             ],
-            equip_drops: {
-                chance: 0.03,
-                table: [
-                    { equip_id: 'reading_glasses', weight: 2 },
-                    { equip_id: 'stage_microphone', weight: 1 },
-                ],
-            },
             on_complete: {
                 fn: extra_attend_class,
                 hint: "Good chance to double stat gains. May drop equipment.",
@@ -128,6 +125,7 @@ export const school: LocationDef = {
             name: 'Yell on Wooden Box',
             kind: 'training',
             base_time: 20,
+            no_drops: true,
             desc: "You know when those anime girls standing near the school gate after school to try and advertise their idol activities? Yeah, that's you now.",
             rewards: [
                 { which_stat: "Fans", flat_gain_base: 2 },
@@ -141,6 +139,7 @@ export const school: LocationDef = {
             name: 'Hallway Flash Mob',
             kind: 'training',
             base_time: 20,
+            no_drops: true,
             desc: "Your school doesn't seem to understand your value to provide you with a suitable stage. But as an serious Idol, anywhere is your stage to shine in!",
             rewards: [
                 { which_stat: "Dance", flat_gain_base: 1.0 },
@@ -155,6 +154,7 @@ export const school: LocationDef = {
             name: 'Climbing the Stairs',
             kind: 'training',
             base_time: 6,
+            no_drops: true,
             desc: "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
             rewards: [
                 { which_stat: "Stamina", flat_gain_base: 0.4 },
@@ -205,6 +205,7 @@ export const school: LocationDef = {
                     name: 'Sell Merch',
                     kind: 'earning',
                     base_time: 25,
+                    no_drops: true,
                     desc: "Overpriced? Scam? What do you mean? It's them who chose to spend the Moni...",
                     rewards: [{
                         which_stat: "Moni",
@@ -217,6 +218,7 @@ export const school: LocationDef = {
                     name: 'Club Promoter',
                     kind: 'training',
                     base_time: 30,
+                    no_drops: true,
                     desc: "Idol isn't all about performing on stage, getting your name out there is also important. But people will only notice you if you are actually good...",
                     rewards: [{ which_stat: "Presence", flat_gain_base: 3.0 }],
                     on_complete: {

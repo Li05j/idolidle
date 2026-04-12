@@ -14,6 +14,7 @@ export type ActionDef = {
     rewards: Rewards[];
     costs?: { stat: BasicStats; amount: number }[];
     equip_drops?: EquipDropTable;
+    no_drops?: boolean;
 
     requires?: {
         text: string;
@@ -40,6 +41,7 @@ export type LocationDef = {
     base_time: number;
     hint?: string;
     rewards: Rewards[];
+    equip_drops?: EquipDropTable;
     requires?: {
         text: string;
         check: () => boolean;

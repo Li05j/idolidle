@@ -2,6 +2,7 @@ import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
+import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 
 function extra_play_with_kids() {
     let [is_success, actual_gain] = simple_flat_stat_reward('Fans', 'base', 'Slight', 1);
@@ -21,12 +22,14 @@ export const park: LocationDef = {
         text: "Sing + Dance ≥ 3.0",
         check: () => stat_list.Sing.final + stat_list.Dance.final < 3.0,
     },
+    equip_drops: LOCATION_DROPS['Park'],
     unlocks: ['Mall'],
     actions: [
         {
             name: 'Picking Bottles',
             kind: 'earning',
             base_time: 8,
+            no_drops: true,
             desc: "Being an Idol means starting somewhere, you know? Defo not working for the Moni - Just making sure the Park is clean and tidy.",
             rewards: [
                 { which_stat: "Moni", flat_gain_base: 3, depends: [{ which_stat: "Haste", effectiveness: 1.0 }], efficiency: "v_slow" },
@@ -46,10 +49,6 @@ export const park: LocationDef = {
                     efficiency: "slow",
                 },
             ],
-            equip_drops: {
-                chance: 0.05,
-                table: [{ equip_id: 'buskers_cap', weight: 1 }],
-            },
         },
         {
             name: 'Play Tag with Kids',
@@ -60,10 +59,6 @@ export const park: LocationDef = {
                 { which_stat: "Haste", flat_gain_base: 0.6 },
                 { which_stat: "Charm", flat_gain_base: 0.6 },
             ],
-            equip_drops: {
-                chance: 0.05,
-                table: [{ equip_id: 'buskers_cap', weight: 1 }],
-            },
             on_complete: {
                 fn: extra_play_with_kids,
                 hint: "Slight chance to gain 1 Fan(s). May drop equipment.",
