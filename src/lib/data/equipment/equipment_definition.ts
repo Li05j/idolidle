@@ -4,6 +4,16 @@ export type EquipSlot = 'hat' | 'top' | 'bottom' | 'shoes' | 'accessory';
 export type Rarity = 'N' | 'R' | 'SR' | 'UR';
 export type BattleTrigger = 'live_start' | 'turn_start' | 'before_taking_dmg';
 
+export const EQUIP_CONFIG = {
+    rarity_stat_mult: { N: 1.0, R: 1.5, SR: 2.5, UR: 4.0 } as Record<Rarity, number>,
+    rarity_color: { N: 'white', R: 'green', SR: 'yellow', UR: 'red' } as Record<Rarity, string>,
+    dupe_exp: { N: 1, R: 5, SR: 10, UR: 20 } as Record<Rarity, number>,
+    exp_per_level: 10,
+    level_cap: 20,
+    rarity_weights: { N: 0.88, R: 0.10, SR: 0.018, UR: 0.002 } as Record<Rarity, number>,
+    level_bonus_per_level: 0.1,
+};
+
 export type EquipStatBonus = {
     stat: BasicStats;
     base_value: number;
@@ -45,16 +55,6 @@ export type EquipDropEntry = {
 export type EquipDropTable = {
     chance: number;
     table: EquipDropEntry[];
-};
-
-export const EQUIP_CONFIG = {
-    rarity_stat_mult: { N: 1.0, R: 1.5, SR: 2.5, UR: 4.0 } as Record<Rarity, number>,
-    rarity_color: { N: 'white', R: 'green', SR: 'yellow', UR: 'red' } as Record<Rarity, string>,
-    dupe_exp: { N: 1, R: 5, SR: 10, UR: 20 } as Record<Rarity, number>,
-    exp_per_level: 10,
-    level_cap: 20,
-    rarity_weights: { N: 0.88, R: 0.10, SR: 0.018, UR: 0.002 } as Record<Rarity, number>,
-    level_bonus_per_level: 0.1,
 };
 
 export const RARITY_ORDER: Rarity[] = ['N', 'R', 'SR', 'UR'];
