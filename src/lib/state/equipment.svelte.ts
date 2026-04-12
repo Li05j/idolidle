@@ -69,8 +69,7 @@ class EquipmentManager {
                 level: 1,
                 exp: 0,
             });
-            const color = EQUIP_CONFIG.rarity_color[rolled_rarity];
-            history.addSystemLog(`[${color}]New equipment obtained: ${def.name} (${rolled_rarity})![/${color}]`);
+            history.addSystemLog(`New equipment obtained: ${def.name} (${rolled_rarity})!`);
             return;
         }
 
@@ -79,12 +78,12 @@ class EquipmentManager {
 
         if (new_idx > existing_idx) {
             existing.rarity = rolled_rarity;
-            const color = EQUIP_CONFIG.rarity_color[rolled_rarity];
-            history.addSystemLog(`[${color}]${def.name} rarity upgraded to ${rolled_rarity}![/${color}]`);
+            history.addSystemLog(`${def.name} rarity upgraded to ${rolled_rarity}!`);
             this.recalculate_equip_stats();
         } else {
             const exp_gain = EQUIP_CONFIG.dupe_exp[rolled_rarity];
             this._add_exp(existing, exp_gain);
+            history.addSystemLog(`${def.name} (+${exp_gain} EXP)`);
         }
     }
 

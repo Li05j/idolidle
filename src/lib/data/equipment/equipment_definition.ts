@@ -6,7 +6,7 @@ export type BattleTrigger = 'live_start' | 'turn_start' | 'before_taking_dmg';
 
 export const EQUIP_CONFIG = {
     rarity_stat_mult: { N: 1.0, R: 1.5, SR: 2.5, UR: 4.0 } as Record<Rarity, number>,
-    rarity_color: { N: 'white', R: 'green', SR: 'yellow', UR: 'red' } as Record<Rarity, string>,
+    rarity_color: { N: '#8C7A7D', R: '#16a34a', SR: '#9333ea', UR: '#dc2626' } as Record<Rarity, string>,
     dupe_exp: { N: 1, R: 5, SR: 10, UR: 20 } as Record<Rarity, number>,
     exp_per_level: 10,
     level_cap: 20,

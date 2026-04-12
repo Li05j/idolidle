@@ -35,7 +35,7 @@ Defined in `src/lib/state/skills.svelte.ts`. Each skill has a trigger timing (`l
 
 ## Equipment
 
-Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory), stat bonuses, and optionally a battle skill. On drop, rarity is rolled (N/R/SR/UR) — higher rarity multiplies stat bonuses. Duplicates grant EXP toward leveling; a dupe with higher rarity upgrades the item's rarity instead. Leveling adds 10% bonus per level. Six equip slots: hat, top, bottom, shoes, accessory ×2.
+Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory), stat bonuses, and optionally a battle skill. On drop, rarity is rolled (N/R/SR/UR) — higher rarity multiplies stat bonuses. Duplicates grant EXP toward leveling (logged in history); a dupe with higher rarity upgrades the item's rarity instead. Leveling adds 10% bonus per level. Six equip slots: hat, top, bottom, shoes, accessory ×2.
 
 Global tuning (rarity weights, stat multipliers, leveling curve) lives in `EQUIP_CONFIG` in `src/lib/data/equipment/equipment_definition.ts`. Per-action drop chances are defined inline on each action's `equip_drops` field in the location files.
 
