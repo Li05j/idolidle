@@ -38,9 +38,9 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             cond_string: 'Your Fans < Rival Fans',
             eff_string: 'Your next move steals 50% more Fans.',
             condition: ({ you, rival }) => you.Fans < rival.Fans,
-            effect: ({ you }) => {
-                you.Sing *= 1.5;
-                you.Dance *= 1.5;
+            effect: ({ you, apply_temp_buff }) => {
+                apply_temp_buff!('you', 'Sing', you.Sing * 1.5);
+                apply_temp_buff!('you', 'Dance', you.Dance * 1.5);
             },
         },
     },
@@ -62,9 +62,10 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             cond_string: 'Always',
             eff_string: 'Drain 10% Fans from Rival before LIVE starts.',
             condition: () => true,
-            effect: ({ rival }) => {
+            effect: ({ you, rival }) => {
                 const drain = Math.floor(rival.Fans * 0.1);
                 rival.Fans -= drain;
+                you.Fans += drain;
             },
         },
     },
@@ -142,9 +143,15 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             chance: 1,
             cond_string: 'Rival performs a Sing move.',
             eff_string: 'Increase Charm by 50%. If Rival fails to steal Fans, Rival loses 10% Fans.',
-            condition: () => true,
-            effect: ({ you }) => {
-                you.Charm *= 1.5;
+            condition: ({ atk_type }) => atk_type === 'Sing',
+            effect: ({ you, rival, apply_temp_buff, on_after_attack }) => {
+                apply_temp_buff!('you', 'Charm', you.Charm * 1.5);
+                on_after_attack!((fans_stolen) => {
+                    if (fans_stolen <= 0) {
+                        const penalty = Math.floor(rival.Fans * 0.1);
+                        rival.Fans -= penalty;
+                    }
+                });
             },
         },
     },

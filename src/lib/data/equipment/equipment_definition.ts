@@ -25,15 +25,35 @@ export type SkillContext = {
     rival: LiveBattleStats;
     /** Set to reduce incoming damage by this fraction (0-1). Only meaningful for before_taking_dmg. */
     set_dmg_reduction?: (amount: number) => void;
+    /** Apply a temporary stat buff that reverts after the current attack resolves. */
+    apply_temp_buff?: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => void;
+    /** The attack type being performed. Only available during before_taking_dmg. */
+    atk_type?: 'Sing' | 'Dance';
+    /** Register a callback that runs after the current attack resolves. Receives fans_stolen (0 = blocked). */
+    on_after_attack?: (callback: (fans_stolen: number) => void) => void;
 };
 
+/**
+ * Equipment active skill. Each skill fires at most once per battle.
+ *
+ * Execution order in fire_skills():
+ *   1. trigger match → 2. condition(ctx) → 3. chance roll → 4. effect(ctx)
+ *
+ * - condition: gate that decides whether the skill activates (checked BEFORE chance roll).
+ */
 export type EquipSkillDef = {
     name: string;
+    /** Battle events that can trigger this skill. */
     triggers: BattleTrigger[];
+    /** Activation probability (0-1). Rolled after condition check. */
     chance: number;
+    /** Human-readable condition for UI display. */
     cond_string: string;
+    /** Human-readable effect for UI display. */
     eff_string: string;
+    /** Gate function — return true to activate. Don't mutate stats here. */
     condition: (ctx: SkillContext) => boolean;
+    /** Gameplay mutation. Use ctx helpers or mutate ctx.you / ctx.rival directly. */
     effect: (ctx: SkillContext) => void;
 };
 

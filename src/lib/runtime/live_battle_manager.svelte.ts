@@ -105,8 +105,14 @@ class LiveBattleManager {
 
     private basic_attack(actor: string, attacker: LiveBattleStats, defender: LiveBattleStats) {
         const r = Math.random()
-        const atk_type: keyof LiveBattleStats = r > 0.5 ? "Sing" : "Dance"
-        const def_type: keyof LiveBattleStats = r > 0.5 ? "Charm" : "Presence"
+        const atk_type = r > 0.5 ? "Sing" : "Dance" as const
+        const def_type = r > 0.5 ? "Charm" : "Presence" as const
+
+        // Fire before_taking_dmg skills BEFORE reading stats so temp buffs apply
+        this._dmg_reduction = 0;
+        if (actor === "Rival") {
+            this.fire_skills('before_taking_dmg', atk_type);
+        }
 
         const raw_atk = attacker[atk_type] as number
         const raw_def = defender[def_type] as number
@@ -116,19 +122,13 @@ class LiveBattleManager {
         const fatigue = BATTLE_TUNING.FATIGUE_FLOOR + (1 - BATTLE_TUNING.FATIGUE_FLOOR) * stamina_ratio
         const effective_def = raw_def * fatigue
 
-        // Fire before_taking_dmg skills when player is defending
-        this._dmg_reduction = 0;
-        if (actor === "Rival") {
-            this.fire_skills('before_taking_dmg');
-        }
-
         // Subtraction-based damage with variance
         const variance = (1 - BATTLE_TUNING.VARIANCE) + Math.random() * BATTLE_TUNING.VARIANCE * 2
         let raw_damage = (raw_atk - effective_def) * variance
         if (this._dmg_reduction > 0) {
             raw_damage *= (1 - this._dmg_reduction);
         }
-        const fans_stolen = Math.ceil(Math.min(Math.max(raw_damage, 1), defender.Fans))
+        const fans_stolen = Math.max(Math.ceil(Math.min(raw_damage, defender.Fans)), 0)
 
         // Transfer fans
         attacker.Fans += fans_stolen
@@ -137,6 +137,10 @@ class LiveBattleManager {
         // Pay stamina
         const stamina_cost = raw_atk * BATTLE_TUNING.STAMINA_COST_MULT + 1
         attacker.Curr_Stamina = Math.max(attacker.Curr_Stamina - stamina_cost, 0)
+
+        // Revert temp buffs and run post-attack effects
+        this.revert_temp_buffs();
+        this.run_post_attack_effects(fans_stolen);
 
         // Log
         const color = actor === "Player" ? "green" : "darkorange"
@@ -152,24 +156,50 @@ class LiveBattleManager {
     }
 
     private _dmg_reduction = 0;
+    private _fired_skills = new Set<string>();
+    private _temp_buffs: { target: LiveBattleStats; stat: keyof LiveBattleStats; original: number }[] = [];
+    private _post_attack_effects: ((fans_stolen: number) => void)[] = [];
 
-    private fire_skills(trigger: BattleTrigger): void {
+    private fire_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance'): void {
         const ctx = {
             you: this._you,
             rival: this._rival,
+            atk_type,
             set_dmg_reduction: (amount: number) => { this._dmg_reduction = Math.max(this._dmg_reduction, amount); },
+            apply_temp_buff: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => {
+                const target = who === 'you' ? this._you : this._rival;
+                this._temp_buffs.push({ target, stat, original: target[stat] as number });
+                (target as Record<string, number>)[stat] = new_value;
+            },
+            on_after_attack: (callback: (fans_stolen: number) => void) => {
+                this._post_attack_effects.push(callback);
+            },
         };
 
         for (const item of EquipM.get_all_equipped()) {
+            if (this._fired_skills.has(item.equip_id)) continue;
             const def = EQUIP_REGISTRY.get(item.equip_id);
             if (!def?.skill) continue;
             if (!def.skill.triggers.includes(trigger)) continue;
-            if (Math.random() > def.skill.chance) continue;
             if (!def.skill.condition(ctx)) continue;
+            if (Math.random() > def.skill.chance) continue;
 
             def.skill.effect(ctx);
+            this._fired_skills.add(item.equip_id);
             this.log(`[blue]${def.skill.name} activated![/blue]`, false);
         }
+    }
+
+    private revert_temp_buffs(): void {
+        for (const buff of this._temp_buffs) {
+            (buff.target as Record<string, number>)[buff.stat] = buff.original;
+        }
+        this._temp_buffs = [];
+    }
+
+    private run_post_attack_effects(fans_stolen: number): void {
+        for (const fn of this._post_attack_effects) fn(fans_stolen);
+        this._post_attack_effects = [];
     }
 
     private battleOver(): boolean {
@@ -272,6 +302,9 @@ class LiveBattleManager {
         this._action_bar = [0, 0]
         this.did_player_win = false;
         this._dmg_reduction = 0;
+        this._fired_skills.clear();
+        this._temp_buffs = [];
+        this._post_attack_effects = [];
         RivalStatsM.reroll()
     }
 }
