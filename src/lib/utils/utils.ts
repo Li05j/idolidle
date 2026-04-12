@@ -89,8 +89,8 @@ export function executeAction(def: ActionDef, log: (name: string, text: string) 
     }
 
     handle_rewards(def.rewards);
-    roll_equip_drop(def.equip_drops);
     log(def.name, actionRewardText(def));
+    roll_equip_drop(def.equip_drops);
     def.on_complete?.fn();
 }
 

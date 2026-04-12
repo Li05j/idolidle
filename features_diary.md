@@ -41,6 +41,8 @@ Global tuning (rarity weights, stat multipliers, leveling curve) lives in `EQUIP
 
 Some equipment grants a passive skill that triggers during LIVE battles (e.g. restore stamina, steal extra fans, reduce damage).
 
+The equipment panel shows equipped slots (left) and inventory (right) at the top. Selecting any item reveals its detail — stats, EXP progress, skill info, and an equip/unequip button. With nothing selected, the bottom panel summarizes total equipment bonuses and active skills.
+
 ## Checkpoints
 
 Defined as `{ time, multi }` entries in `src/lib/state/checkpoints.svelte.ts`. The checkpoint bar fills while actions are running. Each checkpoint corresponds 1:1 to a rival template in `src/lib/data/rival_stats.ts`.
