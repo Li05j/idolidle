@@ -196,31 +196,35 @@
                     <!-- Action Button -->
                     <div class="ml-auto">
                         {#if vm.selected_is_equipped}
-                            <GenericButton name="Unequip" variant="secondary" class="px-4 py-1 text-xs" onclick={() => vm.do_unequip()} />
+                            <GenericButton name="Unequip" variant="secondary" class="px-4 py-1.5 text-xs" onclick={() => vm.do_unequip()} />
                         {:else}
-                            <GenericButton name="Equip" variant="primary" class="px-4 py-1 text-xs" onclick={() => vm.do_equip()} />
+                            <GenericButton name="Equip" variant="primary" class="px-4 py-1.5 text-xs" onclick={() => vm.do_equip()} />
                         {/if}
                     </div>
                 </div>
 
                 <!-- EXP Bar -->
                 {#if exp}
-                    <div>
-                        <div class="h-2 rounded-full bg-[var(--surface-base)] overflow-hidden">
-                            <div
-                                class="h-full rounded-full transition-all"
-                                style="width: {exp.percent}%; background: linear-gradient(to right, var(--progress-from), var(--progress-to));"
-                            ></div>
-                        </div>
-                        <div class="text-xs text-[var(--text-muted)] text-right mt-0.5">{exp.current} / {exp.needed} EXP</div>
+                    <div class="h-2 rounded-full bg-[var(--surface-base)] overflow-hidden">
+                        <div
+                            class="h-full rounded-full transition-all"
+                            style="width: {exp.percent}%; background: linear-gradient(to right, var(--progress-from), var(--progress-to));"
+                        ></div>
                     </div>
-                {:else if item.level >= 20}
-                    <div class="text-xs font-bold text-[var(--progress-from)]">MAX LEVEL</div>
                 {/if}
 
-                <!-- Flavor text -->
-                {#if def.desc}
-                    <div class="text-sm text-[var(--text-muted)] italic">{def.desc}</div>
+                <!-- EXP / Max Level + Description inline -->
+                {#if exp || item.level >= 20 || def.desc}
+                    <div class="flex flex-wrap items-baseline gap-x-3 text-sm">
+                        {#if exp}
+                            <span class="text-xs text-[var(--text-muted)] shrink-0">{exp.current} / {exp.needed} EXP</span>
+                        {:else if item.level >= 20}
+                            <span class="text-xs font-bold text-[var(--progress-from)] shrink-0">MAX LEVEL</span>
+                        {/if}
+                        {#if def.desc}
+                            <span class="text-[var(--text-muted)] italic">{def.desc}</span>
+                        {/if}
+                    </div>
                 {/if}
 
                 <!-- Stats + Skill side by side -->

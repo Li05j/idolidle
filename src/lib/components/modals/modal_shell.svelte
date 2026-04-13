@@ -1,7 +1,5 @@
 <script lang="ts">
     import { ModalM, type ModalConfig } from '$lib/runtime/modal_manager.svelte';
-    import X from '$lib/components/shared/x_button.svelte';
-
     const SIZE_CLASSES = {
         sm: 'relative min-w-1/4 min-h-1/4 bg-[var(--surface-card)] rounded-2xl shadow-xl',
         lg: 'relative w-3/4 h-3/4 bg-[var(--surface-card)] rounded-2xl shadow-xl overflow-hidden',
@@ -28,11 +26,6 @@
             aria-modal="true"
         >
             <div class={SIZE_CLASSES[config.size]} onclick={(e) => e.stopPropagation()}>
-                {#if config.closeable}
-                    <div class="absolute top-2 right-2 z-10">
-                        <X onclick={() => ModalM.close()} />
-                    </div>
-                {/if}
                 <config.component onClose={() => ModalM.close()} {...config.props ?? {}} />
             </div>
         </div>

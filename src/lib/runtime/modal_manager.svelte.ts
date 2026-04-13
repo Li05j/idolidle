@@ -27,7 +27,6 @@ function createModalManager() {
     }
 
     function reset() {
-        _close_on_esc = true;
         _stack = [];
     }
 

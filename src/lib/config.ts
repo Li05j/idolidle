@@ -1,6 +1,6 @@
 import type { BasicStats } from '$lib/types';
 
-// 0 = prod, 1 = dev, 2 = fast
+// 0 = prod, 1 = prod-fast, 2 = super-fast
 const ENV: 0 | 1 | 2 = 2;
 
 const envs = {
@@ -17,11 +17,11 @@ const envs = {
 		checkpoint_dp_base: 2,
 	},
 	1: {
-		time_scale: 10.0,
-		stat_init_add_value: 1.0,
-		stat_init_multi: 10.0,
-		rebirth_base_ratio: 0.1,
-		rebirth_multi_ratio: 0.0005,
+		time_scale: 100.0,
+		stat_init_add_value: 0.0,
+		stat_init_multi: 1.0,
+		rebirth_base_ratio: 0.025,
+		rebirth_multi_ratio: 0.0001,
 		min_action_time: 100,
 		mastery_rate: 0.02,
 		mastery_offset: 0.04,
@@ -29,11 +29,11 @@ const envs = {
 		checkpoint_dp_base: 2,
 	},
 	2: {
-		time_scale: 100.0,
-		stat_init_add_value: 0.0,
-		stat_init_multi: 1.0,
-		rebirth_base_ratio: 0.025,
-		rebirth_multi_ratio: 0.0001,
+		time_scale: 10.0,
+		stat_init_add_value: 1.0,
+		stat_init_multi: 10.0,
+		rebirth_base_ratio: 0.1,
+		rebirth_multi_ratio: 0.0005,
 		min_action_time: 100,
 		mastery_rate: 0.02,
 		mastery_offset: 0.04,
