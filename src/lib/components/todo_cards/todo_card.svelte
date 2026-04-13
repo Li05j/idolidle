@@ -54,7 +54,7 @@
                     <i>{@html parseText(vm.desc)}</i>
                 </div>
                 <div class="absolute top-0 left-0 rounded-lg transition-opacity duration-300 h-2/5 w-full text-[var(--text-primary)]" style="opacity: {vm.hovered ? 1 : 0};">
-                    <p>{@html parseText(tooltipString(vm.def, vm.disabled, vm.is_location ? undefined : Mastery.completions(vm.mastery_id)))}</p>
+                    <p>{@html parseText(tooltipString(vm.def, vm.disabled, vm.actionDef?.kind === 'training' ? Mastery.completions(vm.mastery_id) : undefined))}</p>
                 </div>
             </div>
         {/if}

@@ -1,5 +1,7 @@
 import { EquipM, type EquipSlotKey, type OwnedEquip } from '$lib/state/equipment.svelte';
 import { EQUIP_REGISTRY } from '$lib/data/equipment';
+import { ALL_EQUIPMENT } from '$lib/data/equipment/equipment_table';
+import { EQUIP_DROP_LOCATION } from '$lib/data/equipment/location_drops';
 import {
 	type EquipDef,
 	type EquipSlot,
@@ -22,6 +24,12 @@ type EffectiveBonus = {
 	stat: BasicStats;
 	target: 'base' | 'multi';
 	value: number;
+};
+
+export type CodexEntry = {
+	def: EquipDef;
+	status: 'current' | 'previous' | 'unknown';
+	drop_location: string;
 };
 
 type EquippedSkillInfo = {
@@ -55,8 +63,10 @@ const SLOT_ORDER: EquipSlotKey[] = ['hat', 'top', 'bottom', 'shoes', 'accessory_
 
 export class EquipmentPanelVM {
 	selected_item_id: string | null = $state(null);
-	selected_source: 'equipped' | 'inventory' | null = $state(null);
+	selected_source: 'equipped' | 'inventory' | 'codex' | null = $state(null);
 	selected_slot: EquipSlotKey | null = $state(null);
+	codex_open: boolean = $state(false);
+	codex_hide_unlocked: boolean = $state(false);
 
 	get selected_item(): OwnedEquip | null {
 		if (!this.selected_item_id) return null;
@@ -211,6 +221,53 @@ export class EquipmentPanelVM {
 		if (!slot) return;
 		EquipM.unequip(slot);
 		this.clear_selection();
+	}
+
+	toggle_codex(): void {
+		this.codex_open = !this.codex_open;
+		if (!this.codex_open) {
+			this.codex_hide_unlocked = false;
+		}
+		this.clear_selection();
+	}
+
+	toggle_codex_hide_unlocked(): void {
+		this.codex_hide_unlocked = !this.codex_hide_unlocked;
+	}
+
+	get codex_list(): CodexEntry[] {
+		let entries = ALL_EQUIPMENT.map(def => {
+			const in_current = EquipM.has_in_current_run(def.id);
+			const ever = EquipM.ever_obtained.has(def.id);
+			const status: CodexEntry['status'] = in_current ? 'current' : ever ? 'previous' : 'unknown';
+			const drop_location = EQUIP_DROP_LOCATION.get(def.id) ?? '???';
+			return { def, status, drop_location };
+		});
+
+		if (this.codex_hide_unlocked) {
+			entries = entries.filter(e => e.status !== 'current');
+		}
+
+		return entries;
+	}
+
+	select_codex(equip_id: string): void {
+		const entry = this.codex_list.find(e => e.def.id === equip_id);
+		if (!entry || entry.status === 'unknown') {
+			this.clear_selection();
+			return;
+		}
+		if (this.selected_item_id === equip_id && this.selected_source === 'codex') {
+			this.clear_selection();
+			return;
+		}
+		this.selected_item_id = equip_id;
+		this.selected_source = 'codex';
+	}
+
+	get selected_codex_entry(): CodexEntry | null {
+		if (this.selected_source !== 'codex' || !this.selected_item_id) return null;
+		return this.codex_list.find(e => e.def.id === this.selected_item_id) ?? null;
 	}
 
 	private _find_target_slot(def: EquipDef): EquipSlotKey | null {

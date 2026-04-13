@@ -29,3 +29,9 @@ export const LOCATION_DROPS: Record<string, EquipDropTable> = {
         table: [{ equip_id: 'cat_ear_headband', weight: 1 }],
     },
 };
+
+export const EQUIP_DROP_LOCATION: Map<string, string> = new Map(
+    Object.entries(LOCATION_DROPS).flatMap(([loc, table]) =>
+        table.table.map(entry => [entry.equip_id, loc] as const)
+    )
+);

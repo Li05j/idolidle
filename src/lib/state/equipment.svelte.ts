@@ -37,9 +37,11 @@ function empty_slots(): Record<EquipSlotKey, string | null> {
 class EquipmentManager {
     private _inventory: Map<string, OwnedEquip> = $state(new Map());
     private _equipped: Record<EquipSlotKey, string | null> = $state(empty_slots());
+    private _ever_obtained: Set<string> = $state(new Set());
 
     get inventory() { return this._inventory; }
     get equipped() { return this._equipped; }
+    get ever_obtained(): ReadonlySet<string> { return this._ever_obtained; }
 
     get_owned(equip_id: string): OwnedEquip | undefined {
         return this._inventory.get(equip_id);
@@ -60,6 +62,8 @@ class EquipmentManager {
     receive_equipment(equip_id: string, rolled_rarity: Rarity): void {
         const def = EQUIP_REGISTRY.get(equip_id);
         if (!def) return;
+
+        this._ever_obtained.add(equip_id);
 
         const existing = this._inventory.get(equip_id);
         if (!existing) {
@@ -154,8 +158,15 @@ class EquipmentManager {
         }
     }
 
+    has_in_current_run(equip_id: string): boolean {
+        return this._inventory.has(equip_id);
+    }
+
     reset_for_rebirth(): void {
-        // Equipment persists — just reapply bonuses after stat reset
+        this._inventory.clear();
+        for (const slot of Object.keys(this._equipped) as EquipSlotKey[]) {
+            this._equipped[slot] = null;
+        }
         this.recalculate_equip_stats();
     }
 }

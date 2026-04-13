@@ -20,5 +20,5 @@ export function performRebirth() {
     ModalM.reset()
     Rebirth.increment_rebirth_count()
     Rebirth.apply_gains_to_initial_stats()
-    EquipM.recalculate_equip_stats()
+    EquipM.reset_for_rebirth()
 }
