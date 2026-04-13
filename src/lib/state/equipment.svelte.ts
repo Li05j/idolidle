@@ -38,10 +38,18 @@ class EquipmentManager {
     private _inventory: Map<string, OwnedEquip> = $state(new Map());
     private _equipped: Record<EquipSlotKey, string | null> = $state(empty_slots());
     private _ever_obtained: Set<string> = $state(new Set());
+    private _pending_dp = $state(0);
 
     get inventory() { return this._inventory; }
     get equipped() { return this._equipped; }
     get ever_obtained(): ReadonlySet<string> { return this._ever_obtained; }
+    get pending_dp() { return this._pending_dp; }
+
+    flush_pending_dp(): number {
+        const dp = this._pending_dp;
+        this._pending_dp = 0;
+        return dp;
+    }
 
     get_owned(equip_id: string): OwnedEquip | undefined {
         return this._inventory.get(equip_id);
@@ -64,6 +72,9 @@ class EquipmentManager {
         if (!def) return;
 
         this._ever_obtained.add(equip_id);
+
+        const dp = EQUIP_CONFIG.dupe_exp[rolled_rarity];
+        this._pending_dp += dp;
 
         const existing = this._inventory.get(equip_id);
         if (!existing) {
@@ -164,6 +175,7 @@ class EquipmentManager {
 
     reset_for_rebirth(): void {
         this._inventory.clear();
+        this._pending_dp = 0;
         for (const slot of Object.keys(this._equipped) as EquipSlotKey[]) {
             this._equipped[slot] = null;
         }

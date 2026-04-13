@@ -11,7 +11,8 @@ const dev = {
 	min_action_time: 100,
 	mastery_rate: 0.02,
 	mastery_offset: 0.04,
-	equip_drop_mult: 10,
+	equip_drop_mult: 1,
+	checkpoint_dp_base: 2,
 } as const;
 
 const prod = {
@@ -24,6 +25,7 @@ const prod = {
 	mastery_rate: 0.02,
 	mastery_offset: 0.04,
 	equip_drop_mult: 1,
+	checkpoint_dp_base: 2,
 } as const;
 
 export const CFG = DEV ? dev : prod;

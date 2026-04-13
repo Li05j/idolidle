@@ -41,7 +41,11 @@ Global tuning (rarity weights, stat multipliers, leveling curve) lives in `EQUIP
 
 Some equipment grants a passive skill that triggers during LIVE battles (e.g. restore stamina, steal extra fans, reduce damage).
 
+Equipment resets on rebirth — inventory and equipped items are cleared. However, the game tracks which equipment has ever been obtained across all runs.
+
 The equipment panel shows equipped slots (left) and inventory (right) at the top. Selecting any item reveals its detail — stats, EXP progress, skill info, and an equip/unequip button. With nothing selected, the bottom panel summarizes total equipment bonuses and active skills.
+
+A **Codex** toggle in the inventory header switches to a grid view of all possible equipment. Items obtained this run show in full color, items from previous runs appear greyed out, and never-obtained items show as "???". Selecting a known item shows its details including drop location. A "Hide Unlocked" filter hides current-run items from the codex.
 
 ## Checkpoints
 
@@ -55,7 +59,9 @@ Each action tracks total completions across all rebirths. More completions = sho
 
 After a LIVE, you can "dream" (rebirth). This resets all progress but permanently carries over a portion of your current stats as base/multi bonuses. The multi carry-over is capped proportionally to your furthest completed checkpoint. Ratios are configured in `RebirthStats` (`BASE_RATIO`, `MULTI_RATIO`).
 
-Each rebirth also awards **Dream Points** (`checkpoint_completed + 1`). Points accumulate permanently. They currently have no gameplay effect but are tracked for future use.
+**Dream Points** are awarded only on rebirth, from two sources:
+- **Equipment**: each equip obtain during the run (new, upgrade, or dupe) accumulates dream points equal to the rarity's EXP value (N=1, R=5, SR=10, UR=20), awarded in bulk on rebirth.
+- **Checkpoints**: each rebirth awards `1 + sum(base^i, i=1..CPs_completed)` dream points, where `base` is `checkpoint_dp_base` in config (default 2). E.g. 0 CPs → 1, 1 CP → 3, 2 CPs → 7, 3 CPs → 15.
 
 ---
 

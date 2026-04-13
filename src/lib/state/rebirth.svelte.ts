@@ -36,7 +36,15 @@ class RebirthStats {
     }
 
     award_rebirth_points() {
-        this._rebirth_points += CPs.current_completed_checkpoint + 1;
+        let points = 1;
+        for (let i = 1; i <= CPs.current_completed_checkpoint; i++) {
+            points += CFG.checkpoint_dp_base ** i;
+        }
+        this._rebirth_points += points;
+    }
+
+    add_dream_points(n: number) {
+        this._rebirth_points += n;
     }
 
     increment_rebirth_count() { this._rebirth_count++; }
