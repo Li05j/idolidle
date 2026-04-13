@@ -20,9 +20,17 @@ export type EquipStatBonus = {
     target: 'base' | 'multi';
 };
 
+export type RarityOverride = {
+    stat_mult?: number;
+    skill_values?: Record<string, number>;
+    extra_bonuses?: EquipStatBonus[];
+};
+
 export type SkillContext = {
     you: LiveBattleStats;
     rival: LiveBattleStats;
+    /** Resolved skill values (base values merged with rarity overrides). */
+    values: Record<string, number>;
     /** Set to reduce incoming damage by this fraction (0-1). Only meaningful for before_taking_dmg. */
     set_dmg_reduction?: (amount: number) => void;
     /** Apply a temporary stat buff that reverts after the current attack resolves. */
@@ -47,10 +55,12 @@ export type EquipSkillDef = {
     triggers: BattleTrigger[];
     /** Activation probability (0-1). Rolled after condition check. */
     chance: number;
-    /** Human-readable condition for UI display. */
-    cond_string: string;
-    /** Human-readable effect for UI display. */
-    eff_string: string;
+    /** Default skill parameters. Rarity overrides merge on top of these. */
+    values?: Record<string, number>;
+    /** Human-readable condition. String or function of resolved values. */
+    cond_string: string | ((v: Record<string, number>) => string);
+    /** Human-readable effect. String or function of resolved values. */
+    eff_string: string | ((v: Record<string, number>) => string);
     /** Gate function — return true to activate. Don't mutate stats here. */
     condition: (ctx: SkillContext) => boolean;
     /** Gameplay mutation. Use ctx helpers or mutate ctx.you / ctx.rival directly. */
@@ -64,7 +74,7 @@ export type EquipDef = {
     desc: string;
     stat_bonuses: EquipStatBonus[];
     skill?: EquipSkillDef;
-    rarity_stat_mult_override?: Partial<Record<Rarity, number>>;
+    rarity?: Partial<Record<Rarity, RarityOverride>>;
 };
 
 export type EquipDropEntry = {
@@ -87,7 +97,28 @@ export function exp_to_next_level(level: number): number {
     return level * EQUIP_CONFIG.exp_per_level;
 }
 
-export function effective_bonus(bonus: EquipStatBonus, level: number, rarity: Rarity, def?: EquipDef): number {
-    const mult = def?.rarity_stat_mult_override?.[rarity] ?? EQUIP_CONFIG.rarity_stat_mult[rarity];
-    return bonus.base_value * mult * (1 + EQUIP_CONFIG.level_bonus_per_level * (level - 1));
+export function effective_bonus(bonus: EquipStatBonus, level: number, stat_mult: number): number {
+    return bonus.base_value * stat_mult * (1 + EQUIP_CONFIG.level_bonus_per_level * (level - 1));
+}
+
+export type ResolvedEquip = {
+    stat_mult: number;
+    extra_bonuses: EquipStatBonus[];
+    skill_values: Record<string, number>;
+};
+
+export function resolve_equip(def: EquipDef, rarity: Rarity): ResolvedEquip {
+    const overrides = def.rarity?.[rarity];
+    return {
+        stat_mult: overrides?.stat_mult ?? EQUIP_CONFIG.rarity_stat_mult[rarity],
+        extra_bonuses: overrides?.extra_bonuses ?? [],
+        skill_values: { ...def.skill?.values, ...overrides?.skill_values },
+    };
+}
+
+export function resolve_skill_string(
+    str: string | ((v: Record<string, number>) => string),
+    values: Record<string, number>,
+): string {
+    return typeof str === 'function' ? str(values) : str;
 }

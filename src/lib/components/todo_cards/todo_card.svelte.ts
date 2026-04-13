@@ -9,6 +9,7 @@ import { executeAction, actionRewardText, handle_rewards, reward_string } from '
 import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 import { CFG } from '$lib/config';
 import { Mastery } from '$lib/state/mastery.svelte';
+import { Dreams } from '$lib/state/dreams.svelte';
 
 
 const ACTION_BG = {
@@ -23,11 +24,12 @@ const BORDER_ACTIVE = 'outline outline-3 outline-[var(--card-border-active)] sha
 const BORDER_INACTIVE = 'outline outline-2 outline-[var(--card-border-inactive)]';
 
 function getLocationDuration(base_time: number): number {
-    return Math.max(base_time * CFG.time_scale, CFG.min_action_time);
+    return Math.max(base_time * Dreams.location_time_mult * CFG.time_scale, CFG.min_action_time);
 }
 
-function getActionDuration(base_time: number, mastery_id: string): number {
-    return Math.max(base_time * Mastery.factor(mastery_id) * CFG.time_scale, CFG.min_action_time);
+function getActionDuration(base_time: number, mastery_id: string, kind: ActionDef['kind']): number {
+    const dream_mult = kind === 'training' ? Dreams.training_time_mult : Dreams.earning_time_mult;
+    return Math.max(base_time * Mastery.factor(mastery_id) * dream_mult * CFG.time_scale, CFG.min_action_time);
 }
 
 export class TodoCardVM {
@@ -95,7 +97,7 @@ export class TodoCardVM {
             if (this.is_location) {
                 this.todo_actual_duration = getLocationDuration(this.def.base_time);
             } else {
-                this.todo_actual_duration = getActionDuration(this.def.base_time, this.mastery_id);
+                this.todo_actual_duration = getActionDuration(this.def.base_time, this.mastery_id, (this.def as ActionDef).kind);
             }
         });
 
@@ -162,7 +164,7 @@ export class TodoCardVM {
         const actDef = this.actionDef!;
 
         const mid = this.mastery_id;
-        const getDur = () => getActionDuration(actDef.base_time, mid);
+        const getDur = () => getActionDuration(actDef.base_time, mid, actDef.kind);
 
         if (actDef.uses !== undefined) {
             this.timer.repeat(1, getDur,

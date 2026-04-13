@@ -163,7 +163,7 @@
                         </div>
                     {/if}
 
-                    {#if def.skill}
+                    {#if def.skill && vm.selected_skill_strings}
                         <div class="flex-1">
                             <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Battle Skill</div>
                             <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
@@ -171,8 +171,8 @@
                                 <div class="text-xs text-[var(--text-muted)] mt-1">
                                     Trigger: {def.skill.triggers.join(', ')} &middot; {def.skill.chance * 100}%
                                 </div>
-                                <div class="text-xs text-[var(--text-muted)]">If: {def.skill.cond_string}</div>
-                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{def.skill.eff_string}</div>
+                                <div class="text-xs text-[var(--text-muted)]">If: {vm.selected_skill_strings.cond_string}</div>
+                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{vm.selected_skill_strings.eff_string}</div>
                             </div>
                         </div>
                     {/if}
@@ -244,7 +244,7 @@
                     {/if}
 
                     <!-- Skill -->
-                    {#if def.skill}
+                    {#if def.skill && vm.selected_skill_strings}
                         <div class="flex-1">
                             <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Battle Skill</div>
                             <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
@@ -252,8 +252,8 @@
                                 <div class="text-xs text-[var(--text-muted)] mt-1">
                                     Trigger: {def.skill.triggers.join(', ')} &middot; {def.skill.chance * 100}%
                                 </div>
-                                <div class="text-xs text-[var(--text-muted)]">If: {def.skill.cond_string}</div>
-                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{def.skill.eff_string}</div>
+                                <div class="text-xs text-[var(--text-muted)]">If: {vm.selected_skill_strings.cond_string}</div>
+                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{vm.selected_skill_strings.eff_string}</div>
                             </div>
                         </div>
                     {/if}

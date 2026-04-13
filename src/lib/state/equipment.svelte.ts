@@ -7,6 +7,7 @@ import {
     rarity_index,
     exp_to_next_level,
     effective_bonus,
+    resolve_equip,
 } from '$lib/data/equipment/equipment_definition';
 import { stat_list } from '$lib/state/stats.svelte';
 import { history } from '$lib/state/history.svelte';
@@ -133,8 +134,19 @@ class EquipmentManager {
             const def = EQUIP_REGISTRY.get(item.equip_id);
             if (!def) continue;
 
+            const resolved = resolve_equip(def, item.rarity);
+
             for (const bonus of def.stat_bonuses) {
-                const value = effective_bonus(bonus, item.level, item.rarity, def);
+                const value = effective_bonus(bonus, item.level, resolved.stat_mult);
+                if (bonus.target === 'base') {
+                    stat_list[bonus.stat].equip_base += value;
+                } else {
+                    stat_list[bonus.stat].equip_multi += value;
+                }
+            }
+
+            for (const bonus of resolved.extra_bonuses) {
+                const value = effective_bonus(bonus, item.level, resolved.stat_mult);
                 if (bonus.target === 'base') {
                     stat_list[bonus.stat].equip_base += value;
                 } else {

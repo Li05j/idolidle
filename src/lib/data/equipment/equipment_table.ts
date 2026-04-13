@@ -13,11 +13,12 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         skill: {
             name: 'Go-Home Club',
             triggers: ['turn_start'],
-            chance: 1,
-            cond_string: 'Stamina < 25%',
-            eff_string: 'Restore 25% Stamina.',
-            condition: ({ you }) => you.Curr_Stamina < you.Max_Stamina * 0.25,
-            effect: ({ you }) => { you.Curr_Stamina = Math.min(you.Max_Stamina, you.Curr_Stamina + you.Max_Stamina * 0.25); },
+            chance: 0.5,
+            values: { threshold: 0.25, restore: 0.25 },
+            cond_string: (v) => `Stamina < ${v.threshold * 100}%`,
+            eff_string: (v) => `Restore ${v.restore * 100}% Stamina.`,
+            condition: ({ you, values: v }) => you.Curr_Stamina < you.Max_Stamina * v.threshold,
+            effect: ({ you, values: v }) => { you.Curr_Stamina = Math.min(you.Max_Stamina, you.Curr_Stamina + you.Max_Stamina * v.restore); },
         },
     },
 
@@ -34,13 +35,14 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         skill: {
             name: 'Underdog',
             triggers: ['turn_start'],
-            chance: 1,
+            chance: 0.5,
+            values: { buff: 1.5 },
             cond_string: 'Your Fans < Rival Fans',
-            eff_string: 'Your next move steals 50% more Fans.',
+            eff_string: (v) => `Your next move steals ${(v.buff - 1) * 100}% more Fans.`,
             condition: ({ you, rival }) => you.Fans < rival.Fans,
-            effect: ({ you, apply_temp_buff }) => {
-                apply_temp_buff!('you', 'Sing', you.Sing * 1.5);
-                apply_temp_buff!('you', 'Dance', you.Dance * 1.5);
+            effect: ({ you, apply_temp_buff, values: v }) => {
+                apply_temp_buff!('you', 'Sing', you.Sing * v.buff);
+                apply_temp_buff!('you', 'Dance', you.Dance * v.buff);
             },
         },
     },
@@ -59,11 +61,12 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             name: 'Idol Executive',
             triggers: ['live_start'],
             chance: 1,
+            values: { drain: 0.1 },
             cond_string: 'Always',
-            eff_string: 'Drain 10% Fans from Rival before LIVE starts.',
+            eff_string: (v) => `Drain ${v.drain * 100}% Fans from Rival before LIVE starts.`,
             condition: () => true,
-            effect: ({ you, rival }) => {
-                const drain = Math.floor(rival.Fans * 0.1);
+            effect: ({ you, rival, values: v }) => {
+                const drain = Math.floor(rival.Fans * v.drain);
                 rival.Fans -= drain;
                 you.Fans += drain;
             },
@@ -83,12 +86,13 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         skill: {
             name: 'Good Student',
             triggers: ['before_taking_dmg'],
-            chance: 1,
+            chance: 0.2,
+            values: { reduction: 0.5 },
             cond_string: 'Rival performs a move.',
-            eff_string: 'Reduce Fans loss by 50%.',
+            eff_string: (v) => `Reduce Fans loss by ${v.reduction * 100}%.`,
             condition: () => true,
-            effect: ({ set_dmg_reduction }) => {
-                set_dmg_reduction?.(0.5);
+            effect: ({ set_dmg_reduction, values: v }) => {
+                set_dmg_reduction?.(v.reduction);
             },
         },
     },
@@ -107,11 +111,12 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             name: 'Flashy Outfit',
             triggers: ['live_start'],
             chance: 1,
+            values: { drain: 0.1 },
             cond_string: 'Always',
-            eff_string: 'Reduce Rival Stamina by 10%.',
+            eff_string: (v) => `Reduce Rival Stamina by ${v.drain * 100}%.`,
             condition: () => true,
-            effect: ({ rival }) => {
-                const drain = rival.Max_Stamina * 0.1;
+            effect: ({ rival, values: v }) => {
+                const drain = rival.Max_Stamina * v.drain;
                 rival.Curr_Stamina = Math.max(0, rival.Curr_Stamina - drain);
             },
         },
@@ -142,16 +147,17 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         skill: {
             name: 'Moe Kyun~!',
             triggers: ['before_taking_dmg'],
-            chance: 1,
+            chance: 0.25,
+            values: { charm_buff: 1.5, penalty: 0.1 },
             cond_string: 'Rival performs a Sing move.',
-            eff_string: 'Increase Charm by 50%. If Rival fails to steal Fans, Rival loses 10% Fans.',
+            eff_string: (v) => `Increase Charm by ${(v.charm_buff - 1) * 100}%. If Rival fails to steal Fans, Rival loses ${v.penalty * 100}% Fans.`,
             condition: ({ atk_type }) => atk_type === 'Sing',
-            effect: ({ you, rival, apply_temp_buff, on_after_attack }) => {
-                apply_temp_buff!('you', 'Charm', you.Charm * 1.5);
+            effect: ({ you, rival, apply_temp_buff, on_after_attack, values: v }) => {
+                apply_temp_buff!('you', 'Charm', you.Charm * v.charm_buff);
                 on_after_attack!((fans_stolen) => {
                     if (fans_stolen <= 0) {
-                        const penalty = Math.floor(rival.Fans * 0.1);
-                        rival.Fans -= penalty;
+                        const pen = Math.floor(rival.Fans * v.penalty);
+                        rival.Fans -= pen;
                     }
                 });
             },

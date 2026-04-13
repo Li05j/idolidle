@@ -4,7 +4,7 @@ import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
 import { Rebirth } from "$lib/state/rebirth.svelte";
 import { history } from "$lib/state/history.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
-import type { BattleTrigger } from "$lib/data/equipment/equipment_definition";
+import { resolve_equip, type BattleTrigger } from "$lib/data/equipment/equipment_definition";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 import { EquipM } from "$lib/state/equipment.svelte";
 
@@ -181,10 +181,14 @@ class LiveBattleManager {
             const def = EQUIP_REGISTRY.get(item.equip_id);
             if (!def?.skill) continue;
             if (!def.skill.triggers.includes(trigger)) continue;
-            if (!def.skill.condition(ctx)) continue;
+
+            const resolved = resolve_equip(def, item.rarity);
+            const skill_ctx = { ...ctx, values: resolved.skill_values };
+
+            if (!def.skill.condition(skill_ctx)) continue;
             if (Math.random() > def.skill.chance) continue;
 
-            def.skill.effect(ctx);
+            def.skill.effect(skill_ctx);
             this._fired_skills.add(item.equip_id);
             this.log(`[blue]${def.skill.name} activated![/blue]`, false);
         }

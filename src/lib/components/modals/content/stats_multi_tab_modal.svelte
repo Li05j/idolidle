@@ -1,6 +1,7 @@
 <script lang="ts">
     import DetailedStats from "./detailed_stats.svelte";
     import Equipment from "./equipment.svelte";
+    import DreamUpgrades from "./dream_upgrades.svelte";
 
     type Tabs = 'stats' | 'equipment' | 'dreams'
 
@@ -39,7 +40,7 @@
             {:else if active === 'equipment'}
                 <Equipment />
             {:else if active === 'dreams'}
-                <h2 class="text-xl font-semibold text-[var(--text-muted)] mb-2">Not done yet.</h2>
+                <DreamUpgrades />
             {/if}
         </div>
     </div>

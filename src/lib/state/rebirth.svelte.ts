@@ -2,6 +2,7 @@ import { CPs } from "$lib/state/checkpoints.svelte"
 import { stat_list, stat_list_reset } from "$lib/state/stats.svelte"
 import type { BasicStats } from "$lib/types"
 import { CFG } from '$lib/config'
+import { Dreams } from '$lib/state/dreams.svelte'
 
 function zero_record(): Record<BasicStats, number> {
     return { Fans: 0, Moni: 0, Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
@@ -30,8 +31,8 @@ class RebirthStats {
 
     apply_gains_to_initial_stats() {
         for (const key of STAT_KEYS) {
-            stat_list[key].base += this.base_gains[key]
-            stat_list[key].multi += this.multi_gains[key]
+            stat_list[key].base += this.base_gains[key] + Dreams.stat_base_bonus(key)
+            stat_list[key].multi += this.multi_gains[key] + Dreams.stat_multi_bonus(key)
         }
     }
 
@@ -45,6 +46,10 @@ class RebirthStats {
 
     add_dream_points(n: number) {
         this._rebirth_points += n;
+    }
+
+    deduct_points(n: number) {
+        this._rebirth_points -= n;
     }
 
     increment_rebirth_count() { this._rebirth_count++; }

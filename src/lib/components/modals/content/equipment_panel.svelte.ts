@@ -10,6 +10,8 @@ import {
 	RARITY_ORDER,
 	effective_bonus,
 	exp_to_next_level,
+	resolve_equip,
+	resolve_skill_string,
 } from '$lib/data/equipment/equipment_definition';
 import type { BasicStats } from '$lib/types';
 
@@ -78,15 +80,33 @@ export class EquipmentPanelVM {
 		return EQUIP_REGISTRY.get(this.selected_item_id) ?? null;
 	}
 
+	get selected_skill_strings(): { cond_string: string; eff_string: string } | null {
+		const def = this.selected_def;
+		if (!def?.skill) return null;
+		const item = this.selected_item;
+		const resolved = item ? resolve_equip(def, item.rarity) : resolve_equip(def, 'N');
+		return {
+			cond_string: resolve_skill_string(def.skill.cond_string, resolved.skill_values),
+			eff_string: resolve_skill_string(def.skill.eff_string, resolved.skill_values),
+		};
+	}
+
 	get selected_effective_bonuses(): EffectiveBonus[] {
 		const item = this.selected_item;
 		const def = this.selected_def;
 		if (!item || !def) return [];
-		return def.stat_bonuses.map((b) => ({
+		const resolved = resolve_equip(def, item.rarity);
+		const base = def.stat_bonuses.map((b) => ({
 			stat: b.stat,
 			target: b.target,
-			value: effective_bonus(b, item.level, item.rarity, def),
+			value: effective_bonus(b, item.level, resolved.stat_mult),
 		}));
+		const extra = resolved.extra_bonuses.map((b) => ({
+			stat: b.stat,
+			target: b.target,
+			value: effective_bonus(b, item.level, resolved.stat_mult),
+		}));
+		return [...base, ...extra];
 	}
 
 	get selected_exp_progress(): { current: number; needed: number; percent: number } | null {
@@ -141,8 +161,10 @@ export class EquipmentPanelVM {
 		for (const item of EquipM.get_all_equipped()) {
 			const def = EQUIP_REGISTRY.get(item.equip_id);
 			if (!def) continue;
-			for (const b of def.stat_bonuses) {
-				const value = effective_bonus(b, item.level, item.rarity, def);
+			const resolved = resolve_equip(def, item.rarity);
+			const all_bonuses = [...def.stat_bonuses, ...resolved.extra_bonuses];
+			for (const b of all_bonuses) {
+				const value = effective_bonus(b, item.level, resolved.stat_mult);
 				const entry = stats.get(b.stat) ?? { base: 0, multi: 0 };
 				if (b.target === 'base') entry.base += value;
 				else entry.multi += value;
@@ -157,13 +179,14 @@ export class EquipmentPanelVM {
 		for (const item of EquipM.get_all_equipped()) {
 			const def = EQUIP_REGISTRY.get(item.equip_id);
 			if (!def?.skill) continue;
+			const resolved = resolve_equip(def, item.rarity);
 			skills.push({
 				item_name: def.name,
 				skill_name: def.skill.name,
 				triggers: def.skill.triggers.join(', '),
 				chance: def.skill.chance,
-				cond_string: def.skill.cond_string,
-				eff_string: def.skill.eff_string,
+				cond_string: resolve_skill_string(def.skill.cond_string, resolved.skill_values),
+				eff_string: resolve_skill_string(def.skill.eff_string, resolved.skill_values),
 			});
 		}
 		return skills;
