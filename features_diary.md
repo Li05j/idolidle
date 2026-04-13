@@ -63,6 +63,17 @@ After a LIVE, you can "dream" (rebirth). This resets all progress but permanentl
 - **Equipment**: each equip obtain during the run (new, upgrade, or dupe) accumulates dream points equal to the rarity's EXP value (N=1, R=5, SR=10, UR=20), awarded in bulk on rebirth.
 - **Checkpoints**: each rebirth awards `1 + sum(base^i, i=1..CPs_completed)` dream points, where `base` is `checkpoint_dp_base` in config (default 2). E.g. 0 CPs → 1, 1 CP → 3, 2 CPs → 7, 3 CPs → 15.
 
+## Dream Upgrades
+
+Spend dream points on permanent upgrades in the Dreams tab of Detailed Stats. Upgrades persist across rebirths and all bonuses are multiplicative.
+
+- **Time reductions** (max 50 each): reduce location, training, or earning/spending card base time by 1% per level (0.99^level).
+- **Initial base stats** (max 50 each): +2.0 initial base per level for each of the 8 stats, applied on rebirth.
+- **Initial stat multipliers** (max 50 each): +0.01 initial multi per level for each of the 8 stats, applied on rebirth.
+- **Equipment drop rate** (max 10): +10% multiplicative per level (1.1^level).
+
+Cost per level: `floor(base_cost × 1.25^current_level)`. Each upgrade can override the scaling factor. Upgrade definitions live in `src/lib/data/dreams/`.
+
 ---
 
 ## Contributor Guide: How to Extend
@@ -106,3 +117,7 @@ Single file: `src/lib/state/rebirth.svelte.ts`. Adjust `BASE_RATIO`, `MULTI_RATI
 ### Edit mastery curve
 
 Mastery curve is `mastery_rate` (sqrt coefficient) and `mastery_offset` (additive constant clamped to 1.0) in `config.ts`. Completion tracking lives in `src/lib/state/mastery.svelte.ts`. To link upgraded actions to a shared mastery track, set `mastery_id` on the `ActionDef`.
+
+### Add/edit dream upgrades
+
+Upgrade definitions: `src/lib/data/dreams/dream_upgrade_table.ts`. State manager: `src/lib/state/dreams.svelte.ts`. To add a new upgrade, append a `DreamUpgradeDef` to `ALL_DREAM_UPGRADES` and add the corresponding bonus getter + integration in the state manager.

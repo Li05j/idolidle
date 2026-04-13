@@ -28,8 +28,9 @@ function getLocationDuration(base_time: number): number {
 }
 
 function getActionDuration(base_time: number, mastery_id: string, kind: ActionDef['kind']): number {
+    const mastery = kind === 'training' ? Mastery.factor(mastery_id) : 1;
     const dream_mult = kind === 'training' ? Dreams.training_time_mult : Dreams.earning_time_mult;
-    return Math.max(base_time * Mastery.factor(mastery_id) * dream_mult * CFG.time_scale, CFG.min_action_time);
+    return Math.max(base_time * mastery * dream_mult * CFG.time_scale, CFG.min_action_time);
 }
 
 export class TodoCardVM {
