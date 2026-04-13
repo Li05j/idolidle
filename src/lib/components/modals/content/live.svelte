@@ -5,6 +5,8 @@
     import { LiveInfo } from "$lib/runtime/live_rival_info.svelte";
     import { DEV } from "$lib/config";
     import { LiveVM } from "./live.svelte.ts";
+    import Equipment from "./equipment.svelte";
+    import { ModalM } from "$lib/runtime/modal_manager.svelte";
 
     let { onClose } = $props();
 
@@ -51,7 +53,10 @@
 
         <p class="text-lg font-bold text-[var(--text-primary)] text-center">{LiveInfo.condition_text}</p>
 
-        <GenericButton name={"Start Battle!"} onclick={() => vm.startBattle()} variant='primary' class={"px-8 py-3 text-lg"}/>
+        <div class="flex gap-3">
+            <GenericButton name={"Manage Equipment"} onclick={() => ModalM.open({ component: Equipment, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>
+            <GenericButton name={"Start Battle!"} onclick={() => vm.startBattle()} variant='primary' class={"px-8 py-3 text-lg"}/>
+        </div>
     </div>
 
 {:else}

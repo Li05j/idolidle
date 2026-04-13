@@ -9,9 +9,9 @@ export const EQUIP_CONFIG = {
     rarity_color: { N: '#8C7A7D', R: '#16a34a', SR: '#9333ea', UR: '#dc2626' } as Record<Rarity, string>,
     dupe_exp: { N: 1, R: 5, SR: 10, UR: 20 } as Record<Rarity, number>,
     exp_per_level: 10,
-    level_cap: 20,
+    level_cap: 5,
     rarity_weights: { N: 0.88, R: 0.10, SR: 0.018, UR: 0.002 } as Record<Rarity, number>,
-    level_bonus_per_level: 0.1,
+    level_bonus_per_level: 0.2,
 };
 
 export type EquipStatBonus = {

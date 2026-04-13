@@ -8,7 +8,7 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         slot: 'shoes',
         desc: "Worn-out slippers from home. They remind you to take it easy sometimes.",
         stat_bonuses: [
-            { stat: 'Stamina', base_value: 0.5, target: 'base' },
+            { stat: 'Stamina', base_value: 5.0, target: 'base' },
         ],
         skill: {
             name: 'Go-Home Club',
@@ -28,8 +28,8 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         slot: 'hat',
         desc: "A weathered cap from your street performing days. It still smells like loose change and determination.",
         stat_bonuses: [
-            { stat: 'Haste', base_value: 0.3, target: 'base' },
-            { stat: 'Charm', base_value: 0.3, target: 'base' },
+            { stat: 'Sing', base_value: 1.5, target: 'base' },
+            { stat: 'Dance', base_value: 1.5, target: 'base' },
         ],
         skill: {
             name: 'Underdog',
@@ -52,8 +52,8 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         slot: 'accessory',
         desc: "The first mic you ever used on a real stage. It crackles sometimes, but the memories are crystal clear.",
         stat_bonuses: [
-            { stat: 'Sing', base_value: 0.5, target: 'base' },
-            { stat: 'Presence', base_value: 0.3, target: 'base' },
+            { stat: 'Sing', base_value: 5.0, target: 'base' },
+            { stat: 'Presence', base_value: 2.5, target: 'base' },
         ],
         skill: {
             name: 'Idol Executive',
@@ -75,8 +75,10 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         slot: 'accessory',
         desc: "Studious and stylish. They make you look like you know what you're doing (you don't, but they don't know that).",
         stat_bonuses: [
-            { stat: 'Dance', base_value: 0.3, target: 'base' },
-            { stat: 'Charm', base_value: 0.3, target: 'base' },
+            { stat: 'Sing', base_value: 1.5, target: 'base' },
+            { stat: 'Dance', base_value: 1.5, target: 'base' },
+            { stat: 'Charm', base_value: 1.5, target: 'base' },
+            { stat: 'Presence', base_value: 1.5, target: 'base' },
         ],
         skill: {
             name: 'Good Student',
@@ -98,8 +100,8 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         slot: 'top',
         desc: "Flashy, expensive, and turns heads. Exactly what an idol needs to make a statement before the show even starts.",
         stat_bonuses: [
-            { stat: 'Charm', base_value: 0.5, target: 'base' },
-            { stat: 'Presence', base_value: 0.3, target: 'base' },
+            { stat: 'Moni', base_value: 0.02, target: 'multi' },
+            { stat: 'Presence', base_value: 3.0, target: 'base' },
         ],
         skill: {
             name: 'Flashy Outfit',
@@ -123,7 +125,7 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         desc: "Light, breathable, and somehow always in the laundry when you need them.",
         stat_bonuses: [
             { stat: 'Stamina', base_value: 0.5, target: 'base' },
-            { stat: 'Haste', base_value: 0.3, target: 'base' },
+            { stat: 'Haste', base_value: 7.5, target: 'base' },
         ],
     },
 
@@ -134,8 +136,8 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         slot: 'hat',
         desc: "Nya~ It's embarrassing, but the fans absolutely love it. Meow.",
         stat_bonuses: [
-            { stat: 'Charm', base_value: 0.5, target: 'base' },
-            { stat: 'Dance', base_value: 0.2, target: 'base' },
+            { stat: 'Charm', base_value: 5.0, target: 'base' },
+            { stat: 'Dance', base_value: 1.0, target: 'base' },
         ],
         skill: {
             name: 'Moe Kyun~!',
