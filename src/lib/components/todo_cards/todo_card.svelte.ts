@@ -78,7 +78,7 @@ export class TodoCardVM {
     get mastery_id(): string {
         if (this.is_location) return this.locationName;
         const def = this.actionDef;
-        return def?.mastery_id ?? def?.name ?? this.actionName!;
+        return def?.mastery_id?.name ?? def?.name ?? this.actionName!;
     }
 
     constructor(locationName: string, actionName?: string) {

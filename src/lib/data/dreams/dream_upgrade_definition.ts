@@ -9,7 +9,7 @@ export type DreamUpgradeDef = {
     max_level: number;
     effect_per_level: number;
     base_cost: number;
-    cost_scaling?: number; // default 1.25
+    cost_scaling?: number;
     category: DreamUpgradeCategory;
     stat?: BasicStats;
 };

@@ -1,16 +1,10 @@
 import { CFG } from '$lib/config';
-
-type CheckpointDef = { time: number; multi: number };
+import { CHECKPOINTS } from '$lib/data/checkpoints';
+import type { RivalTemplate } from '$lib/data/checkpoints';
 
 class Checkpoints {
 	public current_time_spent = $state(0)
 
-	private _defs: CheckpointDef[] = $state([
-		{ time: 1000,     multi: 1.0 },
-		{ time: 2500,     multi: 1.0 },
-		{ time: 4000,     multi: 1.0 },
-		{ time: Infinity, multi: 1.0 },
-	])
 	private _idx = $state(0)
 	private _last_triggered = $state(-1)
 
@@ -19,15 +13,16 @@ class Checkpoints {
 	}
 
 	get current_multi() {
-		return this._defs[this._idx].multi
-	}
-
-	setMulti(idx: number, val: number) {
-		if (this._defs[idx]) this._defs[idx].multi = val
+		return CHECKPOINTS[this._idx].multi
 	}
 
 	get current_total_time() {
-		return this._defs[this._idx].time * CFG.time_scale * this._defs[this._idx].multi
+		const cp = CHECKPOINTS[this._idx];
+		return cp.time * CFG.time_scale * cp.multi
+	}
+
+	get_rival_template(idx: number): RivalTemplate | undefined {
+		return CHECKPOINTS[idx]?.rival;
 	}
 
 	readonly shouldTrigger = $derived(
@@ -40,7 +35,7 @@ class Checkpoints {
 	}
 
 	advanceToNextCheckpoint() {
-		if (this._idx < this._defs.length - 1) {
+		if (this._idx < CHECKPOINTS.length - 1) {
 			this._idx++
 			this.current_time_spent = 0
 		}

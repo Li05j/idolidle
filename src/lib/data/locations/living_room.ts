@@ -1,8 +1,28 @@
 import { history } from '$lib/state/history.svelte';
-import type { LocationDef } from './location_definition';
+import type { ActionDef, LocationDef } from './location_definition';
 import { park } from './park';
 import { school } from './school';
 import { upgrade_living_room } from './mall';
+
+const singing_practice: ActionDef = {
+    name: 'Singing Practice',
+    kind: 'training',
+    base_time: 5,
+    desc: "Your voice cracks. Your cat weeps. But somewhere in the noise, a star might be warming up.",
+    rewards: [
+        { which_stat: "Sing", target: 'base', amount: 0.5 },
+    ],
+};
+
+const dancing_practice: ActionDef = {
+    name: 'Dancing Practice',
+    kind: 'training',
+    base_time: 5,
+    desc: "Limbs flail, rhythm fails, and then you trip yourself. Maybe the floor just hates you.",
+    rewards: [
+        { which_stat: "Dance", target: 'base', amount: 0.5 },
+    ],
+};
 
 export const living_room: LocationDef = {
     name: 'Living Room',
@@ -17,28 +37,7 @@ export const living_room: LocationDef = {
         table: [{ equip_id: 'comfy_slippers', weight: 1 }],
     },
     unlocks: () => [park, school],
-    actions: [
-        {
-            name: 'Singing Practice',
-            kind: 'training',
-            base_time: 5,
-            desc: "Your voice cracks. Your cat weeps. But somewhere in the noise, a star might be warming up.",
-            rewards: [
-                { which_stat: "Sing", target: 'base', amount: 0.5 },
-            ],
-
-        },
-        {
-            name: 'Dancing Practice',
-            kind: 'training',
-            base_time: 5,
-            desc: "Limbs flail, rhythm fails, and then you trip yourself. Maybe the floor just hates you.",
-            rewards: [
-                { which_stat: "Dance", target: 'base', amount: 0.5 },
-            ],
-
-        },
-    ],
+    actions: [singing_practice, dancing_practice],
     upgrades: [
         {
             trigger: upgrade_living_room,
@@ -46,7 +45,7 @@ export const living_room: LocationDef = {
             add_actions: [
                 {
                     name: 'Singing Practice+',
-                    mastery_id: 'Singing Practice',
+                    mastery_id: singing_practice,
                     kind: 'training',
                     base_time: 30,
                     desc: "At least your cat won't faint anymore, that's what we call improvement.",
@@ -54,11 +53,10 @@ export const living_room: LocationDef = {
                         { which_stat: "Stamina", target: 'base', amount: 0.5 },
                         { which_stat: "Sing", target: 'base', amount: 5 },
                     ],
-
                 },
                 {
                     name: 'Dancing Practice+',
-                    mastery_id: 'Dancing Practice',
+                    mastery_id: dancing_practice,
                     kind: 'training',
                     base_time: 30,
                     desc: "No more kisses with the floor you just mopped. More calm, more peace. Going with the flow.",
@@ -66,7 +64,6 @@ export const living_room: LocationDef = {
                         { which_stat: "Stamina", target: 'base', amount: 0.5 },
                         { which_stat: "Dance", target: 'base', amount: 5 },
                     ],
-
                 },
             ],
             on_trigger: () => {

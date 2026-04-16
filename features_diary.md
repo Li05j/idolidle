@@ -20,7 +20,7 @@ Fans, Moni, Stamina, Haste, Sing, Dance, Charm, Presence. Each has base/multi co
 
 Turn-based simulation. Haste determines turn order. Attacks poach Fans from the defender; battle ends when either side hits 0 Fans or both exhaust Stamina. The fight is pre-computed then replayed turn-by-turn in the UI. Rival stats are generated from templates per checkpoint.
 
-Battle logic: `src/lib/state/live.svelte.ts`. Rival templates: `src/lib/data/rival_stats.ts`.
+Battle logic: `src/lib/state/live.svelte.ts`. Rival templates live inline on each `CheckpointDef` in `src/lib/data/checkpoints.ts`.
 
 ## Skills
 
@@ -34,11 +34,11 @@ Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `e
 
 ## Checkpoints
 
-The checkpoint bar fills while actions run. Each checkpoint maps 1:1 to a rival template. Defined in `src/lib/state/checkpoints.svelte.ts`; rival templates in `src/lib/data/rival_stats.ts`.
+The checkpoint bar fills while actions run. Each checkpoint carries its own rival template inline (terminal checkpoint omits `rival`). Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
 
 ## Action Mastery
 
-Actions track total completions across all rebirths. More completions = shorter action time (diminishing returns). Upgraded actions can share a mastery track via `mastery_id`. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.
+Actions track total completions across all rebirths. More completions = shorter action time (diminishing returns). Upgraded actions can share a mastery track by setting `mastery_id` to the base `ActionDef` ref. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.
 
 ## Rebirth
 
@@ -68,7 +68,7 @@ Upgrades reference their trigger by **object ref**, not name: extract the action
 
 ### Add a checkpoint
 
-Two files, matched by array index: add `{ time, multi }` to `checkpoints.svelte.ts` and a corresponding `RivalTemplate` to `rival_stats.ts`.
+Append a `CheckpointDef` to `CHECKPOINTS` in `src/lib/data/checkpoints.ts`. Include an inline `rival: RivalTemplate` for battle checkpoints; omit for terminal.
 
 ### Add equipment
 
@@ -77,4 +77,4 @@ Two files, matched by array index: add `{ time, multi }` to `checkpoints.svelte.
 
 ### Add a dream upgrade
 
-Append a `DreamUpgradeDef` to `ALL_DREAM_UPGRADES` in `src/lib/data/dreams/dream_upgrade_table.ts` and wire up the bonus in `src/lib/state/dreams.svelte.ts`.
+Append a `DreamUpgradeDef` to `ALL_DREAM_UPGRADES` in `src/lib/data/dreams/dream_upgrade_table.ts`. The math shape is driven by `category` (see `MATH`/`FORMAT` tables in `src/lib/state/dreams.svelte.ts`). For a new existing-category upgrade: add a named getter delegating to `Dreams.value(id)`. For a new category: add an entry to `DreamUpgradeCategory` plus `MATH` and `FORMAT`.

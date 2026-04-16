@@ -1,8 +1,8 @@
-import type { LiveBattleStats } from "$lib/types";
+import type { LiveBattleStats } from '$lib/types';
 
 type StatRange = [number, number];
 
-type RivalTemplate = {
+export type RivalTemplate = {
     fans: StatRange;
     stamina: StatRange;
     haste: StatRange;
@@ -10,6 +10,13 @@ type RivalTemplate = {
     dance: StatRange;
     charm: StatRange;
     presence: StatRange;
+};
+
+export type CheckpointDef = {
+    time: number;
+    multi: number;
+    /** Omit for terminal checkpoints (no LIVE battle). */
+    rival?: RivalTemplate;
 };
 
 const BASE: RivalTemplate = {
@@ -34,10 +41,11 @@ function scaleTemplate(base: RivalTemplate, multi: number, fanMulti: number = mu
     };
 }
 
-export const RIVAL_TEMPLATES: RivalTemplate[] = [
-    BASE,
-    scaleTemplate(BASE, 5, 6),
-    scaleTemplate(BASE, 12, 14),
+export const CHECKPOINTS: CheckpointDef[] = [
+    { time: 1000,     multi: 1.0, rival: BASE },
+    { time: 2500,     multi: 1.0, rival: scaleTemplate(BASE, 5, 6) },
+    { time: 4000,     multi: 1.0, rival: scaleTemplate(BASE, 12, 14) },
+    { time: Infinity, multi: 1.0 },
 ];
 
 const MIN_STAT_PERCENT = 0.5;

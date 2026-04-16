@@ -9,7 +9,7 @@ export type ActionDef = {
     base_time: number;
     kind: ActionKind;
     uses?: number;
-    mastery_id?: string;
+    mastery_id?: ActionDef;
 
     rewards: Reward[];
     costs?: { stat: BasicStats; amount: number }[];

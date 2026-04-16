@@ -1,16 +1,20 @@
 import type { LiveBattleStats } from "$lib/types";
-import { RIVAL_TEMPLATES, generateRivalStats } from "$lib/data/rival_stats";
+import { CHECKPOINTS, generateRivalStats } from "$lib/data/checkpoints";
 
 function emptyStats(): LiveBattleStats {
     return { Fans: 1, Max_Stamina: 1, Curr_Stamina: 1, Haste: 1, Sing: 1, Dance: 1, Charm: 1, Presence: 1 };
 }
 
+function rerollPreviews(): (LiveBattleStats | null)[] {
+    return CHECKPOINTS.map(c => c.rival ? generateRivalStats(c.rival) : null);
+}
+
 class RivalStats {
-    private _previews: LiveBattleStats[] = RIVAL_TEMPLATES.map(generateRivalStats);
+    private _previews: (LiveBattleStats | null)[] = rerollPreviews();
     public battle: LiveBattleStats = emptyStats();
 
     preview(checkpoint: number): LiveBattleStats {
-        return this._previews[checkpoint] ?? this._previews[0];
+        return this._previews[checkpoint] ?? this._previews.find(p => p !== null) ?? emptyStats();
     }
 
     initForBattle(checkpoint: number) {
@@ -18,7 +22,7 @@ class RivalStats {
     }
 
     reroll() {
-        this._previews = RIVAL_TEMPLATES.map(generateRivalStats);
+        this._previews = rerollPreviews();
     }
 }
 

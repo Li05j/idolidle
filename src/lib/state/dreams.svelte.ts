@@ -1,7 +1,21 @@
 import { DREAM_REGISTRY, ALL_DREAM_UPGRADES, upgrade_cost } from '$lib/data/dreams';
-import type { DreamUpgradeDef } from '$lib/data/dreams';
+import type { DreamUpgradeDef, DreamUpgradeCategory } from '$lib/data/dreams';
 import { Rebirth } from '$lib/state/rebirth.svelte';
 import type { BasicStats } from '$lib/types';
+
+const MATH: Record<DreamUpgradeCategory, (per_level: number, lvl: number) => number> = {
+    time_reduction: (p, l) => (1 - p) ** l,
+    stat_base:      (p, l) => p * l,
+    stat_multi:     (p, l) => p * l,
+    equip_drop:     (p, l) => (1 + p) ** l,
+};
+
+const FORMAT: Record<DreamUpgradeCategory, (value: number) => string> = {
+    time_reduction: v => `-${((1 - v) * 100).toFixed(1)}%`,
+    stat_base:      v => `+${v.toFixed(1)}`,
+    stat_multi:     v => `+${v.toFixed(2)}`,
+    equip_drop:     v => `x${v.toFixed(2)}`,
+};
 
 class DreamUpgradeState {
     private _levels: Record<string, number> = $state(
@@ -32,50 +46,31 @@ class DreamUpgradeState {
         return true;
     }
 
-    // --- Computed bonuses ---
-
-    get location_time_mult(): number {
-        return (1 - 0.01) ** this.level('time_location');
+    /** Compute the current effective value for an upgrade from its category + level. */
+    value(id: string): number {
+        const def = DREAM_REGISTRY.get(id)!;
+        return MATH[def.category](def.effect_per_level, this.level(id));
     }
 
-    get training_time_mult(): number {
-        return (1 - 0.01) ** this.level('time_training');
-    }
+    // --- Named getters ---
 
-    get earning_time_mult(): number {
-        return (1 - 0.01) ** this.level('time_earning');
-    }
+    get location_time_mult(): number { return this.value('time_location'); }
+    get training_time_mult(): number { return this.value('time_training'); }
+    get earning_time_mult(): number  { return this.value('time_earning'); }
+    get equip_drop_mult(): number    { return this.value('equip_drop_rate'); }
 
     stat_base_bonus(stat: BasicStats): number {
-        return 2.0 * this.level(`base_${stat.toLowerCase()}`);
+        return this.value(`base_${stat.toLowerCase()}`);
     }
 
     stat_multi_bonus(stat: BasicStats): number {
-        return 0.01 * this.level(`multi_${stat.toLowerCase()}`);
-    }
-
-    get equip_drop_mult(): number {
-        return 1.1 ** this.level('equip_drop_rate');
+        return this.value(`multi_${stat.toLowerCase()}`);
     }
 
     /** Format current effect for display */
     effect_text(def: DreamUpgradeDef): string {
-        const lvl = this.level(def.id);
-        if (lvl === 0) return 'None';
-        switch (def.category) {
-            case 'time_reduction': {
-                const pct = (1 - (1 - def.effect_per_level) ** lvl) * 100;
-                return `-${pct.toFixed(1)}%`;
-            }
-            case 'stat_base':
-                return `+${(def.effect_per_level * lvl).toFixed(1)}`;
-            case 'stat_multi':
-                return `+${(def.effect_per_level * lvl).toFixed(2)}`;
-            case 'equip_drop': {
-                const mult = (1 + def.effect_per_level) ** lvl;
-                return `x${mult.toFixed(2)}`;
-            }
-        }
+        if (this.level(def.id) === 0) return 'None';
+        return FORMAT[def.category](this.value(def.id));
     }
 }
 
