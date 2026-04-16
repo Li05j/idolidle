@@ -8,116 +8,72 @@ Complete **locations** to unlock new areas with **actions**. Actions run on time
 
 ## Locations & Actions
 
-Locations unlock sequentially via each location's `unlocks` list. Arriving at a location grants its rewards (typically Stamina) and reveals its actions. Some locations have prerequisites (stat thresholds).
+Locations unlock sequentially; some have stat prerequisites. Actions come in three kinds: **training** (stat gains), **earning** (Moni income, scales with stats), and **spending** (costs Moni). Some actions are **one-off** — they disappear after completion and can trigger **upgrades** that swap/add/remove actions. Eureka events give random bonus procs on completion.
 
-Actions come in three kinds:
-- **training** — stat gains.
-- **earning** — Moni income. All earners scale via `depends`/`efficiency` (sublinear power curves: v_slow ^0.4 through v_fast ^0.92). Later earners have better tiers and outscale early ones at high stats.
-- **spending** — costs Moni.
-
-Some actions are **one-off** (`uses: 1`) — they disappear after completion and can trigger **upgrades** (swap/add/remove actions in that location). Eureka events (`on_complete`) give random bonus procs.
+Location definitions: `src/lib/data/locations/`. See `park.ts` for a minimal example, `school.ts` for upgrades.
 
 ## Stats
 
-Fans, Moni, Stamina, Haste, Sing, Dance, Charm, Presence. Each has a `base` and `multi`; final = base × multi.
-
-Canonical gain rates per second at 1.0x value: Stamina 0.05/s, Fans 0.1/s, Moni 0.3/s, all others 0.1/s. An action's **value** = `sum(reward / rate) / base_time`. Defined in `BASE_RATE` in `config.ts`.
+Fans, Moni, Stamina, Haste, Sing, Dance, Charm, Presence. Each has base/multi components; equipment bonuses add into each. See `createStat` in `src/lib/state/stats.svelte.ts`.
 
 ## LIVE Battles
 
-Turn-based simulation. Timeline order is determined by Haste. Each turn one side attacks (Sing vs Charm or Dance vs Presence, randomly chosen). Damage poaches Fans from the defender. Stamina drains per attack; low Stamina weakens defense. Battle ends when either side hits 0 Fans or both run out of Stamina. The fight is pre-computed then replayed turn-by-turn in the UI.
+Turn-based simulation. Haste determines turn order. Attacks poach Fans from the defender; battle ends when either side hits 0 Fans or both exhaust Stamina. The fight is pre-computed then replayed turn-by-turn in the UI. Rival stats are generated from templates per checkpoint.
 
-Rival stats are generated from `RivalTemplate` ranges per checkpoint, with a minimum-stat-sum floor to prevent pushover rolls.
+Battle logic: `src/lib/state/live.svelte.ts`. Rival templates: `src/lib/data/rival_stats.ts`.
 
 ## Skills
 
-Defined in `src/lib/state/skills.svelte.ts`. Each skill has a trigger timing (`live_start`, `turn_start`, `before_taking_dmg`), a proc chance, and condition/effect descriptions. Skills are unlocked by performing specific actions. On rebirth, all skills reset to unlearned.
+Each skill has a trigger timing, proc chance, and conditions. Unlocked by performing specific actions. Reset on rebirth. Defined in `src/lib/state/skills.svelte.ts`.
 
 ## Equipment
 
-Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory), stat bonuses, and optionally a battle skill. On drop, rarity is rolled (N/R/SR/UR) — higher rarity multiplies stat bonuses. Duplicates grant EXP toward leveling (logged in history); a dupe with higher rarity upgrades the item's rarity instead. Leveling adds 10% bonus per level. Six equip slots: hat, top, bottom, shoes, accessory ×2.
+Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory), stat bonuses, and optionally a battle skill. Rarity is rolled on drop (N/R/SR/UR). Duplicates grant EXP toward leveling; a higher-rarity dupe upgrades rarity instead. Equipment resets on rebirth, but the **Codex** tracks all-time collection history.
 
-Global tuning (rarity weights, stat multipliers, leveling curve) lives in `EQUIP_CONFIG` in `src/lib/data/equipment/equipment_definition.ts`. Per-action drop chances are defined inline on each action's `equip_drops` field in the location files.
-
-Some equipment grants a passive skill that triggers during LIVE battles (e.g. restore stamina, steal extra fans, reduce damage).
-
-Equipment resets on rebirth — inventory and equipped items are cleared. However, the game tracks which equipment has ever been obtained across all runs.
-
-The equipment panel shows equipped slots (left) and inventory (right) at the top. Selecting any item reveals its detail — stats, EXP progress, skill info, and an equip/unequip button. With nothing selected, the bottom panel summarizes total equipment bonuses and active skills.
-
-A **Codex** toggle in the inventory header switches to a grid view of all possible equipment. Items obtained this run show in full color, items from previous runs appear greyed out, and never-obtained items show as "???". Selecting a known item shows its details including drop location. A "Hide Unlocked" filter hides current-run items from the codex.
+Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `equipment_definition.ts`. Drop tables: `equip_drops` field on actions in location files.
 
 ## Checkpoints
 
-Defined as `{ time, multi }` entries in `src/lib/state/checkpoints.svelte.ts`. The checkpoint bar fills while actions are running. Each checkpoint corresponds 1:1 to a rival template in `src/lib/data/rival_stats.ts`.
+The checkpoint bar fills while actions run. Each checkpoint maps 1:1 to a rival template. Defined in `src/lib/state/checkpoints.svelte.ts`; rival templates in `src/lib/data/rival_stats.ts`.
 
 ## Action Mastery
 
-Each action tracks total completions across all rebirths. More completions = shorter action time via a diminishing-returns curve: `min(1, 1/(1 + rate * sqrt(completions)) + offset)`. The offset creates a dead zone where early completions have no effect; the sqrt provides a gentler ramp than log. Action timers are reactive — mastery gains apply immediately to subsequent loops. Upgraded actions can share a mastery track via `mastery_id` (e.g. "Singing Practice+" shares mastery with "Singing Practice"). Mastery info shows on card hover.
+Actions track total completions across all rebirths. More completions = shorter action time (diminishing returns). Upgraded actions can share a mastery track via `mastery_id`. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.
 
 ## Rebirth
 
-After a LIVE, you can "dream" (rebirth). This resets all progress but permanently carries over a portion of your current stats as base/multi bonuses. The multi carry-over is capped proportionally to your furthest completed checkpoint. Ratios are configured in `RebirthStats` (`BASE_RATIO`, `MULTI_RATIO`).
+After a LIVE, you can "dream" (rebirth). Resets progress but permanently carries over a portion of current stats as base/multi bonuses. Multi carry-over is capped by furthest checkpoint reached. Logic in `src/lib/state/rebirth.svelte.ts`.
 
-**Dream Points** are awarded only on rebirth, from two sources:
-- **Equipment**: each equip obtain during the run (new, upgrade, or dupe) accumulates dream points equal to the rarity's EXP value (N=1, R=5, SR=10, UR=20), awarded in bulk on rebirth.
-- **Checkpoints**: each rebirth awards `1 + sum(base^i, i=1..CPs_completed)` dream points, where `base` is `checkpoint_dp_base` in config (default 2). E.g. 0 CPs → 1, 1 CP → 3, 2 CPs → 7, 3 CPs → 15.
+**Dream Points** are awarded on rebirth from two sources: equipment obtained during the run, and checkpoints completed.
 
 ## Dream Upgrades
 
-Spend dream points on permanent upgrades in the Dreams tab of Detailed Stats. Upgrades persist across rebirths and all bonuses are multiplicative.
-
-- **Time reductions** (max 50 each): reduce location, training, or earning/spending card base time by 1% per level (0.99^level).
-- **Initial base stats** (max 50 each): +2.0 initial base per level for each of the 8 stats, applied on rebirth.
-- **Initial stat multipliers** (max 50 each): +0.01 initial multi per level for each of the 8 stats, applied on rebirth.
-- **Equipment drop rate** (max 10): +10% multiplicative per level (1.1^level).
-
-Cost per level: `floor(base_cost × 1.25^current_level)`. Each upgrade can override the scaling factor. Upgrade definitions live in `src/lib/data/dreams/`.
+Spend dream points on permanent upgrades (persist across rebirths): time reductions, initial stat bonuses, equipment drop rate. Upgrade definitions: `src/lib/data/dreams/`. State: `src/lib/state/dreams.svelte.ts`.
 
 ---
 
-## Contributor Guide: How to Extend
+## Contributor Guide
 
-### Add a new location
+### Add a location
 
-1. Create `src/lib/data/locations/<name>.ts` — export a `LocationDef` (see `park.ts` for a minimal example, `school.ts` for upgrades).
-2. Register it in `src/lib/data/locations/index.ts` — add to `allLocations`.
-3. Add the location name to an existing location's `unlocks` array so the progression chain reaches it.
+1. Create `src/lib/data/locations/<name>.ts` — export a `LocationDef`.
+2. Register in `src/lib/data/locations/index.ts`.
+3. Add to an existing location's `unlocks` array.
 
-### Add a new action to an existing location
+### Add an action
 
-Single-file edit: append to the `actions` array in that location's file. For actions unlocked by an upgrade, add them inside an `UpgradeDef` in the `upgrades` array instead.
+Append to the `actions` array in a location file. For upgrade-gated actions, add inside an `UpgradeDef` in the `upgrades` array.
 
-### Add a new checkpoint
+### Add a checkpoint
 
-Two files, matched by array index:
-1. `src/lib/state/checkpoints.svelte.ts` — add a `{ time, multi }` entry to `_defs`.
-2. `src/lib/data/rival_stats.ts` — add a corresponding `RivalTemplate` to `RIVAL_TEMPLATES` (use `scaleTemplate` or define manually).
+Two files, matched by array index: add `{ time, multi }` to `checkpoints.svelte.ts` and a corresponding `RivalTemplate` to `rival_stats.ts`.
 
-### Edit rival stats
+### Add equipment
 
-Single file: `src/lib/data/rival_stats.ts`. Edit `BASE` template ranges or adjust `scaleTemplate` multipliers in `RIVAL_TEMPLATES`.
+1. Define in `src/lib/data/equipment/<location>_equipment.ts`.
+2. Register in `src/lib/data/equipment/index.ts`.
+3. Add to an action's `equip_drops` in the location file.
 
-### Edit rebirth bonuses
+### Add a dream upgrade
 
-Single file: `src/lib/state/rebirth.svelte.ts`. Adjust `BASE_RATIO`, `MULTI_RATIO`, carry-over logic in `inherit_stats()`.
-
-### Add new equipment
-
-1. Define the item in `src/lib/data/equipment/<location>_equipment.ts` — export an `EquipDef` with slot, stat bonuses, and optional skill.
-2. Register it in `src/lib/data/equipment/index.ts`.
-3. Add it to an action's `equip_drops` table in the relevant location file (`{ chance, table: [{ equip_id, weight }] }`).
-
-### Edit equipment rates / stats
-
-- **Global rarity weights, stat multipliers, leveling**: `EQUIP_CONFIG` in `src/lib/data/equipment/equipment_definition.ts`.
-- **Per-action drop chance**: `equip_drops.chance` on the action in its location file.
-- **Per-item stat bonuses**: `stat_bonuses` in the item's definition file.
-
-### Edit mastery curve
-
-Mastery curve is `mastery_rate` (sqrt coefficient) and `mastery_offset` (additive constant clamped to 1.0) in `config.ts`. Completion tracking lives in `src/lib/state/mastery.svelte.ts`. To link upgraded actions to a shared mastery track, set `mastery_id` on the `ActionDef`.
-
-### Add/edit dream upgrades
-
-Upgrade definitions: `src/lib/data/dreams/dream_upgrade_table.ts`. State manager: `src/lib/state/dreams.svelte.ts`. To add a new upgrade, append a `DreamUpgradeDef` to `ALL_DREAM_UPGRADES` and add the corresponding bonus getter + integration in the state manager.
+Append a `DreamUpgradeDef` to `ALL_DREAM_UPGRADES` in `src/lib/data/dreams/dream_upgrade_table.ts` and wire up the bonus in `src/lib/state/dreams.svelte.ts`.
