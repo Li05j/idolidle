@@ -1,8 +1,7 @@
 import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
-import type { LocationDef } from './location_definition';
-import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
+import type { ActionDef, LocationDef } from './location_definition';
 
 const MAID_INTERVIEW_COST = { fans: 150, charm: 75 };
 
@@ -20,44 +19,49 @@ function extra_maid_part_time() {
     }
 }
 
+const maid_interview: ActionDef = {
+    name: 'Maid Interview',
+    kind: 'training',
+    base_time: 30,
+    no_drops: true,
+    desc: "So you want to be a maid? Prove your Charm.",
+    rewards: [
+        { which_stat: "Presence", target: 'base', amount: 3.0 },
+    ],
+    uses: 1,
+    requires: {
+        text: `Fans ≥ ${MAID_INTERVIEW_COST.fans}, Charm ≥ ${MAID_INTERVIEW_COST.charm}`,
+        check: () => stat_list.Fans.final < MAID_INTERVIEW_COST.fans || stat_list.Charm.final < MAID_INTERVIEW_COST.charm,
+    },
+    on_complete: {
+        fn: () => {},
+        hint: "Unlocks more options in Maid Cafe.",
+    },
+};
+
 export const maid_cafe: LocationDef = {
     name: 'Maid Cafe',
     base_time: 300,
     desc: "\"Can I work as a waitress - wait, cat ears? Why? I guess it is kinda cute...?\"",
     hint: "During LIVE, you consume Stamina for each move you perform. However, your Fans will also be more easily swayed by Rival if your are running out of Stamina.",
     rewards: [
-        { which_stat: "Stamina", flat_gain_base: 15 },
+        { which_stat: "Stamina", target: 'base', amount: 15 },
     ],
-    equip_drops: LOCATION_DROPS['Maid Cafe'],
-    unlocks: [],
+    equip_drops: {
+        chance: 0.04,
+        table: [{ equip_id: 'cat_ear_headband', weight: 1 }],
+    },
+    unlocks: () => [],
     actions: [
-        {
-            name: 'Maid Interview',
-            kind: 'training',
-            base_time: 30,
-            no_drops: true,
-            desc: "So you want to be a maid? Prove your Charm.",
-            rewards: [
-                { which_stat: "Presence", flat_gain_base: 3.0 },
-            ],
-            uses: 1,
-            requires: {
-                text: `Fans ≥ ${MAID_INTERVIEW_COST.fans}, Charm ≥ ${MAID_INTERVIEW_COST.charm}`,
-                check: () => stat_list.Fans.final < MAID_INTERVIEW_COST.fans || stat_list.Charm.final < MAID_INTERVIEW_COST.charm,
-            },
-            on_complete: {
-                fn: () => {},
-                hint: "Unlocks more options in Maid Cafe.",
-            },
-        },
+        maid_interview,
         {
             name: 'Chant Moe Magic',
             kind: 'training',
             base_time: 25,
             desc: "Otaku dances aren't real dances, but it sure is cute and lovely. And cute. And lovely~ Look at all these Otakus fawning at you, you could even start a cult at this rate.",
             rewards: [
-                { which_stat: "Dance", flat_gain_base: 0.5 },
-                { which_stat: "Charm", flat_gain_base: 2.0 },
+                { which_stat: "Dance", target: 'base', amount: 0.5 },
+                { which_stat: "Charm", target: 'base', amount: 2.0 },
             ],
             on_complete: {
                 fn: extra_moe_magic,
@@ -67,7 +71,7 @@ export const maid_cafe: LocationDef = {
     ],
     upgrades: [
         {
-            trigger_action: 'Maid Interview',
+            trigger: maid_interview,
             add_actions: [
                 {
                     name: 'New Hire Bonus!',
@@ -76,8 +80,8 @@ export const maid_cafe: LocationDef = {
                     no_drops: true,
                     desc: "New maid, new Idol life.",
                     rewards: [
-                        { which_stat: "Charm", flat_gain_multi: 0.02 },
-                        { which_stat: "Presence", flat_gain_multi: 0.02 },
+                        { which_stat: "Charm", target: 'multi', amount: 0.02 },
+                        { which_stat: "Presence", target: 'multi', amount: 0.02 },
                     ],
                     uses: 1,
                 },
@@ -87,12 +91,15 @@ export const maid_cafe: LocationDef = {
                     base_time: 45,
                     desc: "\"Moe Moe Kyun Moe Moe Kyun Moe Moe Kyun Oishikuna-re~!!\"",
                     rewards: [
-                        { which_stat: "Presence", flat_gain_base: 3.5 },
+                        { which_stat: "Presence", target: 'base', amount: 3.5 },
                         {
                             which_stat: "Moni",
-                            flat_gain_base: 9,
-                            depends: [{ which_stat: "Charm", effectiveness: 1.2 }],
-                            efficiency: "slow",
+                            target: 'base',
+                            amount: 9,
+                            scaling: {
+                                sources: [{ which_stat: "Charm", effectiveness: 1.2 }],
+                                efficiency: "slow",
+                            },
                         },
                     ],
                     on_complete: {
@@ -104,9 +111,6 @@ export const maid_cafe: LocationDef = {
             on_trigger: () => {
                 history.addSystemLog('You are now a Maid!');
             },
-        },
-        {
-            trigger_action: 'New Hire Bonus!',
         },
     ],
 };

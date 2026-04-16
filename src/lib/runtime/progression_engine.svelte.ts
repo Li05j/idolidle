@@ -1,6 +1,6 @@
 import { TD_List_Tracker } from '$lib/state/todos_list_tracker.svelte';
-import { locationMap } from '$lib/data/locations/index';
-import type { ActionDef } from '$lib/data/locations/location_definition';
+import { locationMap, allLocations } from '$lib/data/locations/index';
+import type { ActionDef, LocationDef, UpgradeDef } from '$lib/data/locations/location_definition';
 
 class ProgressionEngine {
     onLocationArrived(locationName: string) {
@@ -20,47 +20,38 @@ class ProgressionEngine {
             ]);
         }
 
-        for (const unlockName of def.unlocks) {
-            if (locationMap.has(unlockName)) {
-                TD_List_Tracker.locations.push(unlockName);
-            }
+        for (const unlockDef of def.unlocks()) {
+            TD_List_Tracker.locations.push(unlockDef.name);
         }
     }
 
-    onUsesExhausted(locationName: string, actionName: string) {
-        const def = locationMap.get(locationName);
-        if (!def?.upgrades) {
-            this._removeAction(locationName, actionName);
-            return;
-        }
+    onUsesExhausted(triggeredLocation: string, actDef: ActionDef) {
+        this._removeAction(triggeredLocation, actDef.name);
 
-        const upgrade = def.upgrades.find(u => u.trigger_action === actionName);
-        if (!upgrade) {
-            this._removeAction(locationName, actionName);
-            return;
-        }
+        const match = this._findUpgrade(actDef);
+        if (!match) return;
 
-        this._removeAction(locationName, actionName);
+        const { owner, upgrade } = match;
 
         if (upgrade.replace_all) {
             const newNames = upgrade.add_actions ? upgrade.add_actions.map(a => a.name) : [];
             TD_List_Tracker.actions = new Map([
                 ...TD_List_Tracker.actions,
-                [locationName, newNames],
+                [owner.name, newNames],
             ]);
         } else {
             if (upgrade.remove_actions) {
-                for (const name of upgrade.remove_actions) {
-                    this._removeAction(locationName, name);
+                for (const removeDef of upgrade.remove_actions) {
+                    this._removeAction(owner.name, removeDef.name);
                 }
             }
 
             if (upgrade.add_actions) {
                 const newNames = upgrade.add_actions.map(a => a.name);
-                const current = TD_List_Tracker.actions.get(locationName) || [];
+                const current = TD_List_Tracker.actions.get(owner.name) || [];
                 TD_List_Tracker.actions = new Map([
                     ...TD_List_Tracker.actions,
-                    [locationName, [...current, ...newNames]],
+                    [owner.name, [...current, ...newNames]],
                 ]);
             }
         }
@@ -70,7 +61,7 @@ class ProgressionEngine {
 
     /**
      * Resolve an ActionDef by location + action name.
-     * Checks the location's base actions first, then upgrade-added actions.
+     * Checks the location's base actions first, then upgrade-added actions owned by that location.
      */
     resolveAction(locationName: string, actionName: string): ActionDef | undefined {
         const def = locationMap.get(locationName);
@@ -86,6 +77,14 @@ class ProgressionEngine {
             }
         }
 
+        return undefined;
+    }
+
+    private _findUpgrade(actDef: ActionDef): { owner: LocationDef; upgrade: UpgradeDef } | undefined {
+        for (const loc of allLocations) {
+            const upgrade = loc.upgrades?.find(u => u.trigger === actDef);
+            if (upgrade) return { owner: loc, upgrade };
+        }
         return undefined;
     }
 

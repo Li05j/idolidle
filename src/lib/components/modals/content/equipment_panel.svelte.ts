@@ -1,7 +1,7 @@
 import { EquipM, type EquipSlotKey, type OwnedEquip } from '$lib/state/equipment.svelte';
 import { EQUIP_REGISTRY } from '$lib/data/equipment';
 import { ALL_EQUIPMENT } from '$lib/data/equipment/equipment_table';
-import { EQUIP_DROP_LOCATION } from '$lib/data/equipment/location_drops';
+import { EQUIP_DROP_LOCATION } from '$lib/data/locations/index';
 import {
 	type EquipDef,
 	type EquipSlot,

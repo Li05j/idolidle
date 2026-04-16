@@ -6,7 +6,6 @@ import { locationMap } from '$lib/data/locations/index';
 import { history } from '$lib/state/history.svelte';
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { executeAction, actionRewardText, handle_rewards, reward_string } from '$lib/utils/utils';
-import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
 import { CFG } from '$lib/config';
 import { Mastery } from '$lib/state/mastery.svelte';
 import { Dreams } from '$lib/state/dreams.svelte';
@@ -170,19 +169,19 @@ export class TodoCardVM {
         if (actDef.uses !== undefined) {
             this.timer.repeat(1, getDur,
                 () => {
-                    executeAction(actDef, history.addLogs, LOCATION_DROPS[this.locationName]);
+                    executeAction(actDef, history.addLogs, locationMap.get(this.locationName)?.equip_drops);
                     Mastery.increment(mid);
                 },
                 () => {
                     TodoCardM.deactivateCard(this.card_id);
-                    Progression.onUsesExhausted(this.locationName, actDef.name);
+                    Progression.onUsesExhausted(this.locationName, actDef);
                 },
             );
         } else {
             this.timer.repeat(this.loop, getDur,
                 () => {
                     this.loop--;
-                    executeAction(actDef, history.addLogs, LOCATION_DROPS[this.locationName]);
+                    executeAction(actDef, history.addLogs, locationMap.get(this.locationName)?.equip_drops);
                     Mastery.increment(mid);
                     if (this.disabled) this.timer.loop_count = 0;
                 },

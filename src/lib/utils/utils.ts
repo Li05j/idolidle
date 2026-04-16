@@ -1,4 +1,4 @@
-import type { StatEffectPair, Rewards, BasicStats, TrainingEfficiency } from '$lib/types'
+import type { StatEffectPair, Reward, TrainingEfficiency } from '$lib/types'
 import { stat_list } from "$lib/state/stats.svelte";
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { CFG } from '$lib/config';
@@ -29,46 +29,35 @@ export function truncate_to_decimal(v: number, decimals: number = 1) {
     return Math.floor(v * d) / d;
 }
 
-export function reward_string(rewards: Rewards[]): string {
+export function reward_string(rewards: Reward[]): string {
     let ret_str = ""
     rewards.forEach(r => {
-        let temp = ``
         let depends_gain = 0;
-        let fixed_at = DECIMAL_PLACES;
-        if (r.which_stat === 'Fans' || r.which_stat === 'Moni') fixed_at = 0;
-
-        if (r.depends && r.efficiency) {
-            depends_gain = find_training_eff_from_str(r.efficiency)(calc_stat_effectiveness(r.depends))
+        if (r.scaling) {
+            depends_gain = find_training_eff_from_str(r.scaling.efficiency)(calc_stat_effectiveness(r.scaling.sources))
         }
-        if (r.flat_gain_base) {
-            let summed_flat_gain = r.flat_gain_base + depends_gain
-            let multi = stat_list[r.which_stat].multi
-            temp += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
+        if (r.target === 'base') {
+            let fixed_at = DECIMAL_PLACES;
+            if (r.which_stat === 'Fans' || r.which_stat === 'Moni') fixed_at = 0;
+            let summed_flat_gain = r.amount + depends_gain;
+            let multi = stat_list[r.which_stat].multi;
+            ret_str += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
+        } else {
+            ret_str += ` +${(r.amount + depends_gain).toFixed(2)} ${r.which_stat} Multi`;
         }
-        else if (r.flat_gain_multi) {
-            temp += ` +${(r.flat_gain_multi + depends_gain).toFixed(2)} ${r.which_stat} Multi`;
-        }
-        ret_str += temp;
     })
 
     return ret_str
 }
 
-export function handle_rewards(rewards: Rewards[]): void {
+export function handle_rewards(rewards: Reward[]): void {
     rewards.forEach(r => {
         let s = stat_list[r.which_stat];
         let depends_gain = 0;
-        if (r.depends && r.efficiency) {
-            depends_gain = find_training_eff_from_str(r.efficiency)(calc_stat_effectiveness(r.depends))
+        if (r.scaling) {
+            depends_gain = find_training_eff_from_str(r.scaling.efficiency)(calc_stat_effectiveness(r.scaling.sources))
         }
-        if (r.flat_gain_base) {
-            s.base += r.flat_gain_base;
-            s.base += depends_gain;
-        }
-        else if (r.flat_gain_multi) {
-            s.multi += r.flat_gain_multi;
-            s.multi += depends_gain;
-        }
+        s[r.target] += r.amount + depends_gain;
     });
 }
 
@@ -97,9 +86,9 @@ export function executeAction(def: ActionDef, log: (name: string, text: string) 
 
 function deriveDependsOn(def: ActionDef): string | null {
     const deps = def.rewards
-        .filter(r => r.depends?.length)
+        .filter(r => r.scaling?.sources.length)
         .map(r => {
-            const sources = r.depends!.map(d => d.which_stat).join(', ');
+            const sources = r.scaling!.sources.map(d => d.which_stat).join(', ');
             return `${sources} ➤ ${r.which_stat}`;
         });
     return deps.length ? deps.join('. ') : null;

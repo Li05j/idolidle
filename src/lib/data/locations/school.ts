@@ -2,8 +2,9 @@ import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import { truncate_to_decimal } from '$lib/utils/utils';
 import { simple_flat_stat_reward, simple_percent_stat_reward, uniform_rand_stat_flat_reward } from '$lib/utils/reward_helpers';
-import type { LocationDef } from './location_definition';
-import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
+import type { ActionDef, LocationDef } from './location_definition';
+import { gym } from './gym';
+import { maid_cafe } from './maid_cafe';
 
 const IDOL_CLUB_COST = { fans: 100, moni: 500 };
 const IDOL_CLUB_CONCERT_COST = 100;
@@ -65,33 +66,41 @@ function extra_club_promoter() {
     }
 }
 
+const open_idol_club: ActionDef = {
+    name: 'Open Idol Club',
+    kind: 'spending',
+    base_time: 30,
+    no_drops: true,
+    desc: "On your way to become the ultimate school idol. One step closer to becoming the star you've always dreamed of.",
+    rewards: [
+        { which_stat: "Fans", target: 'base', amount: 25 },
+    ],
+    costs: [{ stat: "Moni", amount: IDOL_CLUB_COST.moni }],
+    uses: 1,
+    requires: {
+        text: `Fans ≥ ${IDOL_CLUB_COST.fans}, Moni ≥ ${IDOL_CLUB_COST.moni}`,
+        check: () => stat_list.Fans.final < IDOL_CLUB_COST.fans || stat_list.Moni.final < IDOL_CLUB_COST.moni,
+    },
+};
+
 export const school: LocationDef = {
     name: 'School',
     base_time: 80,
     desc: "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
     hint: "When it is time for LIVE, you will need to prove that you are the better Idol. All of your stats (except Moni) will be taken into consideration. Make sure to train well!",
     rewards: [
-        { which_stat: "Stamina", flat_gain_base: 4 },
+        { which_stat: "Stamina", target: 'base', amount: 4 },
     ],
-    equip_drops: LOCATION_DROPS['School'],
-    unlocks: ['Gym', 'Maid Cafe'],
+    equip_drops: {
+        chance: 0.03,
+        table: [
+            { equip_id: 'reading_glasses', weight: 2 },
+            { equip_id: 'stage_microphone', weight: 1 },
+        ],
+    },
+    unlocks: () => [gym, maid_cafe],
     actions: [
-        {
-            name: 'Open Idol Club',
-            kind: 'spending',
-            base_time: 30,
-            no_drops: true,
-            desc: "On your way to become the ultimate school idol. One step closer to becoming the star you've always dreamed of.",
-            rewards: [
-                { which_stat: "Fans", flat_gain_base: 25 },
-            ],
-            costs: [{ stat: "Moni", amount: IDOL_CLUB_COST.moni }],
-            uses: 1,
-            requires: {
-                text: `Fans ≥ ${IDOL_CLUB_COST.fans}, Moni ≥ ${IDOL_CLUB_COST.moni}`,
-                check: () => stat_list.Fans.final < IDOL_CLUB_COST.fans || stat_list.Moni.final < IDOL_CLUB_COST.moni,
-            },
-        },
+        open_idol_club,
         {
             name: 'Collect Grade Report',
             kind: 'training',
@@ -111,10 +120,10 @@ export const school: LocationDef = {
             base_time: 60,
             desc: "You still gotta study alright; elite idol and elite student? That's the spirit.",
             rewards: [
-                { which_stat: "Sing", flat_gain_base: 1.2 },
-                { which_stat: "Dance", flat_gain_base: 1.2 },
-                { which_stat: "Charm", flat_gain_base: 1.2 },
-                { which_stat: "Presence", flat_gain_base: 1.2 },
+                { which_stat: "Sing", target: 'base', amount: 1.2 },
+                { which_stat: "Dance", target: 'base', amount: 1.2 },
+                { which_stat: "Charm", target: 'base', amount: 1.2 },
+                { which_stat: "Presence", target: 'base', amount: 1.2 },
             ],
             on_complete: {
                 fn: extra_attend_class,
@@ -128,7 +137,7 @@ export const school: LocationDef = {
             no_drops: true,
             desc: "You know when those anime girls standing near the school gate after school to try and advertise their idol activities? Yeah, that's you now.",
             rewards: [
-                { which_stat: "Fans", flat_gain_base: 2 },
+                { which_stat: "Fans", target: 'base', amount: 2 },
             ],
             on_complete: {
                 fn: extra_yell_on_wooden_box,
@@ -142,8 +151,8 @@ export const school: LocationDef = {
             no_drops: true,
             desc: "Your school doesn't seem to understand your value to provide you with a suitable stage. But as an serious Idol, anywhere is your stage to shine in!",
             rewards: [
-                { which_stat: "Dance", flat_gain_base: 1.0 },
-                { which_stat: "Presence", flat_gain_base: 1.0 },
+                { which_stat: "Dance", target: 'base', amount: 1.0 },
+                { which_stat: "Presence", target: 'base', amount: 1.0 },
             ],
             on_complete: {
                 fn: extra_hallway_flash_mob,
@@ -157,14 +166,14 @@ export const school: LocationDef = {
             no_drops: true,
             desc: "No, no, not metaphorically; physically - you are physically running up and down the stairs like a silly goose. But hey, this does make you fitter, probably.",
             rewards: [
-                { which_stat: "Stamina", flat_gain_base: 0.4 },
-                { which_stat: "Presence", flat_gain_base: 0.2 },
+                { which_stat: "Stamina", target: 'base', amount: 0.4 },
+                { which_stat: "Presence", target: 'base', amount: 0.2 },
             ],
         },
     ],
     upgrades: [
         {
-            trigger_action: 'Open Idol Club',
+            trigger: open_idol_club,
             add_actions: [
                 {
                     name: 'Host School Concert',
@@ -174,15 +183,18 @@ export const school: LocationDef = {
                     rewards: [
                         {
                             which_stat: "Fans",
-                            flat_gain_base: 20,
-                            depends: [
-                                { which_stat: "Sing", effectiveness: 0.5 },
-                                { which_stat: "Dance", effectiveness: 0.5 },
-                            ],
-                            efficiency: "fast",
+                            target: 'base',
+                            amount: 20,
+                            scaling: {
+                                sources: [
+                                    { which_stat: "Sing", effectiveness: 0.5 },
+                                    { which_stat: "Dance", effectiveness: 0.5 },
+                                ],
+                                efficiency: "fast",
+                            },
                         },
-                        { which_stat: "Charm", flat_gain_base: 5.0 },
-                        { which_stat: "Presence", flat_gain_base: 5.0 },
+                        { which_stat: "Charm", target: 'base', amount: 5.0 },
+                        { which_stat: "Presence", target: 'base', amount: 5.0 },
                     ],
                     costs: [{ stat: "Moni", amount: IDOL_CLUB_CONCERT_COST }],
                     requires: {
@@ -209,9 +221,12 @@ export const school: LocationDef = {
                     desc: "Overpriced? Scam? What do you mean? It's them who chose to spend the Moni...",
                     rewards: [{
                         which_stat: "Moni",
-                        flat_gain_base: 5,
-                        depends: [{ which_stat: "Presence", effectiveness: 1.2 }],
-                        efficiency: "slow",
+                        target: 'base',
+                        amount: 5,
+                        scaling: {
+                            sources: [{ which_stat: "Presence", effectiveness: 1.2 }],
+                            efficiency: "slow",
+                        },
                     }],
                 },
                 {
@@ -220,7 +235,7 @@ export const school: LocationDef = {
                     base_time: 30,
                     no_drops: true,
                     desc: "Idol isn't all about performing on stage, getting your name out there is also important. But people will only notice you if you are actually good...",
-                    rewards: [{ which_stat: "Presence", flat_gain_base: 3.0 }],
+                    rewards: [{ which_stat: "Presence", target: 'base', amount: 3.0 }],
                     on_complete: {
                         fn: extra_club_promoter,
                         hint: "Tiny chance to gain 0.01 Fans multi",
@@ -230,9 +245,6 @@ export const school: LocationDef = {
             on_trigger: () => {
                 history.addSystemLog('You have unlocked some club activities under School, go check them out!');
             },
-        },
-        {
-            trigger_action: 'Collect Grade Report',
         },
     ],
 };

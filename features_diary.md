@@ -57,12 +57,14 @@ Spend dream points on permanent upgrades (persist across rebirths): time reducti
 ### Add a location
 
 1. Create `src/lib/data/locations/<name>.ts` — export a `LocationDef`.
-2. Register in `src/lib/data/locations/index.ts`.
-3. Add to an existing location's `unlocks` array.
+2. Register in `src/lib/data/locations/index.ts` (`allLocations`).
+3. Add to an existing location's `unlocks` thunk: `unlocks: () => [mall, new_loc]`. Import the peer directly; the thunk defers evaluation so module-load order is not a concern.
 
 ### Add an action
 
 Append to the `actions` array in a location file. For upgrade-gated actions, add inside an `UpgradeDef` in the `upgrades` array.
+
+Upgrades reference their trigger by **object ref**, not name: extract the action as a `const my_action: ActionDef = {...}`, put it in `actions`, and use `{ trigger: my_action, ... }` in `upgrades`. Triggers can live in a different location than the upgrade — import the action from the owning file (e.g. Living Room's upgrade triggers off `upgrade_living_room` imported from `mall.ts`). The progression engine searches all locations for an upgrade matching the exhausted action.
 
 ### Add a checkpoint
 
@@ -70,9 +72,8 @@ Two files, matched by array index: add `{ time, multi }` to `checkpoints.svelte.
 
 ### Add equipment
 
-1. Define in `src/lib/data/equipment/<location>_equipment.ts`.
-2. Register in `src/lib/data/equipment/index.ts`.
-3. Add to an action's `equip_drops` in the location file.
+1. Define in `src/lib/data/equipment/equipment_table.ts` (`ALL_EQUIPMENT`).
+2. Add to a `LocationDef.equip_drops` (location-wide drop) or a specific `ActionDef.equip_drops` (action override). The reverse map `EQUIP_DROP_LOCATION` in `locations/index.ts` is derived automatically — no manual registration.
 
 ### Add a dream upgrade
 

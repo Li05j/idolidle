@@ -1,8 +1,7 @@
 import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import type { BasicStats } from '$lib/types';
-import type { LocationDef } from './location_definition';
-import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
+import type { ActionDef, LocationDef } from './location_definition';
 
 const LIVING_ROOM_UPGRADE_COST = 500;
 const MINI_LOTTERY_COST = 50;
@@ -53,31 +52,36 @@ function extra_mini_lottery() {
     }
 }
 
+export const upgrade_living_room: ActionDef = {
+    name: 'Upgrade Living Room',
+    kind: 'spending',
+    base_time: 60,
+    no_drops: true,
+    desc: "Tired of the shitty environment at home? Well, hopefully this little upgrade will make it better.",
+    rewards: [],
+    costs: [{ stat: 'Moni', amount: LIVING_ROOM_UPGRADE_COST }],
+    uses: 1,
+    requires: {
+        text: `Moni ≥ ${LIVING_ROOM_UPGRADE_COST}`,
+        check: () => stat_list.Moni.final < LIVING_ROOM_UPGRADE_COST,
+    },
+};
+
 export const mall: LocationDef = {
     name: 'Mall',
     base_time: 200,
     desc: "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
     hint: "All Location cards and white Action cards will take less time to complete the more you do them. Keep up your trainings!",
     rewards: [
-        { which_stat: "Stamina", flat_gain_base: 10 },
+        { which_stat: "Stamina", target: 'base', amount: 10 },
     ],
-    equip_drops: LOCATION_DROPS['Mall'],
-    unlocks: [],
+    equip_drops: {
+        chance: 0.05,
+        table: [{ equip_id: 'designer_jacket', weight: 1 }],
+    },
+    unlocks: () => [],
     actions: [
-        {
-            name: 'Upgrade Living Room',
-            kind: 'spending',
-            base_time: 60,
-            no_drops: true,
-            desc: "Tired of the shitty environment at home? Well, hopefully this little upgrade will make it better.",
-            rewards: [],
-            costs: [{ stat: 'Moni', amount: LIVING_ROOM_UPGRADE_COST }],
-            uses: 1,
-            requires: {
-                text: `Moni ≥ ${LIVING_ROOM_UPGRADE_COST}`,
-                check: () => stat_list.Moni.final < LIVING_ROOM_UPGRADE_COST,
-            },
-        },
+        upgrade_living_room,
         {
             name: 'Mini Lottery',
             kind: 'spending',
@@ -101,7 +105,7 @@ export const mall: LocationDef = {
             kind: 'spending',
             base_time: 3,
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
-            rewards: [{ which_stat: "Charm", flat_gain_base: 8 }],
+            rewards: [{ which_stat: "Charm", target: 'base', amount: 8 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
@@ -113,17 +117,12 @@ export const mall: LocationDef = {
             kind: 'spending',
             base_time: 3,
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
-            rewards: [{ which_stat: "Presence", flat_gain_base: 8 }],
+            rewards: [{ which_stat: "Presence", target: 'base', amount: 8 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
                 check: () => stat_list.Moni.final < OUTFIT_COST,
             },
-        },
-    ],
-    upgrades: [
-        {
-            trigger_action: 'Mini Lottery',
         },
     ],
 };

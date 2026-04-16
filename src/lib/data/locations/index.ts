@@ -20,3 +20,15 @@ export const allLocations: LocationDef[] = [
 export const locationMap = new Map<string, LocationDef>(
     allLocations.map(loc => [loc.name, loc])
 );
+
+/** Reverse map: equip_id → location display name. Derived from each location's drop tables. */
+export const EQUIP_DROP_LOCATION: Map<string, string> = new Map(
+    allLocations.flatMap(loc => {
+        const tables = [
+            loc.equip_drops,
+            ...loc.actions.map(a => a.equip_drops),
+            ...(loc.upgrades ?? []).flatMap(u => u.add_actions?.map(a => a.equip_drops) ?? []),
+        ].filter((t): t is NonNullable<typeof t> => !!t);
+        return tables.flatMap(t => t.table.map(e => [e.equip_id, loc.name] as const));
+    })
+);

@@ -1,4 +1,5 @@
 import type { LocationDef } from './location_definition';
+import { living_room } from './living_room';
 
 export const wake_up: LocationDef = {
     name: 'Wake Up',
@@ -6,9 +7,9 @@ export const wake_up: LocationDef = {
     desc: "Time to wake up, silly. Everything starts here.",
     hint: "What are you waiting for, click me to start your Idol journey!",
     rewards: [
-        { which_stat: "Stamina", flat_gain_base: 0.1 },
-        { which_stat: "Haste", flat_gain_base: 0.1 },
+        { which_stat: "Stamina", target: 'base', amount: 0.1 },
+        { which_stat: "Haste", target: 'base', amount: 0.1 },
     ],
-    unlocks: ['Living Room'],
+    unlocks: () => [living_room],
     actions: [],
 };

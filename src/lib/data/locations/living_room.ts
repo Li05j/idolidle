@@ -1,6 +1,8 @@
 import { history } from '$lib/state/history.svelte';
 import type { LocationDef } from './location_definition';
-import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
+import { park } from './park';
+import { school } from './school';
+import { upgrade_living_room } from './mall';
 
 export const living_room: LocationDef = {
     name: 'Living Room',
@@ -8,10 +10,13 @@ export const living_room: LocationDef = {
     desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one's watching (except maybe the cat). Meow.",
     hint: "Some cards may show very important info when hovered - like hints, or even restrictions/bonuses.",
     rewards: [
-        { which_stat: "Stamina", flat_gain_base: 0.2 },
+        { which_stat: "Stamina", target: 'base', amount: 0.2 },
     ],
-    equip_drops: LOCATION_DROPS['Living Room'],
-    unlocks: ['Park', 'School'],
+    equip_drops: {
+        chance: 0.08,
+        table: [{ equip_id: 'comfy_slippers', weight: 1 }],
+    },
+    unlocks: () => [park, school],
     actions: [
         {
             name: 'Singing Practice',
@@ -19,7 +24,7 @@ export const living_room: LocationDef = {
             base_time: 5,
             desc: "Your voice cracks. Your cat weeps. But somewhere in the noise, a star might be warming up.",
             rewards: [
-                { which_stat: "Sing", flat_gain_base: 0.5 },
+                { which_stat: "Sing", target: 'base', amount: 0.5 },
             ],
 
         },
@@ -29,14 +34,14 @@ export const living_room: LocationDef = {
             base_time: 5,
             desc: "Limbs flail, rhythm fails, and then you trip yourself. Maybe the floor just hates you.",
             rewards: [
-                { which_stat: "Dance", flat_gain_base: 0.5 },
+                { which_stat: "Dance", target: 'base', amount: 0.5 },
             ],
 
         },
     ],
     upgrades: [
         {
-            trigger_action: 'Upgrade Living Room',
+            trigger: upgrade_living_room,
             replace_all: true,
             add_actions: [
                 {
@@ -46,10 +51,10 @@ export const living_room: LocationDef = {
                     base_time: 30,
                     desc: "At least your cat won't faint anymore, that's what we call improvement.",
                     rewards: [
-                        { which_stat: "Stamina", flat_gain_base: 0.5 },
-                        { which_stat: "Sing", flat_gain_base: 5 },
+                        { which_stat: "Stamina", target: 'base', amount: 0.5 },
+                        { which_stat: "Sing", target: 'base', amount: 5 },
                     ],
-        
+
                 },
                 {
                     name: 'Dancing Practice+',
@@ -58,10 +63,10 @@ export const living_room: LocationDef = {
                     base_time: 30,
                     desc: "No more kisses with the floor you just mopped. More calm, more peace. Going with the flow.",
                     rewards: [
-                        { which_stat: "Stamina", flat_gain_base: 0.5 },
-                        { which_stat: "Dance", flat_gain_base: 5 },
+                        { which_stat: "Stamina", target: 'base', amount: 0.5 },
+                        { which_stat: "Dance", target: 'base', amount: 5 },
                     ],
-        
+
                 },
             ],
             on_trigger: () => {

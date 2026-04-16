@@ -1,4 +1,4 @@
-import type { BasicStats, Rewards } from '$lib/types';
+import type { BasicStats, Reward } from '$lib/types';
 import type { EquipDropTable } from '$lib/data/equipment/equipment_definition';
 
 export type ActionKind = 'training' | 'earning' | 'spending';
@@ -11,7 +11,7 @@ export type ActionDef = {
     uses?: number;
     mastery_id?: string;
 
-    rewards: Rewards[];
+    rewards: Reward[];
     costs?: { stat: BasicStats; amount: number }[];
     equip_drops?: EquipDropTable;
     no_drops?: boolean;
@@ -28,8 +28,8 @@ export type ActionDef = {
 };
 
 export type UpgradeDef = {
-    trigger_action: string;
-    remove_actions?: string[];
+    trigger: ActionDef;
+    remove_actions?: ActionDef[];
     add_actions?: ActionDef[];
     replace_all?: boolean;
     on_trigger?: () => void;
@@ -40,13 +40,13 @@ export type LocationDef = {
     desc: string;
     base_time: number;
     hint?: string;
-    rewards: Rewards[];
+    rewards: Reward[];
     equip_drops?: EquipDropTable;
     requires?: {
         text: string;
         check: () => boolean;
     };
-    unlocks: string[];
+    unlocks: () => LocationDef[];
     actions: ActionDef[];
     upgrades?: UpgradeDef[];
 };

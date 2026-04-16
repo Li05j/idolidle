@@ -1,8 +1,7 @@
 import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
-import type { LocationDef } from './location_definition';
-import { LOCATION_DROPS } from '$lib/data/equipment/location_drops';
+import type { ActionDef, LocationDef } from './location_definition';
 
 const GYM_VIP_COST = 500;
 const GYM_ACTION_COST = 5;
@@ -29,89 +28,100 @@ function extra_treadmill() {
     }
 }
 
+const purchase_gym_vip: ActionDef = {
+    name: 'Purchase Gym VIP',
+    kind: 'spending',
+    base_time: 10,
+    no_drops: true,
+    desc: "With just a 1 time fee, you no longer need to pay to use the Gym. What a deal!",
+    rewards: [],
+    costs: [{ stat: "Moni", amount: GYM_VIP_COST }],
+    uses: 1,
+    requires: {
+        text: `Moni ≥ ${GYM_VIP_COST}`,
+        check: () => stat_list.Moni.final < GYM_VIP_COST,
+    },
+    on_complete: {
+        fn: () => {},
+        hint: "Void all training costs in Gym. Trainings will also be slightly more efficient.",
+    },
+};
+
+const bench_press: ActionDef = {
+    name: 'Bench Press',
+    kind: 'spending',
+    base_time: 30,
+    no_drops: true,
+    desc: "Is this the Idol meta nowadays?",
+    rewards: [{ which_stat: "Stamina", target: 'base', amount: 3.0 }],
+    costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
+    requires: {
+        text: `Moni ≥ ${GYM_ACTION_COST}`,
+        check: () => stat_list.Moni.final < GYM_ACTION_COST,
+    },
+};
+
+const assault_bike: ActionDef = {
+    name: 'Assault Bike',
+    kind: 'spending',
+    base_time: 30,
+    no_drops: true,
+    desc: "You are not actually assulting a bike are you.",
+    rewards: [{ which_stat: "Haste", target: 'base', amount: 3.0 }],
+    costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
+    requires: {
+        text: `Moni ≥ ${GYM_ACTION_COST}`,
+        check: () => stat_list.Moni.final < GYM_ACTION_COST,
+    },
+};
+
+const treadmill: ActionDef = {
+    name: 'Treadmill',
+    kind: 'spending',
+    base_time: 30,
+    no_drops: true,
+    desc: "\"...Why do I have to pay to run?\"",
+    rewards: [
+        { which_stat: "Stamina", target: 'base', amount: 1.5 },
+        { which_stat: "Haste", target: 'base', amount: 1.5 },
+    ],
+    costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
+    requires: {
+        text: `Moni ≥ ${GYM_ACTION_COST}`,
+        check: () => stat_list.Moni.final < GYM_ACTION_COST,
+    },
+};
+
 export const gym: LocationDef = {
     name: 'Gym',
     base_time: 70,
     desc: "Remember to wipe the equipment after using them, don't wanna end up being cancelled by some gym bros online. Talking about ways to end your Idol career...",
     hint: "You cannot lower the time needed to complete Purple and Yellow cards. However, their rewards tend to be dynamic.",
     rewards: [
-        { which_stat: "Stamina", flat_gain_base: 3.5 },
+        { which_stat: "Stamina", target: 'base', amount: 3.5 },
     ],
-    equip_drops: LOCATION_DROPS['Gym'],
-    unlocks: [],
+    equip_drops: {
+        chance: 0.04,
+        table: [{ equip_id: 'training_shorts', weight: 1 }],
+    },
+    unlocks: () => [],
     actions: [
-        {
-            name: 'Purchase Gym VIP',
-            kind: 'spending',
-            base_time: 10,
-            no_drops: true,
-            desc: "With just a 1 time fee, you no longer need to pay to use the Gym. What a deal!",
-            rewards: [],
-            costs: [{ stat: "Moni", amount: GYM_VIP_COST }],
-            uses: 1,
-            requires: {
-                text: `Moni ≥ ${GYM_VIP_COST}`,
-                check: () => stat_list.Moni.final < GYM_VIP_COST,
-            },
-            on_complete: {
-                fn: () => {},
-                hint: "Void all training costs in Gym. Trainings will also be slightly more efficient.",
-            },
-        },
-        {
-            name: 'Bench Press',
-            kind: 'spending',
-            base_time: 30,
-            no_drops: true,
-            desc: "Is this the Idol meta nowadays?",
-            rewards: [{ which_stat: "Stamina", flat_gain_base: 3.0 }],
-            costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
-            requires: {
-                text: `Moni ≥ ${GYM_ACTION_COST}`,
-                check: () => stat_list.Moni.final < GYM_ACTION_COST,
-            },
-        },
-        {
-            name: 'Assault Bike',
-            kind: 'spending',
-            base_time: 30,
-            no_drops: true,
-            desc: "You are not actually assulting a bike are you.",
-            rewards: [{ which_stat: "Haste", flat_gain_base: 3.0 }],
-            costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
-            requires: {
-                text: `Moni ≥ ${GYM_ACTION_COST}`,
-                check: () => stat_list.Moni.final < GYM_ACTION_COST,
-            },
-        },
-        {
-            name: 'Treadmill',
-            kind: 'spending',
-            base_time: 30,
-            no_drops: true,
-            desc: "\"...Why do I have to pay to run?\"",
-            rewards: [
-                { which_stat: "Stamina", flat_gain_base: 1.5 },
-                { which_stat: "Haste", flat_gain_base: 1.5 },
-            ],
-            costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
-            requires: {
-                text: `Moni ≥ ${GYM_ACTION_COST}`,
-                check: () => stat_list.Moni.final < GYM_ACTION_COST,
-            },
-        },
+        purchase_gym_vip,
+        bench_press,
+        assault_bike,
+        treadmill,
     ],
     upgrades: [
         {
-            trigger_action: 'Purchase Gym VIP',
-            remove_actions: ['Treadmill', 'Bench Press', 'Assault Bike'],
+            trigger: purchase_gym_vip,
+            remove_actions: [treadmill, bench_press, assault_bike],
             add_actions: [
                 {
                     name: 'Bench Press',
                     kind: 'training',
                     base_time: 40,
                     desc: "Muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it's free now.",
-                    rewards: [{ which_stat: "Stamina", flat_gain_base: 4.0 }],
+                    rewards: [{ which_stat: "Stamina", target: 'base', amount: 4.0 }],
 
                     on_complete: {
                         fn: extra_bench_press,
@@ -123,7 +133,7 @@ export const gym: LocationDef = {
                     kind: 'training',
                     base_time: 40,
                     desc: "Biking.",
-                    rewards: [{ which_stat: "Haste", flat_gain_base: 4.0 }],
+                    rewards: [{ which_stat: "Haste", target: 'base', amount: 4.0 }],
 
                     on_complete: {
                         fn: extra_assault_bike,
@@ -136,8 +146,8 @@ export const gym: LocationDef = {
                     base_time: 40,
                     desc: "Running.",
                     rewards: [
-                        { which_stat: "Stamina", flat_gain_base: 2.0 },
-                        { which_stat: "Haste", flat_gain_base: 2.0 },
+                        { which_stat: "Stamina", target: 'base', amount: 2.0 },
+                        { which_stat: "Haste", target: 'base', amount: 2.0 },
                     ],
 
                     on_complete: {
