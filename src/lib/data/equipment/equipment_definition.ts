@@ -33,6 +33,8 @@ export type SkillContext = {
     atk_type?: 'Sing' | 'Dance';
     /** Register a callback that runs after the current attack resolves. Receives fans_stolen (0 = blocked). */
     on_after_attack?: (callback: (fans_stolen: number) => void) => void;
+    /** Push a colored line into the live battle log. Use freely from effect/on_after_attack. */
+    log: (msg: string) => void;
 };
 
 /**

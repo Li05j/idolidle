@@ -161,6 +161,8 @@ class LiveBattleManager {
     private _post_attack_effects: ((fans_stolen: number) => void)[] = [];
 
     private fire_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance'): void {
+        // All current skills are player-equipped (EquipM.get_all_equipped()), so green matches the player's attack color.
+        // Revisit if Rival skills are added.
         const ctx = {
             you: this._you,
             rival: this._rival,
@@ -174,6 +176,7 @@ class LiveBattleManager {
             on_after_attack: (callback: (fans_stolen: number) => void) => {
                 this._post_attack_effects.push(callback);
             },
+            log: (msg: string) => this.log(`[green]${msg}[/green]`),
         };
 
         for (const item of EquipM.get_all_equipped()) {
@@ -191,9 +194,9 @@ class LiveBattleManager {
             if (!skill.condition(skill_ctx)) continue;
             if (Math.random() > skill.chance) continue;
 
+            this.log(`[green]${skill.name} activated![/green]`, false);
             skill.effect(skill_ctx);
             this._fired_skills.add(item.equip_id);
-            this.log(`[blue]${skill.name} activated![/blue]`, false);
         }
     }
 
