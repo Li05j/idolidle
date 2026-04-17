@@ -1,5 +1,5 @@
 import { TD_List_Tracker } from '$lib/state/todos_list_tracker.svelte';
-import { locationMap, allLocations } from '$lib/data/locations/index';
+import { locationMap, allLocations, STARTING_LOCATION } from '$lib/data/locations/index';
 import type { ActionDef, LocationDef, UpgradeDef } from '$lib/data/locations/location_definition';
 
 class ProgressionEngine {
@@ -25,10 +25,10 @@ class ProgressionEngine {
         }
     }
 
-    onUsesExhausted(triggeredLocation: string, actDef: ActionDef) {
-        this._removeAction(triggeredLocation, actDef.name);
+    onUsesExhausted(triggeredLocation: string, actionName: string) {
+        this._removeAction(triggeredLocation, actionName);
 
-        const match = this._findUpgrade(actDef);
+        const match = this._findUpgrade(actionName);
         if (!match) return;
 
         const { owner, upgrade } = match;
@@ -41,8 +41,8 @@ class ProgressionEngine {
             ]);
         } else {
             if (upgrade.remove_actions) {
-                for (const removeDef of upgrade.remove_actions) {
-                    this._removeAction(owner.name, removeDef.name);
+                for (const removeName of upgrade.remove_actions) {
+                    this._removeAction(owner.name, removeName);
                 }
             }
 
@@ -80,9 +80,9 @@ class ProgressionEngine {
         return undefined;
     }
 
-    private _findUpgrade(actDef: ActionDef): { owner: LocationDef; upgrade: UpgradeDef } | undefined {
+    private _findUpgrade(actionName: string): { owner: LocationDef; upgrade: UpgradeDef } | undefined {
         for (const loc of allLocations) {
-            const upgrade = loc.upgrades?.find(u => u.trigger === actDef);
+            const upgrade = loc.upgrades?.find(u => u.trigger === actionName);
             if (upgrade) return { owner: loc, upgrade };
         }
         return undefined;
@@ -100,10 +100,7 @@ class ProgressionEngine {
     }
 
     init() {
-        const wakeUpDef = locationMap.get('Wake Up');
-        if (wakeUpDef) {
-            TD_List_Tracker.locations = ['Wake Up'];
-        }
+        TD_List_Tracker.locations = [STARTING_LOCATION.name];
         TD_List_Tracker.actions = new Map();
     }
 

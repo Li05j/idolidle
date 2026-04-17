@@ -20,7 +20,7 @@ export const park: LocationDef = {
     ],
     requires: {
         text: "Sing + Dance ≥ 3.0",
-        check: () => stat_list.Sing.final + stat_list.Dance.final < 3.0,
+        is_met: () => stat_list.Sing.final + stat_list.Dance.final >= 3.0,
     },
     equip_drops: {
         chance: 0.05,
@@ -75,7 +75,7 @@ export const park: LocationDef = {
             ],
             on_complete: {
                 fn: extra_play_with_kids,
-                hint: "Slight chance to gain 1 Fan(s). May drop equipment.",
+                desc: "Slight chance to gain 1 Fan(s). May drop equipment.",
             },
         },
     ],

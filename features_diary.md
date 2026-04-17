@@ -28,7 +28,7 @@ Each skill has a trigger timing, proc chance, and conditions. Unlocked by perfor
 
 ## Equipment
 
-Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory), stat bonuses, and optionally a battle skill. Rarity is rolled on drop (N/R/SR/UR). Duplicates grant EXP toward leveling; a higher-rarity dupe upgrades rarity instead. Equipment resets on rebirth, but the **Codex** tracks all-time collection history.
+Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory) and per-rarity variants (N is mandatory baseline; R/SR/UR are partial overrides that can replace stat bonuses, swap/add/remove the skill, or override the stat multiplier). Rarity is rolled on drop (N/R/SR/UR). Duplicates grant EXP toward leveling; a higher-rarity dupe upgrades rarity instead. Equipment resets on rebirth, but the **Codex** tracks all-time collection history.
 
 Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `equipment_definition.ts`. Drop tables: `equip_drops` field on actions in location files.
 
@@ -38,7 +38,7 @@ The checkpoint bar fills while actions run. Each checkpoint carries its own riva
 
 ## Action Mastery
 
-Actions track total completions across all rebirths. More completions = shorter action time (diminishing returns). Upgraded actions can share a mastery track by setting `mastery_id` to the base `ActionDef` ref. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.
+Actions track total completions across all rebirths. More completions = shorter action time (diminishing returns). Upgraded actions can share a mastery track by setting `mastery_id` to the base action's name. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.
 
 ## Rebirth
 
@@ -64,7 +64,7 @@ Spend dream points on permanent upgrades (persist across rebirths): time reducti
 
 Append to the `actions` array in a location file. For upgrade-gated actions, add inside an `UpgradeDef` in the `upgrades` array.
 
-Upgrades reference their trigger by **object ref**, not name: extract the action as a `const my_action: ActionDef = {...}`, put it in `actions`, and use `{ trigger: my_action, ... }` in `upgrades`. Triggers can live in a different location than the upgrade — import the action from the owning file (e.g. Living Room's upgrade triggers off `upgrade_living_room` imported from `mall.ts`). The progression engine searches all locations for an upgrade matching the exhausted action.
+Upgrades reference their trigger and removed actions by **action name string**: `{ trigger: 'My Action', remove_actions: ['Foo', 'Bar'] }`. Triggers can live in a different location than the upgrade (e.g. Living Room's upgrade triggers off `'Upgrade Living Room'` which is defined in the Mall). Trigger action must have `uses` set — only uses-exhausted completions fire upgrades. The progression engine searches all locations for an upgrade matching the exhausted action's name; trigger names should be unique across the game.
 
 ### Add a checkpoint
 

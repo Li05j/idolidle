@@ -20,16 +20,10 @@ export type EquipStatBonus = {
     target: 'base' | 'multi';
 };
 
-export type RarityOverride = {
-    stat_mult?: number;
-    skill_values?: Record<string, number>;
-    extra_bonuses?: EquipStatBonus[];
-};
-
 export type SkillContext = {
     you: LiveBattleStats;
     rival: LiveBattleStats;
-    /** Resolved skill values (base values merged with rarity overrides). */
+    /** Resolved skill values (taken from the rarity-merged skill). */
     values: Record<string, number>;
     /** Set to reduce incoming damage by this fraction (0-1). Only meaningful for before_taking_dmg. */
     set_dmg_reduction?: (amount: number) => void;
@@ -55,7 +49,7 @@ export type EquipSkillDef = {
     triggers: BattleTrigger[];
     /** Activation probability (0-1). Rolled after condition check. */
     chance: number;
-    /** Default skill parameters. Rarity overrides merge on top of these. */
+    /** Skill parameters consumed by cond_string / eff_string / condition / effect. */
     values?: Record<string, number>;
     /** Human-readable condition. String or function of resolved values. */
     cond_string: string | ((v: Record<string, number>) => string);
@@ -67,14 +61,26 @@ export type EquipSkillDef = {
     effect: (ctx: SkillContext) => void;
 };
 
+/**
+ * The per-rarity body of an equipment. `N` is mandatory baseline; higher rarities
+ * supply a partial body that REPLACES individual fields wholesale (no array merging).
+ *
+ * - Omit a field at R/SR/UR to inherit from N.
+ * - Set `skill: null` to explicitly remove N's skill at that rarity.
+ * - Omit `stat_mult` to fall back to `EQUIP_CONFIG.rarity_stat_mult[rarity]`.
+ */
+export type VariantBody = {
+    stat_bonuses: EquipStatBonus[];
+    skill?: EquipSkillDef | null;
+    stat_mult?: number;
+};
+
 export type EquipDef = {
     id: string;
     name: string;
     slot: EquipSlot;
     desc: string;
-    stat_bonuses: EquipStatBonus[];
-    skill?: EquipSkillDef;
-    rarity?: Partial<Record<Rarity, RarityOverride>>;
+    variants: { N: VariantBody } & Partial<Record<Exclude<Rarity, 'N'>, Partial<VariantBody>>>;
 };
 
 export type EquipDropEntry = {
@@ -102,17 +108,19 @@ export function effective_bonus(bonus: EquipStatBonus, level: number, stat_mult:
 }
 
 export type ResolvedEquip = {
+    stat_bonuses: EquipStatBonus[];
+    skill: EquipSkillDef | null;
     stat_mult: number;
-    extra_bonuses: EquipStatBonus[];
-    skill_values: Record<string, number>;
 };
 
 export function resolve_equip(def: EquipDef, rarity: Rarity): ResolvedEquip {
-    const overrides = def.rarity?.[rarity];
+    const base = def.variants.N;
+    const overlay = rarity === 'N' ? undefined : def.variants[rarity];
+    const merged: VariantBody = overlay ? { ...base, ...overlay } : base;
     return {
-        stat_mult: overrides?.stat_mult ?? EQUIP_CONFIG.rarity_stat_mult[rarity],
-        extra_bonuses: overrides?.extra_bonuses ?? [],
-        skill_values: { ...def.skill?.values, ...overrides?.skill_values },
+        stat_bonuses: merged.stat_bonuses,
+        skill: merged.skill ?? null,
+        stat_mult: merged.stat_mult ?? EQUIP_CONFIG.rarity_stat_mult[rarity],
     };
 }
 

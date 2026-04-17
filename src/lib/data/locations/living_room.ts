@@ -2,7 +2,6 @@ import { history } from '$lib/state/history.svelte';
 import type { ActionDef, LocationDef } from './location_definition';
 import { park } from './park';
 import { school } from './school';
-import { upgrade_living_room } from './mall';
 
 const singing_practice: ActionDef = {
     name: 'Singing Practice',
@@ -28,7 +27,7 @@ export const living_room: LocationDef = {
     name: 'Living Room',
     base_time: 4,
     desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one's watching (except maybe the cat). Meow.",
-    hint: "Some cards may show very important info when hovered - like hints, or even restrictions/bonuses.",
+    tutorial: "Some cards may show very important info when hovered - like hints, or even restrictions/bonuses.",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 0.2 },
     ],
@@ -40,12 +39,12 @@ export const living_room: LocationDef = {
     actions: [singing_practice, dancing_practice],
     upgrades: [
         {
-            trigger: upgrade_living_room,
+            trigger: 'Upgrade Living Room',
             replace_all: true,
             add_actions: [
                 {
                     name: 'Singing Practice+',
-                    mastery_id: singing_practice,
+                    mastery_id: 'Singing Practice',
                     kind: 'training',
                     base_time: 30,
                     desc: "At least your cat won't faint anymore, that's what we call improvement.",
@@ -56,7 +55,7 @@ export const living_room: LocationDef = {
                 },
                 {
                     name: 'Dancing Practice+',
-                    mastery_id: dancing_practice,
+                    mastery_id: 'Dancing Practice',
                     kind: 'training',
                     base_time: 30,
                     desc: "No more kisses with the floor you just mopped. More calm, more peace. Going with the flow.",

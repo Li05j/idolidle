@@ -9,7 +9,8 @@ export type ActionDef = {
     base_time: number;
     kind: ActionKind;
     uses?: number;
-    mastery_id?: ActionDef;
+    /** Action name to share a mastery pool with (typically the un-upgraded base action). */
+    mastery_id?: string;
 
     rewards: Reward[];
     costs?: { stat: BasicStats; amount: number }[];
@@ -18,18 +19,22 @@ export type ActionDef = {
 
     requires?: {
         text: string;
-        check: () => boolean;
+        /** Returns true when the prereq is satisfied (action is enabled). */
+        is_met: () => boolean;
     };
 
     on_complete?: {
         fn: () => void;
-        hint?: string;
+        /** Short description of what the on_complete bonus does, shown in tooltip. */
+        desc?: string;
     };
 };
 
 export type UpgradeDef = {
-    trigger: ActionDef;
-    remove_actions?: ActionDef[];
+    /** Name of the action whose completion fires this upgrade. Must have `uses` set. */
+    trigger: string;
+    /** Action names to remove from the owning location's tracker on trigger. */
+    remove_actions?: string[];
     add_actions?: ActionDef[];
     replace_all?: boolean;
     on_trigger?: () => void;
@@ -39,13 +44,15 @@ export type LocationDef = {
     name: string;
     desc: string;
     base_time: number;
-    hint?: string;
+    /** Tutorial-style hover hint, shown when the player mouses over the location card. */
+    tutorial?: string;
     rewards: Reward[];
     equip_drops?: EquipDropTable;
     requires?: {
         text: string;
-        check: () => boolean;
+        is_met: () => boolean;
     };
+    /** Returns child locations to unlock on arrival. Function form defers evaluation to avoid circular imports. */
     unlocks: () => LocationDef[];
     actions: ActionDef[];
     upgrades?: UpgradeDef[];

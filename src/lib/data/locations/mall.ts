@@ -63,7 +63,7 @@ export const upgrade_living_room: ActionDef = {
     uses: 1,
     requires: {
         text: `Moni ≥ ${LIVING_ROOM_UPGRADE_COST}`,
-        check: () => stat_list.Moni.final < LIVING_ROOM_UPGRADE_COST,
+        is_met: () => stat_list.Moni.final >= LIVING_ROOM_UPGRADE_COST,
     },
 };
 
@@ -71,7 +71,7 @@ export const mall: LocationDef = {
     name: 'Mall',
     base_time: 200,
     desc: "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
-    hint: "All Location cards and white Action cards will take less time to complete the more you do them. Keep up your trainings!",
+    tutorial: "All Location cards and white Action cards will take less time to complete the more you do them. Keep up your trainings!",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 10 },
     ],
@@ -93,11 +93,11 @@ export const mall: LocationDef = {
             uses: 1,
             requires: {
                 text: `Moni ≥ ${MINI_LOTTERY_COST}`,
-                check: () => stat_list.Moni.final < MINI_LOTTERY_COST,
+                is_met: () => stat_list.Moni.final >= MINI_LOTTERY_COST,
             },
             on_complete: {
                 fn: extra_mini_lottery,
-                hint: "Who knows what you will get...?",
+                desc: "Who knows what you will get...?",
             },
         },
         {
@@ -109,7 +109,7 @@ export const mall: LocationDef = {
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
-                check: () => stat_list.Moni.final < OUTFIT_COST,
+                is_met: () => stat_list.Moni.final >= OUTFIT_COST,
             },
         },
         {
@@ -121,7 +121,7 @@ export const mall: LocationDef = {
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
-                check: () => stat_list.Moni.final < OUTFIT_COST,
+                is_met: () => stat_list.Moni.final >= OUTFIT_COST,
             },
         },
     ],

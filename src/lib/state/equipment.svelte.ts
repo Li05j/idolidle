@@ -136,16 +136,7 @@ class EquipmentManager {
 
             const resolved = resolve_equip(def, item.rarity);
 
-            for (const bonus of def.stat_bonuses) {
-                const value = effective_bonus(bonus, item.level, resolved.stat_mult);
-                if (bonus.target === 'base') {
-                    stat_list[bonus.stat].equip_base += value;
-                } else {
-                    stat_list[bonus.stat].equip_multi += value;
-                }
-            }
-
-            for (const bonus of resolved.extra_bonuses) {
+            for (const bonus of resolved.stat_bonuses) {
                 const value = effective_bonus(bonus, item.level, resolved.stat_mult);
                 if (bonus.target === 'base') {
                     stat_list[bonus.stat].equip_base += value;

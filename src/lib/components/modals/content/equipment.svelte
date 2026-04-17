@@ -103,7 +103,7 @@
                         </div>
                     {:else}
                         <div class="flex flex-col gap-1">
-                            {#each vm.inventory_list as { id, item, def }}
+                            {#each vm.inventory_list as { id, item, def, skill_name }}
                                 {@const color = EQUIP_CONFIG.rarity_color[item.rarity]}
                                 {@const is_selected = vm.selected_item_id === id && vm.selected_source === 'inventory'}
                                 {@const equipped = vm.is_item_equipped(id)}
@@ -116,8 +116,8 @@
                                     <span class="text-sm font-semibold text-[var(--text-primary)] truncate">{def.name}</span>
                                     <span class="text-xs text-[var(--text-muted)]">Lv.{item.level}</span>
                                     <span class="text-xs text-[var(--text-muted)] opacity-60">{def.slot}</span>
-                                    {#if def.skill}
-                                        <span class="text-xs text-blue-400 truncate">{def.skill.name}</span>
+                                    {#if skill_name}
+                                        <span class="text-xs text-blue-400 truncate">{skill_name}</span>
                                     {/if}
                                     {#if equipped}
                                         <span class="text-xs text-[var(--progress-from)] font-bold ml-auto shrink-0">E</span>
@@ -137,6 +137,8 @@
             <!-- Codex Detail View -->
             {@const entry = vm.selected_codex_entry}
             {@const def = entry.def}
+            {@const codex_bonuses = vm.selected_codex_stat_bonuses}
+            {@const codex_skill_view = vm.selected_skill_view}
 
             <div class="flex flex-col gap-3">
                 <div class="flex items-center gap-3">
@@ -150,11 +152,11 @@
                 {/if}
 
                 <div class="flex gap-4">
-                    {#if def.stat_bonuses.length > 0}
+                    {#if codex_bonuses.length > 0}
                         <div class="flex-1">
                             <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Base Stats</div>
                             <div class="grid grid-cols-[1fr_auto_auto] gap-x-3 gap-y-0.5 text-sm">
-                                {#each def.stat_bonuses as b}
+                                {#each codex_bonuses as b}
                                     <span class="text-[var(--text-primary)]">{b.stat}</span>
                                     <span class="text-[var(--text-primary)] font-semibold">+{b.base_value.toFixed(2)}</span>
                                     <span class="text-xs text-[var(--text-muted)]">({b.target})</span>
@@ -163,16 +165,16 @@
                         </div>
                     {/if}
 
-                    {#if def.skill && vm.selected_skill_strings}
+                    {#if codex_skill_view}
                         <div class="flex-1">
                             <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Battle Skill</div>
                             <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
-                                <div class="font-semibold text-sm text-blue-400">{def.skill.name}</div>
+                                <div class="font-semibold text-sm text-blue-400">{codex_skill_view.skill.name}</div>
                                 <div class="text-xs text-[var(--text-muted)] mt-1">
-                                    Trigger: {def.skill.triggers.join(', ')} &middot; {def.skill.chance * 100}%
+                                    Trigger: {codex_skill_view.skill.triggers.join(', ')} &middot; {codex_skill_view.skill.chance * 100}%
                                 </div>
-                                <div class="text-xs text-[var(--text-muted)]">If: {vm.selected_skill_strings.cond_string}</div>
-                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{vm.selected_skill_strings.eff_string}</div>
+                                <div class="text-xs text-[var(--text-muted)]">If: {codex_skill_view.cond_string}</div>
+                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{codex_skill_view.eff_string}</div>
                             </div>
                         </div>
                     {/if}
@@ -184,6 +186,7 @@
             {@const def = vm.selected_def}
             {@const color = EQUIP_CONFIG.rarity_color[item.rarity]}
             {@const exp = vm.selected_exp_progress}
+            {@const skill_view = vm.selected_skill_view}
 
             <div class="flex flex-col gap-3">
                 <!-- Header -->
@@ -244,16 +247,16 @@
                     {/if}
 
                     <!-- Skill -->
-                    {#if def.skill && vm.selected_skill_strings}
+                    {#if skill_view}
                         <div class="flex-1">
                             <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Battle Skill</div>
                             <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
-                                <div class="font-semibold text-sm text-blue-400">{def.skill.name}</div>
+                                <div class="font-semibold text-sm text-blue-400">{skill_view.skill.name}</div>
                                 <div class="text-xs text-[var(--text-muted)] mt-1">
-                                    Trigger: {def.skill.triggers.join(', ')} &middot; {def.skill.chance * 100}%
+                                    Trigger: {skill_view.skill.triggers.join(', ')} &middot; {skill_view.skill.chance * 100}%
                                 </div>
-                                <div class="text-xs text-[var(--text-muted)]">If: {vm.selected_skill_strings.cond_string}</div>
-                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{vm.selected_skill_strings.eff_string}</div>
+                                <div class="text-xs text-[var(--text-muted)]">If: {skill_view.cond_string}</div>
+                                <div class="text-xs text-[var(--text-primary)] mt-0.5">{skill_view.eff_string}</div>
                             </div>
                         </div>
                     {/if}

@@ -4,6 +4,8 @@ import { ALL_EQUIPMENT } from '$lib/data/equipment/equipment_table';
 import { EQUIP_DROP_LOCATION } from '$lib/data/locations/index';
 import {
 	type EquipDef,
+	type EquipSkillDef,
+	type EquipStatBonus,
 	type EquipSlot,
 	type Rarity,
 	EQUIP_CONFIG,
@@ -20,6 +22,12 @@ type SlotDisplay = {
 	label: string;
 	item: OwnedEquip | null;
 	def: EquipDef | null;
+};
+
+export type SelectedSkillView = {
+	skill: EquipSkillDef;
+	cond_string: string;
+	eff_string: string;
 };
 
 type EffectiveBonus = {
@@ -80,15 +88,25 @@ export class EquipmentPanelVM {
 		return EQUIP_REGISTRY.get(this.selected_item_id) ?? null;
 	}
 
-	get selected_skill_strings(): { cond_string: string; eff_string: string } | null {
+	get selected_skill_view(): SelectedSkillView | null {
 		const def = this.selected_def;
-		if (!def?.skill) return null;
+		if (!def) return null;
 		const item = this.selected_item;
-		const resolved = item ? resolve_equip(def, item.rarity) : resolve_equip(def, 'N');
+		const resolved = resolve_equip(def, item?.rarity ?? 'N');
+		const skill = resolved.skill;
+		if (!skill) return null;
+		const values = skill.values ?? {};
 		return {
-			cond_string: resolve_skill_string(def.skill.cond_string, resolved.skill_values),
-			eff_string: resolve_skill_string(def.skill.eff_string, resolved.skill_values),
+			skill,
+			cond_string: resolve_skill_string(skill.cond_string, values),
+			eff_string: resolve_skill_string(skill.eff_string, values),
 		};
+	}
+
+	get selected_codex_stat_bonuses(): EquipStatBonus[] {
+		const def = this.selected_def;
+		if (!def) return [];
+		return resolve_equip(def, 'N').stat_bonuses;
 	}
 
 	get selected_effective_bonuses(): EffectiveBonus[] {
@@ -96,17 +114,11 @@ export class EquipmentPanelVM {
 		const def = this.selected_def;
 		if (!item || !def) return [];
 		const resolved = resolve_equip(def, item.rarity);
-		const base = def.stat_bonuses.map((b) => ({
+		return resolved.stat_bonuses.map((b) => ({
 			stat: b.stat,
 			target: b.target,
 			value: effective_bonus(b, item.level, resolved.stat_mult),
 		}));
-		const extra = resolved.extra_bonuses.map((b) => ({
-			stat: b.stat,
-			target: b.target,
-			value: effective_bonus(b, item.level, resolved.stat_mult),
-		}));
-		return [...base, ...extra];
 	}
 
 	get selected_exp_progress(): { current: number; needed: number; percent: number } | null {
@@ -138,11 +150,13 @@ export class EquipmentPanelVM {
 		});
 	}
 
-	get inventory_list(): { id: string; item: OwnedEquip; def: EquipDef }[] {
-		const items: { id: string; item: OwnedEquip; def: EquipDef }[] = [];
+	get inventory_list(): { id: string; item: OwnedEquip; def: EquipDef; skill_name: string | null }[] {
+		const items: { id: string; item: OwnedEquip; def: EquipDef; skill_name: string | null }[] = [];
 		for (const [id, item] of EquipM.inventory) {
 			const def = EQUIP_REGISTRY.get(id);
-			if (def) items.push({ id, item, def });
+			if (!def) continue;
+			const skill_name = resolve_equip(def, item.rarity).skill?.name ?? null;
+			items.push({ id, item, def, skill_name });
 		}
 		// Sort by slot order, then rarity descending, then name
 		const slot_order: Record<EquipSlot, number> = { hat: 0, top: 1, bottom: 2, shoes: 3, accessory: 4 };
@@ -162,8 +176,7 @@ export class EquipmentPanelVM {
 			const def = EQUIP_REGISTRY.get(item.equip_id);
 			if (!def) continue;
 			const resolved = resolve_equip(def, item.rarity);
-			const all_bonuses = [...def.stat_bonuses, ...resolved.extra_bonuses];
-			for (const b of all_bonuses) {
+			for (const b of resolved.stat_bonuses) {
 				const value = effective_bonus(b, item.level, resolved.stat_mult);
 				const entry = stats.get(b.stat) ?? { base: 0, multi: 0 };
 				if (b.target === 'base') entry.base += value;
@@ -178,15 +191,18 @@ export class EquipmentPanelVM {
 		const skills: EquippedSkillInfo[] = [];
 		for (const item of EquipM.get_all_equipped()) {
 			const def = EQUIP_REGISTRY.get(item.equip_id);
-			if (!def?.skill) continue;
+			if (!def) continue;
 			const resolved = resolve_equip(def, item.rarity);
+			const skill = resolved.skill;
+			if (!skill) continue;
+			const values = skill.values ?? {};
 			skills.push({
 				item_name: def.name,
-				skill_name: def.skill.name,
-				triggers: def.skill.triggers.join(', '),
-				chance: def.skill.chance,
-				cond_string: resolve_skill_string(def.skill.cond_string, resolved.skill_values),
-				eff_string: resolve_skill_string(def.skill.eff_string, resolved.skill_values),
+				skill_name: skill.name,
+				triggers: skill.triggers.join(', '),
+				chance: skill.chance,
+				cond_string: resolve_skill_string(skill.cond_string, values),
+				eff_string: resolve_skill_string(skill.eff_string, values),
 			});
 		}
 		return skills;

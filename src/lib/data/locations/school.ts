@@ -79,7 +79,7 @@ const open_idol_club: ActionDef = {
     uses: 1,
     requires: {
         text: `Fans ≥ ${IDOL_CLUB_COST.fans}, Moni ≥ ${IDOL_CLUB_COST.moni}`,
-        check: () => stat_list.Fans.final < IDOL_CLUB_COST.fans || stat_list.Moni.final < IDOL_CLUB_COST.moni,
+        is_met: () => stat_list.Fans.final >= IDOL_CLUB_COST.fans && stat_list.Moni.final >= IDOL_CLUB_COST.moni,
     },
 };
 
@@ -87,7 +87,7 @@ export const school: LocationDef = {
     name: 'School',
     base_time: 80,
     desc: "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
-    hint: "When it is time for LIVE, you will need to prove that you are the better Idol. All of your stats (except Moni) will be taken into consideration. Make sure to train well!",
+    tutorial: "When it is time for LIVE, you will need to prove that you are the better Idol. All of your stats (except Moni) will be taken into consideration. Make sure to train well!",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 4 },
     ],
@@ -111,7 +111,7 @@ export const school: LocationDef = {
             uses: 1,
             on_complete: {
                 fn: extra_grade_report,
-                hint: "Randomly increase a stat by a small amount",
+                desc: "Randomly increase a stat by a small amount",
             },
         },
         {
@@ -127,7 +127,7 @@ export const school: LocationDef = {
             ],
             on_complete: {
                 fn: extra_attend_class,
-                hint: "Good chance to double stat gains. May drop equipment.",
+                desc: "Good chance to double stat gains. May drop equipment.",
             },
         },
         {
@@ -141,7 +141,7 @@ export const school: LocationDef = {
             ],
             on_complete: {
                 fn: extra_yell_on_wooden_box,
-                hint: "Tiny chance to gain 5 Fans",
+                desc: "Tiny chance to gain 5 Fans",
             },
         },
         {
@@ -156,7 +156,7 @@ export const school: LocationDef = {
             ],
             on_complete: {
                 fn: extra_hallway_flash_mob,
-                hint: "Tiny chance to gain 5 Fans",
+                desc: "Tiny chance to gain 5 Fans",
             },
         },
         {
@@ -173,7 +173,7 @@ export const school: LocationDef = {
     ],
     upgrades: [
         {
-            trigger: open_idol_club,
+            trigger: 'Open Idol Club',
             add_actions: [
                 {
                     name: 'Host School Concert',
@@ -199,7 +199,7 @@ export const school: LocationDef = {
                     costs: [{ stat: "Moni", amount: IDOL_CLUB_CONCERT_COST }],
                     requires: {
                         text: `Moni ≥ ${IDOL_CLUB_CONCERT_COST}`,
-                        check: () => stat_list.Moni.final < IDOL_CLUB_CONCERT_COST,
+                        is_met: () => stat_list.Moni.final >= IDOL_CLUB_CONCERT_COST,
                     },
                     equip_drops: {
                         chance: 0.03,
@@ -210,7 +210,7 @@ export const school: LocationDef = {
                     },
                     on_complete: {
                         fn: extra_host_school_concert,
-                        hint: "Tiny chance for Big Success. May drop equipment.",
+                        desc: "Tiny chance for Big Success. May drop equipment.",
                     },
                 },
                 {
@@ -238,7 +238,7 @@ export const school: LocationDef = {
                     rewards: [{ which_stat: "Presence", target: 'base', amount: 3.0 }],
                     on_complete: {
                         fn: extra_club_promoter,
-                        hint: "Tiny chance to gain 0.01 Fans multi",
+                        desc: "Tiny chance to gain 0.01 Fans multi",
                     },
                 },
             ],

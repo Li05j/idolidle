@@ -17,6 +17,9 @@ export const allLocations: LocationDef[] = [
     maid_cafe,
 ];
 
+/** The location the player starts at on a fresh run / rebirth. */
+export const STARTING_LOCATION: LocationDef = wake_up;
+
 export const locationMap = new Map<string, LocationDef>(
     allLocations.map(loc => [loc.name, loc])
 );

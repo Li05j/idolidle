@@ -31,11 +31,11 @@ const maid_interview: ActionDef = {
     uses: 1,
     requires: {
         text: `Fans ≥ ${MAID_INTERVIEW_COST.fans}, Charm ≥ ${MAID_INTERVIEW_COST.charm}`,
-        check: () => stat_list.Fans.final < MAID_INTERVIEW_COST.fans || stat_list.Charm.final < MAID_INTERVIEW_COST.charm,
+        is_met: () => stat_list.Fans.final >= MAID_INTERVIEW_COST.fans && stat_list.Charm.final >= MAID_INTERVIEW_COST.charm,
     },
     on_complete: {
         fn: () => {},
-        hint: "Unlocks more options in Maid Cafe.",
+        desc: "Unlocks more options in Maid Cafe.",
     },
 };
 
@@ -43,7 +43,7 @@ export const maid_cafe: LocationDef = {
     name: 'Maid Cafe',
     base_time: 300,
     desc: "\"Can I work as a waitress - wait, cat ears? Why? I guess it is kinda cute...?\"",
-    hint: "During LIVE, you consume Stamina for each move you perform. However, your Fans will also be more easily swayed by Rival if your are running out of Stamina.",
+    tutorial: "During LIVE, you consume Stamina for each move you perform. However, your Fans will also be more easily swayed by Rival if your are running out of Stamina.",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 15 },
     ],
@@ -65,13 +65,13 @@ export const maid_cafe: LocationDef = {
             ],
             on_complete: {
                 fn: extra_moe_magic,
-                hint: "Tiny chance to gain 0.01 Charm multi. May drop equipment.",
+                desc: "Tiny chance to gain 0.01 Charm multi. May drop equipment.",
             },
         },
     ],
     upgrades: [
         {
-            trigger: maid_interview,
+            trigger: 'Maid Interview',
             add_actions: [
                 {
                     name: 'New Hire Bonus!',
@@ -104,7 +104,7 @@ export const maid_cafe: LocationDef = {
                     ],
                     on_complete: {
                         fn: extra_maid_part_time,
-                        hint: "Good chance to gain a few Fans. May drop equipment.",
+                        desc: "Good chance to gain a few Fans. May drop equipment.",
                     },
                 },
             ],

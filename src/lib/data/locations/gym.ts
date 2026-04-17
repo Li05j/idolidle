@@ -39,11 +39,11 @@ const purchase_gym_vip: ActionDef = {
     uses: 1,
     requires: {
         text: `Moni ≥ ${GYM_VIP_COST}`,
-        check: () => stat_list.Moni.final < GYM_VIP_COST,
+        is_met: () => stat_list.Moni.final >= GYM_VIP_COST,
     },
     on_complete: {
         fn: () => {},
-        hint: "Void all training costs in Gym. Trainings will also be slightly more efficient.",
+        desc: "Void all training costs in Gym. Trainings will also be slightly more efficient.",
     },
 };
 
@@ -57,7 +57,7 @@ const bench_press: ActionDef = {
     costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
     requires: {
         text: `Moni ≥ ${GYM_ACTION_COST}`,
-        check: () => stat_list.Moni.final < GYM_ACTION_COST,
+        is_met: () => stat_list.Moni.final >= GYM_ACTION_COST,
     },
 };
 
@@ -71,7 +71,7 @@ const assault_bike: ActionDef = {
     costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
     requires: {
         text: `Moni ≥ ${GYM_ACTION_COST}`,
-        check: () => stat_list.Moni.final < GYM_ACTION_COST,
+        is_met: () => stat_list.Moni.final >= GYM_ACTION_COST,
     },
 };
 
@@ -88,7 +88,7 @@ const treadmill: ActionDef = {
     costs: [{ stat: "Moni", amount: GYM_ACTION_COST }],
     requires: {
         text: `Moni ≥ ${GYM_ACTION_COST}`,
-        check: () => stat_list.Moni.final < GYM_ACTION_COST,
+        is_met: () => stat_list.Moni.final >= GYM_ACTION_COST,
     },
 };
 
@@ -96,7 +96,7 @@ export const gym: LocationDef = {
     name: 'Gym',
     base_time: 70,
     desc: "Remember to wipe the equipment after using them, don't wanna end up being cancelled by some gym bros online. Talking about ways to end your Idol career...",
-    hint: "You cannot lower the time needed to complete Purple and Yellow cards. However, their rewards tend to be dynamic.",
+    tutorial: "You cannot lower the time needed to complete Purple and Yellow cards. However, their rewards tend to be dynamic.",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 3.5 },
     ],
@@ -113,8 +113,8 @@ export const gym: LocationDef = {
     ],
     upgrades: [
         {
-            trigger: purchase_gym_vip,
-            remove_actions: [treadmill, bench_press, assault_bike],
+            trigger: 'Purchase Gym VIP',
+            remove_actions: ['Treadmill', 'Bench Press', 'Assault Bike'],
             add_actions: [
                 {
                     name: 'Bench Press',
@@ -125,7 +125,7 @@ export const gym: LocationDef = {
 
                     on_complete: {
                         fn: extra_bench_press,
-                        hint: "Slight chance to gain 0.01 Stamina multi. May drop equipment.",
+                        desc: "Slight chance to gain 0.01 Stamina multi. May drop equipment.",
                     },
                 },
                 {
@@ -137,7 +137,7 @@ export const gym: LocationDef = {
 
                     on_complete: {
                         fn: extra_assault_bike,
-                        hint: "Slight chance to gain 0.01 Haste multi. May drop equipment.",
+                        desc: "Slight chance to gain 0.01 Haste multi. May drop equipment.",
                     },
                 },
                 {
@@ -152,7 +152,7 @@ export const gym: LocationDef = {
 
                     on_complete: {
                         fn: extra_treadmill,
-                        hint: "Slight chance to gain 1 Stamina or Haste. May drop equipment.",
+                        desc: "Slight chance to gain 1 Stamina or Haste. May drop equipment.",
                     },
                 },
             ],

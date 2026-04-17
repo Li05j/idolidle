@@ -95,8 +95,8 @@ function deriveDependsOn(def: ActionDef): string | null {
 }
 
 export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean, mastery_completions?: number): string {
-    if ('hint' in def && def.hint && !('kind' in def)) {
-        return "💡" + def.hint;
+    if (!('kind' in def) && def.tutorial) {
+        return "💡" + def.tutorial;
     }
 
     let ret_str = '';
@@ -110,8 +110,8 @@ export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean
         if (depends) {
             ret_str += `Depends: ${depends}.\n`
         }
-        if (def.on_complete?.hint) {
-            ret_str += `[blue]⭐ ${def.on_complete.hint}.[/blue]\n`
+        if (def.on_complete?.desc) {
+            ret_str += `[blue]⭐ ${def.on_complete.desc}.[/blue]\n`
         }
         if (mastery_completions !== undefined && mastery_completions > 0) {
             const factor = Math.min(1, 1 / (1 + CFG.mastery_rate * Math.sqrt(mastery_completions)) + CFG.mastery_offset);

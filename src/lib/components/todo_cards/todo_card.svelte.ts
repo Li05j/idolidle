@@ -78,7 +78,7 @@ export class TodoCardVM {
     get mastery_id(): string {
         if (this.is_location) return this.locationName;
         const def = this.actionDef;
-        return def?.mastery_id?.name ?? def?.name ?? this.actionName!;
+        return def?.mastery_id ?? def?.name ?? this.actionName!;
     }
 
     constructor(locationName: string, actionName?: string) {
@@ -89,7 +89,7 @@ export class TodoCardVM {
 
         const checkDisabled = () => {
             const d = this.def;
-            return d.requires?.check() ?? false;
+            return d.requires ? !d.requires.is_met() : false;
         };
         this.disabled = $derived.by(() => checkDisabled());
 
@@ -174,7 +174,7 @@ export class TodoCardVM {
                 },
                 () => {
                     TodoCardM.deactivateCard(this.card_id);
-                    Progression.onUsesExhausted(this.locationName, actDef);
+                    Progression.onUsesExhausted(this.locationName, actDef.name);
                 },
             );
         } else {

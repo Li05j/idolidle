@@ -7,18 +7,22 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         name: 'Comfy Slippers',
         slot: 'shoes',
         desc: "Worn-out slippers from home. They remind you to take it easy sometimes.",
-        stat_bonuses: [
-            { stat: 'Stamina', base_value: 5.0, target: 'base' },
-        ],
-        skill: {
-            name: 'Go-Home Club',
-            triggers: ['turn_start'],
-            chance: 0.5,
-            values: { threshold: 0.25, restore: 0.25 },
-            cond_string: (v) => `Stamina < ${v.threshold * 100}%`,
-            eff_string: (v) => `Restore ${v.restore * 100}% Stamina.`,
-            condition: ({ you, values: v }) => you.Curr_Stamina < you.Max_Stamina * v.threshold,
-            effect: ({ you, values: v }) => { you.Curr_Stamina = Math.min(you.Max_Stamina, you.Curr_Stamina + you.Max_Stamina * v.restore); },
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Stamina', base_value: 5.0, target: 'base' },
+                ],
+                skill: {
+                    name: 'Go-Home Club',
+                    triggers: ['turn_start'],
+                    chance: 0.5,
+                    values: { threshold: 0.25, restore: 0.25 },
+                    cond_string: (v) => `Stamina < ${v.threshold * 100}%`,
+                    eff_string: (v) => `Restore ${v.restore * 100}% Stamina.`,
+                    condition: ({ you, values: v }) => you.Curr_Stamina < you.Max_Stamina * v.threshold,
+                    effect: ({ you, values: v }) => { you.Curr_Stamina = Math.min(you.Max_Stamina, you.Curr_Stamina + you.Max_Stamina * v.restore); },
+                },
+            },
         },
     },
 
@@ -28,21 +32,25 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         name: "Busker's Cap",
         slot: 'hat',
         desc: "A weathered cap from your street performing days. It still smells like loose change and determination.",
-        stat_bonuses: [
-            { stat: 'Sing', base_value: 1.5, target: 'base' },
-            { stat: 'Dance', base_value: 1.5, target: 'base' },
-        ],
-        skill: {
-            name: 'Underdog',
-            triggers: ['turn_start'],
-            chance: 0.5,
-            values: { buff: 1.5 },
-            cond_string: 'Your Fans < Rival Fans',
-            eff_string: (v) => `Your next move steals ${(v.buff - 1) * 100}% more Fans.`,
-            condition: ({ you, rival }) => you.Fans < rival.Fans,
-            effect: ({ you, apply_temp_buff, values: v }) => {
-                apply_temp_buff!('you', 'Sing', you.Sing * v.buff);
-                apply_temp_buff!('you', 'Dance', you.Dance * v.buff);
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Sing', base_value: 1.5, target: 'base' },
+                    { stat: 'Dance', base_value: 1.5, target: 'base' },
+                ],
+                skill: {
+                    name: 'Underdog',
+                    triggers: ['turn_start'],
+                    chance: 0.5,
+                    values: { buff: 1.5 },
+                    cond_string: 'Your Fans < Rival Fans',
+                    eff_string: (v) => `Your next move steals ${(v.buff - 1) * 100}% more Fans.`,
+                    condition: ({ you, rival }) => you.Fans < rival.Fans,
+                    effect: ({ you, apply_temp_buff, values: v }) => {
+                        apply_temp_buff!('you', 'Sing', you.Sing * v.buff);
+                        apply_temp_buff!('you', 'Dance', you.Dance * v.buff);
+                    },
+                },
             },
         },
     },
@@ -53,22 +61,26 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         name: 'Stage Microphone',
         slot: 'accessory',
         desc: "The first mic you ever used on a real stage. It crackles sometimes, but the memories are crystal clear.",
-        stat_bonuses: [
-            { stat: 'Sing', base_value: 5.0, target: 'base' },
-            { stat: 'Presence', base_value: 2.5, target: 'base' },
-        ],
-        skill: {
-            name: 'Idol Executive',
-            triggers: ['live_start'],
-            chance: 1,
-            values: { drain: 0.1 },
-            cond_string: 'Always',
-            eff_string: (v) => `Drain ${v.drain * 100}% Fans from Rival before LIVE starts.`,
-            condition: () => true,
-            effect: ({ you, rival, values: v }) => {
-                const drain = Math.floor(rival.Fans * v.drain);
-                rival.Fans -= drain;
-                you.Fans += drain;
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Sing', base_value: 5.0, target: 'base' },
+                    { stat: 'Presence', base_value: 2.5, target: 'base' },
+                ],
+                skill: {
+                    name: 'Idol Executive',
+                    triggers: ['live_start'],
+                    chance: 1,
+                    values: { drain: 0.1 },
+                    cond_string: 'Always',
+                    eff_string: (v) => `Drain ${v.drain * 100}% Fans from Rival before LIVE starts.`,
+                    condition: () => true,
+                    effect: ({ you, rival, values: v }) => {
+                        const drain = Math.floor(rival.Fans * v.drain);
+                        rival.Fans -= drain;
+                        you.Fans += drain;
+                    },
+                },
             },
         },
     },
@@ -77,22 +89,26 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         name: 'Reading Glasses',
         slot: 'accessory',
         desc: "Studious and stylish. They make you look like you know what you're doing (you don't, but they don't know that).",
-        stat_bonuses: [
-            { stat: 'Sing', base_value: 1.5, target: 'base' },
-            { stat: 'Dance', base_value: 1.5, target: 'base' },
-            { stat: 'Charm', base_value: 1.5, target: 'base' },
-            { stat: 'Presence', base_value: 1.5, target: 'base' },
-        ],
-        skill: {
-            name: 'Good Student',
-            triggers: ['before_taking_dmg'],
-            chance: 0.2,
-            values: { reduction: 0.5 },
-            cond_string: 'Rival performs a move.',
-            eff_string: (v) => `Reduce Fans loss by ${v.reduction * 100}%.`,
-            condition: () => true,
-            effect: ({ set_dmg_reduction, values: v }) => {
-                set_dmg_reduction?.(v.reduction);
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Sing', base_value: 1.5, target: 'base' },
+                    { stat: 'Dance', base_value: 1.5, target: 'base' },
+                    { stat: 'Charm', base_value: 1.5, target: 'base' },
+                    { stat: 'Presence', base_value: 1.5, target: 'base' },
+                ],
+                skill: {
+                    name: 'Good Student',
+                    triggers: ['before_taking_dmg'],
+                    chance: 0.2,
+                    values: { reduction: 0.5 },
+                    cond_string: 'Rival performs a move.',
+                    eff_string: (v) => `Reduce Fans loss by ${v.reduction * 100}%.`,
+                    condition: () => true,
+                    effect: ({ set_dmg_reduction, values: v }) => {
+                        set_dmg_reduction?.(v.reduction);
+                    },
+                },
             },
         },
     },
@@ -103,21 +119,25 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         name: 'Designer Jacket',
         slot: 'top',
         desc: "Flashy, expensive, and turns heads. Exactly what an idol needs to make a statement before the show even starts.",
-        stat_bonuses: [
-            { stat: 'Moni', base_value: 0.02, target: 'multi' },
-            { stat: 'Presence', base_value: 3.0, target: 'base' },
-        ],
-        skill: {
-            name: 'Flashy Outfit',
-            triggers: ['live_start'],
-            chance: 1,
-            values: { drain: 0.1 },
-            cond_string: 'Always',
-            eff_string: (v) => `Reduce Rival Stamina by ${v.drain * 100}%.`,
-            condition: () => true,
-            effect: ({ rival, values: v }) => {
-                const drain = rival.Max_Stamina * v.drain;
-                rival.Curr_Stamina = Math.max(0, rival.Curr_Stamina - drain);
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Moni', base_value: 0.02, target: 'multi' },
+                    { stat: 'Presence', base_value: 3.0, target: 'base' },
+                ],
+                skill: {
+                    name: 'Flashy Outfit',
+                    triggers: ['live_start'],
+                    chance: 1,
+                    values: { drain: 0.1 },
+                    cond_string: 'Always',
+                    eff_string: (v) => `Reduce Rival Stamina by ${v.drain * 100}%.`,
+                    condition: () => true,
+                    effect: ({ rival, values: v }) => {
+                        const drain = rival.Max_Stamina * v.drain;
+                        rival.Curr_Stamina = Math.max(0, rival.Curr_Stamina - drain);
+                    },
+                },
             },
         },
     },
@@ -128,10 +148,14 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         name: 'Training Shorts',
         slot: 'bottom',
         desc: "Light, breathable, and somehow always in the laundry when you need them.",
-        stat_bonuses: [
-            { stat: 'Stamina', base_value: 0.5, target: 'base' },
-            { stat: 'Haste', base_value: 7.5, target: 'base' },
-        ],
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Stamina', base_value: 0.5, target: 'base' },
+                    { stat: 'Haste', base_value: 7.5, target: 'base' },
+                ],
+            },
+        },
     },
 
     // Maid Cafe
@@ -140,26 +164,30 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         name: 'Cat Ear Headband',
         slot: 'hat',
         desc: "Nya~ It's embarrassing, but the fans absolutely love it. Meow.",
-        stat_bonuses: [
-            { stat: 'Charm', base_value: 5.0, target: 'base' },
-            { stat: 'Dance', base_value: 1.0, target: 'base' },
-        ],
-        skill: {
-            name: 'Moe Kyun~!',
-            triggers: ['before_taking_dmg'],
-            chance: 0.25,
-            values: { charm_buff: 1.5, penalty: 0.1 },
-            cond_string: 'Rival performs a Sing move.',
-            eff_string: (v) => `Increase Charm by ${(v.charm_buff - 1) * 100}%. If Rival fails to steal Fans, Rival loses ${v.penalty * 100}% Fans.`,
-            condition: ({ atk_type }) => atk_type === 'Sing',
-            effect: ({ you, rival, apply_temp_buff, on_after_attack, values: v }) => {
-                apply_temp_buff!('you', 'Charm', you.Charm * v.charm_buff);
-                on_after_attack!((fans_stolen) => {
-                    if (fans_stolen <= 0) {
-                        const pen = Math.floor(rival.Fans * v.penalty);
-                        rival.Fans -= pen;
-                    }
-                });
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Charm', base_value: 5.0, target: 'base' },
+                    { stat: 'Dance', base_value: 1.0, target: 'base' },
+                ],
+                skill: {
+                    name: 'Moe Kyun~!',
+                    triggers: ['before_taking_dmg'],
+                    chance: 0.25,
+                    values: { charm_buff: 1.5, penalty: 0.1 },
+                    cond_string: 'Rival performs a Sing move.',
+                    eff_string: (v) => `Increase Charm by ${(v.charm_buff - 1) * 100}%. If Rival fails to steal Fans, Rival loses ${v.penalty * 100}% Fans.`,
+                    condition: ({ atk_type }) => atk_type === 'Sing',
+                    effect: ({ you, rival, apply_temp_buff, on_after_attack, values: v }) => {
+                        apply_temp_buff!('you', 'Charm', you.Charm * v.charm_buff);
+                        on_after_attack!((fans_stolen) => {
+                            if (fans_stolen <= 0) {
+                                const pen = Math.floor(rival.Fans * v.penalty);
+                                rival.Fans -= pen;
+                            }
+                        });
+                    },
+                },
             },
         },
     },

@@ -179,18 +179,21 @@ class LiveBattleManager {
         for (const item of EquipM.get_all_equipped()) {
             if (this._fired_skills.has(item.equip_id)) continue;
             const def = EQUIP_REGISTRY.get(item.equip_id);
-            if (!def?.skill) continue;
-            if (!def.skill.triggers.includes(trigger)) continue;
+            if (!def) continue;
 
             const resolved = resolve_equip(def, item.rarity);
-            const skill_ctx = { ...ctx, values: resolved.skill_values };
+            const skill = resolved.skill;
+            if (!skill) continue;
+            if (!skill.triggers.includes(trigger)) continue;
 
-            if (!def.skill.condition(skill_ctx)) continue;
-            if (Math.random() > def.skill.chance) continue;
+            const skill_ctx = { ...ctx, values: skill.values ?? {} };
 
-            def.skill.effect(skill_ctx);
+            if (!skill.condition(skill_ctx)) continue;
+            if (Math.random() > skill.chance) continue;
+
+            skill.effect(skill_ctx);
             this._fired_skills.add(item.equip_id);
-            this.log(`[blue]${def.skill.name} activated![/blue]`, false);
+            this.log(`[blue]${skill.name} activated![/blue]`, false);
         }
     }
 
