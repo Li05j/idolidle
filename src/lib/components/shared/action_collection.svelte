@@ -1,6 +1,5 @@
 <script lang="ts">
     import TodoCard from '$lib/components/todo_cards/todo_card.svelte';
-    import { TodoCardM } from "$lib/runtime/todo_card_manager.svelte";
 
     let { title, actionNames }: { title: string, actionNames: string[] } = $props();
     let repeat_val = $state('x1');
@@ -16,10 +15,9 @@
         <button onclick={toggle_collapse} class="appearance-none bg-transparent border-none p-0 m-0 text-inherit font-inherit cursor-pointer">
             {title}
         </button>
-        <select 
-            bind:value={repeat_val} 
-            disabled={TodoCardM.is_active}
-            class="border border-[var(--card-border-inactive)] rounded-full text-center text-xs text-[var(--text-muted)] w-28 mx-2 py-0.5 bg-[var(--surface-base)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+        <select
+            bind:value={repeat_val}
+            class="border border-[var(--card-border-inactive)] rounded-full text-center text-xs text-[var(--text-muted)] w-28 mx-2 py-0.5 bg-[var(--surface-base)] cursor-pointer"
         >
             <option value="x1">Repeat x1</option>
             <option value="x5">Repeat x5</option>

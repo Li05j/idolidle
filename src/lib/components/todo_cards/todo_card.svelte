@@ -9,7 +9,7 @@
     const vm = new TodoCardVM(locationName, actionName);
 
     $effect(() => {
-        if (repeat_val) vm.updateLoop(repeat_val);
+        if (repeat_val) vm.setRepeat(repeat_val);
     });
 
     $effect(() => {
@@ -30,7 +30,7 @@
                 {#if vm.has_uses}
                     ONCE
                 {:else}
-                    x{vm.loop}
+                    x{vm.timer.is_active ? vm.loop : vm.display_loop}
                 {/if}
             </span>
         </div>

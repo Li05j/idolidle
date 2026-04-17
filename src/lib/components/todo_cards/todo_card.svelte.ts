@@ -43,7 +43,12 @@ export class TodoCardVM {
     todo_actual_duration: number = $state(0);
     bg_color = $state('');
     border = $state(BORDER_INACTIVE);
+    // Runtime snapshot of the repeat count, decremented per iteration. Used
+    // as the watermark source only while the timer is running.
     loop = $state(1);
+    // Idle-watermark source. Mirrors the dropdown live so the user's intent
+    // is always visible on cards that aren't currently running.
+    display_loop = $state(1);
     hovered = $state(false);
     disabled: boolean;
 
@@ -115,20 +120,25 @@ export class TodoCardVM {
         });
     }
 
-    updateLoop(repeat_val: string) {
+    private parseRepeat(repeat_val: string): number {
         switch (repeat_val) {
-            case 'x1':   this.loop = 1; break;
-            case 'x5':   this.loop = 5; break;
-            case 'x20':  this.loop = 20; break;
-            case 'x100': this.loop = 100; break;
+            case 'x1':   return 1;
+            case 'x5':   return 5;
+            case 'x20':  return 20;
+            case 'x100': return 100;
+            default:     return 1;
         }
+    }
+
+    setRepeat(repeat_val: string) {
+        this.display_loop = this.parseRepeat(repeat_val);
     }
 
     toggle(repeat_val?: string) {
         if (this.timer.is_paused) {
             this.start(repeat_val);
         } else {
-            this.pause(repeat_val);
+            this.pause();
         }
     }
 
@@ -159,7 +169,7 @@ export class TodoCardVM {
     }
 
     private startAction(repeat_val: string) {
-        this.updateLoop(repeat_val);
+        this.loop = this.parseRepeat(repeat_val);
         TodoCardM.activateCard(this.card_id);
         const actDef = this.actionDef!;
 
@@ -187,14 +197,12 @@ export class TodoCardVM {
                 },
                 () => {
                     TodoCardM.deactivateCard(this.card_id);
-                    this.updateLoop(repeat_val);
                 },
             );
         }
     }
 
-    private pause(repeat_val?: string) {
-        if (repeat_val) this.updateLoop(repeat_val);
+    private pause() {
         TodoCardM.deactivateCard(this.card_id);
         this.timer.pause();
     }
