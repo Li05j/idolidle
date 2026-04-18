@@ -19,8 +19,12 @@ const COMBAT_PAIRS: [StatKey, RivalKey, string][] = [
 export type StatComparison = { label: string; clamped: number; color: string; playerValue: string; rivalValue: string; rivalLabel: string };
 
 class RivalComparison {
+    public persona_name: string = $derived(
+        RivalStatsM.preview(CPs.current_completed_checkpoint).persona.name
+    );
+
     public comparisons: StatComparison[] = $derived.by(() => {
-        const rival = RivalStatsM.preview(CPs.current_completed_checkpoint);
+        const rival = RivalStatsM.preview(CPs.current_completed_checkpoint).stats;
         return COMBAT_PAIRS.map(([playerKey, rivalKey, label]) => {
             const pv = stat_list[playerKey].final;
             const rv = rival[rivalKey] as number;

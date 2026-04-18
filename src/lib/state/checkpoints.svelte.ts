@@ -1,6 +1,5 @@
 import { CFG } from '$lib/config';
 import { CHECKPOINTS } from '$lib/data/checkpoints';
-import type { RivalTemplate } from '$lib/data/checkpoints';
 
 class Checkpoints {
 	public current_time_spent = $state(0)
@@ -19,10 +18,6 @@ class Checkpoints {
 	get current_total_time() {
 		const cp = CHECKPOINTS[this._idx];
 		return cp.time * CFG.time_scale * cp.multi
-	}
-
-	get_rival_template(idx: number): RivalTemplate | undefined {
-		return CHECKPOINTS[idx]?.rival;
 	}
 
 	readonly shouldTrigger = $derived(

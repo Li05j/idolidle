@@ -5,7 +5,7 @@
 
 <div class="w-full p-6">
     <div class="rounded-xl bg-[var(--surface-inset)] p-5">
-        <h3 class="text-xl font-bold mb-4 text-center text-[var(--text-primary)]">Your Rival</h3>
+        <h3 class="text-xl font-bold mb-4 text-center text-[var(--text-primary)]">{LiveInfo.persona_name}</h3>
         <div class="grid items-center justify-center gap-x-3 gap-y-2 max-w-[28rem] mx-auto" style="grid-template-columns: {DEV ? '1fr auto auto auto 1fr' : 'auto auto auto'}">
             <div class="text-sm font-semibold text-[var(--text-muted)] text-right">You</div>
             <div></div>

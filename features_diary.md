@@ -18,9 +18,11 @@ Fans, Moni, Stamina, Haste, Sing, Dance, Charm, Presence. Each has base/multi co
 
 ## LIVE Battles
 
-Turn-based simulation. Haste determines turn order. Attacks poach Fans from the defender; battle ends when either side hits 0 Fans or both exhaust Stamina. The fight is pre-computed then replayed turn-by-turn in the UI. Rival stats are generated from templates per checkpoint.
+Turn-based simulation. Haste determines turn order. Attacks poach Fans from the defender; battle ends when either side hits 0 Fans or both exhaust Stamina. The fight is pre-computed then replayed turn-by-turn in the UI.
 
-Battle logic: `src/lib/state/live.svelte.ts`. Rival templates live inline on each `CheckpointDef` in `src/lib/data/checkpoints.ts`.
+Rival stats = `BASE` ranges (one shared table) × **persona** weights × per-checkpoint scale, then rolled uniformly within the resulting range. A persona is picked at random per checkpoint on each reroll (rebirth or end-of-battle), so the player faces a different archetype — Dance Diva, Glass Cannon, Iron Idol, etc. — each run rather than a generic well-rounded rival.
+
+Battle logic: `src/lib/state/live.svelte.ts`. Checkpoint scale lives inline on each `CheckpointDef` in `src/lib/data/checkpoints.ts`. Persona pool: `src/lib/data/rivals/personas.ts`.
 
 ## Skills
 
@@ -34,7 +36,7 @@ Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `e
 
 ## Checkpoints
 
-The checkpoint bar fills while actions run. Each checkpoint carries its own rival template inline (terminal checkpoint omits `rival`). Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
+The checkpoint bar fills while actions run. Each checkpoint carries an inline `rival: { stat_multi, fan_multi? }` scale (terminal checkpoint omits `rival`); the actual stat shape comes from the rolled persona. Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
 
 ## Action Mastery
 
@@ -68,7 +70,11 @@ Upgrades reference their trigger and removed actions by **action name string**: 
 
 ### Add a checkpoint
 
-Append a `CheckpointDef` to `CHECKPOINTS` in `src/lib/data/checkpoints.ts`. Include an inline `rival: RivalTemplate` for battle checkpoints; omit for terminal.
+Append a `CheckpointDef` to `CHECKPOINTS` in `src/lib/data/checkpoints.ts`. Include an inline `rival: { stat_multi, fan_multi? }` for battle checkpoints; omit for terminal.
+
+### Add a rival persona
+
+Append a `Persona` to `ALL_PERSONAS` in `src/lib/data/rivals/personas.ts`. Weights are per-stat multipliers against the shared `BASE` ranges; a weight of 1.0 = baseline, &gt;1 = specialist, &lt;1 = weakness. Personas are picked uniformly at random per checkpoint, globally — no registration elsewhere.
 
 ### Add equipment
 
