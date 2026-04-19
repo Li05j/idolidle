@@ -20,7 +20,7 @@
     <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-bold text-[var(--text-primary)]">Dream Upgrades</h2>
         <div class="px-3 py-1 rounded-full bg-[var(--surface-inset)] text-sm font-semibold text-[var(--text-primary)]">
-            DP: {Rebirth.rebirth_points}
+            Dream Points (DP): {Rebirth.rebirth_points}
         </div>
     </div>
 
