@@ -7,7 +7,7 @@ export type BattleTrigger = 'live_start' | 'turn_start' | 'before_taking_dmg';
 export const EQUIP_CONFIG = {
     rarity_stat_mult: { N: 1.0, R: 1.5, SR: 2.5, UR: 4.0 } as Record<Rarity, number>,
     rarity_color: { N: '#8C7A7D', R: '#16a34a', SR: '#9333ea', UR: '#dc2626' } as Record<Rarity, string>,
-    dupe_exp: { N: 1, R: 5, SR: 10, UR: 20 } as Record<Rarity, number>,
+    dupe_exp: { N: 1, R: 3, SR: 10, UR: 30 } as Record<Rarity, number>,
     exp_per_level: 10,
     level_cap: 5,
     rarity_weights: { N: 0.88, R: 0.10, SR: 0.018, UR: 0.002 } as Record<Rarity, number>,
@@ -83,6 +83,12 @@ export type EquipDef = {
     slot: EquipSlot;
     desc: string;
     variants: { N: VariantBody } & Partial<Record<Exclude<Rarity, 'N'>, Partial<VariantBody>>>;
+};
+
+export type RivalEquipEntry = {
+    equip_id: string;
+    rarity: Rarity;
+    level: number;
 };
 
 export type EquipDropEntry = {

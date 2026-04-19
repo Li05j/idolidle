@@ -22,6 +22,8 @@ Turn-based simulation. Haste determines turn order. Attacks poach Fans from the 
 
 Rival stats = `BASE` ranges (one shared table) × **persona** weights × per-checkpoint scale, then rolled uniformly within the resulting range. A persona is picked at random per checkpoint on each reroll (rebirth or end-of-battle), so the player faces a different archetype — Dance Diva, Glass Cannon, Iron Idol, etc. — each run rather than a generic well-rounded rival.
 
+Rivals also receive **equipment** from a budget-based system. Each checkpoint has a point budget (higher checkpoints = more budget). A greedy knapsack picks equipment items, assigns rarity and level within budget, and applies stat bonuses to the rival. Rival equipment skills fire during battle with flipped perspective. Budget table and loadout generation: `src/lib/data/rivals/rival_equipment.ts`.
+
 Battle logic: `src/lib/state/live.svelte.ts`. Checkpoint scale lives inline on each `CheckpointDef` in `src/lib/data/checkpoints.ts`. Persona pool: `src/lib/data/rivals/personas.ts`.
 
 ## Skills

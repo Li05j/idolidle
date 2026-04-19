@@ -4,7 +4,7 @@ import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
 import { Rebirth } from "$lib/state/rebirth.svelte";
 import { history } from "$lib/state/history.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
-import { resolve_equip, type BattleTrigger } from "$lib/data/equipment/equipment_definition";
+import { resolve_equip, type BattleTrigger, type RivalEquipEntry } from "$lib/data/equipment/equipment_definition";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 import { EquipM } from "$lib/state/equipment.svelte";
 
@@ -37,13 +37,16 @@ class LiveBattleManager {
     private _rival: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
 
     private _action_bar = [0, 0]
+    private _rival_equipment: RivalEquipEntry[] = []
     private _replay_interval: ReturnType<typeof setInterval> | null = null
 
     get turn_logs() { return this._replay_turns; }
 
     private init() {
-        RivalStatsM.initForBattle(CPs.current_completed_checkpoint);
+        const cp = CPs.current_completed_checkpoint;
+        RivalStatsM.initForBattle(cp);
         this._rival = { ...RivalStatsM.battle };
+        this._rival_equipment = RivalStatsM.preview(cp).equipment;
 
         this._you = {
             Fans: Math.round(stat_list.Fans.final),
@@ -69,6 +72,7 @@ class LiveBattleManager {
         })
 
         this.fire_skills('live_start');
+        this.fire_rival_skills('live_start');
     }
 
     private next_actor(): Actor {
@@ -98,6 +102,8 @@ class LiveBattleManager {
 
         if (actor === "Player") {
             this.fire_skills('turn_start');
+        } else {
+            this.fire_rival_skills('turn_start');
         }
 
         this.basic_attack(actor, attacker, defender)
@@ -112,6 +118,8 @@ class LiveBattleManager {
         this._dmg_reduction = 0;
         if (actor === "Rival") {
             this.fire_skills('before_taking_dmg', atk_type);
+        } else {
+            this.fire_rival_skills('before_taking_dmg', atk_type);
         }
 
         const raw_atk = attacker[atk_type] as number
@@ -197,6 +205,45 @@ class LiveBattleManager {
             this.log(`[green]${skill.name} activated![/green]`, false);
             skill.effect(skill_ctx);
             this._fired_skills.add(item.equip_id);
+        }
+    }
+
+    private fire_rival_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance'): void {
+        const ctx = {
+            you: this._rival,
+            rival: this._you,
+            atk_type,
+            set_dmg_reduction: (amount: number) => { this._dmg_reduction = Math.max(this._dmg_reduction, amount); },
+            apply_temp_buff: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => {
+                const target = who === 'you' ? this._rival : this._you;
+                this._temp_buffs.push({ target, stat, original: target[stat] as number });
+                (target as Record<string, number>)[stat] = new_value;
+            },
+            on_after_attack: (callback: (fans_stolen: number) => void) => {
+                this._post_attack_effects.push(callback);
+            },
+            log: (msg: string) => this.log(`[darkorange]${msg}[/darkorange]`),
+        };
+
+        for (const entry of this._rival_equipment) {
+            const key = `r:${entry.equip_id}`;
+            if (this._fired_skills.has(key)) continue;
+            const def = EQUIP_REGISTRY.get(entry.equip_id);
+            if (!def) continue;
+
+            const resolved = resolve_equip(def, entry.rarity);
+            const skill = resolved.skill;
+            if (!skill) continue;
+            if (!skill.triggers.includes(trigger)) continue;
+
+            const skill_ctx = { ...ctx, values: skill.values ?? {} };
+
+            if (!skill.condition(skill_ctx)) continue;
+            if (Math.random() > skill.chance) continue;
+
+            this.log(`[darkorange]${skill.name} activated![/darkorange]`, false);
+            skill.effect(skill_ctx);
+            this._fired_skills.add(key);
         }
     }
 
@@ -315,6 +362,7 @@ class LiveBattleManager {
         this._fired_skills.clear();
         this._temp_buffs = [];
         this._post_attack_effects = [];
+        this._rival_equipment = [];
         RivalStatsM.reroll()
     }
 }
