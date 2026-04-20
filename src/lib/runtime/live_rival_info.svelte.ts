@@ -27,16 +27,32 @@ const COMBAT_PAIRS: [StatKey, RivalKey, string][] = [
     ["Presence", "Dance",       "Presence"],
 ];
 
-const SLOT_SORT: Record<EquipSlot, number> = { hat: 0, top: 1, bottom: 2, shoes: 3, accessory: 4 };
-
 export type StatComparison = { label: string; clamped: number; color: string; playerValue: string; rivalValue: string; rivalLabel: string };
 
-export type RivalEquipDisplay = {
+export type RivalEquipFilled = {
+    slot_label: string;
+    filled: true;
     idx: number;
     entry: RivalEquipEntry;
     def: EquipDef;
     skill_name: string | null;
 };
+
+export type RivalEquipEmpty = {
+    slot_label: string;
+    filled: false;
+};
+
+export type RivalEquipSlot = RivalEquipFilled | RivalEquipEmpty;
+
+const DISPLAY_SLOTS: { slot: EquipSlot; label: string }[] = [
+    { slot: 'hat', label: 'Hat' },
+    { slot: 'top', label: 'Top' },
+    { slot: 'bottom', label: 'Bottom' },
+    { slot: 'shoes', label: 'Shoes' },
+    { slot: 'accessory', label: 'Accessory' },
+    { slot: 'accessory', label: 'Accessory' },
+];
 
 export type RivalEquipSkillView = {
     skill: EquipSkillDef;
@@ -85,18 +101,29 @@ class RivalComparison {
         });
     });
 
-    public rival_equipment: RivalEquipDisplay[] = $derived.by(() => {
+    public rival_equipment: RivalEquipSlot[] = $derived.by(() => {
         const loadout = RivalStatsM.preview(CPs.current_completed_checkpoint).equipment;
-        const items: RivalEquipDisplay[] = [];
+        // Group resolved entries by slot so accessory cards fill left-to-right
+        // and unfilled slots render as deterministic placeholders.
+        const by_slot: Record<EquipSlot, RivalEquipFilled[]> = {
+            hat: [], top: [], bottom: [], shoes: [], accessory: [],
+        };
         loadout.forEach((entry, idx) => {
             const def = EQUIP_REGISTRY.get(entry.equip_id);
             if (!def) return;
             const skill_name = resolve_equip(def, entry.rarity).skill?.name ?? null;
-            items.push({ idx, entry, def, skill_name });
+            by_slot[def.slot].push({ slot_label: '', filled: true, idx, entry, def, skill_name });
         });
-        items.sort((a, b) => SLOT_SORT[a.def.slot] - SLOT_SORT[b.def.slot]);
-        return items;
+        return DISPLAY_SLOTS.map(({ slot, label }) => {
+            const next = by_slot[slot].shift();
+            if (next) return { ...next, slot_label: label };
+            return { slot_label: label, filled: false };
+        });
     });
+
+    public avg_clamped: number = $derived.by(
+        () => this.comparisons.reduce((s, c) => s + c.clamped, 0) / this.comparisons.length
+    );
 
     public selected_equip_detail: RivalEquipDetail | null = $derived.by(() => {
         const idx = this.selected_equip_idx;
@@ -127,7 +154,7 @@ class RivalComparison {
     });
 
     public condition_text: string = $derived.by(() => {
-        const avg = this.comparisons.reduce((sum, c) => sum + c.clamped, 0) / this.comparisons.length;
+        const avg = this.avg_clamped;
         if (avg >= 0.9) return "Looks like Rival doesn't stand a chance!";
         if (avg >= 0.6) return "You've got a solid shot at winning!";
         if (avg >= 0.4) return "It's anyone's game!";

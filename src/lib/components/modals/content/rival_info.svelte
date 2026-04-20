@@ -4,95 +4,94 @@
     import { EQUIP_CONFIG } from "$lib/data/equipment/equipment_definition";
 </script>
 
-<div class="w-full p-6 flex flex-col gap-3">
-    <h3 class="text-xl font-bold text-center text-[var(--text-primary)]">{LiveInfo.persona_name}</h3>
+<div class="w-full h-full p-6 flex flex-col gap-4 min-h-0">
+    <!-- Header: persona name + condition pill -->
+    <div class="flex items-center justify-between gap-4 shrink-0">
+        <h3 class="text-xl font-bold text-[var(--text-primary)] truncate">{LiveInfo.persona_name}</h3>
+        <div
+            class="px-3 py-1 rounded-full text-sm font-semibold text-[var(--text-primary)] shrink-0"
+            style="background-color: hsl({LiveInfo.avg_clamped * 120}, 70%, 35%);"
+        >
+            {LiveInfo.condition_text}
+        </div>
+    </div>
 
-    <div class="flex gap-3 items-start">
-        <!-- Stats Comparison -->
-        <div class="flex-1 rounded-xl bg-[var(--surface-inset)] p-5">
-            <div class="grid items-center justify-center gap-x-3 gap-y-2 max-w-[28rem] mx-auto" style="grid-template-columns: {DEV ? '1fr auto auto auto 1fr' : 'auto auto auto'}">
-                <div class="text-sm font-semibold text-[var(--text-muted)] text-right">You</div>
-                <div></div>
-                <div></div>
-                {#if DEV}
-                    <div></div>
-                    <div class="text-sm font-semibold text-[var(--text-muted)] text-left">Rival</div>
-                {/if}
+    <!-- Body: three panes -->
+    <div class="flex-1 grid grid-cols-3 gap-3 min-h-0">
+        <!-- Stats vs Rival -->
+        <div class="rounded-xl bg-[var(--surface-inset)] p-4 flex flex-col gap-2 min-h-0">
+            <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide">Stats vs Rival</div>
+            <div class="flex flex-col gap-1.5">
                 {#each LiveInfo.comparisons as comp}
-                    <div class="text-base text-[var(--text-primary)] text-right tabular-nums">{comp.playerValue}</div>
-                    <div class="text-sm text-[var(--text-muted)] text-center">{comp.label}</div>
-                    <div class="flex justify-center"><div class="w-8 h-6 rounded-md" style={comp.color}></div></div>
-                    {#if DEV}
-                        <div class="text-sm text-[var(--text-muted)] text-center">{comp.rivalLabel}</div>
-                        <div class="text-base text-[var(--text-primary)] text-left tabular-nums">{comp.rivalValue}</div>
+                    <div class="grid items-center gap-2" style="grid-template-columns: 5rem auto 1fr auto {DEV ? '5rem' : ''}">
+                        <div class="text-sm text-[var(--text-muted)]">{comp.label}</div>
+                        <div class="text-sm text-[var(--text-primary)] tabular-nums text-right w-12">{comp.playerValue}</div>
+                        <div class="h-2 rounded-full bg-[var(--surface-base)] overflow-hidden">
+                            <div class="h-full rounded-full" style="width: {comp.clamped * 100}%; {comp.color}"></div>
+                        </div>
+                        <div class="text-sm text-[var(--text-muted)] tabular-nums text-left w-12">{comp.rivalValue}</div>
+                        {#if DEV}
+                            <div class="text-xs text-[var(--text-muted)] truncate">{comp.rivalLabel}</div>
+                        {/if}
+                    </div>
+                {/each}
+            </div>
+        </div>
+
+        <!-- Rival Loadout: 6 slot cards -->
+        <div class="rounded-xl bg-[var(--surface-inset)] p-4 flex flex-col gap-2 min-h-0">
+            <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide">Rival Loadout</div>
+            <div class="flex flex-col gap-1.5">
+                {#each LiveInfo.rival_equipment as slot}
+                    {#if slot.filled}
+                        {@const color = EQUIP_CONFIG.rarity_color[slot.entry.rarity]}
+                        {@const is_selected = LiveInfo.selected_equip_idx === slot.idx}
+                        <button
+                            class="flex flex-col gap-0.5 px-3 py-2 rounded-lg bg-[var(--surface-base)] cursor-pointer transition-all text-left w-full
+                                {is_selected ? 'ring-2 ring-[var(--progress-from)]' : 'hover:brightness-110'}"
+                            onclick={() => LiveInfo.select_equip(slot.idx)}
+                        >
+                            <div class="flex items-center gap-2 text-xs">
+                                <span class="text-[var(--text-muted)] uppercase tracking-wide">{slot.slot_label}</span>
+                                <span class="font-bold" style="color: {color};">{slot.entry.rarity}</span>
+                                <span class="ml-auto text-[var(--text-muted)] tabular-nums">Lv.{slot.entry.level}</span>
+                            </div>
+                            <div class="flex items-baseline gap-2 min-w-0">
+                                <span class="text-sm font-semibold text-[var(--text-primary)] truncate">{slot.def.name}</span>
+                                {#if slot.skill_name}
+                                    <span class="text-xs text-blue-400 truncate">{slot.skill_name}</span>
+                                {/if}
+                            </div>
+                        </button>
+                    {:else}
+                        <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--surface-base)]/40 border border-dashed border-[var(--surface-base)] text-xs">
+                            <span class="text-[var(--text-muted)] uppercase tracking-wide">{slot.slot_label}</span>
+                            <span class="ml-auto text-[var(--text-muted)] opacity-50">—</span>
+                        </div>
                     {/if}
                 {/each}
             </div>
         </div>
 
-        <!-- Rival Equipment -->
-        <div class="flex-1 rounded-xl bg-[var(--surface-inset)] p-5">
-            <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-2">Rival Equipment</div>
-            {#if LiveInfo.rival_equipment.length === 0}
-                <div class="text-sm text-[var(--text-muted)] italic">No equipment.</div>
-            {:else}
-                <div class="flex flex-col gap-1.5">
-                    {#each LiveInfo.rival_equipment as { idx, entry, def, skill_name }}
-                        {@const color = EQUIP_CONFIG.rarity_color[entry.rarity]}
-                        {@const is_selected = LiveInfo.selected_equip_idx === idx}
-                        <button
-                            class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--surface-base)] cursor-pointer transition-all text-left w-full
-                                {is_selected ? 'ring-2 ring-[var(--progress-from)]' : 'hover:brightness-95'}"
-                            onclick={() => LiveInfo.select_equip(idx)}
-                        >
-                            <span class="text-xs font-semibold shrink-0" style="color: {color};">[{entry.rarity}]</span>
-                            <span class="text-sm font-semibold text-[var(--text-primary)] truncate">{def.name}</span>
-                            <span class="text-xs text-[var(--text-muted)]">Lv.{entry.level}</span>
-                            <span class="text-xs text-[var(--text-muted)] opacity-60">{def.slot}</span>
-                            {#if skill_name}
-                                <span class="text-xs text-blue-400 truncate">{skill_name}</span>
-                            {/if}
-                        </button>
-                    {/each}
+        <!-- Equip Detail: always mounted -->
+        <div class="rounded-xl bg-[var(--surface-inset)] p-4 flex flex-col gap-3 min-h-0">
+            <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide">Equip Detail</div>
+            {#if LiveInfo.selected_equip_detail}
+                {@const detail = LiveInfo.selected_equip_detail}
+                {@const color = EQUIP_CONFIG.rarity_color[detail.entry.rarity]}
+                <div class="flex items-center gap-2 min-w-0">
+                    <span class="text-base font-bold truncate" style="color: {color};">{detail.def.name}</span>
+                    <span class="text-xs font-semibold px-1.5 py-0.5 rounded shrink-0" style="color: {color}; border: 1px solid {color};">{detail.entry.rarity}</span>
+                    <span class="text-xs text-[var(--text-muted)] px-1.5 py-0.5 rounded bg-[var(--surface-base)] shrink-0">{detail.def.slot}</span>
+                    <span class="text-sm text-[var(--text-primary)] font-semibold shrink-0">Lv.{detail.entry.level}</span>
                 </div>
-            {/if}
-        </div>
-    </div>
 
-    <!-- Legend + Condition -->
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 px-2">
-        <div class="flex items-center gap-1.5">
-            <div class="w-6 h-4 rounded-md" style="background-color: hsl(120, 100%, 50%)"></div>
-            <span class="text-sm text-[var(--text-muted)]">- you have enough of this stat.</span>
-        </div>
-        <div class="flex items-center gap-1.5">
-            <div class="w-6 h-4 rounded-md" style="background-color: hsl(0, 100%, 50%)"></div>
-            <span class="text-sm text-[var(--text-muted)]">- you need more training on this stat.</span>
-        </div>
-    </div>
-    <div class="flex py-4 justify-center items-center">
-        <h1 class="text-xl font-bold text-[var(--text-primary)]">{LiveInfo.condition_text}</h1>
-    </div>
+                {#if detail.def.desc}
+                    <div class="text-sm text-[var(--text-muted)] italic">{detail.def.desc}</div>
+                {/if}
 
-    <!-- Equip Detail Panel -->
-    {#if LiveInfo.selected_equip_detail}
-        {@const detail = LiveInfo.selected_equip_detail}
-        {@const color = EQUIP_CONFIG.rarity_color[detail.entry.rarity]}
-        <div class="rounded-xl bg-[var(--surface-inset)] p-4 flex flex-col gap-3">
-            <div class="flex items-center gap-3 flex-wrap">
-                <span class="text-base font-bold" style="color: {color};">{detail.def.name}</span>
-                <span class="text-xs font-semibold px-1.5 py-0.5 rounded" style="color: {color}; border: 1px solid {color};">{detail.entry.rarity}</span>
-                <span class="text-xs text-[var(--text-muted)] px-1.5 py-0.5 rounded bg-[var(--surface-base)]">{detail.def.slot}</span>
-                <span class="text-sm text-[var(--text-primary)] font-semibold">Lv.{detail.entry.level}</span>
-            </div>
-
-            {#if detail.def.desc}
-                <div class="text-sm text-[var(--text-muted)] italic">{detail.def.desc}</div>
-            {/if}
-
-            <div class="flex gap-4 flex-wrap">
                 {#if detail.effective_bonuses.length > 0}
-                    <div class="flex-1 min-w-[180px]">
+                    <div>
                         <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Stat Bonuses</div>
                         <div class="grid grid-cols-[1fr_auto_auto] gap-x-3 gap-y-0.5 text-sm">
                             {#each detail.effective_bonuses as b}
@@ -105,7 +104,7 @@
                 {/if}
 
                 {#if detail.skill_view}
-                    <div class="flex-1 min-w-[220px]">
+                    <div>
                         <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Battle Skill</div>
                         <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
                             <div class="font-semibold text-sm text-blue-400">{detail.skill_view.skill.name}</div>
@@ -117,7 +116,23 @@
                         </div>
                     </div>
                 {/if}
-            </div>
+            {:else}
+                <div class="flex-1 flex items-center justify-center rounded-lg border border-dashed border-[var(--surface-base)] text-sm text-[var(--text-muted)] italic text-center px-4">
+                    Select an equipment to inspect.
+                </div>
+            {/if}
         </div>
-    {/if}
+    </div>
+
+    <!-- Legend -->
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 px-2 shrink-0 text-xs text-[var(--text-muted)]">
+        <div class="flex items-center gap-1.5">
+            <div class="w-5 h-3 rounded-sm" style="background-color: hsl(120, 100%, 50%)"></div>
+            <span>you have enough of this stat</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+            <div class="w-5 h-3 rounded-sm" style="background-color: hsl(0, 100%, 50%)"></div>
+            <span>you need more training on this stat</span>
+        </div>
+    </div>
 </div>

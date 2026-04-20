@@ -1,7 +1,7 @@
 import type { BasicStats } from '$lib/types';
 
 // 0 = prod, 1 = prod-fast, 2 = super-fast
-const ENV: 0 | 1 | 2 = 2;
+const ENV: 0 | 1 | 2 = 0;
 
 const envs = {
 	0: {
