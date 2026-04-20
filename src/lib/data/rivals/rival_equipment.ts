@@ -28,44 +28,40 @@ type Candidate = {
     rarity: Rarity;
     level: number;
     cost: number;
-    value: number;
 };
 
+// Enumerate every affordable (equip, rarity, level) triple. No scoring —
+// rival loadouts are picked by shuffle, budget is just a spend cap.
 function build_candidates(budget: number): Candidate[] {
     const candidates: Candidate[] = [];
-
     for (const def of ALL_EQUIPMENT) {
         for (const rarity of RARITY_ORDER) {
             for (let level = 1; level <= EQUIP_CONFIG.level_cap; level++) {
                 const cost = equip_cost(rarity, level);
                 if (cost > budget) continue;
-
-                const resolved = resolve_equip(def, rarity);
-                let value = 0;
-                for (const bonus of resolved.stat_bonuses) {
-                    if (bonus.stat === 'Moni') continue;
-                    value += Math.abs(effective_bonus(bonus, level, resolved.stat_mult));
-                }
-                if (resolved.skill) value += 5;
-
-                candidates.push({ equip_id: def.id, slot: def.slot, rarity, level, cost, value });
+                candidates.push({ equip_id: def.id, slot: def.slot, rarity, level, cost });
             }
         }
     }
-
-    // Sort by value/cost ratio descending
-    candidates.sort((a, b) => (b.value / b.cost) - (a.value / a.cost));
     return candidates;
+}
+
+function shuffle<T>(arr: T[]): void {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
 }
 
 export function generate_rival_loadout(budget: number): RivalEquipEntry[] {
     if (budget <= 0) return [];
 
-    // Apply ±15% jitter
-    const jittered = budget * (0.85 + Math.random() * 0.3);
-    let remaining = jittered;
+    // ±15% jitter on the spend cap so totals vary run-to-run.
+    let remaining = budget * (0.85 + Math.random() * 0.3);
 
     const candidates = build_candidates(budget);
+    shuffle(candidates);
+
     const loadout: RivalEquipEntry[] = [];
     const used_ids = new Set<string>();
     const slot_usage: Record<EquipSlot, number> = { hat: 0, top: 0, bottom: 0, shoes: 0, accessory: 0 };
