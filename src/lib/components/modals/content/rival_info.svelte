@@ -9,8 +9,8 @@
     <div class="flex items-center justify-between gap-4 shrink-0">
         <h3 class="text-xl font-bold text-[var(--text-primary)] truncate">{LiveInfo.persona_name}</h3>
         <div
-            class="px-3 py-1 rounded-full text-sm font-semibold text-[var(--text-primary)] shrink-0"
-            style="background-color: hsl({LiveInfo.avg_clamped * 120}, 70%, 35%);"
+            class="px-3 py-1 rounded-full text-sm font-semibold text-[var(--text-primary)] shrink-0 bg-[var(--surface-inset)]"
+            style="border: 1px solid hsl({LiveInfo.avg_clamped * 120}, 70%, 50%); box-shadow: inset 0 0 0 9999px hsla({LiveInfo.avg_clamped * 120}, 70%, 50%, 0.15);"
         >
             {LiveInfo.condition_text}
         </div>
@@ -21,19 +21,14 @@
         <!-- Stats vs Rival -->
         <div class="rounded-xl bg-[var(--surface-inset)] p-4 flex flex-col gap-2 min-h-0">
             <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide">Stats vs Rival</div>
-            <div class="flex flex-col gap-1.5">
+            <div class="grid items-center gap-x-3 gap-y-1.5" style="grid-template-columns: auto 1fr auto {DEV ? 'auto' : ''}">
                 {#each LiveInfo.comparisons as comp}
-                    <div class="grid items-center gap-2" style="grid-template-columns: 5rem auto 1fr auto {DEV ? '5rem' : ''}">
-                        <div class="text-sm text-[var(--text-muted)]">{comp.label}</div>
-                        <div class="text-sm text-[var(--text-primary)] tabular-nums text-right w-12">{comp.playerValue}</div>
-                        <div class="h-2 rounded-full bg-[var(--surface-base)] overflow-hidden">
-                            <div class="h-full rounded-full" style="width: {comp.clamped * 100}%; {comp.color}"></div>
-                        </div>
-                        <div class="text-sm text-[var(--text-muted)] tabular-nums text-left w-12">{comp.rivalValue}</div>
-                        {#if DEV}
-                            <div class="text-xs text-[var(--text-muted)] truncate">{comp.rivalLabel}</div>
-                        {/if}
-                    </div>
+                    <div class="text-sm text-[var(--text-muted)]">{comp.label}</div>
+                    <div class="text-sm text-[var(--text-primary)] tabular-nums text-right">{comp.playerValue}</div>
+                    <div class="w-12 h-4 rounded-md justify-self-end" style={comp.color}></div>
+                    {#if DEV}
+                        <div class="text-xs text-[var(--text-muted)] tabular-nums">rival: {comp.rivalValue} ({comp.rivalLabel})</div>
+                    {/if}
                 {/each}
             </div>
         </div>
