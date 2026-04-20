@@ -24,6 +24,8 @@ Rival stats = `BASE` ranges (one shared table) × **persona** weights × per-che
 
 Rivals also receive **equipment** from a budget-based system. Each checkpoint has a point budget (higher checkpoints = more budget). A greedy knapsack picks equipment items, assigns rarity and level within budget, and applies stat bonuses to the rival. Rival equipment skills fire during battle with flipped perspective. Budget table and loadout generation: `src/lib/data/rivals/rival_equipment.ts`.
 
+The pre-battle **Live Info** panel shows the stat comparison alongside the rival's current equipment loadout. Clicking a rival equip reveals its rarity-adjusted stat bonuses and battle skill (no EXP/ownership since rivals don't own items).
+
 Battle logic: `src/lib/state/live.svelte.ts`. Checkpoint scale lives inline on each `CheckpointDef` in `src/lib/data/checkpoints.ts`. Persona pool: `src/lib/data/rivals/personas.ts`.
 
 ## Skills
