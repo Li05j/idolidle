@@ -12,10 +12,11 @@
     import '$lib/runtime/progression_engine.svelte';
 
     import MultiTabModal from '$lib/components/modals/content/stats_multi_tab_modal.svelte';
+    import SettingsMultiTab from '$lib/components/modals/content/settings_multi_tab_modal.svelte';
     import Live from '$lib/components/modals/content/live.svelte';
 
     function openSettings() {
-        ModalM.open({ component: MultiTabModal, size: 'lg', closeable: true });
+        ModalM.open({ component: SettingsMultiTab, size: 'lg', closeable: true });
     }
 
     function openStats() {

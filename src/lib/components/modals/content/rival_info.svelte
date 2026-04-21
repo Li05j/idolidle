@@ -7,7 +7,12 @@
 <div class="w-full h-full p-6 flex flex-col gap-4 min-h-0">
     <!-- Header: persona name + condition pill -->
     <div class="flex items-center justify-between gap-4 shrink-0">
-        <h3 class="text-xl font-bold text-[var(--text-primary)] truncate">{LiveInfo.persona_name}</h3>
+        <h3 class="text-xl font-bold text-[var(--text-primary)] truncate flex items-baseline gap-2 min-w-0">
+            <span class="truncate">{LiveInfo.persona_name}</span>
+            {#if LiveInfo.persona_desc}
+                <span class="text-xs font-normal italic text-[var(--text-muted)] opacity-70 truncate">{LiveInfo.persona_desc}</span>
+            {/if}
+        </h3>
         <div
             class="px-3 py-1 rounded-full text-sm font-semibold text-[var(--text-primary)] shrink-0 bg-[var(--surface-inset)]"
             style="border: 1px solid hsl({LiveInfo.avg_clamped * 120}, 70%, 50%); box-shadow: inset 0 0 0 9999px hsla({LiveInfo.avg_clamped * 120}, 70%, 50%, 0.15);"

@@ -56,6 +56,10 @@ After a LIVE, you can "dream" (rebirth). Resets progress but permanently carries
 
 Spend dream points on permanent upgrades (persist across rebirths): time reductions, initial stat bonuses, equipment drop rate. Upgrade definitions: `src/lib/data/dreams/`. State: `src/lib/state/dreams.svelte.ts`.
 
+## Settings / Debug
+
+The Settings button opens a multi-tab modal. In dev (`BUILD_ENV === 'dev'` in `src/lib/config.ts`), a **Debug** tab exposes a CFG preset selector (`prod` / `prod-fast` / `super-fast`) — Apply persists to `localStorage` and reloads. A separate Restart button wipes progress and reloads on the current preset. In prod the modal is empty. Switching preset wipes any save (coordination point for future save/load).
+
 ---
 
 ## Contributor Guide

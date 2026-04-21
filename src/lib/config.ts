@@ -1,10 +1,10 @@
 import type { BasicStats } from '$lib/types';
 
-// 0 = prod, 1 = prod-fast, 2 = super-fast
-const ENV: 0 | 1 | 2 = 2;
+const BUILD_ENV: 'prod' | 'dev' = 'dev';
+export const DEV = BUILD_ENV === 'dev';
 
-const envs = {
-	0: {
+const PRESETS = {
+	prod: {
 		time_scale: 1000.0,
 		stat_init_add_value: 0.0,
 		stat_init_multi: 1.0,
@@ -16,7 +16,7 @@ const envs = {
 		equip_drop_mult: 1,
 		checkpoint_dp_base: 2,
 	},
-	1: {
+	'prod-fast': {
 		time_scale: 100.0,
 		stat_init_add_value: 0.0,
 		stat_init_multi: 1.0,
@@ -28,7 +28,7 @@ const envs = {
 		equip_drop_mult: 1,
 		checkpoint_dp_base: 2,
 	},
-	2: {
+	'super-fast': {
 		time_scale: 10.0,
 		stat_init_add_value: 1.0,
 		stat_init_multi: 10.0,
@@ -42,8 +42,32 @@ const envs = {
 	},
 } as const;
 
-export const DEV = ENV !== 0;
-export const CFG = envs[ENV];
+export type PresetName = keyof typeof PRESETS;
+export const PRESET_NAMES = Object.keys(PRESETS) as PresetName[];
+
+const PRESET_KEY = 'idolidle_preset';
+const SAVE_KEY = 'idolidle_save';
+const DEFAULT_PRESET: PresetName = 'super-fast';
+
+function read_preset(): PresetName {
+	if (typeof localStorage === 'undefined') return DEFAULT_PRESET;
+	const v = localStorage.getItem(PRESET_KEY);
+	return v && v in PRESETS ? (v as PresetName) : DEFAULT_PRESET;
+}
+
+export const CURRENT_PRESET: PresetName = read_preset();
+export const CFG = PRESETS[CURRENT_PRESET];
+
+export function switch_preset_and_restart(name: PresetName) {
+	localStorage.setItem(PRESET_KEY, name);
+	localStorage.removeItem(SAVE_KEY);
+	window.location.reload();
+}
+
+export function restart_game() {
+	localStorage.removeItem(SAVE_KEY);
+	window.location.reload();
+}
 
 // Design-time reference: canonical stat gain per second at 1.0x value.
 // value = sum(reward_i / BASE_RATE[stat_i]) / base_time

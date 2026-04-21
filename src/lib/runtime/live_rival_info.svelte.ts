@@ -82,6 +82,10 @@ class RivalComparison {
         RivalStatsM.preview(CPs.current_completed_checkpoint).persona.name
     );
 
+    public persona_desc: string = $derived(
+        RivalStatsM.preview(CPs.current_completed_checkpoint).persona.desc
+    );
+
     public comparisons: StatComparison[] = $derived.by(() => {
         const rival = RivalStatsM.preview(CPs.current_completed_checkpoint).stats;
         return COMBAT_PAIRS.map(([playerKey, rivalKey, label]) => {
