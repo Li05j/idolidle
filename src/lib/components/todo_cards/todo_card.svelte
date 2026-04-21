@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { untrack } from 'svelte';
     import { msToSecF, parseText, tooltipString } from "$lib/utils/utils";
     import { TodoCardVM } from "./todo_card.svelte.ts";
     import { Mastery } from "$lib/state/mastery.svelte";
@@ -13,7 +14,7 @@
     });
 
     $effect(() => {
-        vm.init();
+        untrack(() => vm.init());
         return () => vm.destroy();
     });
 </script>

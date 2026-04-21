@@ -7,21 +7,21 @@ class ProgressionEngine {
         const def = locationMap.get(locationName);
         if (!def) return;
 
-        const index = TD_List_Tracker.locations.indexOf(locationName);
+        const index = TD_List_Tracker.locations.findIndex(e => e.name === locationName);
         if (index > -1) {
             TD_List_Tracker.locations.splice(index, 1);
         }
 
         if (def.actions.length > 0) {
-            const actionNames = def.actions.map(a => a.name);
+            const entries = def.actions.map(a => ({ name: a.name, elapsed: 0 }));
             TD_List_Tracker.actions = new Map([
                 ...TD_List_Tracker.actions,
-                [locationName, actionNames],
+                [locationName, entries],
             ]);
         }
 
         for (const unlockDef of def.unlocks()) {
-            TD_List_Tracker.locations.push(unlockDef.name);
+            TD_List_Tracker.locations.push({ name: unlockDef.name, elapsed: 0 });
         }
     }
 
@@ -34,10 +34,10 @@ class ProgressionEngine {
         const { owner, upgrade } = match;
 
         if (upgrade.replace_all) {
-            const newNames = upgrade.add_actions ? upgrade.add_actions.map(a => a.name) : [];
+            const newEntries = upgrade.add_actions ? upgrade.add_actions.map(a => ({ name: a.name, elapsed: 0 })) : [];
             TD_List_Tracker.actions = new Map([
                 ...TD_List_Tracker.actions,
-                [owner.name, newNames],
+                [owner.name, newEntries],
             ]);
         } else {
             if (upgrade.remove_actions) {
@@ -47,11 +47,11 @@ class ProgressionEngine {
             }
 
             if (upgrade.add_actions) {
-                const newNames = upgrade.add_actions.map(a => a.name);
+                const newEntries = upgrade.add_actions.map(a => ({ name: a.name, elapsed: 0 }));
                 const current = TD_List_Tracker.actions.get(owner.name) || [];
                 TD_List_Tracker.actions = new Map([
                     ...TD_List_Tracker.actions,
-                    [owner.name, [...current, ...newNames]],
+                    [owner.name, [...current, ...newEntries]],
                 ]);
             }
         }
@@ -92,7 +92,7 @@ class ProgressionEngine {
         const actions = TD_List_Tracker.actions.get(locationName);
         if (!actions) return;
 
-        const filtered = actions.filter(n => n !== actionName);
+        const filtered = actions.filter(e => e.name !== actionName);
         TD_List_Tracker.actions = new Map([
             ...TD_List_Tracker.actions,
             [locationName, filtered],
@@ -100,7 +100,7 @@ class ProgressionEngine {
     }
 
     init() {
-        TD_List_Tracker.locations = [STARTING_LOCATION.name];
+        TD_List_Tracker.locations = [{ name: STARTING_LOCATION.name, elapsed: 0 }];
         TD_List_Tracker.actions = new Map();
     }
 
@@ -110,5 +110,3 @@ class ProgressionEngine {
 }
 
 export const Progression = new ProgressionEngine();
-
-Progression.init();

@@ -10,6 +10,7 @@ export interface TodoTimer {
     progress_percent: number;
     progress_text: string;
     loop_count: number;
+    seed: (elapsed: number) => void;
     repeat: (loop_count: number, getDuration: () => number, onComplete: () => void, onAllComplete: () => void) => void;
     pause: () => void;
     stop: () => void;
@@ -101,6 +102,11 @@ export function createTodoTimer(): TodoTimer {
         onAllCompleteCallback = null;
     }
 
+    function seed(value: number) {
+        if (state === 'running') return;
+        elapsed = value;
+    }
+
     return {
         get is_active() { return state === 'running'; },
         get is_paused() { return state !== 'running'; },
@@ -108,6 +114,7 @@ export function createTodoTimer(): TodoTimer {
         get progress_percent() { return progress_percent; },
         get progress_text() { return progress_text; },
         set loop_count(c: number) { loop_count = c; },
+        seed,
         repeat,
         pause,
         stop,

@@ -1,8 +1,9 @@
 import type { LiveBattleStats } from "$lib/types";
-import type { RivalEquipEntry } from "$lib/data/equipment/equipment_definition";
+import type { RivalEquipEntry, Rarity } from "$lib/data/equipment/equipment_definition";
 import { CHECKPOINTS, generateRivalStats } from "$lib/data/checkpoints";
-import { pickPersona, type Persona } from "$lib/data/rivals/personas";
+import { pickPersona, ALL_PERSONAS, type Persona } from "$lib/data/rivals/personas";
 import { RIVAL_EQUIP_BUDGET, generate_rival_loadout, apply_rival_equipment } from "$lib/data/rivals/rival_equipment";
+import { EQUIP_REGISTRY } from "$lib/data/equipment";
 
 export type RivalPreview = { stats: LiveBattleStats; persona: Persona; equipment: RivalEquipEntry[] };
 
@@ -32,7 +33,7 @@ function rerollPreviews(): (RivalPreview | null)[] {
 }
 
 class RivalStats {
-    private _previews: (RivalPreview | null)[] = rerollPreviews();
+    private _previews: (RivalPreview | null)[] = $state(rerollPreviews());
     public battle: LiveBattleStats = emptyStats();
 
     preview(checkpoint: number): RivalPreview {
@@ -45,6 +46,82 @@ class RivalStats {
 
     reroll() {
         this._previews = rerollPreviews();
+    }
+
+    serialize() {
+        return {
+            previews: this._previews.map(p => p === null ? null : ({
+                persona_id: p.persona.id,
+                stats: { ...p.stats },
+                equipment: p.equipment.map(e => ({ ...e })),
+            })),
+        };
+    }
+
+    deserialize(data: unknown): void {
+        const fresh = rerollPreviews();
+        if (!data || typeof data !== 'object') {
+            this._previews = fresh;
+            return;
+        }
+        const d = data as { previews?: unknown };
+        if (!Array.isArray(d.previews)) {
+            this._previews = fresh;
+            return;
+        }
+
+        const persona_by_id = new Map(ALL_PERSONAS.map(p => [p.id, p] as const));
+        const valid_rarity = (r: unknown): r is Rarity => r === 'N' || r === 'R' || r === 'SR' || r === 'UR';
+        const parse_stats = (raw: unknown): LiveBattleStats | null => {
+            if (!raw || typeof raw !== 'object') return null;
+            const s = raw as Record<string, unknown>;
+            const keys: (keyof LiveBattleStats)[] = ['Fans', 'Max_Stamina', 'Curr_Stamina', 'Haste', 'Sing', 'Dance', 'Charm', 'Presence'];
+            const out: Partial<LiveBattleStats> = {};
+            for (const k of keys) {
+                if (typeof s[k] !== 'number') return null;
+                out[k] = s[k] as number;
+            }
+            return out as LiveBattleStats;
+        };
+
+        const out: (RivalPreview | null)[] = [];
+        for (let i = 0; i < CHECKPOINTS.length; i++) {
+            const cp = CHECKPOINTS[i];
+            if (!cp.rival) { out.push(null); continue; }
+
+            const raw = d.previews[i];
+            if (!raw || typeof raw !== 'object') {
+                out.push(fresh[i]);
+                continue;
+            }
+            const p = raw as { persona_id?: unknown; stats?: unknown; equipment?: unknown };
+            const persona = typeof p.persona_id === 'string' ? persona_by_id.get(p.persona_id) : undefined;
+            const stats = parse_stats(p.stats);
+            if (!persona || !stats) {
+                out.push(fresh[i]);
+                continue;
+            }
+
+            const equipment: RivalEquipEntry[] = [];
+            if (Array.isArray(p.equipment)) {
+                for (const er of p.equipment) {
+                    if (!er || typeof er !== 'object') continue;
+                    const e = er as { equip_id?: unknown; rarity?: unknown; level?: unknown };
+                    if (typeof e.equip_id !== 'string') continue;
+                    if (!EQUIP_REGISTRY.has(e.equip_id)) continue;
+                    if (!valid_rarity(e.rarity)) continue;
+                    equipment.push({
+                        equip_id: e.equip_id,
+                        rarity: e.rarity,
+                        level: typeof e.level === 'number' ? e.level : 1,
+                    });
+                }
+            }
+
+            out.push({ persona, stats, equipment });
+        }
+
+        this._previews = out;
     }
 }
 

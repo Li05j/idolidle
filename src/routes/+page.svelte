@@ -9,11 +9,17 @@
 
     import { ModalM } from '$lib/runtime/modal_manager.svelte';
     import { TodoCardM } from '$lib/runtime/todo_card_manager.svelte';
-    import '$lib/runtime/progression_engine.svelte';
+    import { Progression } from '$lib/runtime/progression_engine.svelte';
+    import { Save } from '$lib/state/save.svelte';
+    import { EquipM } from '$lib/state/equipment.svelte';
 
     import MultiTabModal from '$lib/components/modals/content/stats_multi_tab_modal.svelte';
     import SettingsMultiTab from '$lib/components/modals/content/settings_multi_tab_modal.svelte';
     import Live from '$lib/components/modals/content/live.svelte';
+
+    const had_save = Save.load();
+    if (!had_save) Progression.init();
+    EquipM.recalculate_equip_stats();
 
     function openSettings() {
         ModalM.open({ component: SettingsMultiTab, size: 'lg', closeable: true });
@@ -32,6 +38,8 @@
         document.addEventListener('keydown', ModalM.handleKeydown);
         return () => document.removeEventListener('keydown', ModalM.handleKeydown);
     });
+
+    Save.start_autosave();
 </script>
 
 <ModalShell />

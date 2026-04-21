@@ -19,6 +19,18 @@ class ActionMastery {
 		if (c === 0) return 1;
 		return Math.min(1, 1 / (1 + CFG.mastery_rate * Math.sqrt(c)) + CFG.mastery_offset);
 	}
+
+	serialize(): Record<string, number> {
+		return { ...this._counts };
+	}
+
+	deserialize(data: unknown): void {
+		this._counts = {};
+		if (!data || typeof data !== 'object') return;
+		for (const [k, v] of Object.entries(data as Record<string, unknown>)) {
+			if (typeof v === 'number') this._counts[k] = v;
+		}
+	}
 }
 
 export const Mastery = new ActionMastery();

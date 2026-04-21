@@ -52,3 +52,26 @@ export const stat_list: Record<BasicStats, Stat> = {
 export function stat_list_reset() {
 	for (const s of Object.values(stat_list)) s.reset();
 }
+
+const STAT_KEYS = Object.keys(stat_list) as BasicStats[];
+
+export type StatsSave = Partial<Record<BasicStats, { base: number; multi: number }>>;
+
+export function stat_list_serialize(): StatsSave {
+	const out: StatsSave = {};
+	for (const k of STAT_KEYS) {
+		out[k] = { base: stat_list[k].base, multi: stat_list[k].multi };
+	}
+	return out;
+}
+
+export function stat_list_deserialize(data: unknown): void {
+	if (!data || typeof data !== 'object') return;
+	const d = data as Record<string, { base?: unknown; multi?: unknown } | undefined>;
+	for (const k of STAT_KEYS) {
+		const v = d[k];
+		if (!v) continue;
+		if (typeof v.base === 'number') stat_list[k].base = v.base;
+		if (typeof v.multi === 'number') stat_list[k].multi = v.multi;
+	}
+}

@@ -7,9 +7,9 @@
 <div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-to)] to-transparent mb-3"></div>
 
 <div class="overflow-y-auto h-full pb-16">
-    {#each [...TD_List_Tracker.actions] as [locName, actionNames] (locName)}
+    {#each [...TD_List_Tracker.actions] as [locName, entries] (locName)}
         <div class="pb-3">
-            <ActionCollection title={locName} {actionNames} />
+            <ActionCollection title={locName} actionNames={entries.map(e => e.name)} />
         </div>
     {/each}
 </div>

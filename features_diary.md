@@ -58,7 +58,16 @@ Spend dream points on permanent upgrades (persist across rebirths): time reducti
 
 ## Settings / Debug
 
-The Settings button opens a multi-tab modal. In dev (`BUILD_ENV === 'dev'` in `src/lib/config.ts`), a **Debug** tab exposes a CFG preset selector (`prod` / `prod-fast` / `super-fast`) — Apply persists to `localStorage` and reloads. A separate Restart button wipes progress and reloads on the current preset. In prod the modal is empty. Switching preset wipes any save (coordination point for future save/load).
+The Settings button opens a multi-tab modal. In dev (`BUILD_ENV === 'dev'` in `src/lib/config.ts`), a **Debug** tab exposes a CFG preset selector — Apply persists to `localStorage` and reloads. A separate Restart button wipes progress and reloads on the current preset. In prod the modal is empty. Switching preset wipes any save.
+
+## Save / Load
+
+Autosaves to `localStorage` (`idolidle_save`) on a ~1s debounce + flush on tab close. Whole-blob writes, no manual save button. State coverage: stats, checkpoints, equipment + inventory, mastery, rebirth, dream upgrades, todo list (with per-card elapsed), and rolled rival previews. Tolerant load: unknown ids/names get dropped, missing fields default. Save shape lives in `src/lib/state/save.svelte.ts`.
+
+Notes:
+- Action card progress is stored on `TD_List_Tracker` entries; the active card stamps elapsed on pause and right before each save. Renamed actions lose in-progress elapsed.
+- In-flight LIVE replays are not persisted; on reload the CP bar re-triggers and the same persisted rival is re-fought (in-fight RNG re-rolls).
+- Restart and preset switch both wipe the save.
 
 ---
 

@@ -9,6 +9,7 @@ import { executeAction, actionRewardText, handle_rewards, reward_string } from '
 import { CFG } from '$lib/config';
 import { Mastery } from '$lib/state/mastery.svelte';
 import { Dreams } from '$lib/state/dreams.svelte';
+import { TD_List_Tracker } from '$lib/state/todos_list_tracker.svelte';
 
 
 const ACTION_BG = {
@@ -202,15 +203,22 @@ export class TodoCardVM {
         }
     }
 
-    private pause() {
+    private pause_and_stamp() {
+        TD_List_Tracker.set_elapsed(this.locationName, this.actionName, this.timer.elapsed);
         TodoCardM.deactivateCard(this.card_id);
         this.timer.pause();
     }
 
+    private pause() {
+        this.pause_and_stamp();
+    }
+
     init() {
-        TodoCardM.registerCard(this.card_id, () => {
-            TodoCardM.deactivateCard(this.card_id);
-            this.timer.pause();
+        this.timer.seed(TD_List_Tracker.get_elapsed(this.locationName, this.actionName));
+        TodoCardM.registerCard(this.card_id, {
+            pause: () => this.pause_and_stamp(),
+            key: { loc: this.locationName, action: this.actionName },
+            get_elapsed: () => this.timer.elapsed,
         });
     }
 

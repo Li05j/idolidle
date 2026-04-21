@@ -62,6 +62,44 @@ class RebirthStats {
     get rebirth_count() { return this._rebirth_count; }
     get rebirth_points() { return this._rebirth_points; }
     get max_completed_checkpoints() { return this._max_completed_checkpoints; }
+
+    serialize() {
+        return {
+            count: this._rebirth_count,
+            max_cp: this._max_completed_checkpoints,
+            points: this._rebirth_points,
+            base_gains: { ...this.base_gains },
+            multi_gains: { ...this.multi_gains },
+        };
+    }
+
+    deserialize(data: unknown): void {
+        if (!data || typeof data !== 'object') return;
+        const d = data as {
+            count?: unknown;
+            max_cp?: unknown;
+            points?: unknown;
+            base_gains?: unknown;
+            multi_gains?: unknown;
+        };
+
+        if (typeof d.count === 'number') this._rebirth_count = d.count;
+        if (typeof d.max_cp === 'number') this._max_completed_checkpoints = d.max_cp;
+        if (typeof d.points === 'number') this._rebirth_points = d.points;
+
+        const filter = (src: unknown): Record<BasicStats, number> => {
+            const out = zero_record();
+            if (!src || typeof src !== 'object') return out;
+            for (const k of STAT_KEYS) {
+                const v = (src as Record<string, unknown>)[k];
+                if (typeof v === 'number') out[k] = v;
+            }
+            return out;
+        };
+
+        this.base_gains = filter(d.base_gains);
+        this.multi_gains = filter(d.multi_gains);
+    }
 }
 
 export const Rebirth = new RebirthStats()

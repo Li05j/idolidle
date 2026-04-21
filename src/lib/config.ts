@@ -46,7 +46,7 @@ export type PresetName = keyof typeof PRESETS;
 export const PRESET_NAMES = Object.keys(PRESETS) as PresetName[];
 
 const PRESET_KEY = 'idolidle_preset';
-const SAVE_KEY = 'idolidle_save';
+export const SAVE_KEY = 'idolidle_save';
 const DEFAULT_PRESET: PresetName = 'super-fast';
 
 function read_preset(): PresetName {

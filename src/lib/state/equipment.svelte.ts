@@ -184,6 +184,65 @@ class EquipmentManager {
         }
         this.recalculate_equip_stats();
     }
+
+    serialize() {
+        return {
+            inventory: Array.from(this._inventory.values()),
+            equipped: { ...this._equipped },
+            ever_obtained: Array.from(this._ever_obtained),
+            pending_dp: this._pending_dp,
+        };
+    }
+
+    deserialize(data: unknown): void {
+        if (!data || typeof data !== 'object') return;
+        const d = data as {
+            inventory?: unknown;
+            equipped?: unknown;
+            ever_obtained?: unknown;
+            pending_dp?: unknown;
+        };
+
+        this._inventory = new Map();
+        this._equipped = empty_slots();
+        this._ever_obtained = new Set();
+        this._pending_dp = typeof d.pending_dp === 'number' ? d.pending_dp : 0;
+
+        if (Array.isArray(d.inventory)) {
+            for (const raw of d.inventory) {
+                if (!raw || typeof raw !== 'object') continue;
+                const item = raw as Partial<OwnedEquip>;
+                if (typeof item.equip_id !== 'string') continue;
+                if (!EQUIP_REGISTRY.has(item.equip_id)) continue;
+                const rarity = item.rarity;
+                if (rarity !== 'N' && rarity !== 'R' && rarity !== 'SR' && rarity !== 'UR') continue;
+                this._inventory.set(item.equip_id, {
+                    equip_id: item.equip_id,
+                    rarity,
+                    level: typeof item.level === 'number' ? item.level : 1,
+                    exp: typeof item.exp === 'number' ? item.exp : 0,
+                });
+            }
+        }
+
+        if (Array.isArray(d.ever_obtained)) {
+            for (const id of d.ever_obtained) {
+                if (typeof id === 'string') this._ever_obtained.add(id);
+            }
+        }
+
+        if (d.equipped && typeof d.equipped === 'object') {
+            const eq = d.equipped as Record<string, unknown>;
+            for (const slot of Object.keys(this._equipped) as EquipSlotKey[]) {
+                const id = eq[slot];
+                if (typeof id === 'string' && this._inventory.has(id)) {
+                    this._equipped[slot] = id;
+                }
+            }
+        }
+
+        this.recalculate_equip_stats();
+    }
 }
 
 export const EquipM = new EquipmentManager();

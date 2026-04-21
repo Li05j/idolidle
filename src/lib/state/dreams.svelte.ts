@@ -72,6 +72,25 @@ class DreamUpgradeState {
         if (this.level(def.id) === 0) return 'None';
         return FORMAT[def.category](this.value(def.id));
     }
+
+    serialize(): Record<string, number> {
+        return { ...this._levels };
+    }
+
+    deserialize(data: unknown): void {
+        const fresh: Record<string, number> = Object.fromEntries(
+            ALL_DREAM_UPGRADES.map(u => [u.id, 0])
+        );
+        if (data && typeof data === 'object') {
+            for (const [k, v] of Object.entries(data as Record<string, unknown>)) {
+                const def = DREAM_REGISTRY.get(k);
+                if (!def) continue;
+                if (typeof v !== 'number') continue;
+                fresh[k] = Math.max(0, Math.min(def.max_level, Math.floor(v)));
+            }
+        }
+        this._levels = fresh;
+    }
 }
 
 export const Dreams = new DreamUpgradeState();

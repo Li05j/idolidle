@@ -7,7 +7,7 @@
 <div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-from)] to-transparent mb-3"></div>
 
 <div class="overflow-y-auto p-3 h-full">
-    {#each TD_List_Tracker.locations as locName (locName)}
-        <TodoCard locationName={locName} />
+    {#each TD_List_Tracker.locations as entry (entry.name)}
+        <TodoCard locationName={entry.name} />
     {/each}
 </div>

@@ -1,6 +1,13 @@
+type CardKey = { loc: string; action?: string };
+type CardHooks = {
+    pause: () => void;
+    key: CardKey;
+    get_elapsed: () => number;
+};
+
 class TodoCardManager {
     private _active_card: number | null = $state(null);
-    private _pause_card_callbacks = new Map<number, () => void>();
+    private _hooks = new Map<number, CardHooks>();
     private _card_counter = 0;
 
     get is_active() {
@@ -11,20 +18,19 @@ class TodoCardManager {
         return ++this._card_counter;
     }
 
-    registerCard(card_id: number, pause_card_callback: () => void) {
-        this._pause_card_callbacks.set(card_id, pause_card_callback);
+    registerCard(card_id: number, hooks: CardHooks) {
+        this._hooks.set(card_id, hooks);
     }
 
     unregisterCard(card_id: number) {
         this.deactivateCard(card_id);
-        this._pause_card_callbacks.delete(card_id);
+        this._hooks.delete(card_id);
     }
 
     activateCard(card_id: number) {
-        // Stop current active card
         if (this._active_card && this._active_card !== card_id) {
-            const f = this._pause_card_callbacks.get(this._active_card);
-            if (f) f();
+            const h = this._hooks.get(this._active_card);
+            if (h) h.pause();
         }
 
         this._active_card = card_id;
@@ -41,9 +47,17 @@ class TodoCardManager {
             return;
         }
 
-        const f = this._pause_card_callbacks.get(this._active_card);
-        if (f) f();
+        const h = this._hooks.get(this._active_card);
+        if (h) h.pause();
         this._active_card = null;
+    }
+
+    /** Active card's identity + live elapsed for autosave stamping. Null if no card is active. */
+    get active_snapshot(): { key: CardKey; elapsed: number } | null {
+        if (this._active_card === null) return null;
+        const h = this._hooks.get(this._active_card);
+        if (!h) return null;
+        return { key: h.key, elapsed: h.get_elapsed() };
     }
 
     reset() {

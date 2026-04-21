@@ -7,6 +7,11 @@ import type { LiveTurn, LiveBattleStats } from "$lib/types";
 import { render_skill_string, resolve_equip, type BattleTrigger, type Rarity, type RivalEquipEntry, type SkillOwner } from "$lib/data/equipment/equipment_definition";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 import { EquipM } from "$lib/state/equipment.svelte";
+import { Save } from "$lib/state/save.svelte";
+
+// FIXME: Math.random() calls below (basic_attack variance/atk_type, run_skills chance roll, skill effects) are not seeded.
+// Refresh-during-replay re-rolls outcomes against the same persisted rival → mild save-scum vector.
+// Fix when needed: derive a per-checkpoint seed (stored on RivalPreview) and thread a seeded RNG through.
 
 type Actor = "Player" | "Rival"
 
@@ -305,6 +310,7 @@ class LiveBattleManager {
     }
 
     start_live(): void {
+        Save.set_battle_in_progress(true)
         this.init()
         this.fight()
         this.post_fight()
@@ -345,6 +351,7 @@ class LiveBattleManager {
         this._post_attack_effects = [];
         this._rival_equipment = [];
         RivalStatsM.reroll()
+        Save.set_battle_in_progress(false)
     }
 }
 
