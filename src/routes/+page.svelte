@@ -21,6 +21,7 @@
     const had_save = Save.load();
     if (!had_save) Progression.init();
     EquipM.recalculate_equip_stats();
+    Save.mark_loaded();
 
     function openSettings() {
         ModalM.open({ component: SettingsMultiTab, size: 'lg', closeable: true });

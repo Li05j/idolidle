@@ -29,14 +29,21 @@ class SaveManager {
     private _battle_in_progress = false;
     private _debounce_id: ReturnType<typeof setTimeout> | null = null;
     private _autosave_started = false;
+    private _loaded = false;
 
     set_battle_in_progress(b: boolean) {
         this._battle_in_progress = b;
     }
 
+    /** Caller asserts hydration is finished (load() ran, or fresh init completed). */
+    mark_loaded() {
+        this._loaded = true;
+    }
+
     /** Stamp the active card's live elapsed into the tracker, then write the whole blob. */
     save_now = () => {
         if (typeof localStorage === 'undefined') return;
+        if (!this._loaded) return;
         if (this._battle_in_progress) return;
 
         const snap = TodoCardM.active_snapshot;
