@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import AvailableLocations from '$lib/components/game/available_locations.svelte';
     import AvailableActions from '$lib/components/game/available_actions.svelte';
     import CheckpointTopBar from '$lib/components/game/checkpoint_top_bar.svelte';
@@ -34,7 +35,7 @@
         ModalM.open({ component: Live, size: 'worker', closeable: false });
     }
 
-    $effect(() => {
+    onMount(() => {
         document.addEventListener('keydown', ModalM.handleKeydown);
         return () => document.removeEventListener('keydown', ModalM.handleKeydown);
     });

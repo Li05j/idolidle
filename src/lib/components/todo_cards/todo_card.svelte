@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { untrack } from 'svelte';
+    import { onMount } from 'svelte';
     import { msToSecF, parseText, tooltipString } from "$lib/utils/utils";
     import { TodoCardVM } from "./todo_card.svelte.ts";
     import { Mastery } from "$lib/state/mastery.svelte";
@@ -13,8 +13,8 @@
         if (repeat_val) vm.setRepeat(repeat_val);
     });
 
-    $effect(() => {
-        untrack(() => vm.init());
+    onMount(() => {
+        vm.init();
         return () => vm.destroy();
     });
 </script>
