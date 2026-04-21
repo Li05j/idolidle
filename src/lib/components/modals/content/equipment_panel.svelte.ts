@@ -12,8 +12,8 @@ import {
 	RARITY_ORDER,
 	effective_bonus,
 	exp_to_next_level,
+	render_skill_string,
 	resolve_equip,
-	resolve_skill_string,
 } from '$lib/data/equipment/equipment_definition';
 import type { BasicStats } from '$lib/types';
 
@@ -98,8 +98,8 @@ export class EquipmentPanelVM {
 		const values = skill.values ?? {};
 		return {
 			skill,
-			cond_string: resolve_skill_string(skill.cond_string, values),
-			eff_string: resolve_skill_string(skill.eff_string, values),
+			cond_string: render_skill_string(skill.cond_string, values, 'player'),
+			eff_string: render_skill_string(skill.eff_string, values, 'player'),
 		};
 	}
 
@@ -201,8 +201,8 @@ export class EquipmentPanelVM {
 				skill_name: skill.name,
 				triggers: skill.triggers.join(', '),
 				chance: skill.chance,
-				cond_string: resolve_skill_string(skill.cond_string, values),
-				eff_string: resolve_skill_string(skill.eff_string, values),
+				cond_string: render_skill_string(skill.cond_string, values, 'player'),
+				eff_string: render_skill_string(skill.eff_string, values, 'player'),
 			});
 		}
 		return skills;

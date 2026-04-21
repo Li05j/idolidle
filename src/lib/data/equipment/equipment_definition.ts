@@ -3,6 +3,7 @@ import type { BasicStats, LiveBattleStats } from '$lib/types';
 export type EquipSlot = 'hat' | 'top' | 'bottom' | 'shoes' | 'accessory';
 export type Rarity = 'N' | 'R' | 'SR' | 'UR';
 export type BattleTrigger = 'live_start' | 'turn_start' | 'before_taking_dmg';
+export type SkillOwner = 'player' | 'rival';
 
 export const EQUIP_CONFIG = {
     rarity_stat_mult: { N: 1.0, R: 1.5, SR: 2.5, UR: 4.0 } as Record<Rarity, number>,
@@ -35,6 +36,8 @@ export type SkillContext = {
     on_after_attack?: (callback: (fans_stolen: number) => void) => void;
     /** Push a colored line into the live battle log. Use freely from effect/on_after_attack. */
     log: (msg: string) => void;
+    /** Which side owns this skill. */
+    owner: SkillOwner;
 };
 
 /**
@@ -137,4 +140,36 @@ export function resolve_skill_string(
     values: Record<string, number>,
 ): string {
     return typeof str === 'function' ? str(values) : str;
+}
+
+/**
+ * Skills are authored from the owner's POV. These placeholders are swapped at
+ * render time so the same string reads naturally whether the player or the
+ * rival owns the skill.
+ *
+ * Tokens: {Self} {self} {Self_poss} {self_poss} {Opp} {opp} {Opp_poss} {opp_poss}
+ */
+const TOKEN_MAP: Record<SkillOwner, Record<string, string>> = {
+    player: {
+        Self: 'Player',        self: 'Player',
+        Self_poss: "Player's", self_poss: "Player's",
+        Opp: 'Rival',          opp: 'Rival',
+        Opp_poss: "Rival's",   opp_poss: "Rival's",
+    },
+    rival: {
+        Self: 'Rival',         self: 'Rival',
+        Self_poss: "Rival's",  self_poss: "Rival's",
+        Opp: 'Player',         opp: 'Player',
+        Opp_poss: "Player's",  opp_poss: "Player's",
+    },
+};
+
+export function render_skill_string(
+    str: string | ((v: Record<string, number>) => string),
+    values: Record<string, number>,
+    owner: SkillOwner,
+): string {
+    const resolved = resolve_skill_string(str, values);
+    const map = TOKEN_MAP[owner];
+    return resolved.replace(/\{(\w+)\}/g, (match, key) => map[key] ?? match);
 }

@@ -5,8 +5,8 @@ import type { LiveBattleStats } from "$lib/types";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 import {
     effective_bonus,
+    render_skill_string,
     resolve_equip,
-    resolve_skill_string,
     type EquipDef,
     type EquipSkillDef,
     type EquipSlot,
@@ -144,8 +144,8 @@ class RivalComparison {
             const values = resolved.skill.values ?? {};
             skill_view = {
                 skill: resolved.skill,
-                cond_string: resolve_skill_string(resolved.skill.cond_string, values),
-                eff_string: resolve_skill_string(resolved.skill.eff_string, values),
+                cond_string: render_skill_string(resolved.skill.cond_string, values, 'rival'),
+                eff_string: render_skill_string(resolved.skill.eff_string, values, 'rival'),
                 chance: resolved.skill.chance,
                 triggers: resolved.skill.triggers.join(', '),
             };

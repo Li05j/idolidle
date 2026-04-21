@@ -85,6 +85,8 @@ Append a `Persona` to `ALL_PERSONAS` in `src/lib/data/rivals/personas.ts`. Weigh
 1. Define in `src/lib/data/equipment/equipment_table.ts` (`ALL_EQUIPMENT`).
 2. Add to a `LocationDef.equip_drops` (location-wide drop) or a specific `ActionDef.equip_drops` (action override). The reverse map `EQUIP_DROP_LOCATION` in `locations/index.ts` is derived automatically — no manual registration.
 
+Skill text is owner-neutral. Owner token map is in `equipment_definition.ts`.
+
 ### Add a dream upgrade
 
 Append a `DreamUpgradeDef` to `ALL_DREAM_UPGRADES` in `src/lib/data/dreams/dream_upgrade_table.ts`. The math shape is driven by `category` (see `MATH`/`FORMAT` tables in `src/lib/state/dreams.svelte.ts`). For a new existing-category upgrade: add a named getter delegating to `Dreams.value(id)`. For a new category: add an entry to `DreamUpgradeCategory` plus `MATH` and `FORMAT`.

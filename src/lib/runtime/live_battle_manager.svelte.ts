@@ -4,7 +4,7 @@ import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
 import { Rebirth } from "$lib/state/rebirth.svelte";
 import { history } from "$lib/state/history.svelte";
 import type { LiveTurn, LiveBattleStats } from "$lib/types";
-import { resolve_equip, type BattleTrigger, type RivalEquipEntry } from "$lib/data/equipment/equipment_definition";
+import { render_skill_string, resolve_equip, type BattleTrigger, type Rarity, type RivalEquipEntry, type SkillOwner } from "$lib/data/equipment/equipment_definition";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 import { EquipM } from "$lib/state/equipment.svelte";
 
@@ -169,81 +169,62 @@ class LiveBattleManager {
     private _post_attack_effects: ((fans_stolen: number) => void)[] = [];
 
     private fire_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance'): void {
-        // All current skills are player-equipped (EquipM.get_all_equipped()), so green matches the player's attack color.
-        // Revisit if Rival skills are added.
-        const ctx = {
-            you: this._you,
-            rival: this._rival,
-            atk_type,
-            set_dmg_reduction: (amount: number) => { this._dmg_reduction = Math.max(this._dmg_reduction, amount); },
-            apply_temp_buff: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => {
-                const target = who === 'you' ? this._you : this._rival;
-                this._temp_buffs.push({ target, stat, original: target[stat] as number });
-                (target as Record<string, number>)[stat] = new_value;
-            },
-            on_after_attack: (callback: (fans_stolen: number) => void) => {
-                this._post_attack_effects.push(callback);
-            },
-            log: (msg: string) => this.log(`[green]${msg}[/green]`),
-        };
-
-        for (const item of EquipM.get_all_equipped()) {
-            if (this._fired_skills.has(item.equip_id)) continue;
-            const def = EQUIP_REGISTRY.get(item.equip_id);
-            if (!def) continue;
-
-            const resolved = resolve_equip(def, item.rarity);
-            const skill = resolved.skill;
-            if (!skill) continue;
-            if (!skill.triggers.includes(trigger)) continue;
-
-            const skill_ctx = { ...ctx, values: skill.values ?? {} };
-
-            if (!skill.condition(skill_ctx)) continue;
-            if (Math.random() > skill.chance) continue;
-
-            this.log(`[green]${skill.name} activated![/green]`, false);
-            skill.effect(skill_ctx);
-            this._fired_skills.add(item.equip_id);
-        }
+        this.run_skills(trigger, atk_type, 'player');
     }
 
     private fire_rival_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance'): void {
-        const ctx = {
-            you: this._rival,
-            rival: this._you,
-            atk_type,
-            set_dmg_reduction: (amount: number) => { this._dmg_reduction = Math.max(this._dmg_reduction, amount); },
-            apply_temp_buff: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => {
-                const target = who === 'you' ? this._rival : this._you;
-                this._temp_buffs.push({ target, stat, original: target[stat] as number });
-                (target as Record<string, number>)[stat] = new_value;
-            },
-            on_after_attack: (callback: (fans_stolen: number) => void) => {
-                this._post_attack_effects.push(callback);
-            },
-            log: (msg: string) => this.log(`[darkorange]${msg}[/darkorange]`),
-        };
+        this.run_skills(trigger, atk_type, 'rival');
+    }
 
-        for (const entry of this._rival_equipment) {
-            const key = `r:${entry.equip_id}`;
-            if (this._fired_skills.has(key)) continue;
-            const def = EQUIP_REGISTRY.get(entry.equip_id);
+    private run_skills(trigger: BattleTrigger, atk_type: 'Sing' | 'Dance' | undefined, owner: SkillOwner): void {
+        const you = owner === 'player' ? this._you : this._rival;
+        const rival = owner === 'player' ? this._rival : this._you;
+        const color = owner === 'player' ? 'green' : 'darkorange';
+
+        // Iterate the right side's skill list. Player uses equipped inventory;
+        // rival uses the pre-rolled loadout snapshot.
+        const skill_sources: { key: string; equip_id: string; rarity: Rarity }[] =
+            owner === 'player'
+                ? EquipM.get_all_equipped().map(item => ({ key: item.equip_id, equip_id: item.equip_id, rarity: item.rarity }))
+                : this._rival_equipment.map(entry => ({ key: `r:${entry.equip_id}`, equip_id: entry.equip_id, rarity: entry.rarity }));
+
+        for (const src of skill_sources) {
+            if (this._fired_skills.has(src.key)) continue;
+            const def = EQUIP_REGISTRY.get(src.equip_id);
             if (!def) continue;
 
-            const resolved = resolve_equip(def, entry.rarity);
+            const resolved = resolve_equip(def, src.rarity);
             const skill = resolved.skill;
             if (!skill) continue;
             if (!skill.triggers.includes(trigger)) continue;
 
-            const skill_ctx = { ...ctx, values: skill.values ?? {} };
+            const values = skill.values ?? {};
+            const render = (msg: string) => render_skill_string(msg, values, owner);
+
+            const skill_ctx = {
+                you,
+                rival,
+                atk_type,
+                values,
+                owner,
+                set_dmg_reduction: (amount: number) => { this._dmg_reduction = Math.max(this._dmg_reduction, amount); },
+                apply_temp_buff: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => {
+                    const target = who === 'you' ? you : rival;
+                    this._temp_buffs.push({ target, stat, original: target[stat] as number });
+                    (target as Record<string, number>)[stat] = new_value;
+                },
+                on_after_attack: (callback: (fans_stolen: number) => void) => {
+                    this._post_attack_effects.push(callback);
+                },
+                log: (msg: string) => this.log(`[${color}]${render(msg)}[/${color}]`),
+            };
 
             if (!skill.condition(skill_ctx)) continue;
             if (Math.random() > skill.chance) continue;
 
-            this.log(`[darkorange]${skill.name} activated![/darkorange]`, false);
+            this.log(`[${color}]${render(skill.name)} activated![/${color}]`, false);
             skill.effect(skill_ctx);
-            this._fired_skills.add(key);
+            this._fired_skills.add(src.key);
         }
     }
 

@@ -47,13 +47,13 @@ export const ALL_EQUIPMENT: EquipDef[] = [
                     triggers: ['turn_start'],
                     chance: 0.5,
                     values: { buff: 1.5 },
-                    cond_string: 'Your Fans < Rival Fans',
-                    eff_string: (v) => `Your next move steals ${(v.buff - 1) * 100}% more Fans.`,
+                    cond_string: '{Self_poss} Fans < {opp_poss} Fans',
+                    eff_string: (v) => `{Self_poss} next move steals ${(v.buff - 1) * 100}% more Fans.`,
                     condition: ({ you, rival }) => you.Fans < rival.Fans,
                     effect: ({ you, apply_temp_buff, log, values: v }) => {
                         apply_temp_buff!('you', 'Sing', you.Sing * v.buff);
                         apply_temp_buff!('you', 'Dance', you.Dance * v.buff);
-                        log(`You're fired up! Your next move hits harder!`);
+                        log(`{Self} got fired up! {Self_poss} next move hits harder!`);
                     },
                 },
             },
@@ -78,13 +78,13 @@ export const ALL_EQUIPMENT: EquipDef[] = [
                     chance: 1,
                     values: { drain: 0.1 },
                     cond_string: 'Always',
-                    eff_string: (v) => `Drain ${v.drain * 100}% Fans from Rival before LIVE starts.`,
+                    eff_string: (v) => `Drain ${v.drain * 100}% Fans from {Opp} before LIVE starts.`,
                     condition: () => true,
                     effect: ({ you, rival, log, values: v }) => {
                         const drain = Math.floor(rival.Fans * v.drain);
                         rival.Fans -= drain;
                         you.Fans += drain;
-                        log(`Drained ${drain} Fans from your Rival!`);
+                        log(`Drained ${drain} Fans from {Opp_poss} stash!`);
                     },
                 },
             },
@@ -108,12 +108,12 @@ export const ALL_EQUIPMENT: EquipDef[] = [
                     triggers: ['before_taking_dmg'],
                     chance: 0.2,
                     values: { reduction: 0.5 },
-                    cond_string: 'Rival performs a move.',
+                    cond_string: '{Opp} performs a move.',
                     eff_string: (v) => `Reduce Fans loss by ${v.reduction * 100}%.`,
                     condition: () => true,
                     effect: ({ set_dmg_reduction, log, values: v }) => {
                         set_dmg_reduction?.(v.reduction);
-                        log(`You stood unwavering. Fans loss is mitigated!`);
+                        log(`{Self} stood unwavering. Fans loss is mitigated!`);
                     },
                 },
             },
@@ -138,13 +138,13 @@ export const ALL_EQUIPMENT: EquipDef[] = [
                     chance: 1,
                     values: { drain: 0.1 },
                     cond_string: 'Always',
-                    eff_string: (v) => `Reduce Rival Stamina by ${v.drain * 100}%.`,
+                    eff_string: (v) => `Reduce {Opp_poss} Stamina by ${v.drain * 100}%.`,
                     condition: () => true,
                     effect: ({ rival, log, values: v }) => {
                         const before = rival.Curr_Stamina;
                         const drain = rival.Max_Stamina * v.drain;
                         rival.Curr_Stamina = Math.max(0, rival.Curr_Stamina - drain);
-                        log(`Sapped ${Math.round(before - rival.Curr_Stamina)} Stamina from your Rival!`);
+                        log(`Sapped ${Math.round(before - rival.Curr_Stamina)} Stamina from {Opp}!`);
                     },
                 },
             },
@@ -184,17 +184,17 @@ export const ALL_EQUIPMENT: EquipDef[] = [
                     triggers: ['before_taking_dmg'],
                     chance: 0.25,
                     values: { charm_buff: 1.5, penalty: 0.1 },
-                    cond_string: 'Rival performs a Sing move.',
-                    eff_string: (v) => `Increase Charm by ${(v.charm_buff - 1) * 100}%. If Rival fails to steal Fans, Rival loses ${v.penalty * 100}% Fans.`,
+                    cond_string: '{Opp} performs a Sing move.',
+                    eff_string: (v) => `Increase Charm by ${(v.charm_buff - 1) * 100}%. If {opp} fails to steal Fans, {opp} loses ${v.penalty * 100}% Fans.`,
                     condition: ({ atk_type }) => atk_type === 'Sing',
                     effect: ({ you, rival, apply_temp_buff, on_after_attack, log, values: v }) => {
                         apply_temp_buff!('you', 'Charm', you.Charm * v.charm_buff);
-                        log(`Moe Kyun~! Your Charm soars!`);
+                        log(`Moe Kyun~! {Self_poss} Charm soars!`);
                         on_after_attack!((fans_stolen) => {
                             if (fans_stolen <= 0) {
                                 const pen = Math.floor(rival.Fans * v.penalty);
                                 rival.Fans -= pen;
-                                log(`Rival's attempt was BOO'd instead! Drained ${pen} Fans!`);
+                                log(`{Opp_poss} attempt was BOO'd instead! Drained ${pen} Fans!`);
                             }
                         });
                     },
