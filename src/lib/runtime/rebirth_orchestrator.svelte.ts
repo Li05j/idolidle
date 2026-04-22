@@ -7,11 +7,13 @@ import { stat_list_reset } from "$lib/state/stats.svelte"
 import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte"
 import { EquipM } from "$lib/state/equipment.svelte"
 import { Rebirth } from "$lib/state/rebirth.svelte"
+import { RunTotals } from "$lib/state/run_totals.svelte"
 
 export function performRebirth() {
     Rebirth.inherit_stats()
     Rebirth.award_rebirth_points()
     Rebirth.add_dream_points(EquipM.flush_pending_dp())
+    RunTotals.reset()
     stat_list_reset()
     LiveBattleM.reset()
     RivalStatsM.reroll()

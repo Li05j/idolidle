@@ -5,6 +5,7 @@ import { CFG } from '$lib/config';
 import { Mastery } from '$lib/state/mastery.svelte';
 import { roll_equip_drop } from '$lib/utils/equip_drop';
 import type { EquipDropTable } from '$lib/data/equipment/equipment_definition';
+import { RunTotals } from '$lib/state/run_totals.svelte';
 
 export const DECIMAL_PLACES = 1;
 
@@ -56,7 +57,13 @@ export function reward_string(rewards: Reward[]): string {
 export function handle_rewards(rewards: Reward[]): void {
     rewards.forEach(r => {
         let s = stat_list[r.which_stat];
-        s[r.target] += r.amount + scaled_bonus(r);
+        const flat = r.amount + scaled_bonus(r);
+        s[r.target] += flat;
+        // Track Moni/Fans earned-this-run in displayed (final) units, so rebirth
+        // carryover doesn't punish the player for spending or losing them later.
+        if (r.target === 'base' && (r.which_stat === 'Moni' || r.which_stat === 'Fans')) {
+            RunTotals.add(r.which_stat, flat * (s.multi + s.equip_multi));
+        }
     });
 }
 

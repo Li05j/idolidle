@@ -5,6 +5,7 @@ import { EquipM } from '$lib/state/equipment.svelte';
 import { Mastery } from '$lib/state/mastery.svelte';
 import { Rebirth } from '$lib/state/rebirth.svelte';
 import { Dreams } from '$lib/state/dreams.svelte';
+import { RunTotals } from '$lib/state/run_totals.svelte';
 import { TD_List_Tracker } from '$lib/state/todos_list_tracker.svelte';
 import { RivalStatsM } from '$lib/runtime/live_rival_stats.svelte';
 import { TodoCardM } from '$lib/runtime/todo_card_manager.svelte';
@@ -21,6 +22,7 @@ type SaveBlob = {
     mastery: ReturnType<typeof Mastery.serialize>;
     rebirth: ReturnType<typeof Rebirth.serialize>;
     dreams:  ReturnType<typeof Dreams.serialize>;
+    run_totals: ReturnType<typeof RunTotals.serialize>;
     td:      ReturnType<typeof TD_List_Tracker.serialize>;
     rivals:  ReturnType<typeof RivalStatsM.serialize>;
 };
@@ -60,6 +62,7 @@ class SaveManager {
             mastery: Mastery.serialize(),
             rebirth: Rebirth.serialize(),
             dreams:  Dreams.serialize(),
+            run_totals: RunTotals.serialize(),
             td:      TD_List_Tracker.serialize(),
             rivals:  RivalStatsM.serialize(),
         };
@@ -94,6 +97,7 @@ class SaveManager {
         Mastery.deserialize(p.mastery);
         Rebirth.deserialize(p.rebirth);
         Dreams.deserialize(p.dreams);
+        RunTotals.deserialize(p.run_totals);
         TD_List_Tracker.deserialize(p.td);
         RivalStatsM.deserialize(p.rivals);
 
@@ -130,6 +134,8 @@ class SaveManager {
                 void Rebirth.rebirth_count;
                 void Rebirth.rebirth_points;
                 void Rebirth.max_completed_checkpoints;
+                void RunTotals.moni_earned;
+                void RunTotals.fans_earned;
                 void TD_List_Tracker.locations.length;
                 void TD_List_Tracker.actions.size;
 

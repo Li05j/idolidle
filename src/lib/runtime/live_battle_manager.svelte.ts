@@ -8,6 +8,7 @@ import { render_skill_string, resolve_equip, type BattleTrigger, type Rarity, ty
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 import { EquipM } from "$lib/state/equipment.svelte";
 import { Save } from "$lib/state/save.svelte";
+import { RunTotals } from "$lib/state/run_totals.svelte";
 
 // FIXME: Math.random() calls below (basic_attack variance/atk_type, run_skills chance roll, skill effects) are not seeded.
 // Refresh-during-replay re-rolls outcomes against the same persisted rival → mild save-scum vector.
@@ -324,6 +325,7 @@ class LiveBattleManager {
         if (this.final_fan_difference != null) {
             const fan_change = this.final_fan_difference;
             stat_list.Fans.add_base_from_final(fan_change);
+            RunTotals.add('Fans', fan_change);
 
             const fan_change_str = fan_change.toFixed(0);
             if (fan_change >= 0) {

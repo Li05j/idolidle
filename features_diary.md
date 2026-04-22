@@ -48,7 +48,7 @@ Actions track total completions across all rebirths. More completions = shorter 
 
 ## Rebirth
 
-After a LIVE, you can "dream" (rebirth). Resets progress but permanently carries over a portion of current stats as base/multi bonuses. Multi carry-over is capped by furthest checkpoint reached. Logic in `src/lib/state/rebirth.svelte.ts`.
+After a LIVE, you can "dream" (rebirth). Resets progress but permanently carries over a portion of stats as base/multi bonuses. Both base and multi carry-over are capped per-rebirth by checkpoints completed this run. Logic in `src/lib/state/rebirth.svelte.ts`; per-run earnings tracked in `src/lib/state/run_totals.svelte.ts`.
 
 **Dream Points** are awarded on rebirth from two sources: equipment obtained during the run, and checkpoints completed.
 
@@ -62,7 +62,7 @@ The Settings button opens a multi-tab modal. In dev (`BUILD_ENV === 'dev'` in `s
 
 ## Save / Load
 
-Autosaves to `localStorage` (`idolidle_save`) on a ~1s debounce + flush on tab close. Whole-blob writes, no manual save button. State coverage: stats, checkpoints, equipment + inventory, mastery, rebirth, dream upgrades, todo list (with per-card elapsed), and rolled rival previews. Tolerant load: unknown ids/names get dropped, missing fields default. Save shape lives in `src/lib/state/save.svelte.ts`. The page is client-only (no SSR).
+Autosaves to `localStorage` (`idolidle_save`) on a ~1s debounce + flush on tab close. Whole-blob writes, no manual save button. Tolerant load: unknown ids/names get dropped, missing fields default. Save shape lives in `src/lib/state/save.svelte.ts`. The page is client-only (no SSR).
 
 Notes:
 - Action card progress is stored on `TD_List_Tracker` entries; the active card stamps elapsed on pause and right before each save. Renamed actions lose in-progress elapsed.

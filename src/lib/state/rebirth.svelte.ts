@@ -3,6 +3,7 @@ import { stat_list, stat_list_reset } from "$lib/state/stats.svelte"
 import type { BasicStats } from "$lib/types"
 import { CFG } from '$lib/config'
 import { Dreams } from '$lib/state/dreams.svelte'
+import { RunTotals } from '$lib/state/run_totals.svelte'
 
 function zero_record(): Record<BasicStats, number> {
     return { Fans: 0, Moni: 0, Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
@@ -22,10 +23,17 @@ class RebirthStats {
 	private MULTI_RATIO = CFG.rebirth_multi_ratio
 
     inherit_stats() {
-        const multi_cap = 0.01 * (CPs.current_completed_checkpoint + 1)
+        const cp = CPs.current_completed_checkpoint + 1
+        const base_cap  = CFG.rebirth_base_cap_per_cp  * cp
+        const multi_cap = CFG.rebirth_multi_cap_per_cp * cp
         for (const key of STAT_KEYS) {
-            this.base_gains[key] += stat_list[key].final * this.BASE_RATIO
-            this.multi_gains[key] += Math.min(stat_list[key].final * this.MULTI_RATIO, multi_cap)
+            // Moni/Fans deplete during the run (spending, fan poaching). Use cumulative
+            // earned this run instead of current final, so spending isn't punished.
+            const source = (key === 'Moni' || key === 'Fans')
+                ? RunTotals.value(key)
+                : stat_list[key].final
+            this.base_gains[key]  += Math.min(source * this.BASE_RATIO,  base_cap)
+            this.multi_gains[key] += Math.min(source * this.MULTI_RATIO, multi_cap)
         }
     }
 
