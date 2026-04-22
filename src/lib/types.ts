@@ -1,5 +1,4 @@
 export type BasicStats = "Fans" | "Moni" | "Stamina" | "Haste" | "Sing" | "Dance" | "Charm" | "Presence";
-export type TrainingEfficiency = "v_slow" | "slow" | "mid" | "fast" | "v_fast" | "n/a";
 
 export type LiveBattleStats = {
     Fans: number,
@@ -22,7 +21,6 @@ export type StatEffectPair = { which_stat: BasicStats, effectiveness: number };
 
 export type RewardScaling = {
     sources: StatEffectPair[];
-    efficiency: TrainingEfficiency;
 };
 
 export type Reward = {

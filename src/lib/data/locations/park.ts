@@ -41,7 +41,6 @@ export const park: LocationDef = {
                     amount: 3,
                     scaling: {
                         sources: [{ which_stat: "Haste", effectiveness: 1.0 }],
-                        efficiency: "v_slow",
                     },
                 },
             ],
@@ -59,7 +58,6 @@ export const park: LocationDef = {
                     amount: 5,
                     scaling: {
                         sources: [{ which_stat: "Fans", effectiveness: 1.0 }],
-                        efficiency: "slow",
                     },
                 },
             ],

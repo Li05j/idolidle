@@ -98,7 +98,6 @@ export const maid_cafe: LocationDef = {
                             amount: 9,
                             scaling: {
                                 sources: [{ which_stat: "Charm", effectiveness: 1.2 }],
-                                efficiency: "slow",
                             },
                         },
                     ],

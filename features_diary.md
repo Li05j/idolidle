@@ -44,7 +44,7 @@ The checkpoint bar fills while actions run. Each checkpoint carries an inline `r
 
 ## Action Mastery
 
-Actions track total completions across all rebirths. More completions = shorter action time (diminishing returns). Upgraded actions can share a mastery track by setting `mastery_id` to the base action's name. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.
+Actions track total completions across all rebirths. More completions = shorter action time, via a rational diminishing curve (`floor + (1-floor) / (1 + rate * c^p)`) that stays gentle for the first ~10 reps then dives toward a hard floor. Upgraded actions can share a mastery track by setting `mastery_id` to the base action's name. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.
 
 ## Rebirth
 
@@ -54,7 +54,7 @@ After a LIVE, you can "dream" (rebirth). Resets progress but permanently carries
 
 ## Dream Upgrades
 
-Spend dream points on permanent upgrades (persist across rebirths): time reductions, initial stat bonuses, equipment drop rate. Time reductions stack additively within a single upgrade (max 50%) and multiplicatively with mastery and other categories. Upgrade definitions: `src/lib/data/dreams/`. State: `src/lib/state/dreams.svelte.ts`.
+Spend dream points on permanent upgrades (persist across rebirths): time reductions, initial stat bonuses, equipment drop rate. Upgrade definitions: `src/lib/data/dreams/`. State: `src/lib/state/dreams.svelte.ts`.
 
 ## Settings / Debug
 

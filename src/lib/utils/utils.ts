@@ -1,7 +1,8 @@
-import type { StatEffectPair, Reward, TrainingEfficiency } from '$lib/types'
+import type { StatEffectPair, Reward } from '$lib/types'
 import { stat_list } from "$lib/state/stats.svelte";
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { CFG } from '$lib/config';
+import { Mastery } from '$lib/state/mastery.svelte';
 import { roll_equip_drop } from '$lib/utils/equip_drop';
 import type { EquipDropTable } from '$lib/data/equipment/equipment_definition';
 
@@ -29,13 +30,15 @@ export function truncate_to_decimal(v: number, decimals: number = 1) {
     return Math.floor(v * d) / d;
 }
 
+function scaled_bonus(r: Reward): number {
+    if (!r.scaling) return 0;
+    return apply_stat_scaling(calc_stat_effectiveness(r.scaling.sources));
+}
+
 export function reward_string(rewards: Reward[]): string {
     let ret_str = ""
     rewards.forEach(r => {
-        let depends_gain = 0;
-        if (r.scaling) {
-            depends_gain = find_training_eff_from_str(r.scaling.efficiency)(calc_stat_effectiveness(r.scaling.sources))
-        }
+        const depends_gain = scaled_bonus(r);
         if (r.target === 'base') {
             let fixed_at = DECIMAL_PLACES;
             if (r.which_stat === 'Fans' || r.which_stat === 'Moni') fixed_at = 0;
@@ -53,11 +56,7 @@ export function reward_string(rewards: Reward[]): string {
 export function handle_rewards(rewards: Reward[]): void {
     rewards.forEach(r => {
         let s = stat_list[r.which_stat];
-        let depends_gain = 0;
-        if (r.scaling) {
-            depends_gain = find_training_eff_from_str(r.scaling.efficiency)(calc_stat_effectiveness(r.scaling.sources))
-        }
-        s[r.target] += r.amount + depends_gain;
+        s[r.target] += r.amount + scaled_bonus(r);
     });
 }
 
@@ -114,9 +113,7 @@ export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean
             ret_str += `[blue]⭐ ${def.on_complete.desc}.[/blue]\n`
         }
         if (mastery_completions !== undefined) {
-            const factor = mastery_completions === 0
-                ? 1
-                : Math.min(1, 1 / (1 + CFG.mastery_rate * Math.sqrt(mastery_completions)) + CFG.mastery_offset);
+            const factor = Mastery.factor_for_count(mastery_completions);
             const pct = ((1 - factor) * 100).toFixed(0);
             ret_str += `Mastery: ${mastery_completions}x done (−${pct}% time)\n`
         }
@@ -138,37 +135,7 @@ export function calc_stat_effectiveness(depends: StatEffectPair[]): number {
     return r_stat
 }
 
-function find_training_eff_from_str(s: TrainingEfficiency) {
-    switch (s) {
-        case "v_slow"       : return training_v_slow;
-        case "slow"         : return training_slow;
-        case "mid"          : return training_mid;
-        case "fast"         : return training_fast;
-        case "v_fast"       : return training_v_fast;
-        default             : return identity;
-    }
-}
-
-function training_v_slow(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.4)), 1)
-}
-
-function training_slow(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.53)), 1)
-}
-
-function training_mid(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.66)), 1)
-}
-
-function training_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.79)), 1)
-}
-
-function training_v_fast(v: number) {
-    return Math.max(Math.floor(Math.pow(v, 0.92)), 1)
-}
-
-function identity(i: any) {
-    return i;
+function apply_stat_scaling(v: number): number {
+    if (v <= 0) return 0;
+    return Math.pow(v, CFG.stat_scaling_exponent);
 }

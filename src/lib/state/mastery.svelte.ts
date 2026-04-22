@@ -11,13 +11,17 @@ class ActionMastery {
 		return this._counts[mastery_id] ?? 0;
 	}
 
-	// Diminishing returns: min(1, 1/(1 + rate * sqrt(c)) + offset)
-	// Dead zone at low counts (clamped to 1.0), then sqrt decay.
-	// ~0.98x at 10, ~0.87x at 100, ~0.65x at 1000
+	// Rational (Hill) diminishing curve: floor + (1-floor) / (1 + rate * c^p)
+	// p > 1 keeps the early phase gentle; the polynomial denominator throttles
+	// the dive so we get a short accel phase then long decel into the floor.
+	// With defaults: ~0.87x at 10, ~0.18x at 100, ~0.026x at 1000, ~floor at 10000.
 	factor(mastery_id: string): number {
-		const c = this._counts[mastery_id] ?? 0;
-		if (c === 0) return 1;
-		return Math.min(1, 1 / (1 + CFG.mastery_rate * Math.sqrt(c)) + CFG.mastery_offset);
+		return this.factor_for_count(this._counts[mastery_id] ?? 0);
+	}
+
+	factor_for_count(c: number): number {
+		if (c <= 0) return 1;
+		return CFG.mastery_floor + (1 - CFG.mastery_floor) / (1 + CFG.mastery_rate * Math.pow(c, CFG.mastery_exponent));
 	}
 
 	serialize(): Record<string, number> {

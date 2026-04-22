@@ -190,7 +190,6 @@ export const school: LocationDef = {
                                     { which_stat: "Sing", effectiveness: 0.5 },
                                     { which_stat: "Dance", effectiveness: 0.5 },
                                 ],
-                                efficiency: "fast",
                             },
                         },
                         { which_stat: "Charm", target: 'base', amount: 5.0 },
@@ -225,7 +224,6 @@ export const school: LocationDef = {
                         amount: 5,
                         scaling: {
                             sources: [{ which_stat: "Presence", effectiveness: 1.2 }],
-                            efficiency: "slow",
                         },
                     }],
                 },
