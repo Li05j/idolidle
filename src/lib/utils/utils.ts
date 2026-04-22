@@ -113,8 +113,10 @@ export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean
         if (def.on_complete?.desc) {
             ret_str += `[blue]⭐ ${def.on_complete.desc}.[/blue]\n`
         }
-        if (mastery_completions !== undefined && mastery_completions > 0) {
-            const factor = Math.min(1, 1 / (1 + CFG.mastery_rate * Math.sqrt(mastery_completions)) + CFG.mastery_offset);
+        if (mastery_completions !== undefined) {
+            const factor = mastery_completions === 0
+                ? 1
+                : Math.min(1, 1 / (1 + CFG.mastery_rate * Math.sqrt(mastery_completions)) + CFG.mastery_offset);
             const pct = ((1 - factor) * 100).toFixed(0);
             ret_str += `Mastery: ${mastery_completions}x done (−${pct}% time)\n`
         }

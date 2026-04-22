@@ -4,7 +4,7 @@ import { Rebirth } from '$lib/state/rebirth.svelte';
 import type { BasicStats } from '$lib/types';
 
 const MATH: Record<DreamUpgradeCategory, (per_level: number, lvl: number) => number> = {
-    time_reduction: (p, l) => (1 - p) ** l,
+    time_reduction: (p, l) => 1 - p * l,
     stat_base:      (p, l) => p * l,
     stat_multi:     (p, l) => p * l,
     equip_drop:     (p, l) => (1 + p) ** l,
