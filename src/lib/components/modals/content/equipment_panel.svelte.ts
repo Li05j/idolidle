@@ -4,7 +4,7 @@ import { ALL_EQUIPMENT } from '$lib/data/equipment/equipment_table';
 import { EQUIP_DROP_LOCATION } from '$lib/data/locations/index';
 import {
 	type EquipDef,
-	type EquipSkillDef,
+	type SkillDef,
 	type EquipStatBonus,
 	type EquipSlot,
 	type Rarity,
@@ -25,7 +25,7 @@ type SlotDisplay = {
 };
 
 export type SelectedSkillView = {
-	skill: EquipSkillDef;
+	skill: SkillDef;
 	cond_string: string;
 	eff_string: string;
 };

@@ -107,9 +107,9 @@ class LiveBattleManager {
         if (attacker.Curr_Stamina <= 0) return
 
         if (actor === "Player") {
-            this.fire_skills('turn_start');
+            this.fire_skills('before_inflicting_dmg');
         } else {
-            this.fire_rival_skills('turn_start');
+            this.fire_rival_skills('before_inflicting_dmg');
         }
 
         this.basic_attack(actor, attacker, defender)
@@ -152,6 +152,14 @@ class LiveBattleManager {
         const stamina_cost = raw_atk * BATTLE_TUNING.STAMINA_COST_MULT + 1
         attacker.Curr_Stamina = Math.max(attacker.Curr_Stamina - stamina_cost, 0)
 
+        if (actor === "Player") {
+            this.fire_skills('after_inflicting_dmg', atk_type, fans_stolen);
+            this.fire_rival_skills('after_taking_dmg', atk_type, fans_stolen);
+        } else {
+            this.fire_rival_skills('after_inflicting_dmg', atk_type, fans_stolen);
+            this.fire_skills('after_taking_dmg', atk_type, fans_stolen);
+        }
+
         // Revert temp buffs and run post-attack effects
         this.revert_temp_buffs();
         this.run_post_attack_effects(fans_stolen);
@@ -174,15 +182,15 @@ class LiveBattleManager {
     private _temp_buffs: { target: LiveBattleStats; stat: keyof LiveBattleStats; original: number }[] = [];
     private _post_attack_effects: ((fans_stolen: number) => void)[] = [];
 
-    private fire_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance'): void {
-        this.run_skills(trigger, atk_type, 'player');
+    private fire_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance', fans_stolen?: number): void {
+        this.run_skills(trigger, atk_type, fans_stolen, 'player');
     }
 
-    private fire_rival_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance'): void {
-        this.run_skills(trigger, atk_type, 'rival');
+    private fire_rival_skills(trigger: BattleTrigger, atk_type?: 'Sing' | 'Dance', fans_stolen?: number): void {
+        this.run_skills(trigger, atk_type, fans_stolen, 'rival');
     }
 
-    private run_skills(trigger: BattleTrigger, atk_type: 'Sing' | 'Dance' | undefined, owner: SkillOwner): void {
+    private run_skills(trigger: BattleTrigger, atk_type: 'Sing' | 'Dance' | undefined, fans_stolen: number | undefined, owner: SkillOwner): void {
         const you = owner === 'player' ? this._you : this._rival;
         const rival = owner === 'player' ? this._rival : this._you;
         const color = owner === 'player' ? 'green' : 'darkorange';
@@ -211,6 +219,7 @@ class LiveBattleManager {
                 you,
                 rival,
                 atk_type,
+                fans_stolen,
                 values,
                 owner,
                 set_dmg_reduction: (amount: number) => { this._dmg_reduction = Math.max(this._dmg_reduction, amount); },

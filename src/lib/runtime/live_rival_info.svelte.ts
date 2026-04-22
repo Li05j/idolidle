@@ -8,7 +8,7 @@ import {
     render_skill_string,
     resolve_equip,
     type EquipDef,
-    type EquipSkillDef,
+    type SkillDef,
     type EquipSlot,
     type RivalEquipEntry,
 } from "$lib/data/equipment/equipment_definition";
@@ -55,7 +55,7 @@ const DISPLAY_SLOTS: { slot: EquipSlot; label: string }[] = [
 ];
 
 export type RivalEquipSkillView = {
-    skill: EquipSkillDef;
+    skill: SkillDef;
     cond_string: string;
     eff_string: string;
     chance: number;

@@ -30,11 +30,13 @@ Battle logic: `src/lib/state/live.svelte.ts`. Checkpoint scale lives inline on e
 
 ## Skills
 
-Each skill has a trigger timing, proc chance, and conditions. Unlocked by performing specific actions. Reset on rebirth. Defined in `src/lib/state/skills.svelte.ts`.
+Battle skills granted by equipment. Each skill has trigger timing(s), a proc chance, and a condition gate. Each skill fires at most once per battle, across all triggers. Skill text is owner-neutral via `{Self}/{Opp}` tokens, swapped at render time depending on whether the player or rival owns it.
+
+Authored in `src/lib/data/skills/skill_table.ts` (`ALL_SKILLS`). Equipment references skills by `skill_id`.
 
 ## Equipment
 
-Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory) and per-rarity variants (N is mandatory baseline; R/SR/UR are partial overrides that can replace stat bonuses, swap/add/remove the skill, or override the stat multiplier). Rarity is rolled on drop (N/R/SR/UR). Duplicates grant EXP toward leveling; a higher-rarity dupe upgrades rarity instead. Equipment resets on rebirth, but the **Codex** tracks all-time collection history.
+Actions can drop equipment. Each item has a slot (hat, top, bottom, shoes, accessory) and per-rarity variants (N is mandatory baseline; R/SR/UR are partial overrides that can replace stat bonuses, swap/add/remove the `skill_id`, or override the stat multiplier). Rarity is rolled on drop (N/R/SR/UR). Duplicates grant EXP toward leveling; a higher-rarity dupe upgrades rarity instead. Equipment resets on rebirth, but the **Codex** tracks all-time collection history.
 
 Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `equipment_definition.ts`. Drop tables: `equip_drops` field on actions in location files.
 
@@ -98,7 +100,9 @@ Append a `Persona` to `ALL_PERSONAS` in `src/lib/data/rivals/personas.ts`. Weigh
 1. Define in `src/lib/data/equipment/equipment_table.ts` (`ALL_EQUIPMENT`).
 2. Add to a `LocationDef.equip_drops` (location-wide drop) or a specific `ActionDef.equip_drops` (action override). The reverse map `EQUIP_DROP_LOCATION` in `locations/index.ts` is derived automatically — no manual registration.
 
-Skill text is owner-neutral. Owner token map is in `equipment_definition.ts`.
+### Add a skill
+
+Append a `SkillDef` to `ALL_SKILLS` in `src/lib/data/skills/skill_table.ts`. Reference it from an equipment variant via `skill_id`. Owner token map lives in `skill_definition.ts`.
 
 ### Add a dream upgrade
 
