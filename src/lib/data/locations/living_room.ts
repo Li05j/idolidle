@@ -27,7 +27,6 @@ export const living_room: LocationDef = {
     name: 'Living Room',
     base_time: 4,
     desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one's watching (except maybe the cat). Meow.",
-    tutorial: "Some cards may show very important info when hovered - like hints, or even restrictions/bonuses.",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 0.2 },
     ],

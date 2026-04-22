@@ -44,8 +44,6 @@ export type LocationDef = {
     name: string;
     desc: string;
     base_time: number;
-    /** Tutorial-style hover hint, shown when the player mouses over the location card. */
-    tutorial?: string;
     rewards: Reward[];
     equip_drops?: EquipDropTable;
     requires?: {

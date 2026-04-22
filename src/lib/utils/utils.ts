@@ -6,6 +6,7 @@ import { Mastery } from '$lib/state/mastery.svelte';
 import { roll_equip_drop } from '$lib/utils/equip_drop';
 import type { EquipDropTable } from '$lib/data/equipment/equipment_definition';
 import { RunTotals } from '$lib/state/run_totals.svelte';
+import { getLocationHint } from '$lib/data/hints';
 
 export const DECIMAL_PLACES = 1;
 
@@ -101,8 +102,9 @@ function deriveDependsOn(def: ActionDef): string | null {
 }
 
 export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean, mastery_completions?: number): string {
-    if (!('kind' in def) && def.tutorial) {
-        return "💡" + def.tutorial;
+    if (!('kind' in def)) {
+        const hint = getLocationHint(def.name);
+        if (hint) return "💡" + hint;
     }
 
     let ret_str = '';

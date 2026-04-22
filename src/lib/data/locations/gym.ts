@@ -96,7 +96,6 @@ export const gym: LocationDef = {
     name: 'Gym',
     base_time: 70,
     desc: "Remember to wipe the equipment after using them, don't wanna end up being cancelled by some gym bros online. Talking about ways to end your Idol career...",
-    tutorial: "You cannot lower the time needed to complete Purple and Yellow cards. However, their rewards tend to be dynamic.",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 3.5 },
     ],

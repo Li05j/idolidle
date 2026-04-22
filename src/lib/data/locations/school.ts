@@ -87,7 +87,6 @@ export const school: LocationDef = {
     name: 'School',
     base_time: 80,
     desc: "A place for learning, daydreaming, and maybe scribbling lyrics in your notebook. Idol stories always seem to start with being a student.",
-    tutorial: "When it is time for LIVE, you will need to prove that you are the better Idol. All of your stats (except Moni) will be taken into consideration. Make sure to train well!",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 4 },
     ],

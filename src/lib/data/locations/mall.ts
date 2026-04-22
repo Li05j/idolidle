@@ -71,7 +71,6 @@ export const mall: LocationDef = {
     name: 'Mall',
     base_time: 200,
     desc: "Bright lights, weird mannequins... way too many choices. Be careful, rumors say Moni vanishes if one stays for too long.",
-    tutorial: "All Location cards and white Action cards will take less time to complete the more you do them. Keep up your trainings!",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 10 },
     ],

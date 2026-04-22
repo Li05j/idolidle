@@ -43,7 +43,6 @@ export const maid_cafe: LocationDef = {
     name: 'Maid Cafe',
     base_time: 300,
     desc: "\"Can I work as a waitress - wait, cat ears? Why? I guess it is kinda cute...?\"",
-    tutorial: "During LIVE, you consume Stamina for each move you perform. However, your Fans will also be more easily swayed by Rival if your are running out of Stamina.",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 15 },
     ],
