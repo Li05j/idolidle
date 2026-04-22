@@ -10,24 +10,27 @@ export type BattleTrigger =
 export type SkillOwner = 'player' | 'rival';
 
 export type SkillContext = {
+    // ── Always present ─────────────────────────────────────────────
     you: LiveBattleStats;
     rival: LiveBattleStats;
     /** Resolved skill values (taken from the rarity-merged skill). */
     values: Record<string, number>;
-    /** Set to reduce incoming damage by this fraction (0-1). Only meaningful for before_taking_dmg. */
-    set_dmg_reduction?: (amount: number) => void;
-    /** Apply a temporary stat buff that reverts after the current attack resolves. */
-    apply_temp_buff?: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => void;
+    /** Which side owns this skill. */
+    owner: SkillOwner;
+    /** Push a colored line into the live battle log. Use freely from effect/on_after_attack. */
+    log: (msg: string) => void;
+
+    // ── Trigger-specific extras (may be undefined) ─────────────────
     /** The attack type being performed. Available during before_taking_dmg / after_* triggers. */
     atk_type?: 'Sing' | 'Dance';
     /** Fans transferred by the just-resolved attack. Available during after_* triggers. */
     fans_stolen?: number;
+    /** Set to reduce incoming damage by this fraction (0-1). Only meaningful for before_taking_dmg. */
+    set_dmg_reduction?: (amount: number) => void;
+    /** Apply a temporary stat buff that reverts after the current attack resolves. */
+    apply_temp_buff?: (who: 'you' | 'rival', stat: keyof LiveBattleStats, new_value: number) => void;
     /** Register a callback that runs after the current attack resolves. Receives fans_stolen (0 = blocked). */
     on_after_attack?: (callback: (fans_stolen: number) => void) => void;
-    /** Push a colored line into the live battle log. Use freely from effect/on_after_attack. */
-    log: (msg: string) => void;
-    /** Which side owns this skill. */
-    owner: SkillOwner;
 };
 
 /**

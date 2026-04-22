@@ -98,6 +98,97 @@ export const ALL_SKILLS: SkillDef[] = [
             });
         },
     },
+    {
+        id: 'second_wind',
+        name: 'Second Wind',
+        triggers: ['after_taking_dmg'],
+        chance: 0.4,
+        values: { threshold: 0.5, haste_buff: 1.3 },
+        cond_string: (v) => `Stamina < ${v.threshold * 100}% after taking a hit`,
+        eff_string: (v) => `Restore Haste to ${v.haste_buff * 100}% for the rest of the LIVE.`,
+        condition: ({ you, values: v }) => you.Curr_Stamina < you.Max_Stamina * v.threshold,
+        effect: ({ you, log, values: v }) => {
+            you.Haste *= v.haste_buff;
+            log(`{Self} caught a second wind! Haste rises!`);
+        },
+    },
+    {
+        id: 'idol_veteran',
+        name: 'Idol Veteran',
+        triggers: ['live_start'],
+        chance: 1,
+        values: { buff: 1.2 },
+        cond_string: '{Self_poss} Fans > {opp_poss} Fans',
+        eff_string: (v) => `Boost {Self_poss} Sing & Dance by ${(v.buff - 1) * 100}% for the LIVE.`,
+        condition: ({ you, rival }) => you.Fans > rival.Fans,
+        effect: ({ you, log, values: v }) => {
+            you.Sing *= v.buff;
+            you.Dance *= v.buff;
+            log(`Veteran composure! {Self} performs flawlessly.`);
+        },
+    },
+    {
+        id: 'workaholic',
+        name: 'Workaholic',
+        triggers: ['after_inflicting_dmg'],
+        chance: 0.5,
+        values: { restore: 0.1 },
+        cond_string: 'Successfully steal Fans',
+        eff_string: (v) => `Restore ${v.restore * 100}% Stamina.`,
+        condition: ({ fans_stolen }) => (fans_stolen ?? 0) > 0,
+        effect: ({ you, log, values: v }) => {
+            const before = you.Curr_Stamina;
+            you.Curr_Stamina = Math.min(you.Max_Stamina, you.Curr_Stamina + you.Max_Stamina * v.restore);
+            log(`{Self} thrives on the grind! +${Math.round(you.Curr_Stamina - before)} Stamina.`);
+        },
+    },
+    {
+        id: 'crybaby',
+        name: 'Crybaby',
+        triggers: ['after_taking_dmg'],
+        chance: 0.5,
+        values: { charm_gain: 1.15 },
+        cond_string: 'Lose Fans to {opp}',
+        eff_string: (v) => `Sympathy buff: +${(v.charm_gain - 1) * 100}% Charm permanently this LIVE.`,
+        condition: ({ fans_stolen }) => (fans_stolen ?? 0) > 0,
+        effect: ({ you, log, values: v }) => {
+            you.Charm *= v.charm_gain;
+            log(`{Self} sniffles... the audience pities {self}! Charm rises.`);
+        },
+    },
+    {
+        id: 'showstopper',
+        name: 'Showstopper',
+        triggers: ['before_inflicting_dmg'],
+        chance: 0.3,
+        values: { stam_cost: 0.25, buff: 2.0 },
+        cond_string: (v) => `Stamina >= ${v.stam_cost * 100}%`,
+        eff_string: (v) => `Burn ${v.stam_cost * 100}% Stamina to ${v.buff}x next move.`,
+        condition: ({ you, values: v }) => you.Curr_Stamina >= you.Max_Stamina * v.stam_cost,
+        effect: ({ you, apply_temp_buff, log, values: v }) => {
+            you.Curr_Stamina -= you.Max_Stamina * v.stam_cost;
+            apply_temp_buff!('you', 'Sing', you.Sing * v.buff);
+            apply_temp_buff!('you', 'Dance', you.Dance * v.buff);
+            log(`{Self} pulls out all the stops!!`);
+        },
+    },
+    {
+        id: 'scandal_magnet',
+        name: 'Scandal Magnet',
+        triggers: ['after_taking_dmg'],
+        chance: 0.35,
+        values: { reflect: 0.5 },
+        cond_string: '{Opp} steals Fans with a Dance move',
+        eff_string: (v) => `Steal back ${v.reflect * 100}% of the Fans lost.`,
+        condition: ({ atk_type, fans_stolen }) => atk_type === 'Dance' && (fans_stolen ?? 0) > 0,
+        effect: ({ you, rival, log, fans_stolen, values: v }) => {
+            const reflect = Math.floor((fans_stolen ?? 0) * v.reflect);
+            const taken = Math.min(rival.Fans, reflect);
+            rival.Fans -= taken;
+            you.Fans += taken;
+            log(`Scandalous! {Self} stole ${taken} Fans back from {opp}!`);
+        },
+    },
 ];
 
 export const SKILL_REGISTRY: Map<string, SkillDef> = new Map(
