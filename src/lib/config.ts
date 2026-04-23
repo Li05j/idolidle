@@ -70,13 +70,20 @@ function read_preset(): PresetName {
 export const CURRENT_PRESET: PresetName = read_preset();
 export const CFG = PRESETS[CURRENT_PRESET];
 
-export function switch_preset_and_restart(name: PresetName) {
+async function disable_save() {
+	const { Save } = await import('$lib/state/save.svelte');
+	Save.disable();
+}
+
+export async function switch_preset_and_restart(name: PresetName) {
+	await disable_save();
 	localStorage.setItem(PRESET_KEY, name);
 	localStorage.removeItem(SAVE_KEY);
 	window.location.reload();
 }
 
-export function restart_game() {
+export async function restart_game() {
+	await disable_save();
 	localStorage.removeItem(SAVE_KEY);
 	window.location.reload();
 }

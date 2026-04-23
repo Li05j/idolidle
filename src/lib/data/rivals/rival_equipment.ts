@@ -16,7 +16,7 @@ const SLOT_CAPS: Record<EquipSlot, number> = {
     hat: 1, top: 1, bottom: 1, shoes: 1, accessory: 2,
 };
 
-const COST_LEVEL_STEP = 0.25;
+const COST_LEVEL_STEP = 0.5;
 
 function equip_cost(rarity: Rarity, level: number): number {
     return EQUIP_CONFIG.dupe_exp[rarity] * (1 + COST_LEVEL_STEP * (level - 1));

@@ -42,6 +42,11 @@ class SaveManager {
         this._loaded = true;
     }
 
+    /** Prevent any further writes (used before wipe-and-reload). */
+    disable() {
+        this._loaded = false;
+    }
+
     /** Stamp the active card's live elapsed into the tracker, then write the whole blob. */
     save_now = () => {
         if (typeof localStorage === 'undefined') return;

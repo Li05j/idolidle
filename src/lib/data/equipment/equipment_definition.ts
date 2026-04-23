@@ -23,7 +23,7 @@ export const EQUIP_CONFIG = {
     exp_per_level: 10,
     level_cap: 5,
     rarity_weights: { N: 0.88, R: 0.10, SR: 0.018, UR: 0.002 } as Record<Rarity, number>,
-    level_bonus_per_level: 0.2,
+    level_bonus_per_level: 0.5,
 };
 
 export type EquipStatBonus = {
