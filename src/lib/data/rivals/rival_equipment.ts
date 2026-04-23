@@ -62,7 +62,7 @@ export function generate_rival_loadout(budget: number): RivalLoadoutResult {
     const budget_cap = budget * (0.85 + Math.random() * 0.3);
     let remaining = budget_cap;
 
-    const candidates = build_candidates(budget);
+    const candidates = build_candidates(budget_cap);
     shuffle(candidates);
 
     const loadout: RivalEquipEntry[] = [];
