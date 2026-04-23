@@ -68,6 +68,9 @@ class LiveBattleManager {
         this.display_your_fans = this._you.Fans
         this.display_enemy_fans = this._rival.Fans
 
+        this.fire_skills('live_start');
+        this.fire_rival_skills('live_start');
+
         this._action_bar[0] = 1 / this._you.Haste
         this._action_bar[1] = 1 / this._rival.Haste
 
@@ -76,9 +79,6 @@ class LiveBattleManager {
             your_stats: { ...this._you },
             enemy_stats: { ...this._rival },
         })
-
-        this.fire_skills('live_start');
-        this.fire_rival_skills('live_start');
     }
 
     private next_actor(): Actor {
@@ -95,16 +95,29 @@ class LiveBattleManager {
         let turns = 0
         while (!this.battleOver() && turns < BATTLE_TUNING.MAX_TURNS) {
             turns++
-            const actor = this.next_actor()
+            const actor = this.pre_turn()
+            const attacker = actor === "Player" ? this._you : this._rival
+            // Stamina-0 actor: skip take_turn AND post_turn. _temp_buffs is empty
+            // here (single-turn semantics), so nothing to revert anyway.
+            if (attacker.Curr_Stamina <= 0) continue
             this.take_turn(actor)
+            this.post_turn()
         }
+    }
+
+    /** Engine phase: pick next actor, increment their action bar. */
+    private pre_turn(): Actor {
+        return this.next_actor()
+    }
+
+    /** Engine phase: revert single-turn temp buffs. */
+    private post_turn(): void {
+        this.revert_temp_buffs()
     }
 
     private take_turn(actor: Actor) {
         const attacker = actor === "Player" ? this._you : this._rival
         const defender = actor === "Player" ? this._rival : this._you
-
-        if (attacker.Curr_Stamina <= 0) return
 
         if (actor === "Player") {
             this.fire_skills('before_inflicting_dmg');
@@ -160,8 +173,7 @@ class LiveBattleManager {
             this.fire_skills('after_taking_dmg', atk_type, fans_stolen);
         }
 
-        // Revert temp buffs and run post-attack effects
-        this.revert_temp_buffs();
+        // Run post-attack effects. Temp buff revert happens in post_turn.
         this.run_post_attack_effects(fans_stolen);
 
         // Log
