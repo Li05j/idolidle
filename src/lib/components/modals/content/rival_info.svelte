@@ -2,8 +2,14 @@
     import { LiveInfo } from "$lib/runtime/live_rival_info.svelte";
     import { DEV } from "$lib/config";
     import { EQUIP_CONFIG } from "$lib/data/equipment/equipment_definition";
+    import { CPs } from "$lib/state/checkpoints.svelte";
 </script>
 
+{#if CPs.is_terminal}
+    <div class="w-full h-full p-6 flex items-center justify-center text-center text-[var(--text-muted)] italic">
+        You're already the top idol — no more rivals to face.
+    </div>
+{:else}
 <div class="w-full h-full p-6 flex flex-col gap-4 min-h-0">
     <!-- Header: persona name + condition pill -->
     <div class="flex items-center justify-between gap-4 shrink-0">
@@ -71,6 +77,11 @@
                     {/if}
                 {/each}
             </div>
+            {#if DEV}
+                <div class="mt-auto pt-2 text-xs text-[var(--text-muted)] tabular-nums border-t border-[var(--surface-base)]">
+                    Budget: {LiveInfo.budget_info.used.toFixed(2)} / {LiveInfo.budget_info.cap.toFixed(2)} (base {LiveInfo.budget_info.total.toFixed(2)})
+                </div>
+            {/if}
         </div>
 
         <!-- Equip Detail: always mounted -->
@@ -84,6 +95,9 @@
                     <span class="text-xs font-semibold px-1.5 py-0.5 rounded shrink-0" style="color: {color}; border: 1px solid {color};">{detail.entry.rarity}</span>
                     <span class="text-xs text-[var(--text-muted)] px-1.5 py-0.5 rounded bg-[var(--surface-base)] shrink-0">{detail.def.slot}</span>
                     <span class="text-sm text-[var(--text-primary)] font-semibold shrink-0">Lv.{detail.entry.level}</span>
+                    {#if DEV}
+                        <span class="text-xs text-[var(--text-muted)] tabular-nums shrink-0 ml-auto">cost: {detail.budget_cost.toFixed(2)}</span>
+                    {/if}
                 </div>
 
                 {#if detail.def.desc}
@@ -136,3 +150,4 @@
         </div>
     </div>
 </div>
+{/if}

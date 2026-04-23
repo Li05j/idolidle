@@ -1,6 +1,8 @@
 import { stat_list } from "$lib/state/stats.svelte";
 import { CPs } from "$lib/state/checkpoints.svelte";
 import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
+import { RIVAL_EQUIP_BUDGET, equip_cost } from "$lib/data/rivals/rival_equipment";
+import { CHECKPOINTS } from "$lib/data/checkpoints";
 import type { LiveBattleStats } from "$lib/types";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 import {
@@ -73,7 +75,10 @@ export type RivalEquipDetail = {
     entry: RivalEquipEntry;
     effective_bonuses: RivalEquipEffectiveBonus[];
     skill_view: RivalEquipSkillView | null;
+    budget_cost: number;
 };
+
+export type RivalBudgetInfo = { total: number; cap: number; used: number };
 
 class RivalComparison {
     public selected_equip_idx: number | null = $state(null);
@@ -154,7 +159,15 @@ class RivalComparison {
                 triggers: resolved.skill.triggers.join(', '),
             };
         }
-        return { def, entry, effective_bonuses, skill_view };
+        return { def, entry, effective_bonuses, skill_view, budget_cost: equip_cost(entry.rarity, entry.level) };
+    });
+
+    public budget_info: RivalBudgetInfo = $derived.by(() => {
+        const cp = CPs.current_completed_checkpoint;
+        const total = CHECKPOINTS[cp]?.rival ? (RIVAL_EQUIP_BUDGET[cp] ?? 0) : 0;
+        const preview = RivalStatsM.preview(cp);
+        const used = preview.equipment.reduce((s, e) => s + equip_cost(e.rarity, e.level), 0);
+        return { total, cap: preview.budget_cap, used };
     });
 
     public condition_text: string = $derived.by(() => {

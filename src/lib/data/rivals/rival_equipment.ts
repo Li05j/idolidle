@@ -18,7 +18,7 @@ const SLOT_CAPS: Record<EquipSlot, number> = {
 
 const COST_LEVEL_STEP = 0.5;
 
-function equip_cost(rarity: Rarity, level: number): number {
+export function equip_cost(rarity: Rarity, level: number): number {
     return EQUIP_CONFIG.dupe_exp[rarity] * (1 + COST_LEVEL_STEP * (level - 1));
 }
 
@@ -53,11 +53,14 @@ function shuffle<T>(arr: T[]): void {
     }
 }
 
-export function generate_rival_loadout(budget: number): RivalEquipEntry[] {
-    if (budget <= 0) return [];
+export type RivalLoadoutResult = { loadout: RivalEquipEntry[]; budget_cap: number };
+
+export function generate_rival_loadout(budget: number): RivalLoadoutResult {
+    if (budget <= 0) return { loadout: [], budget_cap: 0 };
 
     // ±15% jitter on the spend cap so totals vary run-to-run.
-    let remaining = budget * (0.85 + Math.random() * 0.3);
+    const budget_cap = budget * (0.85 + Math.random() * 0.3);
+    let remaining = budget_cap;
 
     const candidates = build_candidates(budget);
     shuffle(candidates);
@@ -77,7 +80,7 @@ export function generate_rival_loadout(budget: number): RivalEquipEntry[] {
         remaining -= c.cost;
     }
 
-    return loadout;
+    return { loadout, budget_cap };
 }
 
 const LIVE_STAT_MAP: Record<string, (keyof LiveBattleStats)[]> = {

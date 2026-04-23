@@ -38,7 +38,7 @@ export function createTodoTimer(): TodoTimer {
         last_frame_time = now;
 
         elapsed += delta;
-        CPs.current_time_spent += delta;
+        if (!CPs.is_terminal) CPs.current_time_spent += delta;
 
         let dur = getDuration();
         while (elapsed >= dur) {
@@ -48,7 +48,7 @@ export function createTodoTimer(): TodoTimer {
                 elapsed -= dur;
                 loop_count--;
                 checkpoint_base += dur;
-                CPs.current_time_spent = checkpoint_base + elapsed;
+                if (!CPs.is_terminal) CPs.current_time_spent = checkpoint_base + elapsed;
                 dur = getDuration();
             } else {
                 stop();
@@ -84,7 +84,7 @@ export function createTodoTimer(): TodoTimer {
     }
 
     function stop() {
-        CPs.current_time_spent = checkpoint_base + getDuration();
+        if (!CPs.is_terminal) CPs.current_time_spent = checkpoint_base + getDuration();
         onAllCompleteCallback?.();
         clear();
     }

@@ -21,16 +21,22 @@
     }
 </script>
 
-<div class="bg-[var(--surface-card)] p-3 rounded-b-2xl shadow-md mb-1 w-full">
-    <div class="flex justify-between items-center mb-2">
-        <div class="pl-2 pb-1 text-base font-bold text-[var(--text-primary)]">Time till next LIVE!</div>
-        <GenericButton name={"LIVE info..."} onclick={open_rival_info} variant='cute' class={"px-4 py-1 text-xs"}/>
+{#if CPs.is_terminal}
+    <div class="bg-[var(--surface-card)] p-3 rounded-b-2xl shadow-md mb-1 w-full text-center text-sm font-semibold text-[var(--text-primary)]">
+        You're already the top idol — no more rivals to face.
     </div>
-    <div class="w-full bg-[var(--progress-bg)] rounded-full h-3 mb-2 overflow-hidden">
-        <div
-            class="h-3 w-full rounded-full will-change-transform"
-            style="transform: scaleX({progress_percent / 100}); transform-origin: left; background: linear-gradient(90deg, var(--progress-from), var(--progress-to));"
-        ></div>
+{:else}
+    <div class="bg-[var(--surface-card)] p-3 rounded-b-2xl shadow-md mb-1 w-full">
+        <div class="flex justify-between items-center mb-2">
+            <div class="pl-2 pb-1 text-base font-bold text-[var(--text-primary)]">Time till next LIVE!</div>
+            <GenericButton name={"LIVE info..."} onclick={open_rival_info} variant='cute' class={"px-4 py-1 text-xs"}/>
+        </div>
+        <div class="w-full bg-[var(--progress-bg)] rounded-full h-3 mb-2 overflow-hidden">
+            <div
+                class="h-3 w-full rounded-full will-change-transform"
+                style="transform: scaleX({progress_percent / 100}); transform-origin: left; background: linear-gradient(90deg, var(--progress-from), var(--progress-to));"
+            ></div>
+        </div>
+        <div class="text-center text-xs text-[var(--text-muted)]">{msToSecF(CPs.current_time_spent)}/{msToSecF(CPs.current_total_time)}s</div>
     </div>
-    <div class="text-center text-xs text-[var(--text-muted)]">{msToSecF(CPs.current_time_spent)}/{msToSecF(CPs.current_total_time)}s</div>
-</div>
+{/if}

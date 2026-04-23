@@ -20,6 +20,10 @@ class Checkpoints {
 		return cp.time * CFG.time_scale * cp.multi
 	}
 
+	get is_terminal() {
+		return !CHECKPOINTS[this._idx]?.rival;
+	}
+
 	readonly shouldTrigger = $derived(
 		this._last_triggered !== this._idx &&
 		this.current_time_spent >= this.current_total_time

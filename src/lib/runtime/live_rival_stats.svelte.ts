@@ -5,7 +5,7 @@ import { pickPersona, ALL_PERSONAS, type Persona } from "$lib/data/rivals/person
 import { RIVAL_EQUIP_BUDGET, generate_rival_loadout, apply_rival_equipment } from "$lib/data/rivals/rival_equipment";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 
-export type RivalPreview = { stats: LiveBattleStats; persona: Persona; equipment: RivalEquipEntry[] };
+export type RivalPreview = { stats: LiveBattleStats; persona: Persona; equipment: RivalEquipEntry[]; budget_cap: number };
 
 const FALLBACK_PERSONA: Persona = {
     id: 'none',
@@ -18,7 +18,7 @@ function emptyStats(): LiveBattleStats {
     return { Fans: 1, Max_Stamina: 1, Curr_Stamina: 1, Haste: 1, Sing: 1, Dance: 1, Charm: 1, Presence: 1 };
 }
 
-const FALLBACK_PREVIEW: RivalPreview = { stats: emptyStats(), persona: FALLBACK_PERSONA, equipment: [] };
+const FALLBACK_PREVIEW: RivalPreview = { stats: emptyStats(), persona: FALLBACK_PERSONA, equipment: [], budget_cap: 0 };
 
 function rerollPreviews(): (RivalPreview | null)[] {
     return CHECKPOINTS.map((c, i) => {
@@ -26,9 +26,9 @@ function rerollPreviews(): (RivalPreview | null)[] {
         const persona = pickPersona();
         const stats = generateRivalStats(persona, c.rival);
         const budget = RIVAL_EQUIP_BUDGET[i] ?? 0;
-        const equipment = generate_rival_loadout(budget);
+        const { loadout: equipment, budget_cap } = generate_rival_loadout(budget);
         apply_rival_equipment(stats, equipment);
-        return { persona, stats, equipment };
+        return { persona, stats, equipment, budget_cap };
     });
 }
 
@@ -54,6 +54,7 @@ class RivalStats {
                 persona_id: p.persona.id,
                 stats: { ...p.stats },
                 equipment: p.equipment.map(e => ({ ...e })),
+                budget_cap: p.budget_cap,
             })),
         };
     }
@@ -94,7 +95,7 @@ class RivalStats {
                 out.push(fresh[i]);
                 continue;
             }
-            const p = raw as { persona_id?: unknown; stats?: unknown; equipment?: unknown };
+            const p = raw as { persona_id?: unknown; stats?: unknown; equipment?: unknown; budget_cap?: unknown };
             const persona = typeof p.persona_id === 'string' ? persona_by_id.get(p.persona_id) : undefined;
             const stats = parse_stats(p.stats);
             if (!persona || !stats) {
@@ -118,7 +119,8 @@ class RivalStats {
                 }
             }
 
-            out.push({ persona, stats, equipment });
+            const budget_cap = typeof p.budget_cap === 'number' ? p.budget_cap : 0;
+            out.push({ persona, stats, equipment, budget_cap });
         }
 
         this._previews = out;
