@@ -10,7 +10,7 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         variants: {
             N: {
                 stat_bonuses: [
-                    { stat: 'Stamina', base_value: 5.0, target: 'base' },
+                    { stat: 'Stamina', base_value: 6.0, target: 'base' },
                 ],
                 skill_id: 'go_home_club',
             },
@@ -177,7 +177,6 @@ export const ALL_EQUIPMENT: EquipDef[] = [
                 stat_bonuses: [
                     { stat: 'Charm', base_value: 4.0, target: 'base' },
                 ],
-                skill_id: 'crybaby',
             },
         },
     },
@@ -189,8 +188,8 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         variants: {
             N: {
                 stat_bonuses: [
-                    { stat: 'Presence', base_value: 3.5, target: 'base' },
                     { stat: 'Dance', base_value: 3.5, target: 'base' },
+                    { stat: 'Presence', base_value: 3.5, target: 'base' },
                 ],
                 skill_id: 'showstopper',
             },
@@ -219,6 +218,7 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         variants: {
             N: {
                 stat_bonuses: [
+                    { stat: 'Haste', base_value: 1.0, target: 'base' },
                     { stat: 'Sing', base_value: 5.0, target: 'base' },
                 ],
                 // skill_id: 'scandal_magnet',

@@ -20,7 +20,7 @@ export const ALL_SKILLS: SkillDef[] = [
         id: 'underdog',
         name: 'Underdog',
         triggers: ['before_inflicting_dmg'],
-        chance: 0.33,
+        chance: 0.35,
         values: { buff: 1.5 },
         cond_string: '{Self_poss} Fans < {opp_poss} Fans',
         eff_string: (v) => `{Self_poss} next move steals ${(v.buff - 1) * 100}% more Fans.`,
@@ -142,25 +142,11 @@ export const ALL_SKILLS: SkillDef[] = [
         },
     },
     {
-        id: 'crybaby',
-        name: 'Crybaby',
-        triggers: ['after_taking_dmg'],
-        chance: 0.5,
-        values: { charm_gain: 1.15 },
-        cond_string: 'Lose Fans to {opp}',
-        eff_string: (v) => `Sympathy buff: +${(v.charm_gain - 1) * 100}% Charm permanently this LIVE.`,
-        condition: ({ fans_stolen }) => (fans_stolen ?? 0) > 0,
-        effect: ({ you, log, values: v }) => {
-            you.Charm *= v.charm_gain;
-            log(`{Self} sniffles... the audience pities {self}! Charm rises.`);
-        },
-    },
-    {
         id: 'showstopper',
         name: 'Showstopper',
         triggers: ['before_inflicting_dmg'],
-        chance: 0.3,
-        values: { stam_cost: 0.25, buff: 2.0 },
+        chance: 0.35,
+        values: { stam_cost: 0.2, buff: 2.0 },
         cond_string: (v) => `Stamina >= ${v.stam_cost * 100}%`,
         eff_string: (v) => `Burn ${v.stam_cost * 100}% Stamina to ${v.buff}x next move.`,
         condition: ({ you, values: v }) => you.Curr_Stamina >= you.Max_Stamina * v.stam_cost,
@@ -168,7 +154,7 @@ export const ALL_SKILLS: SkillDef[] = [
             you.Curr_Stamina -= you.Max_Stamina * v.stam_cost;
             apply_temp_buff!('you', 'Sing', you.Sing * v.buff);
             apply_temp_buff!('you', 'Dance', you.Dance * v.buff);
-            log(`{Self} pulls out all the stops!!`);
+            log(`Showstopper: {Self} pulls out all the stops!!`);
         },
     },
     {
@@ -177,7 +163,7 @@ export const ALL_SKILLS: SkillDef[] = [
         triggers: ['after_taking_dmg'],
         chance: 0.35,
         values: { reflect: 0.5 },
-        cond_string: '{Opp} steals Fans with a Dance move',
+        cond_string: '{Opp} steals Fans with a Sing move',
         eff_string: (v) => `Steal back ${v.reflect * 100}% of the Fans lost.`,
         condition: ({ atk_type, fans_stolen }) => atk_type === 'Dance' && (fans_stolen ?? 0) > 0,
         effect: ({ you, rival, log, fans_stolen, values: v }) => {
@@ -185,7 +171,7 @@ export const ALL_SKILLS: SkillDef[] = [
             const taken = Math.min(rival.Fans, reflect);
             rival.Fans -= taken;
             you.Fans += taken;
-            log(`Scandalous! {Self} stole ${taken} Fans back from {opp}!`);
+            log(`Scandal Magnet: Scandalous! {Self} dissed {Opp} and stole ${taken} Fans back from {Opp}!`);
         },
     },
 ];
