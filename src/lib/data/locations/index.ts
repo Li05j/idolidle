@@ -2,7 +2,9 @@ import type { LocationDef } from './location_definition';
 import { wake_up } from './wake_up';
 import { living_room } from './living_room';
 import { park } from './park';
+import { karaoke_box } from './karaoke_box';
 import { school } from './school';
+import { train_station } from './train_station';
 import { mall } from './mall';
 import { gym } from './gym';
 import { maid_cafe } from './maid_cafe';
@@ -13,42 +15,40 @@ export const allLocations: LocationDef[] = [
     wake_up,
     living_room,
     park,
+    karaoke_box,
     school,
+    train_station,
     mall,
     gym,
     maid_cafe,
 ];
 
 // ---------------------------------------------------------------------------
-// Future location/upgrade ideas — brainstorm pile, not a roadmap.
-// Constraint reminders: Sing is currently only trained at School (real gap).
-// Haste lives almost entirely in Gym. Late-game Moni has nowhere to go past
-// Mall outfits + Living Room upgrade. No nighttime venues. No online loop.
+// Future location/upgrade ideas: brainstorm.
+// Constraint reminders: Sing is currently only trained at School (gap).
+// Haste lives almost entirely in Gym. Late game Moni has nowhere to go past
+// Mall outfits + Living Room upgrade.
 //
-// Priority guesses (closes the most obvious holes first):
-//   1. Karaoke Box       — fixes Sing starvation. Unlock from Park/School.
-//                          Trigger: 'Book a Solo Booth'. Late-night upgrade.
-//   2. Concert Hall      — endgame stage. Gate behind School concert or Fans.
-//                          Trigger: 'Pass Audition' → 'Headline Show'.
-//   3. Streaming Studio  — Presence/Fans loop, big Moni sink + viral % procs.
-//                          Could spawn from upgraded Living Room instead.
-//   4. Talent Agency     — meta hub, 1-use buys: vocal coach, choreographer,
-//                          photoshoot, signing bonus. Eats late-game Moni.
-//   5. Shrine / Festival — Haste second home, omikuji gambling-lite, wholesome
-//                          counter to Maid Cafe's otaku vibe.
+//   - Concert Hall
+//   - Streaming Studio could spawn from upgraded Living Room instead.
+//   - Talent Agency
+//   - Shrine / Festival
 //
-// Cities (much later, NOT now): only worth it past ~12 locations AND only if
-// each city carries mechanical weight beyond UI — own rival persona pool, own
-// equip drop pool, own dream upgrade lane. Otherwise it's just folders and
-// pure complexity cost. Tie unlock to a checkpoint milestone, not a menu.
-// Possible split when the time comes:
-//   Hometown (current 7 + Karaoke + Shrine) → Tokyo (Concert Hall, Streaming
-//   Studio, Talent Agency, plus tougher rivals & better equip pools).
+// Cities (much later, NOT now): probably each city can have its own theme.
 // Optional: 'start-in-Tokyo' rebirth choice as a dream upgrade once unlocked.
 // ---------------------------------------------------------------------------
 
 /** The location the player starts at on a fresh run / rebirth. */
 export const STARTING_LOCATION: LocationDef = wake_up;
+
+const LOCATION_ORDER = new Map<string, number>(
+    allLocations.map((loc, i) => [loc.name, i])
+);
+
+/** Canonical sort key for a location name. Unknown names sort to the end. */
+export function canonical_index(name: string): number {
+    return LOCATION_ORDER.get(name) ?? Number.POSITIVE_INFINITY;
+}
 
 export const locationMap = new Map<string, LocationDef>(
     allLocations.map(loc => [loc.name, loc])

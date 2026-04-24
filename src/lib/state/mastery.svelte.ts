@@ -12,9 +12,9 @@ class ActionMastery {
 	}
 
 	// Rational (Hill) diminishing curve: floor + (1-floor) / (1 + rate * c^p)
-	// p > 1 keeps the early phase gentle; the polynomial denominator throttles
-	// the dive so we get a short accel phase then long decel into the floor.
-	// With defaults: ~0.87x at 10, ~0.18x at 100, ~0.026x at 1000, ~floor at 10000.
+	// Sub-linear p (≈0.88) keeps early grind cheap and stretches the decay so
+	// mid-count reductions stay readable. With defaults:
+	// ~0.93x at 10, ~0.77x at 50, ~0.64x at 100, ~0.30x at 500, ~0.20x at 1000.
 	factor(mastery_id: string): number {
 		return this.factor_for_count(this._counts[mastery_id] ?? 0);
 	}

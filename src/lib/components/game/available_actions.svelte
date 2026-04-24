@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TD_List_Tracker } from "$lib/state/todos_list_tracker.svelte";
+    import { available_actions_vm } from "./available_actions.svelte.ts";
     import ActionCollection from '$lib/components/shared/action_collection.svelte';
 </script>
 
@@ -7,7 +7,7 @@
 <div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-to)] to-transparent mb-3"></div>
 
 <div class="overflow-y-auto h-full pb-16">
-    {#each [...TD_List_Tracker.actions] as [locName, entries] (locName)}
+    {#each available_actions_vm.entries as [locName, entries] (locName)}
         <div class="pb-3">
             <ActionCollection title={locName} actionNames={entries.map(e => e.name)} />
         </div>

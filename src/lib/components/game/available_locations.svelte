@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TD_List_Tracker } from "$lib/state/todos_list_tracker.svelte";
+    import { available_locations_vm } from "./available_locations.svelte.ts";
     import TodoCard from '$lib/components/todo_cards/todo_card.svelte';
 </script>
 
@@ -7,7 +7,7 @@
 <div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-from)] to-transparent mb-3"></div>
 
 <div class="overflow-y-auto p-3 h-full">
-    {#each TD_List_Tracker.locations as entry (entry.name)}
+    {#each available_locations_vm.entries as entry (entry.name)}
         <TodoCard locationName={entry.name} />
     {/each}
 </div>

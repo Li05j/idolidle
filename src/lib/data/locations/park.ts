@@ -3,6 +3,7 @@ import { stat_list } from '$lib/state/stats.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
 import { mall } from './mall';
+import { karaoke_box } from './karaoke_box';
 
 function extra_play_with_kids() {
     let [is_success, actual_gain] = simple_flat_stat_reward('Fans', 'base', 'Slight', 1);
@@ -29,7 +30,7 @@ export const park: LocationDef = {
             { equip_id: 'rivals_old_hoodie', weight: 1 },
         ],
     },
-    unlocks: () => [mall],
+    unlocks: () => [mall, karaoke_box],
     actions: [
         {
             name: 'Picking Bottles',
