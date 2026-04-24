@@ -1,7 +1,22 @@
 import { history } from '$lib/state/history.svelte';
+import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { ActionDef, LocationDef } from './location_definition';
 import { park } from './park';
 import { school } from './school';
+
+function extra_singing_practice() {
+    let [is_success, value] = simple_flat_stat_reward("Sing", "base", "Good", 2.0);
+    if (is_success) {
+        history.addSystemLog(`Eureka! You found your voice! +${value} Sing!`);
+    }
+}
+
+function extra_dancing_practice() {
+    let [is_success, value] = simple_flat_stat_reward("Dance", "base", "Good", 2.0);
+    if (is_success) {
+        history.addSystemLog(`Eureka! You found your rhythm! +${value} Dance!`);
+    }
+}
 
 const singing_practice: ActionDef = {
     name: 'Singing Practice',
@@ -46,27 +61,36 @@ export const living_room: LocationDef = {
             trigger: 'Upgrade Living Room',
             replace_all: true,
             add_actions: [
+                
                 {
                     name: 'Singing Practice+',
                     mastery_id: 'Singing Practice',
                     kind: 'training',
-                    base_time: 30,
+                    base_time: 15,
                     desc: "At least your cat won't faint anymore, that's what we call improvement.",
                     rewards: [
                         { which_stat: "Stamina", target: 'base', amount: 0.5 },
-                        { which_stat: "Sing", target: 'base', amount: 5 },
+                        { which_stat: "Sing", target: 'base', amount: 1.0 },
                     ],
+                    on_complete: {
+                        fn: extra_singing_practice,
+                        desc: "Good chance to gain an extra 2.0 Sing.",
+                    },
                 },
                 {
                     name: 'Dancing Practice+',
                     mastery_id: 'Dancing Practice',
                     kind: 'training',
-                    base_time: 30,
+                    base_time: 15,
                     desc: "No more kisses with the floor you just mopped. More calm, more peace. Going with the flow.",
                     rewards: [
                         { which_stat: "Stamina", target: 'base', amount: 0.5 },
-                        { which_stat: "Dance", target: 'base', amount: 5 },
+                        { which_stat: "Dance", target: 'base', amount: 1.0 },
                     ],
+                    on_complete: {
+                        fn: extra_dancing_practice,
+                        desc: "Good chance to gain an extra 2.0 Dance.",
+                    },
                 },
             ],
             on_trigger: () => {

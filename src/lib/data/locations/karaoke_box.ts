@@ -3,14 +3,14 @@ import type { LocationDef } from './location_definition';
 
 export const karaoke_box: LocationDef = {
     name: 'Karaoke Box',
-    base_time: 15,
+    base_time: 60,
     desc: "A booth-lined hallway humming with half-drunk choruses. The soundproofing is a lie.",
     rewards: [
-        { which_stat: "Stamina", target: 'base', amount: 1.0 },
+        { which_stat: "Stamina", target: 'base', amount: 3.0 },
     ],
     requires: {
-        text: "Sing + Charm ≥ 5.0",
-        is_met: () => stat_list.Sing.final + stat_list.Charm.final >= 5.0,
+        text: "Sing ≥ 20.0",
+        is_met: () => stat_list.Sing.final >= 20.0,
     },
     unlocks: () => [],
     // TODO: placeholder dummies — replace with real Sing-focused lineup later.

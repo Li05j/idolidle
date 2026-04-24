@@ -6,9 +6,9 @@ type Chance = 'Tiny' | 'Slight' | 'Good' | 'Great'; // 0.1, 0.25, 0.5, 0.75
 function map_chance_to_number(chance: Chance) {
     switch (chance) {
         case 'Tiny'     : return 0.1;
-        case 'Slight'   : return 0.25;
-        case 'Good'     : return 0.5;
-        case 'Great'    : return 0.75;
+        case 'Slight'   : return 0.2;
+        case 'Good'     : return 0.33;
+        case 'Great'    : return 0.5;
     }
 }
 
