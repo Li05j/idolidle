@@ -168,7 +168,7 @@ const climbing_the_stairs: ActionDef = {
 const host_school_concert: ActionDef = {
     name: 'Host School Concert',
     kind: 'spending',
-    base_time: 50,
+    base_time: 45,
     desc: "Finally, a real stage. The lighting, the music, the fans...! Is this what it feels like to be in the spotlight? The tickets are free though.",
     rewards: [
         {
@@ -183,8 +183,6 @@ const host_school_concert: ActionDef = {
             },
         },
         { which_stat: "Fans", target: 'multi', amount: 0.01 },
-        { which_stat: "Sing", target: 'base', amount: 2.5 },
-        { which_stat: "Dance", target: 'base', amount: 2.5 },
     ],
     costs: [{ stat: "Moni", amount: IDOL_CLUB_CONCERT_COST }],
     requires: {
@@ -243,12 +241,12 @@ const school_plus: LocationDef = {
     },
     unlocks: () => [old_theatre, gym, maid_cafe],
     actions: [
+        host_school_concert,
         collect_grade_report,
         attend_class,
         yell_on_wooden_box,
         hallway_flash_mob,
         climbing_the_stairs,
-        host_school_concert,
         sell_merch,
         club_promoter,
     ],
