@@ -64,16 +64,16 @@ export type RivalEquipSkillView = {
     triggers: string;
 };
 
-export type RivalEquipEffectiveBonus = {
+export type RivalEquipStatRow = {
     stat: BasicStats;
-    target: 'base' | 'multi';
-    value: number;
+    base: number | null;
+    multi: number | null;
 };
 
 export type RivalEquipDetail = {
     def: EquipDef;
     entry: RivalEquipEntry;
-    effective_bonuses: RivalEquipEffectiveBonus[];
+    stat_rows: RivalEquipStatRow[];
     skill_view: RivalEquipSkillView | null;
     budget_cost: number;
 };
@@ -143,11 +143,16 @@ class RivalComparison {
         const def = EQUIP_REGISTRY.get(entry.equip_id);
         if (!def) return null;
         const resolved = resolve_equip(def, entry.rarity);
-        const effective_bonuses: RivalEquipEffectiveBonus[] = resolved.stat_bonuses.map((b) => ({
-            stat: b.stat,
-            target: b.target,
-            value: effective_bonus(b, entry.level, resolved.stat_mult),
-        }));
+        const by_stat = new Map<BasicStats, RivalEquipStatRow>();
+        for (const b of resolved.stat_bonuses) {
+            let row = by_stat.get(b.stat);
+            if (!row) {
+                row = { stat: b.stat, base: null, multi: null };
+                by_stat.set(b.stat, row);
+            }
+            row[b.target] = effective_bonus(b, entry.level, resolved.stat_mult);
+        }
+        const stat_rows: RivalEquipStatRow[] = Array.from(by_stat.values());
         let skill_view: RivalEquipSkillView | null = null;
         if (resolved.skill) {
             const values = resolved.skill.values ?? {};
@@ -159,7 +164,7 @@ class RivalComparison {
                 triggers: resolved.skill.triggers.join(', '),
             };
         }
-        return { def, entry, effective_bonuses, skill_view, budget_cost: equip_cost(entry.rarity, entry.level) };
+        return { def, entry, stat_rows, skill_view, budget_cost: equip_cost(entry.rarity, entry.level) };
     });
 
     public budget_info: RivalBudgetInfo = $derived.by(() => {

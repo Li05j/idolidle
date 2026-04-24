@@ -35,6 +35,8 @@ class LiveBattleManager {
 
     public display_your_fans: number = $state(1)
     public display_enemy_fans: number = $state(1)
+    public display_your_stamina_pct: number = $state(1)
+    public display_enemy_stamina_pct: number = $state(1)
 
     private _real_turns: LiveTurn[] = []
     private _replay_turns: LiveTurn[] = $state([])
@@ -67,6 +69,8 @@ class LiveBattleManager {
 
         this.display_your_fans = this._you.Fans
         this.display_enemy_fans = this._rival.Fans
+        this.display_your_stamina_pct = 1
+        this.display_enemy_stamina_pct = 1
 
         this.fire_skills('live_start');
         this.fire_rival_skills('live_start');
@@ -290,7 +294,7 @@ class LiveBattleManager {
         }
     }
 
-    private push_over_time(source: LiveTurn[], target: LiveTurn[], intervalMs: number = 500) {
+    private push_over_time(source: LiveTurn[], target: LiveTurn[], intervalMs: number = 600) {
         this._replay_interval = setInterval(() => {
             if (source.length === 0) {
                 clearInterval(this._replay_interval!);
@@ -300,8 +304,18 @@ class LiveBattleManager {
             const item = source.shift();
             if (item !== undefined) {
                 target.push(item);
-                if (item.your_stats) this.display_your_fans = item.your_stats.Fans;
-                if (item.enemy_stats) this.display_enemy_fans = item.enemy_stats.Fans;
+                if (item.your_stats) {
+                    this.display_your_fans = item.your_stats.Fans;
+                    if (item.your_stats.Max_Stamina > 0) {
+                        this.display_your_stamina_pct = item.your_stats.Curr_Stamina / item.your_stats.Max_Stamina;
+                    }
+                }
+                if (item.enemy_stats) {
+                    this.display_enemy_fans = item.enemy_stats.Fans;
+                    if (item.enemy_stats.Max_Stamina > 0) {
+                        this.display_enemy_stamina_pct = item.enemy_stats.Curr_Stamina / item.enemy_stats.Max_Stamina;
+                    }
+                }
             }
         }, intervalMs);
     }
@@ -364,6 +378,8 @@ class LiveBattleManager {
         }
         this.live_sim_complete = false;
         this.final_fan_difference = null;
+        this.display_your_stamina_pct = 1;
+        this.display_enemy_stamina_pct = 1;
         this._real_turns = []
         this._replay_turns = []
         this._action_bar = [0, 0]

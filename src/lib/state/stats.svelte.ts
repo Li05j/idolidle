@@ -24,7 +24,7 @@ function createStat(name: BasicStats, round: RoundFn, formatFinal: (v: number) =
 		get equip_multi() { return equip_multi }, set equip_multi(v) { equip_multi = v },
 		get total_base() { return total_base() },
 		get total_multi() { return total_multi() },
-		add_base_from_final(v: number) { base += round(v / total_multi()) },
+		add_base_from_final(v: number) { base += v / total_multi() },
 		format_final_gain(v: number) { return round(v * total_multi()).toString() },
 		get final() { return round(total_base() * total_multi()) },
 		get final_str() { return formatFinal(round(total_base() * total_multi())) },

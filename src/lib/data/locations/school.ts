@@ -20,7 +20,7 @@ function extra_attend_class() {
     let b = Math.random();
     let c = Math.random();
     let d = Math.random();
-    let gain = 1.1;
+    let gain = 1.2;
     if (a < 0.5) {
         stat_list.Sing.base += gain;
         history.addSystemLog(`Eureka! You gained +${truncate_to_decimal(gain * stat_list.Sing.multi)} Sing!`);
@@ -84,7 +84,7 @@ const open_idol_club: ActionDef = {
     },
     on_complete: {
         fn: () => {},
-        desc: "Unlocks more options in School. School Equipment drop rate increased. ",
+        desc: "Unlocks more options in School. School Equipment drop rate increased",
     },
 };
 
@@ -114,10 +114,10 @@ const attend_class: ActionDef = {
     base_time: 60,
     desc: "You still gotta study alright; elite idol and elite student? That's the spirit.",
     rewards: [
-        { which_stat: "Sing", target: 'base', amount: 1.1 },
-        { which_stat: "Dance", target: 'base', amount: 1.1 },
-        { which_stat: "Charm", target: 'base', amount: 1.1 },
-        { which_stat: "Presence", target: 'base', amount: 1.1 },
+        { which_stat: "Sing", target: 'base', amount: 1.2 },
+        { which_stat: "Dance", target: 'base', amount: 1.2 },
+        { which_stat: "Charm", target: 'base', amount: 1.2 },
+        { which_stat: "Presence", target: 'base', amount: 1.2 },
     ],
     on_complete: {
         fn: extra_attend_class,
@@ -177,8 +177,8 @@ const host_school_concert: ActionDef = {
             amount: 25,
             scaling: {
                 sources: [
-                    { which_stat: "Sing", effectiveness: 0.25 },
-                    { which_stat: "Dance", effectiveness: 0.25 },
+                    { which_stat: "Sing", effectiveness: 2.5 },
+                    { which_stat: "Dance", effectiveness: 2.5 },
                 ],
             },
         },
@@ -211,7 +211,7 @@ const sell_merch: ActionDef = {
         target: 'base',
         amount: 5,
         scaling: {
-            sources: [{ which_stat: "Presence", effectiveness: 1.1 }],
+            sources: [{ which_stat: "Presence", effectiveness: 2.75 }],
         },
     }],
 };

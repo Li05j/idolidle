@@ -1,5 +1,4 @@
 import { CPs } from "$lib/state/checkpoints.svelte";
-import { DECIMAL_PLACES } from "$lib/utils/utils"
 
 type TimerState = 'idle' | 'running' | 'paused';
 
@@ -7,8 +6,6 @@ export interface TodoTimer {
     is_active: boolean;
     is_paused: boolean;
     elapsed: number;
-    progress_percent: number;
-    progress_text: string;
     loop_count: number;
     seed: (elapsed: number) => void;
     repeat: (loop_count: number, getDuration: () => number, onComplete: () => void, onAllComplete: () => void) => void;
@@ -19,8 +16,6 @@ export interface TodoTimer {
 
 export function createTodoTimer(): TodoTimer {
     let state: TimerState = $state('idle');
-    let progress_percent = $state(0);
-    let progress_text = $state("");
     let elapsed = $state(0);
 
     let loop_count = 0;
@@ -56,9 +51,6 @@ export function createTodoTimer(): TodoTimer {
             }
         }
 
-        progress_percent = (elapsed / dur) * 100;
-        progress_text = `${progress_percent.toFixed(DECIMAL_PLACES)}% complete`;
-
         raf_id = requestAnimationFrame(tick);
     }
 
@@ -93,7 +85,6 @@ export function createTodoTimer(): TodoTimer {
         if (raf_id) cancelAnimationFrame(raf_id);
         raf_id = 0;
         loop_count = 0;
-        progress_percent = 0;
         elapsed = 0;
         checkpoint_base = 0;
         getDuration = () => 0;
@@ -111,8 +102,6 @@ export function createTodoTimer(): TodoTimer {
         get is_active() { return state === 'running'; },
         get is_paused() { return state !== 'running'; },
         get elapsed() { return elapsed; },
-        get progress_percent() { return progress_percent; },
-        get progress_text() { return progress_text; },
         set loop_count(c: number) { loop_count = c; },
         seed,
         repeat,

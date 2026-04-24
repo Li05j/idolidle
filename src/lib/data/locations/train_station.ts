@@ -4,7 +4,7 @@ import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
 
 function extra_people_watching() {
-    let [is_success, value] = simple_flat_stat_reward("Haste", "base", "Tiny", 3, 1);
+    let [is_success, value] = simple_flat_stat_reward("Haste", "base", "Tiny", 3, 3);
     if (is_success) {
         history.addSystemLog(`Eureka! You decided to chase the train too. +${value} Haste!`);
         if (stat_list.Haste.base >= 150) {
@@ -15,7 +15,7 @@ function extra_people_watching() {
 }
 
 function extra_platform_busking() {
-    let [is_success, actual_gain] = simple_flat_stat_reward('Sing', 'base', 'Slight', 3, 5);
+    let [is_success, actual_gain] = simple_flat_stat_reward('Sing', 'base', 'Slight', 5, 3);
     if (is_success) {
         history.addSystemLog(`Eureka! You got better at singing, +${actual_gain} Sing!`);
     }
@@ -48,7 +48,7 @@ export const train_station: LocationDef = {
             ],
             on_complete: {
                 fn: extra_people_watching,
-                desc: "Tiny chance to gain some Haste"
+                desc: "Tiny chance to gain 3~6 Haste"
             },
         },
         {
@@ -64,15 +64,15 @@ export const train_station: LocationDef = {
                     amount: 8,
                     scaling: {
                         sources: [
-                            { which_stat: "Sing", effectiveness: 0.55 },
-                            { which_stat: "Presence", effectiveness: 0.55 },
+                            { which_stat: "Sing", effectiveness: 2.2 },
+                            { which_stat: "Dance", effectiveness: 2.2 },
                         ],
                     },
                 },
             ],
             on_complete: {
                 fn: extra_platform_busking,
-                desc: "Slight chance to gain some Sing"
+                desc: "Slight chance to gain 5~8 Sing"
             }
         },
     ],

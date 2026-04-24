@@ -42,7 +42,7 @@ export const park: LocationDef = {
                     target: 'base',
                     amount: 2,
                     scaling: {
-                        sources: [{ which_stat: "Haste", effectiveness: 1.0 }],
+                        sources: [{ which_stat: "Haste", effectiveness: 0.9 }],
                     },
                 },
             ],
@@ -59,7 +59,7 @@ export const park: LocationDef = {
                     target: 'base',
                     amount: 6,
                     scaling: {
-                        sources: [{ which_stat: "Fans", effectiveness: 1.0 }],
+                        sources: [{ which_stat: "Fans", effectiveness: 3.0 }],
                     },
                 },
             ],

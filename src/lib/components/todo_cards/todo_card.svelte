@@ -45,7 +45,7 @@
         <div class="w-full bg-[var(--progress-bg)] rounded-full h-3 mb-3 overflow-hidden">
             <div
                 class="h-3 w-full rounded-full will-change-transform"
-                style="transform: scaleX({vm.timer.progress_percent / 100}); transform-origin: left; background: linear-gradient(90deg, var(--progress-from), var(--progress-to));"
+                style="transform: scaleX({vm.todo_actual_duration > 0 ? Math.min(vm.timer.elapsed / vm.todo_actual_duration, 1) : 0}); transform-origin: left; background: linear-gradient(90deg, var(--progress-from), var(--progress-to));"
             ></div>
         </div>
 

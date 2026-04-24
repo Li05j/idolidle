@@ -2,7 +2,6 @@ import { history } from '$lib/state/history.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import { weighted_pick } from '$lib/utils/equip_drop';
 import { EquipM } from '$lib/state/equipment.svelte';
-import { EQUIP_REGISTRY } from '$lib/data/equipment';
 import type { Rarity } from '$lib/data/equipment/equipment_definition';
 import type { ActionDef, LocationDef } from './location_definition';
 import { park } from './park';
@@ -33,9 +32,6 @@ function rummage_the_couch() {
     const equip_id = weighted_pick(LIVING_ROOM_DROP_TABLE);
     const rarity: Rarity = Math.random() < 0.8 ? 'SR' : 'UR';
     EquipM.receive_equipment(equip_id, rarity);
-    const def = EQUIP_REGISTRY.get(equip_id);
-    const name = def?.name ?? equip_id;
-    history.addSystemLog(`You dug through the cushions and found ${name} (${rarity})!`);
 }
 
 const singing_practice: ActionDef = {

@@ -105,14 +105,17 @@
                     <div class="text-sm text-[var(--text-muted)] italic">{detail.def.desc}</div>
                 {/if}
 
-                {#if detail.effective_bonuses.length > 0}
+                {#if detail.stat_rows.length > 0}
                     <div>
                         <div class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wide mb-1">Stat Bonuses</div>
-                        <div class="grid grid-cols-[1fr_auto_auto] gap-x-3 gap-y-0.5 text-sm">
-                            {#each detail.effective_bonuses as b}
-                                <span class="text-[var(--text-primary)]">{b.stat}</span>
-                                <span class="text-[var(--text-primary)] font-semibold">+{b.value.toFixed(2)}</span>
-                                <span class="text-xs text-[var(--text-muted)]">({b.target})</span>
+                        <div class="grid grid-cols-[1fr_auto_auto] gap-x-4 gap-y-0.5 text-sm">
+                            <span class="font-bold text-xs text-[var(--text-muted)]">Stat</span>
+                            <span class="font-bold text-xs text-[var(--text-muted)]">Base+</span>
+                            <span class="font-bold text-xs text-[var(--text-muted)]">Multi+</span>
+                            {#each detail.stat_rows as row}
+                                <span class="text-[var(--text-primary)]">{row.stat}</span>
+                                <span class="text-[var(--text-primary)] tabular-nums">{row.base !== null ? `+${row.base.toFixed(2)}` : '-'}</span>
+                                <span class="text-[var(--text-primary)] tabular-nums">{row.multi !== null ? `+${row.multi.toFixed(2)}` : '-'}</span>
                             {/each}
                         </div>
                     </div>

@@ -7,7 +7,7 @@ const MATH: Record<DreamUpgradeCategory, (per_level: number, lvl: number) => num
     time_reduction: (p, l) => 1 - p * l,
     stat_base:      (p, l) => p * l,
     stat_multi:     (p, l) => p * l,
-    equip_drop:     (p, l) => (1 + p) ** l,
+    equip_drop:     (p, l) => 1 + (p * l),
 };
 
 const FORMAT: Record<DreamUpgradeCategory, (value: number) => string> = {

@@ -35,7 +35,7 @@ const maid_interview: ActionDef = {
     },
     on_complete: {
         fn: () => {},
-        desc: "Unlocks more options in Maid Cafe. Maid Cafe Equipment drop rate increased. ",
+        desc: "Unlocks more options in Maid Cafe. Maid Cafe Equipment drop rate increased",
     },
 };
 
@@ -83,7 +83,7 @@ const maid_part_time: ActionDef = {
             target: 'base',
             amount: 9,
             scaling: {
-                sources: [{ which_stat: "Charm", effectiveness: 1.1 }],
+                sources: [{ which_stat: "Charm", effectiveness: 4.95 }],
             },
         },
         { which_stat: "Stamina", target: 'base', amount: 4.5 },

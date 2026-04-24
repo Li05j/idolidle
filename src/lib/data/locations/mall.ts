@@ -6,7 +6,7 @@ import { train_station } from './train_station';
 
 const LIVING_ROOM_UPGRADE_COST = 500;
 const MINI_LOTTERY_COST = 50;
-const OUTFIT_COST = 25;
+const OUTFIT_COST = 35;
 
 function extra_mini_lottery() {
     const grade_thresholds = [0.12, 0.34, 0.56, 0.78, 1.0];
@@ -66,7 +66,7 @@ export const upgrade_living_room: ActionDef = {
     },
     on_complete: {
         fn: () => {},
-        desc: "Improves Living Room trainings. Living Room Equipment drop rate increased. ",
+        desc: "Improves Living Room trainings. Living Room Equipment drop rate increased",
     },
 };
 

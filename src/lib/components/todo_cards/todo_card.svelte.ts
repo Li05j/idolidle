@@ -163,7 +163,7 @@ export class TodoCardVM {
                 history.addLogs(locDef.name, reward_string(locDef.rewards));
             },
             () => {
-                TodoCardM.deactivateCard(this.card_id);
+                this.complete_and_clear();
                 Progression.onLocationArrived(this.locationName);
             },
         );
@@ -184,7 +184,7 @@ export class TodoCardVM {
                     Mastery.increment(mid);
                 },
                 () => {
-                    TodoCardM.deactivateCard(this.card_id);
+                    this.complete_and_clear();
                     Progression.onUsesExhausted(this.locationName, actDef.name);
                 },
             );
@@ -196,11 +196,14 @@ export class TodoCardVM {
                     Mastery.increment(mid);
                     if (this.disabled) this.timer.loop_count = 0;
                 },
-                () => {
-                    TodoCardM.deactivateCard(this.card_id);
-                },
+                () => this.complete_and_clear(),
             );
         }
+    }
+
+    private complete_and_clear() {
+        TodoCardM.deactivateCard(this.card_id);
+        TD_List_Tracker.set_elapsed(this.locationName, this.actionName, 0);
     }
 
     private pause_and_stamp() {

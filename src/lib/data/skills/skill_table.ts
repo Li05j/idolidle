@@ -131,7 +131,7 @@ export const ALL_SKILLS: SkillDef[] = [
         name: 'Seasoned Runner',
         triggers: ['live_start'],
         chance: 1,
-        values: { haste_buff: 1.5 },
+        values: { haste_buff: 1.75 },
         cond_string: 'Always',
         eff_string: (v) => `Haste increases by ${fmt_pct(v.haste_buff - 1)} for 1 turn.`,
         condition: () => true,
@@ -153,7 +153,7 @@ export const ALL_SKILLS: SkillDef[] = [
             you.Curr_Stamina -= you.Max_Stamina * v.stam_cost;
             apply_temp_buff!('you', 'Sing', you.Sing * v.buff);
             apply_temp_buff!('you', 'Dance', you.Dance * v.buff);
-            log(`Showstopper: {Self} pulls out all the stops!!`);
+            log(`Showstopper: {Self} pulls out all the stops!! {Self_poss} next move uses more Stamina but is much more effective!`);
         },
     },
     {

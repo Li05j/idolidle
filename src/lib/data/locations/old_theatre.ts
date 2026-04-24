@@ -42,14 +42,14 @@ export const old_theatre: LocationDef = {
             name: 'Sneak a Rehearsal',
             kind: 'training',
             base_time: 25,
-            desc: "A dusty vocal booth. Close your eyes, and the empty seats almost feel real.",
+            desc: "A dusty booth. Close your eyes, and the empty seats almost feel real.",
             rewards: [
-                { which_stat: "Sing", target: 'base', amount: 3.0 },
-                { which_stat: "Presence", target: 'base', amount: -0.5 },
+                { which_stat: "Sing", target: 'base', amount: 2.0 },
+                { which_stat: "Dance", target: 'base', amount: 0.5 },
             ],
             on_complete: {
                 fn: extra_sneak_rehearsal,
-                desc: "Slight chance to gain some Haste",
+                desc: "Slight chance to gain 1~6 Haste",
             }
         },
         {

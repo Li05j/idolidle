@@ -80,7 +80,15 @@
     </div>
 
     <div class="flex items-center">
-        <div class="flex-1"></div>
+        <div class="flex-1 flex justify-start">
+            <div class="grid grid-cols-2 text-center gap-2 mx-auto">
+                {#each sidebar_stats as comp}
+                    <div class="text-sm text-[var(--text-primary)]">{comp.label}:</div>
+                    <div class="w-8 h-6 rounded-md" style={comp.color}></div>
+                {/each}
+            </div>
+        </div>
+
         <div class="mt-2 mx-auto">
             <div
                 bind:this={scrollContainer}
@@ -94,12 +102,26 @@
             </div>
         </div>
 
-        <div class="flex-1 justify-end">
-            <div class="grid grid-cols-2 text-center gap-2 mx-auto">
-                {#each sidebar_stats as comp}
-                    <div class="text-sm text-[var(--text-primary)]">{comp.label}:</div>
-                    <div class="w-8 h-6 rounded-md" style={comp.color}></div>
-                {/each}
+        <div class="flex-1 flex justify-end">
+            <div class="flex flex-col gap-3 w-40 mx-auto">
+                <div>
+                    <div class="text-xs text-[var(--text-muted)] mb-1">Your Stamina</div>
+                    <div class="relative h-3 bg-[var(--progress-bg)] rounded-full overflow-hidden">
+                        <div
+                            class="absolute top-0 left-0 h-full rounded-full transition-all duration-300"
+                            style="width: {LiveBattleM.display_your_stamina_pct * 100}%; background: var(--battle-player);"
+                        ></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs text-[var(--text-muted)] mb-1">Rival Stamina</div>
+                    <div class="relative h-3 bg-[var(--progress-bg)] rounded-full overflow-hidden">
+                        <div
+                            class="absolute top-0 left-0 h-full rounded-full transition-all duration-300"
+                            style="width: {LiveBattleM.display_enemy_stamina_pct * 100}%; background: var(--battle-rival);"
+                        ></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

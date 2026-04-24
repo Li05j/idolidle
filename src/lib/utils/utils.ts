@@ -146,7 +146,7 @@ export function calc_stat_effectiveness(depends: StatEffectPair[]): number {
         if (d.which_stat === 'Fans') normalization_factor = 2;
         if (d.which_stat === 'Stamina') normalization_factor = 3;
 
-        r_stat += s.final * d.effectiveness / normalization_factor;
+        r_stat += s.final * d.effectiveness * d.effectiveness / normalization_factor;
     })
     return r_stat
 }

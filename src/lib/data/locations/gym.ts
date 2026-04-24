@@ -4,7 +4,7 @@ import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { ActionDef, LocationDef } from './location_definition';
 
 const GYM_VIP_COST = 500;
-const GYM_ACTION_COST = 5;
+const GYM_ACTION_COST = 10;
 
 function extra_bench_press() {
     let [is_success, value] = simple_flat_stat_reward("Stamina", "multi", "Slight", 0.01);
@@ -43,7 +43,7 @@ const purchase_gym_vip: ActionDef = {
     },
     on_complete: {
         fn: () => {},
-        desc: "Void all training costs in Gym. Gym Equipment drop rate increased. Trainings will also be slightly more efficient.",
+        desc: "Void all training costs in Gym. Gym Equipment drop rate increased. Trainings will also be slightly more efficient",
     },
 };
 
@@ -98,7 +98,8 @@ const GYM_DROP_TABLE = [
 ];
 
 const bench_press_plus: ActionDef = {
-    name: 'Bench Press',
+    name: 'Bench Press+',
+    mastery_id: 'Bench Press',
     kind: 'training',
     base_time: 40,
     desc: "Muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it's free now.",
@@ -111,7 +112,8 @@ const bench_press_plus: ActionDef = {
 };
 
 const assault_bike_plus: ActionDef = {
-    name: 'Assault Bike',
+    name: 'Assault Bike+',
+    mastery_id: 'Assault Bike',
     kind: 'training',
     base_time: 40,
     desc: "Biking.",
@@ -124,7 +126,8 @@ const assault_bike_plus: ActionDef = {
 };
 
 const treadmill_plus: ActionDef = {
-    name: 'Treadmill',
+    name: 'Treadmill+',
+    mastery_id: 'Treadmill',
     kind: 'training',
     base_time: 40,
     desc: "Running.",
