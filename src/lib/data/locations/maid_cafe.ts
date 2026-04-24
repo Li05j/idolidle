@@ -67,7 +67,7 @@ export const maid_cafe: LocationDef = {
             ],
             on_complete: {
                 fn: extra_moe_magic,
-                desc: "Tiny chance to gain 0.01 Charm multi. May drop equipment.",
+                desc: "Tiny chance to gain 0.01 Charm multi.",
             },
         },
     ],
@@ -105,7 +105,7 @@ export const maid_cafe: LocationDef = {
                     ],
                     on_complete: {
                         fn: extra_maid_part_time,
-                        desc: "Good chance to gain a few Fans. May drop equipment.",
+                        desc: "Good chance to gain a few Fans.",
                     },
                 },
             ],

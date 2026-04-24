@@ -77,7 +77,7 @@ export const park: LocationDef = {
             ],
             on_complete: {
                 fn: extra_play_with_kids,
-                desc: "Slight chance to gain 1 Fan(s). May drop equipment.",
+                desc: "Slight chance to gain 1 Fan(s)",
             },
         },
     ],

@@ -128,7 +128,7 @@ export const school: LocationDef = {
             ],
             on_complete: {
                 fn: extra_attend_class,
-                desc: "Good chance to double stat gains. May drop equipment.",
+                desc: "Good chance to double stat gains",
             },
         },
         {
@@ -210,7 +210,7 @@ export const school: LocationDef = {
                     },
                     on_complete: {
                         fn: extra_host_school_concert,
-                        desc: "Tiny chance for Big Success. May drop equipment.",
+                        desc: "Tiny chance for Big Success",
                     },
                 },
                 {

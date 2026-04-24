@@ -18,5 +18,6 @@ const DEFAULT_COST_SCALING = 1.25;
 
 export function upgrade_cost(def: DreamUpgradeDef, current_level: number): number {
     const scaling = def.cost_scaling ?? DEFAULT_COST_SCALING;
-    return Math.floor(def.base_cost * scaling ** current_level);
+    const scaled = Math.floor(def.base_cost * scaling ** current_level);
+    return Math.max(scaled, def.base_cost + current_level);
 }

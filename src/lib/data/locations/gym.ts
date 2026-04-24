@@ -127,7 +127,7 @@ export const gym: LocationDef = {
 
                     on_complete: {
                         fn: extra_bench_press,
-                        desc: "Slight chance to gain 0.01 Stamina multi. May drop equipment.",
+                        desc: "Slight chance to gain 0.01 Stamina multi.",
                     },
                 },
                 {
@@ -139,7 +139,7 @@ export const gym: LocationDef = {
 
                     on_complete: {
                         fn: extra_assault_bike,
-                        desc: "Slight chance to gain 0.01 Haste multi. May drop equipment.",
+                        desc: "Slight chance to gain 0.01 Haste multi.",
                     },
                 },
                 {
@@ -154,7 +154,7 @@ export const gym: LocationDef = {
 
                     on_complete: {
                         fn: extra_treadmill,
-                        desc: "Slight chance to gain 1 Stamina or Haste. May drop equipment.",
+                        desc: "Slight chance to gain 1 Stamina or Haste.",
                     },
                 },
             ],
