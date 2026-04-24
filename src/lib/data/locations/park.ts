@@ -24,7 +24,10 @@ export const park: LocationDef = {
     },
     equip_drops: {
         chance: 0.05,
-        table: [{ equip_id: 'buskers_cap', weight: 1 }],
+        table: [
+            { equip_id: 'buskers_cap', weight: 2 },
+            { equip_id: 'rivals_old_hoodie', weight: 1 },
+        ],
     },
     unlocks: () => [mall],
     actions: [

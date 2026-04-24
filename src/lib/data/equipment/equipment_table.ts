@@ -1,7 +1,6 @@
 import type { EquipDef } from './equipment_definition';
 
 export const ALL_EQUIPMENT: EquipDef[] = [
-    // Living Room
     {
         id: 'comfy_slippers',
         name: 'Comfy Slippers',
@@ -16,8 +15,41 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             },
         },
     },
-
-    // Park
+    {
+        id: 'monster_energy_drink',
+        name: 'M*****r Energy Drink',
+        slot: 'accessory',
+        desc: "Tastes like regret and aluminum. Keeps you upright through the encore.",
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Stamina', base_value: 4.0, target: 'base' },
+                    { stat: 'Haste', base_value: 2.0, target: 'base' },
+                ],
+                skill_id: 'final_burst',
+            },
+        },
+    },
+    {
+        id: 'teddy_plushie',
+        name: 'Teddy Plushie',
+        slot: 'accessory',
+        desc: "An ugly little bear that came free with your first single. You can't bring yourself to throw it out.",
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Charm', base_value: 4.0, target: 'base' },
+                ],
+            },
+            UR: {
+                stat_bonuses: [
+                    { stat: 'Charm', base_value: 4.0, target: 'base' },
+                    { stat: 'Charm', base_value: 0.04, target: 'multi' },
+                ],
+                skill_id: 'my_lovely_teddy',
+            },
+        },
+    },
     {
         id: 'buskers_cap',
         name: "Busker's Cap",
@@ -33,8 +65,21 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             },
         },
     },
-
-    // School
+    {
+        id: 'rivals_old_hoodie',
+        name: "Rival's Old Hoodie",
+        slot: 'top',
+        desc: "Found in a thrift bin. Smells faintly of someone you once admired. Or hated. Both, maybe.",
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Sing', base_value: 2.0, target: 'base' },
+                    { stat: 'Charm', base_value: 2.0, target: 'base' },
+                ],
+                skill_id: 'scandal_magnet',
+            },
+        },
+    },
     {
         id: 'stage_microphone',
         name: 'Stage Microphone',
@@ -67,8 +112,6 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             },
         },
     },
-
-    // Mall
     {
         id: 'designer_jacket',
         name: 'Designer Jacket',
@@ -84,8 +127,21 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             },
         },
     },
-
-    // Gym
+    {
+        id: 'lozenges',
+        name: "Lozenges",
+        slot: 'accessory',
+        desc: "1",
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Haste', base_value: 1.0, target: 'base' },
+                    { stat: 'Sing', base_value: 5.0, target: 'base' },
+                ],
+                skill_id: 'lullaby',
+            },
+        },
+    },
     {
         id: 'training_shorts',
         name: 'Training Shorts',
@@ -98,56 +154,6 @@ export const ALL_EQUIPMENT: EquipDef[] = [
                     { stat: 'Haste', base_value: 4.5, target: 'base' },
                     { stat: 'Charm', base_value: 1.0, target: 'base' },
                 ],
-            },
-        },
-    },
-
-    // Maid Cafe
-    {
-        id: 'cat_ear_headband',
-        name: 'Cat Ear Headband',
-        slot: 'hat',
-        desc: "Nya~ It's embarrassing, but the fans absolutely love it. Meow.",
-        variants: {
-            N: {
-                stat_bonuses: [
-                    { stat: 'Charm', base_value: 6.0, target: 'base' },
-                ],
-                skill_id: 'moe_kyun',
-            },
-        },
-    },
-
-        // ??? — unsorted brainstorm equips
-    {
-        id: 'monster_energy_drink',
-        name: 'M*****r Energy Drink',
-        slot: 'accessory',
-        desc: "Tastes like regret and aluminum. Keeps you upright through the encore.",
-        variants: {
-            N: {
-                stat_bonuses: [
-                    { stat: 'Stamina', base_value: 4.0, target: 'base' },
-                    { stat: 'Haste', base_value: 2.0, target: 'base' },
-                ],
-                skill_id: 'final_burst',
-            },
-        },
-    },
-    {
-        id: 'archaic_tiara',
-        name: 'Archaic Tiara',
-        slot: 'hat',
-        desc: "Worn by chart-toppers before you. The weight is heavier than it looks.",
-        variants: {
-            N: {
-                stat_bonuses: [
-                    { stat: 'Sing', base_value: 1.5, target: 'base' },
-                    { stat: 'Sing', base_value: 0.02, target: 'multi' },
-                    { stat: 'Dance', base_value: 1.5, target: 'base' },
-                    { stat: 'Dance', base_value: 0.02, target: 'multi' },
-                ],
-                skill_id: 'old_fashioned',
             },
         },
     },
@@ -168,15 +174,16 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         },
     },
     {
-        id: 'teddy_plushie',
-        name: 'Teddy Plushie',
-        slot: 'accessory',
-        desc: "An ugly little bear that came free with your first single. You can't bring yourself to throw it out.",
+        id: 'cat_ear_headband',
+        name: 'Cat Ear Headband',
+        slot: 'hat',
+        desc: "Nya~ It's embarrassing, but the fans absolutely love it. Meow.",
         variants: {
             N: {
                 stat_bonuses: [
-                    { stat: 'Charm', base_value: 4.0, target: 'base' },
+                    { stat: 'Charm', base_value: 6.0, target: 'base' },
                 ],
+                skill_id: 'moe_kyun',
             },
         },
     },
@@ -196,35 +203,23 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         },
     },
     {
-        id: 'rivals_old_hoodie',
-        name: "Rival's Old Hoodie",
-        slot: 'top',
-        desc: "Found in a thrift bin. Smells faintly of someone you once admired. Or hated. Both, maybe.",
+        id: 'archaic_tiara',
+        name: 'Archaic Tiara',
+        slot: 'hat',
+        desc: "Worn by chart-toppers before you. The weight is heavier than it looks.",
         variants: {
             N: {
                 stat_bonuses: [
-                    { stat: 'Sing', base_value: 2.0, target: 'base' },
-                    { stat: 'Charm', base_value: 2.0, target: 'base' },
+                    { stat: 'Sing', base_value: 1.5, target: 'base' },
+                    { stat: 'Sing', base_value: 0.02, target: 'multi' },
+                    { stat: 'Dance', base_value: 1.5, target: 'base' },
+                    { stat: 'Dance', base_value: 0.02, target: 'multi' },
                 ],
-                skill_id: 'scandal_magnet',
+                skill_id: 'old_fashioned',
             },
         },
     },
-    {
-        id: 'lozenges',
-        name: "Lozenges",
-        slot: 'accessory',
-        desc: "1",
-        variants: {
-            N: {
-                stat_bonuses: [
-                    { stat: 'Haste', base_value: 1.0, target: 'base' },
-                    { stat: 'Sing', base_value: 5.0, target: 'base' },
-                ],
-                // skill_id: 'scandal_magnet',
-            },
-        },
-    },
+
     {
         id: 'ballet_slippers',
         name: "Ballet Slippers",
@@ -234,10 +229,9 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             N: {
                 stat_bonuses: [
                     { stat: 'Haste', base_value: 2.0, target: 'base' },
-                    { stat: 'Dance', base_value: 4.0, target: 'base' },
+                    { stat: 'Dance', base_value: 6.0, target: 'base' },
                     { stat: 'Dance', base_value: 0.01, target: 'multi' },
                 ],
-                // skill_id: 'scandal_magnet',
             },
         },
     },

@@ -47,8 +47,11 @@ export const maid_cafe: LocationDef = {
         { which_stat: "Stamina", target: 'base', amount: 15 },
     ],
     equip_drops: {
-        chance: 0.04,
-        table: [{ equip_id: 'cat_ear_headband', weight: 1 }],
+        chance: 0.05,
+        table: [
+            { equip_id: 'cat_ear_headband', weight: 2 },
+            { equip_id: 'glittery_tights', weight: 1 },
+        ],
     },
     unlocks: () => [],
     actions: [

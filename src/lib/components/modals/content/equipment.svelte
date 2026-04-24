@@ -2,6 +2,7 @@
     import { EQUIP_CONFIG } from '$lib/data/equipment/equipment_definition';
     import { EquipmentPanelVM, type CodexEntry } from './equipment_panel.svelte';
     import GenericButton from '$lib/components/shared/generic_button.svelte';
+    import { fmt_pct } from '$lib/utils/utils';
 
     const vm = new EquipmentPanelVM();
 </script>
@@ -171,7 +172,7 @@
                             <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
                                 <div class="font-semibold text-sm text-blue-400">{codex_skill_view.skill.name}</div>
                                 <div class="text-xs text-[var(--text-muted)] mt-1">
-                                    Trigger: {codex_skill_view.skill.triggers.join(', ')} &middot; {codex_skill_view.skill.chance * 100}%
+                                    Trigger: {codex_skill_view.skill.triggers.join(', ')} &middot; {fmt_pct(codex_skill_view.skill.chance)}
                                 </div>
                                 <div class="text-xs text-[var(--text-muted)]">If: {codex_skill_view.cond_string}</div>
                                 <div class="text-xs text-[var(--text-primary)] mt-0.5">{codex_skill_view.eff_string}</div>
@@ -253,7 +254,7 @@
                             <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
                                 <div class="font-semibold text-sm text-blue-400">{skill_view.skill.name}</div>
                                 <div class="text-xs text-[var(--text-muted)] mt-1">
-                                    Trigger: {skill_view.skill.triggers.join(', ')} &middot; {skill_view.skill.chance * 100}%
+                                    Trigger: {skill_view.skill.triggers.join(', ')} &middot; {fmt_pct(skill_view.skill.chance)}
                                 </div>
                                 <div class="text-xs text-[var(--text-muted)]">If: {skill_view.cond_string}</div>
                                 <div class="text-xs text-[var(--text-primary)] mt-0.5">{skill_view.eff_string}</div>
@@ -300,7 +301,7 @@
                                             <span class="text-xs text-[var(--text-muted)]">({sk.item_name})</span>
                                         </div>
                                         <div class="text-xs text-[var(--text-muted)] mt-0.5">
-                                            Trigger: {sk.triggers} &middot; {sk.chance * 100}%,
+                                            Trigger: {sk.triggers} &middot; {fmt_pct(sk.chance)},
                                             If: {sk.cond_string}
                                         </div>
                                         <div class="text-xs text-[var(--text-primary)]">{sk.eff_string}</div>

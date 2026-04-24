@@ -100,8 +100,11 @@ export const gym: LocationDef = {
         { which_stat: "Stamina", target: 'base', amount: 3.5 },
     ],
     equip_drops: {
-        chance: 0.04,
-        table: [{ equip_id: 'training_shorts', weight: 1 }],
+        chance: 0.05,
+        table: [
+            { equip_id: 'training_shorts', weight: 1 },
+            { equip_id: 'vintage_sneakers', weight: 1 },
+        ],
     },
     unlocks: () => [],
     actions: [

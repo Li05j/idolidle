@@ -76,7 +76,11 @@ export const mall: LocationDef = {
     ],
     equip_drops: {
         chance: 0.05,
-        table: [{ equip_id: 'designer_jacket', weight: 1 }],
+        table: [
+            { equip_id: 'designer_jacket', weight: 1 },
+            { equip_id: 'lozenges', weight: 3 },
+            { equip_id: 'glittery_tights', weight: 1 },
+        ],
     },
     unlocks: () => [],
     actions: [

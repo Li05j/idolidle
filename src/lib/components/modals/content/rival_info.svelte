@@ -3,6 +3,7 @@
     import { DEV } from "$lib/config";
     import { EQUIP_CONFIG } from "$lib/data/equipment/equipment_definition";
     import { CPs } from "$lib/state/checkpoints.svelte";
+    import { fmt_pct } from "$lib/utils/utils";
 </script>
 
 {#if CPs.is_terminal}
@@ -123,7 +124,7 @@
                         <div class="rounded-lg bg-[var(--surface-base)] p-2.5">
                             <div class="font-semibold text-sm text-blue-400">{detail.skill_view.skill.name}</div>
                             <div class="text-xs text-[var(--text-muted)] mt-1">
-                                Trigger: {detail.skill_view.triggers} &middot; {detail.skill_view.chance * 100}%
+                                Trigger: {detail.skill_view.triggers} &middot; {fmt_pct(detail.skill_view.chance)}
                             </div>
                             <div class="text-xs text-[var(--text-muted)]">If: {detail.skill_view.cond_string}</div>
                             <div class="text-xs text-[var(--text-primary)] mt-0.5">{detail.skill_view.eff_string}</div>

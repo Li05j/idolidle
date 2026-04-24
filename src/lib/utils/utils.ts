@@ -32,6 +32,11 @@ export function truncate_to_decimal(v: number, decimals: number = 1) {
     return Math.floor(v * d) / d;
 }
 
+// Format a fraction as a percent string (0.15 → "15%").
+export function fmt_pct(fraction: number, digits: number = 0): string {
+    return `${(fraction * 100).toFixed(digits)}%`;
+}
+
 function scaled_bonus(r: Reward): number {
     if (!r.scaling) return 0;
     return apply_stat_scaling(calc_stat_effectiveness(r.scaling.sources));

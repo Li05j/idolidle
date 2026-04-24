@@ -31,8 +31,13 @@ export const living_room: LocationDef = {
         { which_stat: "Stamina", target: 'base', amount: 0.2 },
     ],
     equip_drops: {
-        chance: 0.08,
-        table: [{ equip_id: 'comfy_slippers', weight: 1 }],
+        chance: 0.05,
+        table: [
+            { equip_id: 'comfy_slippers', weight: 2 },
+            { equip_id: 'monster_energy_drink', weight: 2 },
+            { equip_id: 'teddy_plushie', weight: 2 },
+            { equip_id: 'ballet_slippers', weight: 1 },
+        ],
     },
     unlocks: () => [park, school],
     actions: [singing_practice, dancing_practice],

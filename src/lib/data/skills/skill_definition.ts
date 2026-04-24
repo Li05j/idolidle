@@ -98,3 +98,16 @@ export function render_skill_string(
     const map = TOKEN_MAP[owner];
     return resolved.replace(/\{(\w+)\}/g, (match, key) => map[key] ?? match);
 }
+
+/**
+ * Transfer Fans from one side to the other. Enforces the two invariants:
+ *   1. Fans are always integers (floor).
+ *   2. You can't drain more than the source has (clamp to `from.Fans`).
+ * Returns the actual amount moved, so callers can log it.
+ */
+export function drain_fans(from: LiveBattleStats, to: LiveBattleStats, amount: number): number {
+    const drained = Math.min(Math.max(Math.floor(amount), 0), from.Fans);
+    from.Fans -= drained;
+    to.Fans += drained;
+    return drained;
+}

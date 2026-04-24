@@ -95,6 +95,7 @@ export const school: LocationDef = {
         table: [
             { equip_id: 'reading_glasses', weight: 2 },
             { equip_id: 'stage_microphone', weight: 1 },
+            { equip_id: 'lozenges', weight: 1 },
         ],
     },
     unlocks: () => [gym, maid_cafe],
