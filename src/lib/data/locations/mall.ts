@@ -74,7 +74,7 @@ export const mall: LocationDef = {
         { which_stat: "Stamina", target: 'base', amount: 10 },
     ],
     equip_drops: {
-        chance: 0.05,
+        chance: 0.08,
         table: [
             { equip_id: 'designer_jacket', weight: 1 },
             { equip_id: 'lozenges', weight: 3 },
@@ -105,9 +105,9 @@ export const mall: LocationDef = {
         {
             name: 'Buy Cute Outfit',
             kind: 'spending',
-            base_time: 3,
+            base_time: 5,
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
-            rewards: [{ which_stat: "Charm", target: 'base', amount: 8 }],
+            rewards: [{ which_stat: "Charm", target: 'base', amount: 5.5 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
@@ -117,9 +117,9 @@ export const mall: LocationDef = {
         {
             name: 'Buy Cool Outfit',
             kind: 'spending',
-            base_time: 3,
+            base_time: 5,
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
-            rewards: [{ which_stat: "Presence", target: 'base', amount: 8 }],
+            rewards: [{ which_stat: "Presence", target: 'base', amount: 5.5 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,

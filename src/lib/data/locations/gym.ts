@@ -92,6 +92,72 @@ const treadmill: ActionDef = {
     },
 };
 
+const GYM_DROP_TABLE = [
+    { equip_id: 'training_shorts', weight: 1 },
+    { equip_id: 'vintage_sneakers', weight: 1 },
+];
+
+const bench_press_plus: ActionDef = {
+    name: 'Bench Press',
+    kind: 'training',
+    base_time: 40,
+    desc: "Muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it's free now.",
+    rewards: [{ which_stat: "Stamina", target: 'base', amount: 4.0 }],
+
+    on_complete: {
+        fn: extra_bench_press,
+        desc: "Slight chance to gain 0.01 Stamina multi.",
+    },
+};
+
+const assault_bike_plus: ActionDef = {
+    name: 'Assault Bike',
+    kind: 'training',
+    base_time: 40,
+    desc: "Biking.",
+    rewards: [{ which_stat: "Haste", target: 'base', amount: 4.0 }],
+
+    on_complete: {
+        fn: extra_assault_bike,
+        desc: "Slight chance to gain 0.01 Haste multi.",
+    },
+};
+
+const treadmill_plus: ActionDef = {
+    name: 'Treadmill',
+    kind: 'training',
+    base_time: 40,
+    desc: "Running.",
+    rewards: [
+        { which_stat: "Stamina", target: 'base', amount: 2.0 },
+        { which_stat: "Haste", target: 'base', amount: 2.0 },
+    ],
+
+    on_complete: {
+        fn: extra_treadmill,
+        desc: "Slight chance to gain 1 Stamina or Haste.",
+    },
+};
+
+const gym_plus: LocationDef = {
+    name: 'Gym',
+    base_time: 70,
+    desc: "Remember to wipe the equipment after using them, don't wanna end up being cancelled by some gym bros online. Talking about ways to end your Idol career...",
+    rewards: [
+        { which_stat: "Stamina", target: 'base', amount: 3.5 },
+    ],
+    equip_drops: {
+        chance: 0.08,
+        table: GYM_DROP_TABLE,
+    },
+    unlocks: () => [],
+    actions: [
+        bench_press_plus,
+        assault_bike_plus,
+        treadmill_plus,
+    ],
+};
+
 export const gym: LocationDef = {
     name: 'Gym',
     base_time: 70,
@@ -101,10 +167,7 @@ export const gym: LocationDef = {
     ],
     equip_drops: {
         chance: 0.05,
-        table: [
-            { equip_id: 'training_shorts', weight: 1 },
-            { equip_id: 'vintage_sneakers', weight: 1 },
-        ],
+        table: GYM_DROP_TABLE,
     },
     unlocks: () => [],
     actions: [
@@ -116,48 +179,7 @@ export const gym: LocationDef = {
     upgrades: [
         {
             trigger: 'Purchase Gym VIP',
-            remove_actions: ['Treadmill', 'Bench Press', 'Assault Bike'],
-            add_actions: [
-                {
-                    name: 'Bench Press',
-                    kind: 'training',
-                    base_time: 40,
-                    desc: "Muscles? Chest? Triceps? Being an Idol nowadays sure is tough. Hey, at least it's free now.",
-                    rewards: [{ which_stat: "Stamina", target: 'base', amount: 4.0 }],
-
-                    on_complete: {
-                        fn: extra_bench_press,
-                        desc: "Slight chance to gain 0.01 Stamina multi.",
-                    },
-                },
-                {
-                    name: 'Assault Bike',
-                    kind: 'training',
-                    base_time: 40,
-                    desc: "Biking.",
-                    rewards: [{ which_stat: "Haste", target: 'base', amount: 4.0 }],
-
-                    on_complete: {
-                        fn: extra_assault_bike,
-                        desc: "Slight chance to gain 0.01 Haste multi.",
-                    },
-                },
-                {
-                    name: 'Treadmill',
-                    kind: 'training',
-                    base_time: 40,
-                    desc: "Running.",
-                    rewards: [
-                        { which_stat: "Stamina", target: 'base', amount: 2.0 },
-                        { which_stat: "Haste", target: 'base', amount: 2.0 },
-                    ],
-
-                    on_complete: {
-                        fn: extra_treadmill,
-                        desc: "Slight chance to gain 1 Stamina or Haste.",
-                    },
-                },
-            ],
+            upgrade_to: gym_plus,
             on_trigger: () => {
                 history.addSystemLog('You are now a VIP member of the Gym! All equipment costs are voided.');
             },

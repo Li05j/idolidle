@@ -3,6 +3,8 @@ import { locationMap, allLocations, STARTING_LOCATION } from '$lib/data/location
 import type { ActionDef, LocationDef, UpgradeDef } from '$lib/data/locations/location_definition';
 
 class ProgressionEngine {
+    private applied_upgrades: Set<string> = new Set();
+
     onLocationArrived(locationName: string) {
         const def = locationMap.get(locationName);
         if (!def) return;
@@ -32,52 +34,24 @@ class ProgressionEngine {
         if (!match) return;
 
         const { owner, upgrade } = match;
-
-        if (upgrade.replace_all) {
-            const newEntries = upgrade.add_actions ? upgrade.add_actions.map(a => ({ name: a.name, elapsed: 0 })) : [];
-            TD_List_Tracker.actions = new Map([
-                ...TD_List_Tracker.actions,
-                [owner.name, newEntries],
-            ]);
-        } else {
-            if (upgrade.remove_actions) {
-                for (const removeName of upgrade.remove_actions) {
-                    this._removeAction(owner.name, removeName);
-                }
-            }
-
-            if (upgrade.add_actions) {
-                const newEntries = upgrade.add_actions.map(a => ({ name: a.name, elapsed: 0 }));
-                const current = TD_List_Tracker.actions.get(owner.name) || [];
-                TD_List_Tracker.actions = new Map([
-                    ...TD_List_Tracker.actions,
-                    [owner.name, [...current, ...newEntries]],
-                ]);
-            }
-        }
-
+        this._applyUpgrade(owner, upgrade);
         upgrade.on_trigger?.();
     }
 
-    /**
-     * Resolve an ActionDef by location + action name.
-     * Checks the location's base actions first, then upgrade-added actions owned by that location.
-     */
+    /** Read the currently-registered def for a location. Post-upgrade, returns the swapped-in def. */
     resolveAction(locationName: string, actionName: string): ActionDef | undefined {
-        const def = locationMap.get(locationName);
-        if (!def) return undefined;
+        return locationMap.get(locationName)?.actions.find(a => a.name === actionName);
+    }
 
-        const found = def.actions.find(a => a.name === actionName);
-        if (found) return found;
+    private _applyUpgrade(owner: LocationDef, upgrade: UpgradeDef) {
+        locationMap.set(owner.name, upgrade.upgrade_to);
+        this.applied_upgrades.add(upgrade.trigger);
 
-        if (def.upgrades) {
-            for (const upgrade of def.upgrades) {
-                const inUpgrade = upgrade.add_actions?.find(a => a.name === actionName);
-                if (inUpgrade) return inUpgrade;
-            }
-        }
-
-        return undefined;
+        const newEntries = upgrade.upgrade_to.actions.map(a => ({ name: a.name, elapsed: 0 }));
+        TD_List_Tracker.actions = new Map([
+            ...TD_List_Tracker.actions,
+            [owner.name, newEntries],
+        ]);
     }
 
     private _findUpgrade(actionName: string): { owner: LocationDef; upgrade: UpgradeDef } | undefined {
@@ -99,13 +73,41 @@ class ProgressionEngine {
         ]);
     }
 
+    /** Reset locationMap to its baseline (every base def under its own name). Run before any upgrade replay. */
+    private _restoreBaseline() {
+        for (const loc of allLocations) {
+            locationMap.set(loc.name, loc);
+        }
+    }
+
     init() {
+        this.applied_upgrades = new Set();
+        this._restoreBaseline();
         TD_List_Tracker.locations = [{ name: STARTING_LOCATION.name, elapsed: 0 }];
         TD_List_Tracker.actions = new Map();
     }
 
     reset() {
         this.init();
+    }
+
+    serialize(): string[] {
+        return Array.from(this.applied_upgrades);
+    }
+
+    /** Replay persisted upgrades into locationMap. Must run before TD_List_Tracker.deserialize so action-name validation sees the post-upgrade action set. */
+    deserialize(data: unknown): void {
+        this.applied_upgrades = new Set();
+        this._restoreBaseline();
+
+        if (!Array.isArray(data)) return;
+
+        for (const loc of allLocations) {
+            const upgrade = loc.upgrades?.find(u => data.includes(u.trigger));
+            if (!upgrade) continue;
+            locationMap.set(loc.name, upgrade.upgrade_to);
+            this.applied_upgrades.add(upgrade.trigger);
+        }
     }
 }
 

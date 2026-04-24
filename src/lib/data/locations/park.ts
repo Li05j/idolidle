@@ -70,8 +70,8 @@ export const park: LocationDef = {
             base_time: 12,
             desc: "\"Tag - You're it!\" You giggle, trying to charm them with your elegant wink. It usually doesn't work, though.",
             rewards: [
-                { which_stat: "Haste", target: 'base', amount: 0.6 },
-                { which_stat: "Charm", target: 'base', amount: 0.6 },
+                { which_stat: "Haste", target: 'base', amount: 0.8 },
+                { which_stat: "Charm", target: 'base', amount: 0.4 },
             ],
             on_complete: {
                 fn: extra_play_with_kids,

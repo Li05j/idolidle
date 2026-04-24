@@ -1,5 +1,18 @@
 import { stat_list } from '$lib/state/stats.svelte';
+import { history } from '$lib/state/history.svelte';
+import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
+
+function extra_people_watching() {
+    let [is_success, value] = simple_flat_stat_reward("Haste", "base", "Slight", 2);
+    if (is_success) {
+        history.addSystemLog(`Eureka! You decided to chase the train too. +${value} Haste!`);
+        if (stat_list.Haste.base >= 150) {
+            stat_list.Fans.base += 10;
+            history.addSystemLog(`Eureka! Your speed was unbelievable! +10 Fans!`);
+        }
+    }
+}
 
 export const train_station: LocationDef = {
     name: 'Train Station',
@@ -8,37 +21,37 @@ export const train_station: LocationDef = {
     rewards: [
         { which_stat: "Presence", target: 'base', amount: 0.5 },
     ],
-    requires: {
-        text: "Presence ≥ 3.0",
-        is_met: () => stat_list.Presence.final >= 3.0,
-    },
     unlocks: () => [],
-    // TODO: placeholder hub. Future cities (Tokyo pool per the brainstorm in
-    // ./index.ts) should unlock from here via an upgrade.
     actions: [
         {
             name: 'People-Watching',
             kind: 'training',
-            base_time: 10,
-            no_drops: true,
-            desc: "Study the commuters. Posture, rhythm, the way they carry themselves. All of it useful.",
+            base_time: 15,
+            desc: "Study the commuters. Posture, rhythm, the way they chase the trains. All of it useful.",
             rewards: [
-                { which_stat: "Presence", target: 'base', amount: 0.8 },
+                { which_stat: "Haste", target: 'base', amount: 0.5 },
+                { which_stat: "Presence", target: 'base', amount: 1.0 },
             ],
+            on_complete: {
+                fn: extra_people_watching,
+                desc: "Slight chance to gain 2 Haste."
+            },
         },
         {
             name: 'Platform Busking',
             kind: 'earning',
-            base_time: 30,
-            no_drops: true,
+            base_time: 40,
             desc: "Rush-hour acoustics are surprisingly forgiving. The coins land with a satisfying clink.",
             rewards: [
                 {
                     which_stat: "Moni",
                     target: 'base',
-                    amount: 5,
+                    amount: 8,
                     scaling: {
-                        sources: [{ which_stat: "Presence", effectiveness: 1.0 }],
+                        sources: [
+                            { which_stat: "Sing", effectiveness: 0.55 },
+                            { which_stat: "Presence", effectiveness: 0.55 },
+                        ],
                     },
                 },
             ],

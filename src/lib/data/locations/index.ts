@@ -2,7 +2,7 @@ import type { LocationDef } from './location_definition';
 import { wake_up } from './wake_up';
 import { living_room } from './living_room';
 import { park } from './park';
-import { karaoke_box } from './karaoke_box';
+import { old_theatre } from './old_theatre';
 import { school } from './school';
 import { train_station } from './train_station';
 import { mall } from './mall';
@@ -16,7 +16,7 @@ export const allLocations: LocationDef[] = [
     living_room,
     park,
     school,
-    karaoke_box,
+    old_theatre,
     gym,
     maid_cafe,
     mall,
@@ -54,14 +54,15 @@ export const locationMap = new Map<string, LocationDef>(
     allLocations.map(loc => [loc.name, loc])
 );
 
-/** Reverse map: equip_id → location display name. Derived from each location's drop tables. */
+/** Reverse map: equip_id → location display name. Walks every base location plus all upgrade_to defs reachable from it, so equip dropped only by an upgraded form still attributes back to the base name. */
 export const EQUIP_DROP_LOCATION: Map<string, string> = new Map(
     allLocations.flatMap(loc => {
-        const tables = [
-            loc.equip_drops,
-            ...loc.actions.map(a => a.equip_drops),
-            ...(loc.upgrades ?? []).flatMap(u => u.add_actions?.map(a => a.equip_drops) ?? []),
-        ].filter((t): t is NonNullable<typeof t> => !!t);
-        return tables.flatMap(t => t.table.map(e => [e.equip_id, loc.name] as const));
+        const reachable: LocationDef[] = [loc];
+        for (const upg of loc.upgrades ?? []) reachable.push(upg.upgrade_to);
+        return reachable.flatMap(d => {
+            const tables = [d.equip_drops, ...d.actions.map(a => a.equip_drops)]
+                .filter((t): t is NonNullable<typeof t> => !!t);
+            return tables.flatMap(t => t.table.map(e => [e.equip_id, loc.name] as const));
+        });
     })
 );

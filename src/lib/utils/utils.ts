@@ -49,11 +49,13 @@ export function reward_string(rewards: Reward[]): string {
         if (r.target === 'base') {
             let fixed_at = DECIMAL_PLACES;
             if (r.which_stat === 'Fans' || r.which_stat === 'Moni') fixed_at = 0;
-            let summed_flat_gain = r.amount + depends_gain;
-            let multi = stat_list[r.which_stat].multi;
-            ret_str += ` +${(summed_flat_gain * multi).toFixed(fixed_at)} ${r.which_stat}`;
+            const summed_flat_gain = r.amount + depends_gain;
+            const multi = stat_list[r.which_stat].multi;
+            const v = summed_flat_gain * multi;
+            ret_str += ` ${v >= 0 ? '+' : ''}${v.toFixed(fixed_at)} ${r.which_stat}`;
         } else {
-            ret_str += ` +${(r.amount + depends_gain).toFixed(2)} ${r.which_stat} Multi`;
+            const v = r.amount + depends_gain;
+            ret_str += ` ${v >= 0 ? '+' : ''}${v.toFixed(2)} ${r.which_stat} Multi`;
         }
     })
 

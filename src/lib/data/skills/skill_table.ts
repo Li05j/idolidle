@@ -66,15 +66,15 @@ export const ALL_SKILLS: SkillDef[] = [
         name: 'Flashy',
         triggers: ['live_start'],
         chance: 1,
-        values: { drain: 0.1 },
+        values: { penalty: 0.1 },
         cond_string: 'Always',
-        eff_string: (v) => `Reduce {Opp_poss} Stamina by ${fmt_pct(v.drain)}.`,
+        eff_string: (v) => `Reduce {Opp_poss} Stamina by ${fmt_pct(v.penalty)}.`,
         condition: () => true,
         effect: ({ rival, log, values: v }) => {
             const before = rival.Curr_Stamina;
-            const drain = rival.Max_Stamina * v.drain;
-            rival.Curr_Stamina = Math.max(0, rival.Curr_Stamina - drain);
-            log(`Flashy: Sapped ${Math.round(before - rival.Curr_Stamina)} Stamina from {Opp}!`);
+            const penalty = rival.Max_Stamina * v.penalty;
+            rival.Curr_Stamina = Math.max(0, rival.Curr_Stamina - penalty);
+            log(`Flashy: Reduced ${Math.round(before - rival.Curr_Stamina)} Stamina from {Opp}!`);
         },
     },
     {
@@ -182,6 +182,22 @@ export const ALL_SKILLS: SkillDef[] = [
         effect: ({ rival, apply_temp_buff, log, values: v }) => {
             apply_temp_buff!('rival', 'Charm', rival.Charm * v.charm_debuff);
             log(`Lullaby: {Self} soothing voice lowered {Opp_poss} guard!`);
+        },
+    },
+    {
+        id: 'perfect_composure',
+        name: 'Perfect Composure',
+        triggers: ['after_taking_dmg'],
+        chance: 1,
+        values: { stam_penalty: 0.15 },
+        cond_string: '{Self} blocks a move',
+        eff_string: (v) => `Reduce {Opp_poss} Stamina by ${fmt_pct(v.stam_penalty)}.`,
+        condition: ({ fans_stolen }) => (fans_stolen ?? 0) <= 0,
+        effect: ({ rival, log, values: v }) => {
+            const before = rival.Curr_Stamina;
+            const penalty = rival.Max_Stamina * v.stam_penalty;
+            rival.Curr_Stamina = Math.max(0, rival.Curr_Stamina - penalty);
+            log(`Perfect Composure: {Self_poss} confidence made {Opp} nervous, {Opp_poss} Stamina reduced by ${Math.round(before - rival.Curr_Stamina)}!`);
         },
     },
     {

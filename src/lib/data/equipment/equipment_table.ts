@@ -74,7 +74,7 @@ export const ALL_EQUIPMENT: EquipDef[] = [
             N: {
                 stat_bonuses: [
                     { stat: 'Sing', base_value: 2.0, target: 'base' },
-                    { stat: 'Charm', base_value: 2.0, target: 'base' },
+                    { stat: 'Dance', base_value: 2.0, target: 'base' },
                 ],
                 skill_id: 'scandal_magnet',
             },
@@ -203,6 +203,21 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         },
     },
     {
+        id: 'maid_dress',
+        name: 'Maid Dress',
+        slot: 'top',
+        desc: "1",
+        variants: {
+            N: {
+                stat_bonuses: [
+                    { stat: 'Charm', base_value: 4.5, target: 'base' },
+                    { stat: 'Presence', base_value: 2.5, target: 'base' },
+                ],
+                skill_id: 'perfect_composure',
+            },
+        },
+    },
+    {
         id: 'archaic_tiara',
         name: 'Archaic Tiara',
         slot: 'hat',
@@ -210,6 +225,7 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         variants: {
             N: {
                 stat_bonuses: [
+                    { stat: 'Fans', base_value: 0.01, target: 'multi' },
                     { stat: 'Sing', base_value: 1.5, target: 'base' },
                     { stat: 'Sing', base_value: 0.02, target: 'multi' },
                     { stat: 'Dance', base_value: 1.5, target: 'base' },

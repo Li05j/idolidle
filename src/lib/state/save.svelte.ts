@@ -10,8 +10,9 @@ import { RunTotals } from '$lib/state/run_totals.svelte';
 import { TD_List_Tracker } from '$lib/state/todos_list_tracker.svelte';
 import { RivalStatsM } from '$lib/runtime/live_rival_stats.svelte';
 import { TodoCardM } from '$lib/runtime/todo_card_manager.svelte';
+import { Progression } from '$lib/runtime/progression_engine.svelte';
 
-const SAVE_VERSION = 1 as const;
+const SAVE_VERSION = 2 as const;
 const DEBOUNCE_MS = 1000;
 
 type SaveBlob = {
@@ -26,6 +27,7 @@ type SaveBlob = {
     run_totals: ReturnType<typeof RunTotals.serialize>;
     td:      ReturnType<typeof TD_List_Tracker.serialize>;
     rivals:  ReturnType<typeof RivalStatsM.serialize>;
+    upgrades: ReturnType<typeof Progression.serialize>;
 };
 
 class SaveManager {
@@ -71,6 +73,7 @@ class SaveManager {
             run_totals: RunTotals.serialize(),
             td:      TD_List_Tracker.serialize(),
             rivals:  RivalStatsM.serialize(),
+            upgrades: Progression.serialize(),
         };
 
         try {
@@ -104,6 +107,7 @@ class SaveManager {
         Rebirth.deserialize(p.rebirth);
         Dreams.deserialize(p.dreams);
         RunTotals.deserialize(p.run_totals);
+        Progression.deserialize(p.upgrades);
         TD_List_Tracker.deserialize(p.td);
         RivalStatsM.deserialize(p.rivals);
 

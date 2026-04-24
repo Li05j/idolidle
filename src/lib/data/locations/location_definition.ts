@@ -33,10 +33,8 @@ export type ActionDef = {
 export type UpgradeDef = {
     /** Name of the action whose completion fires this upgrade. Must have `uses` set. */
     trigger: string;
-    /** Action names to remove from the owning location's tracker on trigger. */
-    remove_actions?: string[];
-    add_actions?: ActionDef[];
-    replace_all?: boolean;
+    /** Replacement LocationDef installed under the base's name when the upgrade fires. */
+    upgrade_to: LocationDef;
     on_trigger?: () => void;
 };
 

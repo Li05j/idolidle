@@ -68,11 +68,8 @@ class TodoListTracker {
                 const def = locationMap.get(loc);
                 if (!def) continue;
 
-                // Build the set of action names this location currently knows: base actions + any upgrade-added.
+                // locationMap reflects post-upgrade state (Progression.deserialize ran first), so def.actions is authoritative.
                 const known = new Set<string>(def.actions.map(a => a.name));
-                for (const up of def.upgrades ?? []) {
-                    for (const a of up.add_actions ?? []) known.add(a.name);
-                }
 
                 if (!Array.isArray(list)) continue;
                 const entries: TDEntry[] = [];
