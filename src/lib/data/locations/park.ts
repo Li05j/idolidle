@@ -5,7 +5,7 @@ import type { LocationDef } from './location_definition';
 import { mall } from './mall';
 
 function extra_play_with_kids() {
-    let [is_success, actual_gain] = simple_flat_stat_reward('Fans', 'base', 'Slight', 1);
+    let [is_success, actual_gain] = simple_flat_stat_reward('Fans', 'base', 'Good', 1);
     if (is_success) {
         history.addSystemLog(`Eureka! You converted ${actual_gain} kid(s) into fans! +${actual_gain} Fans!`);
     }
@@ -75,7 +75,7 @@ export const park: LocationDef = {
             ],
             on_complete: {
                 fn: extra_play_with_kids,
-                desc: "Slight chance to gain 1 Fan(s)",
+                desc: "Good chance to gain 1 Fan(s)",
             },
         },
     ],

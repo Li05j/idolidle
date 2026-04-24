@@ -27,19 +27,20 @@ export type CheckpointDef = {
 };
 
 const BASE: BaseRanges = {
-    fans:     [20, 32],
-    stamina:  [30, 48],
-    haste:    [5, 20],
+    fans:     [20, 40],
+    stamina:  [30, 50],
+    haste:    [9, 15],
     sing:     [10, 16],
     dance:    [10, 16],
-    charm:    [8, 15],
-    presence: [8, 15],
+    charm:    [9, 15],
+    presence: [9, 15],
 };
 
 export const CHECKPOINTS: CheckpointDef[] = [
     { time: 1000,     multi: 1.0, rival: { stat_multi: 1,  fan_multi: 1  } },
     { time: 2500,     multi: 1.0, rival: { stat_multi: 5,  fan_multi: 6  } },
-    { time: 4000,     multi: 1.0, rival: { stat_multi: 12, fan_multi: 14 } },
+    { time: 4000,     multi: 1.0, rival: { stat_multi: 13, fan_multi: 15 } },
+    { time: 6500,     multi: 1.0, rival: { stat_multi: 25, fan_multi: 29 } },
     { time: Infinity, multi: 1.0 },
 ];
 

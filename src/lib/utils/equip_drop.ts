@@ -14,7 +14,7 @@ function roll_rarity(): Rarity {
     return 'N';
 }
 
-function weighted_pick(table: EquipDropTable['table']): string {
+export function weighted_pick(table: EquipDropTable['table']): string {
     const total = table.reduce((sum, e) => sum + e.weight, 0);
     let r = Math.random() * total;
     for (const entry of table) {

@@ -18,8 +18,8 @@ export const allLocations: LocationDef[] = [
     school,
     old_theatre,
     gym,
-    maid_cafe,
     mall,
+    maid_cafe,
     train_station,
 ];
 

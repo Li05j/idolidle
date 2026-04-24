@@ -20,7 +20,7 @@ function extra_attend_class() {
     let b = Math.random();
     let c = Math.random();
     let d = Math.random();
-    let gain = 1.2;
+    let gain = 1.1;
     if (a < 0.5) {
         stat_list.Sing.base += gain;
         history.addSystemLog(`Eureka! You gained +${truncate_to_decimal(gain * stat_list.Sing.multi)} Sing!`);
@@ -40,7 +40,7 @@ function extra_attend_class() {
 }
 
 function extra_yell_on_wooden_box() {
-    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 5);
+    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Tiny", 4);
     if (is_success) {
         history.addSystemLog(`Eureka! You attracted ${value} student(s) to be fans! +${value} Fans!`);
     }
@@ -114,10 +114,10 @@ const attend_class: ActionDef = {
     base_time: 60,
     desc: "You still gotta study alright; elite idol and elite student? That's the spirit.",
     rewards: [
-        { which_stat: "Sing", target: 'base', amount: 1.2 },
-        { which_stat: "Dance", target: 'base', amount: 1.2 },
-        { which_stat: "Charm", target: 'base', amount: 1.2 },
-        { which_stat: "Presence", target: 'base', amount: 1.2 },
+        { which_stat: "Sing", target: 'base', amount: 1.1 },
+        { which_stat: "Dance", target: 'base', amount: 1.1 },
+        { which_stat: "Charm", target: 'base', amount: 1.1 },
+        { which_stat: "Presence", target: 'base', amount: 1.1 },
     ],
     on_complete: {
         fn: extra_attend_class,
@@ -135,7 +135,7 @@ const yell_on_wooden_box: ActionDef = {
     ],
     on_complete: {
         fn: extra_yell_on_wooden_box,
-        desc: "Tiny chance to gain 5 Fans",
+        desc: "Tiny chance to gain 4 Fans",
     },
 };
 

@@ -63,10 +63,8 @@ export const old_theatre: LocationDef = {
                 is_met: () => stat_list.Moni.final >= TICKET_COST,
             },
             rewards: [
-                { which_stat: "Sing", target: 'base', amount: 5.0 },
-                { which_stat: "Sing", target: 'multi', amount: 0.01 },
-                { which_stat: "Dance", target: 'base', amount: 5.0 },
-                { which_stat: "Dance", target: 'multi', amount: 0.01 },
+                { which_stat: "Sing", target: 'base', amount: 5.5 },
+                { which_stat: "Dance", target: 'base', amount: 5.5 },
             ],
             on_complete: {
                 fn: extra_watch_a_play,

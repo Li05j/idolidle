@@ -20,7 +20,7 @@ Fans, Moni, Stamina, Haste, Sing, Dance, Charm, Presence. Each has base/multi co
 
 Turn-based simulation. Haste determines turn order. Attacks poach Fans from the defender; battle ends when either side hits 0 Fans or both exhaust Stamina. The fight is pre-computed then replayed turn-by-turn in the UI.
 
-Rival stats = `BASE` ranges (one shared table) × **persona** weights × per-checkpoint scale, then rolled uniformly within the resulting range. A persona is picked at random per checkpoint on each reroll (rebirth or end-of-battle), so the player faces a different archetype — Dance Diva, Glass Cannon, Iron Idol, etc. — each run rather than a generic well-rounded rival.
+Rival stats = `BASE` ranges (one shared table) × **persona** weights × per-checkpoint scale, then rolled uniformly within the resulting range. A persona is picked at random per checkpoint on each reroll (rebirth or end-of-battle), so the player faces a different archetype each run rather than a generic well-rounded rival.
 
 Rivals also receive **equipment** from a budget-based system. Each checkpoint has a point budget (higher checkpoints = more budget). A greedy knapsack picks equipment items, assigns rarity and level within budget, and applies stat bonuses to the rival. Rival equipment skills fire during battle with flipped perspective. Budget table and loadout generation: `src/lib/data/rivals/rival_equipment.ts`.
 

@@ -1,5 +1,9 @@
 import { history } from '$lib/state/history.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
+import { weighted_pick } from '$lib/utils/equip_drop';
+import { EquipM } from '$lib/state/equipment.svelte';
+import { EQUIP_REGISTRY } from '$lib/data/equipment';
+import type { Rarity } from '$lib/data/equipment/equipment_definition';
 import type { ActionDef, LocationDef } from './location_definition';
 import { park } from './park';
 import { school } from './school';
@@ -24,6 +28,15 @@ const LIVING_ROOM_DROP_TABLE = [
     { equip_id: 'teddy_plushie', weight: 2 },
     { equip_id: 'ballet_slippers', weight: 1 },
 ];
+
+function rummage_the_couch() {
+    const equip_id = weighted_pick(LIVING_ROOM_DROP_TABLE);
+    const rarity: Rarity = Math.random() < 0.8 ? 'SR' : 'UR';
+    EquipM.receive_equipment(equip_id, rarity);
+    const def = EQUIP_REGISTRY.get(equip_id);
+    const name = def?.name ?? equip_id;
+    history.addSystemLog(`You dug through the cushions and found ${name} (${rarity})!`);
+}
 
 const singing_practice: ActionDef = {
     name: 'Singing Practice',
@@ -77,6 +90,20 @@ const dancing_practice_plus: ActionDef = {
     },
 };
 
+const rummage_the_couch_action: ActionDef = {
+    name: 'Rummage the Couch',
+    kind: 'training',
+    base_time: 15,
+    no_drops: true,
+    desc: "Now that the place is fixed up, maybe there's treasure buried between the cushions. One last dig before the cleaner takes it all away.",
+    rewards: [],
+    uses: 1,
+    on_complete: {
+        fn: rummage_the_couch,
+        desc: "Hmm, I wonder what you will find...?",
+    },
+};
+
 const living_room_plus: LocationDef = {
     name: 'Living Room',
     base_time: 4,
@@ -89,7 +116,7 @@ const living_room_plus: LocationDef = {
         table: LIVING_ROOM_DROP_TABLE,
     },
     unlocks: () => [park, school],
-    actions: [singing_practice_plus, dancing_practice_plus],
+    actions: [rummage_the_couch_action, singing_practice_plus, dancing_practice_plus,],
 };
 
 export const living_room: LocationDef = {

@@ -132,6 +132,9 @@ class LiveBattleManager {
         const r = Math.random()
         const atk_type = r > 0.5 ? "Sing" : "Dance" as const
         const def_type = r > 0.5 ? "Charm" : "Presence" as const
+        const color = actor === "Player" ? "green" : "darkorange"
+
+        this.log(`[${color}]${actor} performed a ${atk_type} move![/${color}]`, false)
 
         // Fire before_taking_dmg skills BEFORE reading stats so temp buffs apply
         this._dmg_reduction = 0;
@@ -165,6 +168,8 @@ class LiveBattleManager {
         const stamina_cost = raw_atk * BATTLE_TUNING.STAMINA_COST_MULT + 1
         attacker.Curr_Stamina = Math.max(attacker.Curr_Stamina - stamina_cost, 0)
 
+        this.log(`[${color}]${actor} poached ${fans_stolen} fans![/${color}]`)
+
         if (actor === "Player") {
             this.fire_skills('after_inflicting_dmg', atk_type, fans_stolen);
             this.fire_rival_skills('after_taking_dmg', atk_type, fans_stolen);
@@ -175,11 +180,6 @@ class LiveBattleManager {
 
         // Run post-attack effects. Temp buff revert happens in post_turn.
         this.run_post_attack_effects(fans_stolen);
-
-        // Log
-        const color = actor === "Player" ? "green" : "darkorange"
-        this.log(`[${color}]${actor} performed a ${atk_type} move![/${color}]`, false)
-        this.log(`[${color}]${actor} poached ${fans_stolen} fans![/${color}]`)
 
         if (defender.Fans <= 0) {
             const loser = actor === "Player" ? "Rival" : "Player"
