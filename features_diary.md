@@ -56,7 +56,7 @@ After a LIVE, you can "dream" (rebirth). Resets progress but permanently carries
 
 ## Dream Upgrades
 
-Spend dream points on permanent upgrades (persist across rebirths): time reductions, initial stat bonuses, equipment drop rate. Upgrade definitions: `src/lib/data/dreams/`. State: `src/lib/state/dreams.svelte.ts`.
+Spend dream points on permanent upgrades (persist across rebirths). Upgrade definitions: `src/lib/data/dreams/`. State: `src/lib/state/dreams.svelte.ts`.
 
 ## Settings / Debug
 

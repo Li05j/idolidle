@@ -11,6 +11,7 @@ export const LOCATION_HINTS: Record<string, string | null> = {
     'Mall':        "Don't lose hope if you get defeated by Rival. On every Dream, you will gain extra stats and Dream Points (DP). Put them in good use!",
     'Gym':         "You cannot gain Mastery from Earning (purple) and Spending (yellow) cards. However, their rewards tend to be dynamic.",
     'Maid Cafe':   "During LIVE, you consume Stamina for each move you perform. However, your Fans will also be more easily swayed by Rival if your are running out of Stamina.",
+    '': "Skills can only be triggered ONCE per LIVE."
 };
 
 export function getLocationHint(name: string): string | null {
