@@ -21,6 +21,13 @@ export const train_station: LocationDef = {
     rewards: [
         { which_stat: "Presence", target: 'base', amount: 0.5 },
     ],
+    equip_drops: {
+        chance: 0.05,
+        table: [
+            { equip_id: 'buskers_cap', weight: 1 },
+            { equip_id: 'monster_energy_drink', weight: 1 },
+        ],
+    },
     unlocks: () => [],
     actions: [
         {
