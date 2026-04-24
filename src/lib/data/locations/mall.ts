@@ -2,6 +2,7 @@ import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
 import { BASIC_STATS } from '$lib/types';
 import type { ActionDef, LocationDef } from './location_definition';
+import { train_station } from './train_station';
 
 const LIVING_ROOM_UPGRADE_COST = 500;
 const MINI_LOTTERY_COST = 50;
@@ -80,7 +81,7 @@ export const mall: LocationDef = {
             { equip_id: 'glittery_tights', weight: 1 },
         ],
     },
-    unlocks: () => [],
+    unlocks: () => [train_station],
     actions: [
         upgrade_living_room,
         {

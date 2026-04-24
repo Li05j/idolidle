@@ -107,15 +107,15 @@ function deriveDependsOn(def: ActionDef): string | null {
 }
 
 export function tooltipString(def: ActionDef | LocationDef, is_disabled: boolean, mastery_completions?: number): string {
-    if (!('kind' in def)) {
-        const hint = getLocationHint(def.name);
-        if (hint) return "💡" + hint;
-    }
-
     let ret_str = '';
     if (def.requires) {
         if (is_disabled) ret_str += `[red]**!! Prereq: ${def.requires.text}.**[/red]\n`
         else ret_str += `Prereq: ${def.requires.text}.\n`
+    }
+
+    if (!('kind' in def)) {
+        const hint = getLocationHint(def.name);
+        if (hint) ret_str += `💡${hint}\n`;
     }
 
     if ('kind' in def) {

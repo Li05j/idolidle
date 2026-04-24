@@ -15,12 +15,12 @@ export const allLocations: LocationDef[] = [
     wake_up,
     living_room,
     park,
-    karaoke_box,
     school,
-    train_station,
+    karaoke_box,
     mall,
     gym,
     maid_cafe,
+    train_station,
 ];
 
 // ---------------------------------------------------------------------------

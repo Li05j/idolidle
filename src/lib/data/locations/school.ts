@@ -5,7 +5,7 @@ import { simple_flat_stat_reward, simple_percent_stat_reward, uniform_rand_stat_
 import type { ActionDef, LocationDef } from './location_definition';
 import { gym } from './gym';
 import { maid_cafe } from './maid_cafe';
-import { train_station } from './train_station';
+import { karaoke_box } from './karaoke_box';
 
 const IDOL_CLUB_COST = { fans: 100, moni: 500 };
 const IDOL_CLUB_CONCERT_COST = 100;
@@ -99,7 +99,7 @@ export const school: LocationDef = {
             { equip_id: 'lozenges', weight: 1 },
         ],
     },
-    unlocks: () => [gym, maid_cafe, train_station],
+    unlocks: () => [karaoke_box, gym, maid_cafe],
     actions: [
         open_idol_club,
         {
