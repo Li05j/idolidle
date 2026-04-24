@@ -1,6 +1,6 @@
 import { history } from '$lib/state/history.svelte';
 import { stat_list } from '$lib/state/stats.svelte';
-import type { BasicStats } from '$lib/types';
+import { BASIC_STATS } from '$lib/types';
 import type { ActionDef, LocationDef } from './location_definition';
 
 const LIVING_ROOM_UPGRADE_COST = 500;
@@ -13,8 +13,6 @@ function extra_mini_lottery() {
     let r = Math.random();
     const grade_index = grade_thresholds.findIndex(t => r <= t);
     const grade = grades[grade_index];
-
-    const stat_names: BasicStats[] = ['Fans', 'Moni', 'Stamina', 'Haste', 'Sing', 'Dance', 'Charm', 'Presence'];
 
     const loop = grade === 'S' ? 3 : 2;
 
@@ -29,7 +27,7 @@ function extra_mini_lottery() {
     for (let i = 0; i < loop; i++) {
         r = Math.random();
         let index = Math.floor(r * grades.length);
-        const stat_name = stat_names[index];
+        const stat_name = BASIC_STATS[index];
         const stat = stat_list[stat_name];
 
         r = Math.random();

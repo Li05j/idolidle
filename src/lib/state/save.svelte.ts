@@ -1,4 +1,5 @@
 import { CURRENT_PRESET, SAVE_KEY, type PresetName } from '$lib/config';
+import { BASIC_STATS } from '$lib/types';
 import { stat_list, stat_list_serialize, stat_list_deserialize } from '$lib/state/stats.svelte';
 import { CPs } from '$lib/state/checkpoints.svelte';
 import { EquipM } from '$lib/state/equipment.svelte';
@@ -126,7 +127,7 @@ class SaveManager {
         // The set is intentionally broad; reading is cheap and missing one would silently lose writes.
         $effect.root(() => {
             $effect(() => {
-                for (const k of ['Fans', 'Moni', 'Stamina', 'Haste', 'Sing', 'Dance', 'Charm', 'Presence'] as const) {
+                for (const k of BASIC_STATS) {
                     void stat_list[k].base; void stat_list[k].multi;
                     void stat_list[k].equip_base; void stat_list[k].equip_multi;
                 }

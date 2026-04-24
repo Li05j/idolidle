@@ -1,4 +1,5 @@
-export type BasicStats = "Fans" | "Moni" | "Stamina" | "Haste" | "Sing" | "Dance" | "Charm" | "Presence";
+export const BASIC_STATS = ['Fans', 'Moni', 'Stamina', 'Haste', 'Sing', 'Dance', 'Charm', 'Presence'] as const;
+export type BasicStats = typeof BASIC_STATS[number];
 
 export type LiveBattleStats = {
     Fans: number,

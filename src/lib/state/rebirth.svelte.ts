@@ -1,15 +1,12 @@
 import { CPs } from "$lib/state/checkpoints.svelte"
 import { stat_list, stat_list_reset } from "$lib/state/stats.svelte"
-import type { BasicStats } from "$lib/types"
+import { BASIC_STATS, type BasicStats } from "$lib/types"
 import { CFG } from '$lib/config'
-import { Dreams } from '$lib/state/dreams.svelte'
 import { RunTotals } from '$lib/state/run_totals.svelte'
 
 function zero_record(): Record<BasicStats, number> {
-    return { Fans: 0, Moni: 0, Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
+    return Object.fromEntries(BASIC_STATS.map(k => [k, 0])) as Record<BasicStats, number>
 }
-
-const STAT_KEYS = Object.keys(stat_list) as BasicStats[]
 
 class RebirthStats {
     private _rebirth_count = $state(0)
@@ -26,7 +23,7 @@ class RebirthStats {
         const cp = CPs.current_completed_checkpoint + 1
         const base_cap  = CFG.rebirth_base_cap_per_cp  * cp
         const multi_cap = CFG.rebirth_multi_cap_per_cp * cp
-        for (const key of STAT_KEYS) {
+        for (const key of BASIC_STATS) {
             // Moni/Fans deplete during the run (spending, fan poaching). Use cumulative
             // earned this run instead of current final, so spending isn't punished.
             const source = (key === 'Moni' || key === 'Fans')
@@ -38,9 +35,9 @@ class RebirthStats {
     }
 
     apply_gains_to_initial_stats() {
-        for (const key of STAT_KEYS) {
-            stat_list[key].base += this.base_gains[key] + Dreams.stat_base_bonus(key)
-            stat_list[key].multi += this.multi_gains[key] + Dreams.stat_multi_bonus(key)
+        for (const key of BASIC_STATS) {
+            stat_list[key].base += this.base_gains[key]
+            stat_list[key].multi += this.multi_gains[key]
         }
     }
 
@@ -98,7 +95,7 @@ class RebirthStats {
         const filter = (src: unknown): Record<BasicStats, number> => {
             const out = zero_record();
             if (!src || typeof src !== 'object') return out;
-            for (const k of STAT_KEYS) {
+            for (const k of BASIC_STATS) {
                 const v = (src as Record<string, unknown>)[k];
                 if (typeof v === 'number') out[k] = v;
             }

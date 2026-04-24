@@ -11,7 +11,7 @@ import {
 } from '$lib/data/equipment/equipment_definition';
 import { stat_list } from '$lib/state/stats.svelte';
 import { history } from '$lib/state/history.svelte';
-import type { BasicStats } from '$lib/types';
+import { BASIC_STATS, type BasicStats } from '$lib/types';
 
 export type OwnedEquip = {
     equip_id: string;
@@ -124,8 +124,7 @@ class EquipmentManager {
     }
 
     recalculate_equip_stats(): void {
-        const stat_keys = Object.keys(stat_list) as BasicStats[];
-        for (const key of stat_keys) {
+        for (const key of BASIC_STATS) {
             stat_list[key].equip_base = 0;
             stat_list[key].equip_multi = 0;
         }

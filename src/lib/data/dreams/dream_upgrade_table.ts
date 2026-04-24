@@ -1,7 +1,5 @@
 import type { DreamUpgradeDef } from './dream_upgrade_definition';
-import type { BasicStats } from '$lib/types';
-
-const STATS: BasicStats[] = ['Fans', 'Moni', 'Stamina', 'Haste', 'Sing', 'Dance', 'Charm', 'Presence'];
+import { BASIC_STATS, type BasicStats } from '$lib/types';
 
 function stat_base(stat: BasicStats): DreamUpgradeDef {
     return {
@@ -60,10 +58,10 @@ export const ALL_DREAM_UPGRADES: DreamUpgradeDef[] = [
     },
 
     // Stat base upgrades
-    ...STATS.map(stat_base),
+    ...BASIC_STATS.map(stat_base),
 
     // Stat multi upgrades
-    ...STATS.map(stat_multi),
+    ...BASIC_STATS.map(stat_multi),
 
     // Equipment drop rate
     {
