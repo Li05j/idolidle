@@ -24,9 +24,23 @@ function weighted_pick(table: EquipDropTable['table']): string {
     return table[table.length - 1].equip_id;
 }
 
-export function roll_equip_drop(drops?: EquipDropTable): void {
+export function roll_equip_drop(drops: EquipDropTable | undefined, duration_ms: number): void {
     if (!drops) return;
-    if (Math.random() >= drops.chance * CFG.equip_drop_mult * Dreams.equip_drop_mult) return;
+
+    const base = drops.chance * CFG.equip_drop_mult * Dreams.equip_drop_mult;
+    let effective: number;
+    if (drops.chance >= 1) {
+        effective = base;
+    } else {
+        const d = duration_ms / 1000;
+        const P = CFG.equip_drop_pivot_seconds;
+        const K = CFG.equip_drop_above_exp;
+        const ratio = d / P;
+        const factor = ratio <= 1 ? ratio : ratio ** K;
+        effective = base * factor;
+    }
+
+    if (Math.random() >= Math.min(effective, 1)) return;
 
     const equip_id = weighted_pick(drops.table);
     const rarity = roll_rarity();

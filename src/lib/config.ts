@@ -17,6 +17,8 @@ const prod = {
 	mastery_floor: 0.02,
 	stat_scaling_exponent: 0.5,
 	equip_drop_mult: 1,
+	equip_drop_pivot_seconds: 5,
+	equip_drop_above_exp: 0.9,
 	checkpoint_dp_base: 2,
 } as const;
 

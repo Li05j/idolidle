@@ -180,7 +180,7 @@ export class TodoCardVM {
         if (actDef.uses !== undefined) {
             this.timer.repeat(1, getDur,
                 () => {
-                    executeAction(actDef, history.addLogs, locationMap.get(this.locationName)?.equip_drops);
+                    executeAction(actDef, history.addLogs, locationMap.get(this.locationName)?.equip_drops, getDur());
                     Mastery.increment(mid);
                 },
                 () => {
@@ -192,7 +192,7 @@ export class TodoCardVM {
             this.timer.repeat(this.loop, getDur,
                 () => {
                     this.loop--;
-                    executeAction(actDef, history.addLogs, locationMap.get(this.locationName)?.equip_drops);
+                    executeAction(actDef, history.addLogs, locationMap.get(this.locationName)?.equip_drops, getDur());
                     Mastery.increment(mid);
                     if (this.disabled) this.timer.loop_count = 0;
                 },

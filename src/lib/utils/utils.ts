@@ -83,7 +83,7 @@ export function actionRewardText(def: ActionDef): string {
     return ret_str + reward_string(def.rewards);
 }
 
-export function executeAction(def: ActionDef, log: (name: string, text: string) => void, location_drops?: EquipDropTable): void {
+export function executeAction(def: ActionDef, log: (name: string, text: string) => void, location_drops: EquipDropTable | undefined, duration_ms: number): void {
     if (def.costs) {
         def.costs.forEach(c => {
             stat_list[c.stat].add_base_from_final(-c.amount);
@@ -92,7 +92,7 @@ export function executeAction(def: ActionDef, log: (name: string, text: string) 
 
     handle_rewards(def.rewards);
     log(def.name, actionRewardText(def));
-    if (!def.no_drops) roll_equip_drop(def.equip_drops ?? location_drops);
+    if (!def.no_drops) roll_equip_drop(def.equip_drops ?? location_drops, duration_ms);
     def.on_complete?.fn();
 }
 
