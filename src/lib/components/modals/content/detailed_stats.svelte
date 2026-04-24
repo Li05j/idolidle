@@ -19,14 +19,14 @@
             <div class='col-span-4 grid grid-cols-4 text-center gap-y-1'>
                 {#each currency as stat}
                     <div class='text-sm text-[var(--text-primary)]'>{stat.name}</div>
-                    <div class='text-sm text-[var(--text-muted)]'>{Math.floor(stat.base)}</div> 
-                    <div class='text-sm text-[var(--text-muted)]'>{stat.multi.toFixed(2)}</div> 
+                    <div class='text-sm text-[var(--text-muted)]'>{Math.floor(stat.total_base)}</div>
+                    <div class='text-sm text-[var(--text-muted)]'>{stat.total_multi.toFixed(2)}</div>
                     <div class='text-sm font-semibold text-[var(--text-primary)]'>{stat.final_str}</div>
                 {/each}
                 {#each other_stats as stat}
                     <div class='text-sm text-[var(--text-primary)]'>{stat.name}</div>
-                    <div class='text-sm text-[var(--text-muted)]'>{stat.base.toFixed(2)}</div> 
-                    <div class='text-sm text-[var(--text-muted)]'>{stat.multi.toFixed(2)}</div> 
+                    <div class='text-sm text-[var(--text-muted)]'>{stat.total_base.toFixed(2)}</div>
+                    <div class='text-sm text-[var(--text-muted)]'>{stat.total_multi.toFixed(2)}</div>
                     <div class='text-sm font-semibold text-[var(--text-primary)]'>{stat.final_str}</div>
                 {/each}
             </div>

@@ -13,6 +13,7 @@ function createStat(name: BasicStats, round: RoundFn, formatFinal: (v: number) =
 
 	const dream_base  = () => Dreams.stat_base_bonus(name);
 	const dream_multi = () => Dreams.stat_multi_bonus(name);
+	const total_base  = () => base + equip_base + dream_base();
 	const total_multi = () => multi + equip_multi + dream_multi();
 
 	return {
@@ -21,10 +22,12 @@ function createStat(name: BasicStats, round: RoundFn, formatFinal: (v: number) =
 		get multi() { return multi }, set multi(v) { multi = v },
 		get equip_base() { return equip_base }, set equip_base(v) { equip_base = v },
 		get equip_multi() { return equip_multi }, set equip_multi(v) { equip_multi = v },
+		get total_base() { return total_base() },
+		get total_multi() { return total_multi() },
 		add_base_from_final(v: number) { base += round(v / total_multi()) },
 		format_final_gain(v: number) { return round(v * total_multi()).toString() },
-		get final() { return round((base + equip_base + dream_base()) * total_multi()) },
-		get final_str() { return formatFinal(round((base + equip_base + dream_base()) * total_multi())) },
+		get final() { return round(total_base() * total_multi()) },
+		get final_str() { return formatFinal(round(total_base() * total_multi())) },
 		reset() {
 			base = baseInit;
 			multi = multiInit;
