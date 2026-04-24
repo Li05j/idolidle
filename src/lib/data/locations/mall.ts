@@ -64,6 +64,10 @@ export const upgrade_living_room: ActionDef = {
         text: `Moni ≥ ${LIVING_ROOM_UPGRADE_COST}`,
         is_met: () => stat_list.Moni.final >= LIVING_ROOM_UPGRADE_COST,
     },
+    on_complete: {
+        fn: () => {},
+        desc: "Improves Living Room trainings. Living Room Equipment drop rate increased. ",
+    },
 };
 
 export const mall: LocationDef = {

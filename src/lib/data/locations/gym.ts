@@ -43,7 +43,7 @@ const purchase_gym_vip: ActionDef = {
     },
     on_complete: {
         fn: () => {},
-        desc: "Void all training costs in Gym. Trainings will also be slightly more efficient.",
+        desc: "Void all training costs in Gym. Gym Equipment drop rate increased. Trainings will also be slightly more efficient.",
     },
 };
 

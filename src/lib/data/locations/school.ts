@@ -82,6 +82,10 @@ const open_idol_club: ActionDef = {
         text: `Fans ≥ ${IDOL_CLUB_COST.fans}, Moni ≥ ${IDOL_CLUB_COST.moni}`,
         is_met: () => stat_list.Fans.final >= IDOL_CLUB_COST.fans && stat_list.Moni.final >= IDOL_CLUB_COST.moni,
     },
+    on_complete: {
+        fn: () => {},
+        desc: "Unlocks more options in School. School Equipment drop rate increased. ",
+    },
 };
 
 const SCHOOL_DROP_TABLE = [
@@ -234,7 +238,7 @@ const school_plus: LocationDef = {
         { which_stat: "Stamina", target: 'base', amount: 4 },
     ],
     equip_drops: {
-        chance: 0.10,
+        chance: 0.08,
         table: SCHOOL_DROP_TABLE,
     },
     unlocks: () => [old_theatre, gym, maid_cafe],

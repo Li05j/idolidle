@@ -35,7 +35,7 @@ const maid_interview: ActionDef = {
     },
     on_complete: {
         fn: () => {},
-        desc: "Unlocks more options in Maid Cafe.",
+        desc: "Unlocks more options in Maid Cafe. Maid Cafe Equipment drop rate increased. ",
     },
 };
 
