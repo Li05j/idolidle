@@ -10,6 +10,11 @@ import { Rebirth } from "$lib/state/rebirth.svelte"
 import { RunTotals } from "$lib/state/run_totals.svelte"
 
 export function performRebirth() {
+    // A won-but-not-continued battle still earned the CP: fold its rewards in
+    // so "Dream after win" matches "Continue, then dream" (DP, max CP, fans).
+    if (LiveBattleM.did_player_win) {
+        LiveBattleM.concludeBattle()
+    }
     Rebirth.inherit_stats()
     Rebirth.award_rebirth_points()
     Rebirth.add_dream_points(EquipM.flush_pending_dp())

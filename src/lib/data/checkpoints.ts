@@ -38,10 +38,10 @@ const BASE: BaseRanges = {
 };
 
 export const CHECKPOINTS: CheckpointDef[] = [
-    { time: 1000,     multi: 1.0, rival: { stat_multi: 1,  fan_multi: 1,  equip_budget: 3  } },
-    { time: 2500,     multi: 1.0, rival: { stat_multi: 5,  fan_multi: 6,  equip_budget: 9  } },
-    { time: 4000,     multi: 1.0, rival: { stat_multi: 13, fan_multi: 15, equip_budget: 27 } },
-    { time: 6500,     multi: 1.0, rival: { stat_multi: 25, fan_multi: 29, equip_budget: 81 } },
+    { time: 1000, multi: 1.0, rival: { stat_multi: 1,  fan_multi: 1,  equip_budget: 3  } },
+    { time: 2500, multi: 1.0, rival: { stat_multi: 5,  fan_multi: 6,  equip_budget: 9  } },
+    { time: 4000, multi: 1.0, rival: { stat_multi: 13, fan_multi: 15, equip_budget: 27 } },
+    { time: 6500, multi: 1.0, rival: { stat_multi: 25, fan_multi: 29, equip_budget: 81 } },
     { time: Infinity, multi: 1.0 },
 ];
 
@@ -65,5 +65,6 @@ export function generateRivalStats(persona: Persona, scale: RivalScale): LiveBat
         Dance:        rollRange(BASE.dance,    w.dance    * sm),
         Charm:        rollRange(BASE.charm,    w.charm    * sm),
         Presence:     rollRange(BASE.presence, w.presence * sm),
+        Style:        0,
     };
 }

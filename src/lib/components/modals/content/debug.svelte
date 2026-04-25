@@ -30,6 +30,18 @@
     </div>
 
     <div class="flex flex-col gap-2 pt-4 border-t border-[var(--progress-bg)]">
+        <h3 class="text-base font-semibold text-[var(--text-primary)]">Skip to LIVE</h3>
+        <p class="text-xs text-[var(--text-muted)]">Fast-forwards the current checkpoint timer so the next tick triggers the LIVE battle.</p>
+        <GenericButton
+            name="Skip to LIVE"
+            onclick={() => vm.skip_to_live()}
+            disabled={!vm.can_skip_to_live}
+            variant="secondary"
+            class="px-4 py-2 text-xs self-start"
+        />
+    </div>
+
+    <div class="flex flex-col gap-2 pt-4 border-t border-[var(--progress-bg)]">
         <h3 class="text-base font-semibold text-[var(--text-primary)]">Reroll Rival</h3>
         <p class="text-xs text-[var(--text-muted)]">Generates a new persona and equipment loadout for every rival.</p>
         <GenericButton

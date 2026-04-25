@@ -6,6 +6,7 @@ import {
 	type PresetName,
 } from "$lib/config";
 import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
+import { CPs } from "$lib/state/checkpoints.svelte";
 
 export class DebugVM {
 	staged = $state<PresetName>(CURRENT_PRESET);
@@ -14,6 +15,10 @@ export class DebugVM {
 
 	get can_apply() {
 		return this.staged !== this.current;
+	}
+
+	get can_skip_to_live() {
+		return !CPs.is_terminal;
 	}
 
 	apply() {
@@ -28,5 +33,10 @@ export class DebugVM {
 
 	reroll_rival() {
 		RivalStatsM.reroll();
+	}
+
+	skip_to_live() {
+		if (!this.can_skip_to_live) return;
+		CPs.current_time_spent = CPs.current_total_time;
 	}
 }

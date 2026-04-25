@@ -67,9 +67,9 @@ export const ALL_DREAM_UPGRADES: DreamUpgradeDef[] = [
     {
         id: 'equip_drop_rate',
         name: 'Lucky Finds',
-        desc: 'Equipment drop rate +15% per level',
+        desc: 'Equipment drop rate +20% per level',
         max_level: 5,
-        effect_per_level: 0.15,
+        effect_per_level: 0.2,
         base_cost: 5,
         category: 'equip_drop',
     },

@@ -26,6 +26,8 @@ export const BATTLE_TUNING = {
     VARIANCE: 0.2,
     /** Max turns before force-ending the battle. */
     MAX_TURNS: 120,
+    /** Per-stack atk multiplier from Style. Each basic attack grants +1 Style to the attacker. */
+    STYLE_PER_STACK: 0.05,
 }
 
 class LiveBattleManager {
@@ -41,8 +43,8 @@ class LiveBattleManager {
     private _real_turns: LiveTurn[] = []
     private _replay_turns: LiveTurn[] = $state([])
 
-    private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
-    private _rival: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0 }
+    private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, Style: 0 }
+    private _rival: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, Style: 0 }
 
     private _action_bar = [0, 0]
     private _rival_equipment: RivalEquipEntry[] = []
@@ -65,6 +67,7 @@ class LiveBattleManager {
             Dance: stat_list.Dance.final,
             Charm: stat_list.Charm.final,
             Presence: stat_list.Presence.final,
+            Style: 0,
         }
 
         this.display_your_fans = this._you.Fans
@@ -148,7 +151,9 @@ class LiveBattleManager {
             this.fire_rival_skills('before_taking_dmg', atk_type);
         }
 
-        const raw_atk = attacker[atk_type] as number
+        const base_atk = attacker[atk_type] as number
+        const style_mult = 1 + attacker.Style * BATTLE_TUNING.STYLE_PER_STACK
+        const raw_atk = base_atk * style_mult
         const raw_def = defender[def_type] as number
 
         // Defense weakens as stamina drops: [FATIGUE_FLOOR, 1.0]
@@ -168,8 +173,8 @@ class LiveBattleManager {
         attacker.Fans += fans_stolen
         defender.Fans -= fans_stolen
 
-        // Pay stamina
-        const stamina_cost = raw_atk * BATTLE_TUNING.STAMINA_COST_MULT + 1
+        // Pay stamina (Style does not affect cost — only damage)
+        const stamina_cost = base_atk * BATTLE_TUNING.STAMINA_COST_MULT + 1
         attacker.Curr_Stamina = Math.max(attacker.Curr_Stamina - stamina_cost, 0)
 
         this.log(`[${color}]${actor} poached ${fans_stolen} fans![/${color}]`)
@@ -184,6 +189,8 @@ class LiveBattleManager {
 
         // Run post-attack effects. Temp buff revert happens in post_turn.
         this.run_post_attack_effects(fans_stolen);
+
+        attacker.Style += 1
 
         if (defender.Fans <= 0) {
             const loser = actor === "Player" ? "Rival" : "Player"

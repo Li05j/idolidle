@@ -15,7 +15,7 @@ const FALLBACK_PERSONA: Persona = {
 };
 
 function emptyStats(): LiveBattleStats {
-    return { Fans: 1, Max_Stamina: 1, Curr_Stamina: 1, Haste: 1, Sing: 1, Dance: 1, Charm: 1, Presence: 1 };
+    return { Fans: 1, Max_Stamina: 1, Curr_Stamina: 1, Haste: 1, Sing: 1, Dance: 1, Charm: 1, Presence: 1, Style: 0 };
 }
 
 const FALLBACK_PREVIEW: RivalPreview = { stats: emptyStats(), persona: FALLBACK_PERSONA, equipment: [], budget_cap: 0 };
@@ -81,6 +81,7 @@ class RivalStats {
                 if (typeof s[k] !== 'number') return null;
                 out[k] = s[k] as number;
             }
+            out.Style = typeof s.Style === 'number' ? s.Style : 0;
             return out as LiveBattleStats;
         };
 

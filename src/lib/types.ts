@@ -10,6 +10,7 @@ export type LiveBattleStats = {
     Dance: number,
     Charm: number,
     Presence: number,
+    Style: number,
 }
 
 export type LiveTurn = {
