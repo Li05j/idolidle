@@ -64,8 +64,8 @@ export const train_station: LocationDef = {
                     amount: 8,
                     scaling: {
                         sources: [
-                            { which_stat: "Sing", effectiveness: 2.2 },
-                            { which_stat: "Dance", effectiveness: 2.2 },
+                            { which_stat: "Sing", effectiveness: 1.8 },
+                            { which_stat: "Dance", effectiveness: 1.8 },
                         ],
                     },
                 },

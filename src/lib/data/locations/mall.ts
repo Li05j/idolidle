@@ -6,7 +6,7 @@ import { train_station } from './train_station';
 
 const LIVING_ROOM_UPGRADE_COST = 500;
 const MINI_LOTTERY_COST = 50;
-const OUTFIT_COST = 35;
+const OUTFIT_COST = 25;
 
 function extra_mini_lottery() {
     const grade_thresholds = [0.12, 0.34, 0.56, 0.78, 1.0];
@@ -111,7 +111,7 @@ export const mall: LocationDef = {
             kind: 'spending',
             base_time: 5,
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
-            rewards: [{ which_stat: "Charm", target: 'base', amount: 5.5 }],
+            rewards: [{ which_stat: "Charm", target: 'base', amount: 3.0 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,
@@ -123,7 +123,7 @@ export const mall: LocationDef = {
             kind: 'spending',
             base_time: 5,
             desc: "Buy Buy Buy Spend Spend Spend... New clothes are always welcome.",
-            rewards: [{ which_stat: "Presence", target: 'base', amount: 5.5 }],
+            rewards: [{ which_stat: "Presence", target: 'base', amount: 3.0 }],
             costs: [{ stat: "Moni", amount: OUTFIT_COST }],
             requires: {
                 text: `Moni ≥ ${OUTFIT_COST}`,

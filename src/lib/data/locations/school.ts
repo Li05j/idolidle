@@ -8,7 +8,7 @@ import { maid_cafe } from './maid_cafe';
 import { old_theatre } from './old_theatre';
 
 const IDOL_CLUB_COST = { fans: 100, moni: 500 };
-const IDOL_CLUB_CONCERT_COST = 150;
+const IDOL_CLUB_CONCERT_COST = 200;
 
 function extra_grade_report() {
     let [stat_name, actual_gain] = uniform_rand_stat_flat_reward('base', 5, 10);
@@ -177,8 +177,8 @@ const host_school_concert: ActionDef = {
             amount: 25,
             scaling: {
                 sources: [
-                    { which_stat: "Sing", effectiveness: 2.5 },
-                    { which_stat: "Dance", effectiveness: 2.5 },
+                    { which_stat: "Sing", effectiveness: 2.0 },
+                    { which_stat: "Dance", effectiveness: 2.0 },
                 ],
             },
         },
@@ -197,7 +197,7 @@ const host_school_concert: ActionDef = {
     },
     on_complete: {
         fn: extra_host_school_concert,
-        desc: "Tiny chance for Big Success",
+        desc: "Tiny chance for Big Success. Always drops Stage Microphone",
     },
 };
 

@@ -3,7 +3,7 @@ import { history } from '$lib/state/history.svelte';
 import { simple_flat_stat_reward, uniform_rand_stat_flat_reward } from '$lib/utils/reward_helpers';
 import type { LocationDef } from './location_definition';
 
-const TICKET_COST = 25;
+const TICKET_COST = 65;
 
 function extra_sneak_rehearsal() {
     let [is_success, value] = simple_flat_stat_reward("Haste", "base", "Slight", 1, 5);
@@ -63,8 +63,8 @@ export const old_theatre: LocationDef = {
                 is_met: () => stat_list.Moni.final >= TICKET_COST,
             },
             rewards: [
-                { which_stat: "Sing", target: 'base', amount: 5.5 },
-                { which_stat: "Dance", target: 'base', amount: 5.5 },
+                { which_stat: "Sing", target: 'base', amount: 6.0 },
+                { which_stat: "Dance", target: 'base', amount: 6.0 },
             ],
             on_complete: {
                 fn: extra_watch_a_play,

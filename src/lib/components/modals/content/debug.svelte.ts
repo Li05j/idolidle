@@ -5,6 +5,7 @@ import {
 	restart_game,
 	type PresetName,
 } from "$lib/config";
+import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
 
 export class DebugVM {
 	staged = $state<PresetName>(CURRENT_PRESET);
@@ -23,5 +24,9 @@ export class DebugVM {
 	restart() {
 		if (!window.confirm("Restart game? All progress will be lost.")) return;
 		restart_game();
+	}
+
+	reroll_rival() {
+		RivalStatsM.reroll();
 	}
 }

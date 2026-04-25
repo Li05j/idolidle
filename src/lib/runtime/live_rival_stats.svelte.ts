@@ -2,7 +2,7 @@ import type { LiveBattleStats } from "$lib/types";
 import type { RivalEquipEntry, Rarity } from "$lib/data/equipment/equipment_definition";
 import { CHECKPOINTS, generateRivalStats } from "$lib/data/checkpoints";
 import { pickPersona, ALL_PERSONAS, type Persona } from "$lib/data/rivals/personas";
-import { RIVAL_EQUIP_BUDGET, generate_rival_loadout, apply_rival_equipment } from "$lib/data/rivals/rival_equipment";
+import { generate_rival_loadout, apply_rival_equipment } from "$lib/data/rivals/rival_equipment";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
 
 export type RivalPreview = { stats: LiveBattleStats; persona: Persona; equipment: RivalEquipEntry[]; budget_cap: number };
@@ -21,12 +21,11 @@ function emptyStats(): LiveBattleStats {
 const FALLBACK_PREVIEW: RivalPreview = { stats: emptyStats(), persona: FALLBACK_PERSONA, equipment: [], budget_cap: 0 };
 
 function rerollPreviews(): (RivalPreview | null)[] {
-    return CHECKPOINTS.map((c, i) => {
+    return CHECKPOINTS.map((c) => {
         if (!c.rival) return null;
         const persona = pickPersona();
         const stats = generateRivalStats(persona, c.rival);
-        const budget = RIVAL_EQUIP_BUDGET[i] ?? 0;
-        const { loadout: equipment, budget_cap } = generate_rival_loadout(budget);
+        const { loadout: equipment, budget_cap } = generate_rival_loadout(c.rival.equip_budget);
         apply_rival_equipment(stats, equipment);
         return { persona, stats, equipment, budget_cap };
     });

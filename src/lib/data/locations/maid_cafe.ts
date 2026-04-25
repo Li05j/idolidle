@@ -13,7 +13,7 @@ function extra_moe_magic() {
 }
 
 function extra_maid_part_time() {
-    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Good", 2, 10);
+    let [is_success, value] = simple_flat_stat_reward("Fans", "base", "Good", 2, 8);
     if (is_success) {
         history.addSystemLog(`Eureka! You converted ${value} Otaku(s) into fans! +${value} Fans!`);
     }
@@ -55,7 +55,7 @@ const chant_moe_magic: ActionDef = {
     ],
     on_complete: {
         fn: extra_moe_magic,
-        desc: "Tiny chance to gain 0.01 Charm multi.",
+        desc: "Tiny chance to gain 0.01 Charm multi",
     },
 };
 
@@ -78,19 +78,19 @@ const maid_part_time: ActionDef = {
     base_time: 45,
     desc: "\"Moe Moe Kyun Moe Moe Kyun Moe Moe Kyun Oishikuna-re~!!\"",
     rewards: [
+        { which_stat: "Stamina", target: 'base', amount: 4.5 },
         {
             which_stat: "Moni",
             target: 'base',
             amount: 9,
             scaling: {
-                sources: [{ which_stat: "Charm", effectiveness: 4.95 }],
+                sources: [{ which_stat: "Charm", effectiveness: 4.0 }],
             },
         },
-        { which_stat: "Stamina", target: 'base', amount: 4.5 },
     ],
     on_complete: {
         fn: extra_maid_part_time,
-        desc: "Good chance to gain a few Fans.",
+        desc: "Good chance to gain a 2~10 Fans",
     },
 };
 

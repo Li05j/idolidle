@@ -1,7 +1,7 @@
 import { stat_list } from "$lib/state/stats.svelte";
 import { CPs } from "$lib/state/checkpoints.svelte";
 import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte";
-import { RIVAL_EQUIP_BUDGET, equip_cost } from "$lib/data/rivals/rival_equipment";
+import { equip_cost } from "$lib/data/rivals/rival_equipment";
 import { CHECKPOINTS } from "$lib/data/checkpoints";
 import type { LiveBattleStats } from "$lib/types";
 import { EQUIP_REGISTRY } from "$lib/data/equipment";
@@ -169,7 +169,7 @@ class RivalComparison {
 
     public budget_info: RivalBudgetInfo = $derived.by(() => {
         const cp = CPs.current_completed_checkpoint;
-        const total = CHECKPOINTS[cp]?.rival ? (RIVAL_EQUIP_BUDGET[cp] ?? 0) : 0;
+        const total = CHECKPOINTS[cp]?.rival?.equip_budget ?? 0;
         const preview = RivalStatsM.preview(cp);
         const used = preview.equipment.reduce((s, e) => s + equip_cost(e.rarity, e.level), 0);
         return { total, cap: preview.budget_cap, used };

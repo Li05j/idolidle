@@ -30,6 +30,17 @@
     </div>
 
     <div class="flex flex-col gap-2 pt-4 border-t border-[var(--progress-bg)]">
+        <h3 class="text-base font-semibold text-[var(--text-primary)]">Reroll Rival</h3>
+        <p class="text-xs text-[var(--text-muted)]">Generates a new persona and equipment loadout for every rival.</p>
+        <GenericButton
+            name="Reroll Rival"
+            onclick={() => vm.reroll_rival()}
+            variant="secondary"
+            class="px-4 py-2 text-xs self-start"
+        />
+    </div>
+
+    <div class="flex flex-col gap-2 pt-4 border-t border-[var(--progress-bg)]">
         <h3 class="text-base font-semibold text-[var(--text-primary)]">Restart</h3>
         <p class="text-xs text-[var(--text-muted)]">Wipes all progress and reloads on the current preset.</p>
         <GenericButton

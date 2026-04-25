@@ -92,7 +92,7 @@ export const ALL_SKILLS: SkillDef[] = [
             on_after_attack!((fans_stolen) => {
                 if (fans_stolen <= 0) {
                     const drained = drain_fans(rival, you, rival.Fans * v.penalty);
-                    log(`{Opp_poss} attempt was BOO'd instead! Drained ${drained} Fans!`);
+                    log(`Moe Kyun~!: {Opp_poss} attempt was BOO'd instead! Drained ${drained} Fans!`);
                 }
             });
         },

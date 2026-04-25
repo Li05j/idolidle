@@ -66,7 +66,7 @@ const singing_practice_plus: ActionDef = {
     ],
     on_complete: {
         fn: extra_singing_practice,
-        desc: "Good chance to gain an extra 2.0 Sing.",
+        desc: "Good chance to gain 2.0 Sing",
     },
 };
 
@@ -82,7 +82,7 @@ const dancing_practice_plus: ActionDef = {
     ],
     on_complete: {
         fn: extra_dancing_practice,
-        desc: "Good chance to gain an extra 2.0 Dance.",
+        desc: "Good chance to gain 2.0 Dance",
     },
 };
 

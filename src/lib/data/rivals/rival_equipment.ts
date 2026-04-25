@@ -10,8 +10,6 @@ import {
 } from '$lib/data/equipment/equipment_definition';
 import { ALL_EQUIPMENT } from '$lib/data/equipment/equipment_table';
 
-export const RIVAL_EQUIP_BUDGET = [3, 9, 27];
-
 const SLOT_CAPS: Record<EquipSlot, number> = {
     hat: 1, top: 1, bottom: 1, shoes: 1, accessory: 2,
 };
