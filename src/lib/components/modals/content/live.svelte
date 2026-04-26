@@ -12,7 +12,6 @@
 
     const vm = new LiveVM(onClose);
     let scrollContainer: HTMLElement;
-    const sidebar_stats = $derived(LiveInfo.comparisons.filter(c => c.label !== "Fans"));
 
     $effect(() => {
         LiveBattleM.turn_logs.length;
@@ -81,11 +80,22 @@
 
     <div class="flex items-center">
         <div class="flex-1 flex justify-start">
-            <div class="grid grid-cols-2 text-center gap-2 mx-auto">
-                {#each sidebar_stats as comp}
-                    <div class="text-sm text-[var(--text-primary)]">{comp.label}:</div>
-                    <div class="w-8 h-6 rounded-md" style={comp.color}></div>
-                {/each}
+            <div class="flex flex-col gap-3 w-40 mx-auto">
+                <div>
+                    <div class="text-xs text-[var(--text-muted)] mb-1">Your Style</div>
+                    <div class="text-2xl font-bold tabular-nums" style="color: var(--battle-player);">
+                        {LiveBattleM.display_your_style}
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs text-[var(--text-muted)] mb-1">Your Stamina</div>
+                    <div class="relative h-3 bg-[var(--progress-bg)] rounded-full overflow-hidden">
+                        <div
+                            class="absolute top-0 left-0 h-full rounded-full transition-all duration-300"
+                            style="width: {LiveBattleM.display_your_stamina_pct * 100}%; background: var(--battle-player);"
+                        ></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -105,12 +115,9 @@
         <div class="flex-1 flex justify-end">
             <div class="flex flex-col gap-3 w-40 mx-auto">
                 <div>
-                    <div class="text-xs text-[var(--text-muted)] mb-1">Your Stamina</div>
-                    <div class="relative h-3 bg-[var(--progress-bg)] rounded-full overflow-hidden">
-                        <div
-                            class="absolute top-0 left-0 h-full rounded-full transition-all duration-300"
-                            style="width: {LiveBattleM.display_your_stamina_pct * 100}%; background: var(--battle-player);"
-                        ></div>
+                    <div class="text-xs text-[var(--text-muted)] mb-1">Rival Style</div>
+                    <div class="text-2xl font-bold tabular-nums" style="color: var(--battle-rival);">
+                        {LiveBattleM.display_enemy_style}
                     </div>
                 </div>
                 <div>

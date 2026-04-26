@@ -22,6 +22,7 @@ export function parseText(text: string) {
         .map(line => line
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/_([^_]+)_/g, '<em>$1</em>')
+            .replace(/\[muted\](.*?)\[\/muted\]/g, '<span style="color: var(--text-muted)">$1</span>')
             .replace(/\[([a-zA-Z]+)\](.*?)\[\/\1\]/g, '<span style="color: $1">$2</span>')
         )
         .join('<br>');

@@ -17,13 +17,13 @@ export type EquipSlot = 'hat' | 'top' | 'bottom' | 'shoes' | 'accessory';
 export type Rarity = 'N' | 'R' | 'SR' | 'UR';
 
 export const EQUIP_CONFIG = {
-    rarity_stat_mult: { N: 1.0, R: 1.5, SR: 2.5, UR: 4.0 } as Record<Rarity, number>,
+    rarity_stat_mult: { N: 1.0, R: 2.0, SR: 3.0, UR: 4.5 } as Record<Rarity, number>,
     rarity_color: { N: '#8C7A7D', R: '#16a34a', SR: '#9333ea', UR: '#dc2626' } as Record<Rarity, string>,
     dupe_exp: { N: 1, R: 3, SR: 10, UR: 30 } as Record<Rarity, number>,
     exp_per_level: 5,
     level_cap: 5,
     rarity_weights: { N: 0.88, R: 0.10, SR: 0.018, UR: 0.002 } as Record<Rarity, number>,
-    level_bonus_per_level: 0.5,
+    level_bonus_per_level: 1.0,
 };
 
 export type EquipStatBonus = {
