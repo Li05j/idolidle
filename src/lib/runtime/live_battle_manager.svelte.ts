@@ -307,7 +307,7 @@ class LiveBattleManager {
         }
     }
 
-    private push_over_time(source: LiveTurn[], target: LiveTurn[], intervalMs: number = 600) {
+    private push_over_time(source: LiveTurn[], target: LiveTurn[], intervalMs: number = 500) {
         this._replay_interval = setInterval(() => {
             if (source.length === 0) {
                 clearInterval(this._replay_interval!);

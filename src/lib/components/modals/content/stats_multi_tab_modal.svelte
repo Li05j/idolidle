@@ -8,9 +8,9 @@
     let active = $state<Tabs>('stats')
 
     const tabs: {id: Tabs, label: string}[] = [
-        { id: 'stats', label: 'Stats' },
         { id: 'equipment', label: 'Equipment' },
-        { id: 'dreams', label: 'Dreams' }
+        { id: 'dreams', label: 'Dreams' },
+        { id: 'stats', label: 'Stats' },
     ]
 </script>
 
@@ -35,12 +35,12 @@
             class="absolute top-0 left-0 h-full w-px bg-gradient-to-b from-transparent via-[var(--progress-from)] to-transparent opacity-40"
         ></div>
         <div class="ml-6">
-            {#if active === 'stats'}
-                <DetailedStats />
-            {:else if active === 'equipment'}
+            {#if active === 'equipment'}
                 <Equipment />
             {:else if active === 'dreams'}
                 <DreamUpgrades />
+            {:else if active === 'stats'}
+                <DetailedStats />
             {/if}
         </div>
     </div>

@@ -3,9 +3,9 @@
     import { parseText } from "$lib/utils/utils";
     import GenericButton from "$lib/components/shared/generic_button.svelte";
     import { LiveInfo } from "$lib/runtime/live_rival_info.svelte";
-    import { DEV } from "$lib/config";
     import { LiveVM } from "./live.svelte.ts";
     import Equipment from "./equipment.svelte";
+    import RivalInfo from "./rival_info.svelte";
     import { ModalM } from "$lib/runtime/modal_manager.svelte";
 
     let { onClose } = $props();
@@ -29,31 +29,11 @@
     <div class="flex flex-col items-center justify-center h-full p-6 gap-6">
         <h2 class="text-2xl font-bold text-[var(--text-primary)]">LIVE Battle!</h2>
 
-        <div class="rounded-xl bg-[var(--surface-inset)] p-5 w-full max-w-lg">
-            <div class="grid items-center justify-center gap-x-3 gap-y-2 max-w-[28rem] mx-auto" style="grid-template-columns: {DEV ? '1fr auto auto auto 1fr' : 'auto auto auto'}">
-                <div class="text-sm font-semibold text-[var(--text-muted)] text-right">You</div>
-                <div></div>
-                <div></div>
-                {#if DEV}
-                    <div></div>
-                    <div class="text-sm font-semibold text-[var(--text-muted)] text-left">Rival</div>
-                {/if}
-                {#each LiveInfo.comparisons as comp}
-                    <div class="text-base text-[var(--text-primary)] text-right tabular-nums">{comp.playerValue}</div>
-                    <div class="text-sm text-[var(--text-muted)] text-center">{comp.label}</div>
-                    <div class="flex justify-center"><div class="w-8 h-6 rounded-md" style={comp.color}></div></div>
-                    {#if DEV}
-                        <div class="text-sm text-[var(--text-muted)] text-center">{comp.rivalLabel}</div>
-                        <div class="text-base text-[var(--text-primary)] text-left tabular-nums">{comp.rivalValue}</div>
-                    {/if}
-                {/each}
-            </div>
-        </div>
-
-        <p class="text-lg font-bold text-[var(--text-primary)] text-center">{LiveInfo.condition_text}</p>
+        <!-- <p class="text-lg font-bold text-[var(--text-primary)] text-center">{LiveInfo.condition_text}</p> -->
 
         <div class="flex gap-3">
             <GenericButton name={"Manage Equipment"} onclick={() => ModalM.open({ component: Equipment, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>
+            <GenericButton name={"Rival Details"} onclick={() => ModalM.open({ component: RivalInfo, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>
             <GenericButton name={"Start Battle!"} onclick={() => vm.startBattle()} variant='primary' class={"px-8 py-3 text-lg"}/>
         </div>
     </div>

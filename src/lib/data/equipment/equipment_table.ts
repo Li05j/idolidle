@@ -191,7 +191,7 @@ export const ALL_EQUIPMENT: EquipDef[] = [
         id: 'glittery_tights',
         name: 'Glittery Tights',
         slot: 'bottom',
-        desc: "They shed glitter EVERYWHERE. Your manager has stopped complaining about the dressing room.",
+        desc: "They shed glitter EVERYWHERE. Your friends loved it... if only you weren't in the same room as them.",
         variants: {
             N: {
                 stat_bonuses: [
