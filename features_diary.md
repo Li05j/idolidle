@@ -42,7 +42,7 @@ Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `e
 
 ## Checkpoints
 
-The checkpoint bar fills while actions run. Each checkpoint carries an inline `rival: { stat_multi, fan_multi? }` scale (terminal checkpoint omits `rival`); the actual stat shape comes from the rolled persona. Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
+The checkpoint bar fills while actions run. Rival scales with each checkpoint. Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
 
 ## Action Mastery
 

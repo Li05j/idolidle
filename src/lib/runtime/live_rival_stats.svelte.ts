@@ -25,8 +25,8 @@ function rerollPreviews(): (RivalPreview | null)[] {
         if (!c.rival) return null;
         const persona = pickPersona();
         const adjective = pickAdjective();
-        const stats = generateRivalStats(persona, c.rival);
-        const { loadout: equipment, budget_cap } = generate_rival_loadout(c.rival.equip_budget);
+        const stats = generateRivalStats(persona, c.rival.scale);
+        const { loadout: equipment, budget_cap } = generate_rival_loadout(c.rival.scale.equip_budget);
         apply_rival_equipment(stats, equipment);
         return { persona, adjective, stats, equipment, budget_cap };
     });

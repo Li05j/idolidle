@@ -85,10 +85,14 @@ class RivalComparison {
 
     public rival_name: string = $derived.by(() => {
         const cp = CPs.current_completed_checkpoint;
-        const named = CHECKPOINTS[cp]?.rival_name;
+        const named = CHECKPOINTS[cp]?.rival?.name;
         if (named) return named;
         return RivalStatsM.preview(cp).persona.name;
     });
+
+    public rival_bio: string = $derived(
+        CHECKPOINTS[CPs.current_completed_checkpoint]?.rival?.bio ?? ''
+    );
 
     public persona_label: string = $derived.by(() => {
         const preview = RivalStatsM.preview(CPs.current_completed_checkpoint);
@@ -179,7 +183,7 @@ class RivalComparison {
 
     public budget_info: RivalBudgetInfo = $derived.by(() => {
         const cp = CPs.current_completed_checkpoint;
-        const total = CHECKPOINTS[cp]?.rival?.equip_budget ?? 0;
+        const total = CHECKPOINTS[cp]?.rival?.scale.equip_budget ?? 0;
         const preview = RivalStatsM.preview(cp);
         const used = preview.equipment.reduce((s, e) => s + equip_cost(e.rarity, e.level), 0);
         return { total, cap: preview.budget_cap, used };

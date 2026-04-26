@@ -26,12 +26,20 @@
 </script>
 
 {#if vm.effectivePhase === 'preview'}
-    <div class="flex flex-col items-center justify-center h-full p-6 gap-6">
-        <h2 class="text-2xl font-bold text-[var(--text-primary)]">LIVE Battle!</h2>
+    <div class="flex flex-col h-full p-6 gap-6">
+        <h2 class="text-2xl font-bold text-[var(--text-primary)] text-center shrink-0">LIVE Battle!</h2>
 
-        <!-- <p class="text-lg font-bold text-[var(--text-primary)] text-center">{LiveInfo.condition_text}</p> -->
+        <div class="flex-1 flex flex-col items-center justify-center gap-4 max-w-2xl mx-auto text-center min-h-0">
+            <div class="text-3xl font-bold text-[var(--text-primary)]">{LiveInfo.rival_name}</div>
+            {#if LiveInfo.persona_label}
+                <div class="text-sm italic text-[var(--text-muted)] opacity-80">{LiveInfo.persona_label}</div>
+            {/if}
+            {#if LiveInfo.rival_bio}
+                <p class="text-base text-[var(--text-muted)] leading-relaxed">{LiveInfo.rival_bio}</p>
+            {/if}
+        </div>
 
-        <div class="flex gap-3">
+        <div class="flex gap-3 justify-center shrink-0">
             <GenericButton name={"Manage Equipment"} onclick={() => ModalM.open({ component: Equipment, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>
             <GenericButton name={"Rival Details"} onclick={() => ModalM.open({ component: RivalInfo, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>
             <GenericButton name={"Start Battle!"} onclick={() => vm.startBattle()} variant='primary' class={"px-8 py-3 text-lg"}/>
