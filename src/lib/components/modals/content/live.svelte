@@ -7,6 +7,7 @@
     import Equipment from "./equipment.svelte";
     import RivalInfo from "./rival_info.svelte";
     import { ModalM } from "$lib/runtime/modal_manager.svelte";
+    import { CPs } from "$lib/state/checkpoints.svelte";
 
     let { onClose } = $props();
 
@@ -38,6 +39,12 @@
                 <p class="text-base text-[var(--text-muted)] leading-relaxed">{LiveInfo.rival_bio}</p>
             {/if}
         </div>
+
+        {#if CPs.current_time_spent < CPs.current_total_time}
+            <div class="text-sm text-[var(--text-muted)] text-center px-4 py-2 rounded-lg bg-[var(--surface-inset)] mx-auto max-w-xl shrink-0">
+                You still have time to train. Are you sure you want to start the LIVE early?
+            </div>
+        {/if}
 
         <div class="flex gap-3 justify-center shrink-0">
             <GenericButton name={"Manage Equipment"} onclick={() => ModalM.open({ component: Equipment, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>

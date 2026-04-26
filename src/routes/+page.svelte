@@ -13,6 +13,7 @@
     import { Progression } from '$lib/runtime/progression_engine.svelte';
     import { Save } from '$lib/state/save.svelte';
     import { EquipM } from '$lib/state/equipment.svelte';
+    import { CPs } from '$lib/state/checkpoints.svelte';
 
     import MultiTabModal from '$lib/components/modals/content/stats_multi_tab_modal.svelte';
     import SettingsMultiTab from '$lib/components/modals/content/settings_multi_tab_modal.svelte';
@@ -33,8 +34,10 @@
 
     function handle_live() {
         TodoCardM.deactivateCurrentActiveCard();
-        ModalM.open({ component: Live, size: 'worker', closeable: false });
+        ModalM.open({ component: Live, size: 'worker', closeable: true });
     }
+
+    let frozen_class = $derived(CPs.is_live_pending ? 'pointer-events-none opacity-50' : '');
 
     onMount(() => {
         document.addEventListener('keydown', ModalM.handleKeydown);
@@ -54,8 +57,10 @@
         <div class="grid grid-cols-[1fr_1fr_3fr] gap-3 overflow-hidden h-full">
 
             <div class="flex flex-col h-full overflow-hidden gap-3">
-                <Stats />
-                <div class="flex-1 overflow-y-auto">
+                <div class={`transition-opacity duration-300 ${frozen_class}`}>
+                    <Stats />
+                </div>
+                <div class={`flex-1 overflow-y-auto transition-opacity duration-300 ${frozen_class}`}>
                     <History />
                 </div>
                 <div class="grid grid-cols-2 justify-center px-2 gap-2">
@@ -64,11 +69,11 @@
                 </div>
             </div>
 
-            <div class="flex-auto overflow-hidden h-full">
+            <div class={`flex-auto overflow-hidden h-full transition-opacity duration-300 ${frozen_class}`}>
                 <AvailableLocations />
             </div>
 
-            <div class="flex-auto overflow-hidden h-full">
+            <div class={`flex-auto overflow-hidden h-full transition-opacity duration-300 ${frozen_class}`}>
                 <AvailableActions />
             </div>
         </div>

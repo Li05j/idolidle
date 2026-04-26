@@ -19,6 +19,11 @@ function createModalManager() {
         _stack.pop();
     }
 
+    function set_top_closeable(value: boolean) {
+        if (_stack.length === 0) return;
+        _stack[_stack.length - 1].closeable = value;
+    }
+
     function handleKeydown(e: KeyboardEvent) {
         if (e.key === 'Escape' && _stack.length > 0) {
             const top = _stack[_stack.length - 1];
@@ -34,6 +39,7 @@ function createModalManager() {
         get stack() { return _stack; },
         open,
         close,
+        set_top_closeable,
         handleKeydown,
         reset,
     };

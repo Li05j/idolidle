@@ -84,3 +84,17 @@
     /* Shared radius */
     --border-radius-card: 0.875rem;
 }
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 6px 1px rgba(244, 114, 182, 0.45), 0 0 2px rgba(251, 113, 133, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 16px 4px rgba(244, 114, 182, 0.85), 0 0 6px rgba(251, 113, 133, 0.6);
+    }
+}
+
+.glow-pending {
+    animation: pulse-glow 1.4s ease-in-out infinite;
+}
+

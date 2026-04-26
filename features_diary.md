@@ -4,7 +4,7 @@ An idle game where you train an aspiring idol and battle rival idols in LIVE sho
 
 ## Core Loop
 
-Complete **locations** to unlock new areas with **actions**. Actions run on timers and grant stat rewards. A checkpoint bar fills passively — when full, a **LIVE battle** triggers against a rival idol. Win the LIVE to advance; optionally **rebirth** afterward to carry over stat bonuses.
+Complete **locations** to unlock new areas with **actions**. Actions run on timers and grant stat rewards. A checkpoint bar fills passively — when full, the game pauses and the **Go To LIVE** button glows; press it to face the rival. You can also press it early (with a warning) to fight before the bar fills. Win the LIVE to advance; optionally **rebirth** afterward to carry over stat bonuses.
 
 ## Locations & Actions
 
@@ -42,7 +42,7 @@ Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `e
 
 ## Checkpoints
 
-The checkpoint bar fills while actions run. Rival scales with each checkpoint. Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
+The checkpoint bar fills while actions run. When it fills, the active card pauses, the locations/actions/stats/history panels freeze (settings/idol hub/LIVE info/Go To LIVE stay clickable), and Go To LIVE glows as a hint. Pressing Go To LIVE opens the LIVE preview, which is closeable (Esc/backdrop) so the player can back out. Once **Start Battle!** is pressed, the modal locks until the post-battle Continue / Rebirth choice. Rival scales with each checkpoint. Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
 
 ## Action Mastery
 
@@ -68,7 +68,7 @@ Autosaves to `localStorage` (`idolidle_save`) on a ~1s debounce + flush on tab c
 
 Notes:
 - Action card progress is stored on `TD_List_Tracker` entries; the active card stamps elapsed on pause and right before each save. Renamed actions lose in-progress elapsed.
-- In-flight LIVE replays are not persisted; on reload the CP bar re-triggers and the same persisted rival is re-fought (in-fight RNG re-rolls).
+- In-flight LIVE replays are not persisted; on reload, if the CP bar is full, the freeze + glow re-engage and the player re-enters the LIVE via Go To LIVE (in-fight RNG re-rolls against the same persisted rival).
 - Restart and preset switch both wipe the save.
 
 ---

@@ -21,6 +21,7 @@ export class LiveVM {
 
     startBattle() {
         this.phase = 'fighting';
+        ModalM.set_top_closeable(false);
         LiveBattleM.start_live();
     }
 
