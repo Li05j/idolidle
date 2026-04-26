@@ -3,9 +3,9 @@
     import Equipment from "./equipment.svelte";
     import DreamUpgrades from "./dream_upgrades.svelte";
 
-    type Tabs = 'stats' | 'equipment' | 'dreams'
+    type Tabs = 'equipment' | 'dreams' | 'stats'
 
-    let active = $state<Tabs>('stats')
+    let active = $state<Tabs>('equipment')
 
     const tabs: {id: Tabs, label: string}[] = [
         { id: 'equipment', label: 'Equipment' },

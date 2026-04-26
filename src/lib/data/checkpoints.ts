@@ -30,11 +30,11 @@ export type CheckpointDef = {
 const BASE: BaseRanges = {
     fans:     [20, 40],
     stamina:  [30, 50],
-    haste:    [9, 15],
+    haste:    [10, 16],
     sing:     [10, 16],
     dance:    [10, 16],
-    charm:    [9, 15],
-    presence: [9, 15],
+    charm:    [10, 16],
+    presence: [10, 16],
 };
 
 export const CHECKPOINTS: CheckpointDef[] = [
