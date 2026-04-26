@@ -8,6 +8,7 @@ import { RivalStatsM } from "$lib/runtime/live_rival_stats.svelte"
 import { EquipM } from "$lib/state/equipment.svelte"
 import { Rebirth } from "$lib/state/rebirth.svelte"
 import { RunTotals } from "$lib/state/run_totals.svelte"
+import { history } from "$lib/state/history.svelte"
 
 export function performRebirth() {
     // A won-but-not-continued battle still earned the CP: fold its rewards in
@@ -16,8 +17,10 @@ export function performRebirth() {
         LiveBattleM.concludeBattle()
     }
     Rebirth.inherit_stats()
-    Rebirth.award_rebirth_points()
-    Rebirth.add_dream_points(EquipM.flush_pending_dp())
+    const cp_dp = Rebirth.award_rebirth_points()
+    const equip_dp = EquipM.flush_pending_dp()
+    Rebirth.add_dream_points(equip_dp)
+    history.addSystemLog(`Your idol dream inspired you... +${cp_dp + equip_dp} DP`)
     RunTotals.reset()
     stat_list_reset()
     LiveBattleM.reset()

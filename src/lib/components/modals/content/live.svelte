@@ -27,29 +27,76 @@
 </script>
 
 {#if vm.effectivePhase === 'preview'}
-    <div class="flex flex-col h-full p-6 gap-6">
-        <h2 class="text-2xl font-bold text-[var(--text-primary)] text-center shrink-0">LIVE Battle!</h2>
-
-        <div class="flex-1 flex flex-col items-center justify-center gap-4 max-w-2xl mx-auto text-center min-h-0">
-            <div class="text-3xl font-bold text-[var(--text-primary)]">{LiveInfo.rival_name}</div>
-            {#if LiveInfo.persona_label}
-                <div class="text-sm italic text-[var(--text-muted)] opacity-80">{LiveInfo.persona_label}</div>
-            {/if}
-            {#if LiveInfo.rival_bio}
-                <p class="text-base text-[var(--text-muted)] leading-relaxed">{LiveInfo.rival_bio}</p>
-            {/if}
+    <div class="absolute inset-0 flex flex-col p-8 gap-8">
+        <!-- Marquee header -->
+        <div class="flex items-center gap-3 shrink-0">
+            <div class="h-px flex-1 bg-gradient-to-r from-transparent to-[var(--battle-rival)]/50"></div>
+            <div class="flex items-center gap-2 uppercase tracking-[0.30em] text-s font-bold text-[var(--rose)]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--rose)] animate-pulse"></span>
+                <span>Live Battle Scheduled</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-[var(--rose)] animate-pulse"></span>
+            </div>
+            <div class="h-px flex-1 bg-gradient-to-l from-transparent to-[var(--battle-rival)]/50"></div>
         </div>
 
-        {#if CPs.current_time_spent < CPs.current_total_time}
-            <div class="text-sm text-[var(--text-muted)] text-center px-4 py-2 rounded-lg bg-[var(--surface-inset)] mx-auto max-w-xl shrink-0">
-                You still have time to train. Are you sure you want to start the LIVE early?
-            </div>
-        {/if}
+        <!-- Challenger card -->
+        <div class="flex justify-center shrink-0">
+            <div class="relative w-full max-w-2xl">
+                <div class="absolute -top-3 left-1/2 -translate-x-1/2 z-10 px-3 py-0.5 rounded-full bg-[var(--battle-rival)] text-white text-[0.65rem] font-bold uppercase tracking-[0.2em] shadow-md">
+                    Your Rival
+                </div>
+                <button
+                    type="button"
+                    onclick={() => ModalM.open({ component: RivalInfo, size: 'lg', closeable: true })}
+                    class="relative w-full rounded-2xl bg-[var(--surface-inset)] px-8 pt-8 pb-6 flex flex-col items-center gap-3 text-center shadow-md cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+                    style="border: 2px solid color-mix(in srgb, var(--battle-rival) 40%, transparent);"
+                >
+                    <!-- Condition pill, top-right inside card -->
+                    <div
+                        class="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold text-[var(--text-primary)] whitespace-nowrap"
+                        style="border: 1px solid hsl({LiveInfo.avg_clamped * 120}, 70%, 50%); box-shadow: inset 0 0 0 9999px hsla({LiveInfo.avg_clamped * 120}, 70%, 50%, 0.15);"
+                    >
+                        {LiveInfo.condition_text}
+                    </div>
 
-        <div class="flex gap-3 justify-center shrink-0">
-            <GenericButton name={"Manage Equipment"} onclick={() => ModalM.open({ component: Equipment, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>
-            <GenericButton name={"Rival Details"} onclick={() => ModalM.open({ component: RivalInfo, size: 'lg', closeable: true })} variant='secondary' class={"px-6 py-3 text-lg"}/>
-            <GenericButton name={"Start Battle!"} onclick={() => vm.startBattle()} variant='primary' class={"px-8 py-3 text-lg"}/>
+                    <div class="text-4xl font-bold text-[var(--text-primary)] tracking-wide">
+                        {LiveInfo.rival_name}
+                    </div>
+                    {#if LiveInfo.rival_bio}
+                        <div class="h-px w-20 bg-gradient-to-r from-transparent via-[var(--battle-rival)]/60 to-transparent"></div>
+                        <p class="text-base text-[var(--text-muted)] leading-relaxed max-w-xl italic">
+                            “{LiveInfo.rival_bio}”
+                        </p>
+                    {/if}
+
+                    <div class="text-[0.65rem] uppercase tracking-[0.2em] font-semibold text-[var(--text-muted)] mt-1">
+                        Click for Full Profile →
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Action zone — pinned to bottom -->
+        <div class="shrink-0 mt-auto flex flex-col items-center gap-3">
+            <div class="flex items-center justify-center gap-5 w-full">
+                <div class="flex-1"></div>
+                <GenericButton
+                    name={"Start LIVE!"}
+                    onclick={() => vm.startBattle()}
+                    variant='cute'
+                    disabled={CPs.current_time_spent < CPs.current_total_time}
+                    class={`px-12 py-3.5 text-xl font-bold tracking-wider${CPs.current_time_spent < CPs.current_total_time ? '' : ' glow-pending'}`}
+                />
+                <div class="flex-1 flex justify-start">
+                    {#if CPs.current_time_spent < CPs.current_total_time}
+                        <div class="flex items-center gap-2 text-sm text-[var(--rose)]">
+                            <span class="w-2 h-2 rounded-full bg-[var(--rose)] animate-pulse shrink-0"></span>
+                            <span class="font-bold uppercase text-xs tracking-wider shrink-0">Heads up</span>
+                            <span class="whitespace-nowrap">There is still time left before the LIVE.</span>
+                        </div>
+                    {/if}
+                </div>
+            </div>
         </div>
     </div>
 

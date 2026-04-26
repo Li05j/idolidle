@@ -16,14 +16,15 @@
     }
 </script>
 
-<div class="w-full p-4 overflow-y-auto max-h-[70vh]">
-    <div class="flex items-center justify-between mb-4">
+<div class="w-full overflow-y-auto max-h-[70vh]">
+    <div class="sticky top-0 z-10 bg-[var(--surface-card)] flex items-center justify-between px-4 pt-4 pb-3">
         <h2 class="text-lg font-bold text-[var(--text-primary)]">Dream Upgrades</h2>
         <div class="px-3 py-1 rounded-full bg-[var(--surface-inset)] text-sm font-semibold text-[var(--text-primary)]">
             Dream Points (DP): {Rebirth.rebirth_points}
         </div>
     </div>
 
+    <div class="px-4 pb-4">
     {#each sections as section}
         {@const upgrades = upgrades_for(section.category)}
         <div class="mb-4">
@@ -64,4 +65,5 @@
             </div>
         </div>
     {/each}
+    </div>
 </div>

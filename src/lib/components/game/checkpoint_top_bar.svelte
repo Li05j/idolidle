@@ -44,7 +44,7 @@
                 />
                 <div class="relative">
                     <GenericButton
-                        name={'LIVE battle'}
+                        name={pending ? '⭐ LIVE battle' : 'LIVE battle'}
                         onclick={handle_live}
                         variant={pending ? 'primary' : 'secondary'}
                         class={`px-4 py-1 text-xs ${pending ? 'font-bold tracking-wide glow-pending' : ''}`}

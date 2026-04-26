@@ -1,5 +1,5 @@
 import type { LocationDef } from './location_definition';
-import { wake_up } from './wake_up';
+import { bedroom } from './bedroom';
 import { living_room } from './living_room';
 import { park } from './park';
 import { old_theatre } from './old_theatre';
@@ -12,7 +12,7 @@ import { maid_cafe } from './maid_cafe';
 // NOTE: array order is the display order. Authored order = canonical UI order.
 // Adding/reordering here changes what every player sees, regardless of unlock path.
 export const allLocations: LocationDef[] = [
-    wake_up,
+    bedroom,
     living_room,
     park,
     school,
@@ -39,7 +39,7 @@ export const allLocations: LocationDef[] = [
 // ---------------------------------------------------------------------------
 
 /** The location the player starts at on a fresh run / rebirth. */
-export const STARTING_LOCATION: LocationDef = wake_up;
+export const STARTING_LOCATION: LocationDef = bedroom;
 
 const LOCATION_ORDER = new Map<string, number>(
     allLocations.map((loc, i) => [loc.name, i])
