@@ -34,6 +34,9 @@
  *   --battle-player → player side (soft green)
  *   --battle-rival  → rival side (warm coral)
  *
+ * Accents:
+ *   --rose → emphasis/alert accent (dramatic arrow, "NOW!" label)
+ *
  * Misc:
  *   --border-radius-card → consistent card roundedness
  */
@@ -80,6 +83,9 @@
     /* Battle bar */
     --battle-player: #4ADE80;
     --battle-rival: #FB923C;
+
+    /* Accents */
+    --rose: #E11D48;
 
     /* Shared radius */
     --border-radius-card: 0.875rem;
