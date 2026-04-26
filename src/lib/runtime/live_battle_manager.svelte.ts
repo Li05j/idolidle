@@ -21,11 +21,12 @@ export const BATTLE_TUNING = {
     /** Multiplier on ATK stat for stamina cost per action. Higher = shorter battles. */
     STAMINA_COST_MULT: 0.2,
     /** Defense effectiveness at 0 stamina. 0.5 = half defense, 1.0 = no penalty. */
-    FATIGUE_FLOOR: 0.5,
+    // potential BUG: We likely don't need this anymore because of STYLE
+    FATIGUE_FLOOR: 1.0,
     /** Damage variance range: [1 - VARIANCE, 1 + VARIANCE]. */
     VARIANCE: 0.2,
     /** Max turns before force-ending the battle. */
-    MAX_TURNS: 120,
+    MAX_TURNS: 100,
     /** Per-stack atk multiplier from Style. Each basic attack grants +1 Style to the attacker. */
     STYLE_PER_STACK: 0.05,
 }
@@ -108,6 +109,7 @@ class LiveBattleManager {
             turns++
             const actor = this.pre_turn()
             const attacker = actor === "Player" ? this._you : this._rival
+            // potential BUG: buffs are still being applied on other triggers, need cleanup?
             // Stamina-0 actor: skip take_turn AND post_turn. _temp_buffs is empty
             // here (single-turn semantics), so nothing to revert anyway.
             if (attacker.Curr_Stamina <= 0) continue

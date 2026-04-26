@@ -38,7 +38,7 @@
     }
 
     @keyframes wiggle {
-        0%   { transform: translateY(0) rotate(-24deg) scale(1); }
+        0%   { transform: translateY(0) rotate(-20deg) scale(1); }
         100% { transform: translateY(6px) rotate(-12deg) scale(1.06); }
     }
 </style>

@@ -35,21 +35,22 @@
             <div class="pl-2 pb-1 text-base font-bold text-[var(--text-primary)]">Time till next LIVE!</div>
             <div class="flex items-center gap-2">
                 <GenericButton
+                    name={'LIVE Rival'}
                     svg={info_svg}
                     onclick={open_rival_info}
                     variant='cute'
-                    class={"p-1.5 text-xs"}
-                    title="LIVE info"
+                    class={"px-4 py-1 text-xs"}
+                    title="LIVE Info"
                 />
                 <div class="relative">
                     <GenericButton
-                        name={pending ? '🎤 Go To LIVE!' : 'Go To LIVE'}
+                        name={'LIVE battle'}
                         onclick={handle_live}
-                        variant={pending ? 'cute' : 'secondary'}
+                        variant={pending ? 'primary' : 'secondary'}
                         class={`px-4 py-1 text-xs ${pending ? 'font-bold tracking-wide glow-pending' : ''}`}
                     />
                     {#if pending}
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 -ml-3 mt-6 z-40">
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 -ml-5 mt-6 z-40">
                             <DramaticArrow />
                         </div>
                     {/if}
