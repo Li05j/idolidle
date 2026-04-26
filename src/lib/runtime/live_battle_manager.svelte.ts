@@ -20,9 +20,6 @@ type Actor = "Player" | "Rival"
 export const BATTLE_TUNING = {
     /** Multiplier on ATK stat for stamina cost per action. Higher = shorter battles. */
     STAMINA_COST_MULT: 0.2,
-    /** Defense effectiveness at 0 stamina. 0.5 = half defense, 1.0 = no penalty. */
-    // potential BUG: We likely don't need this anymore because of STYLE
-    FATIGUE_FLOOR: 1.0,
     /** Damage variance range: [1 - VARIANCE, 1 + VARIANCE]. */
     VARIANCE: 0.2,
     /** Max turns before force-ending the battle. */
@@ -109,12 +106,10 @@ class LiveBattleManager {
             turns++
             const actor = this.pre_turn()
             const attacker = actor === "Player" ? this._you : this._rival
-            // potential BUG: buffs are still being applied on other triggers, need cleanup?
-            // Stamina-0 actor: skip take_turn AND post_turn. _temp_buffs is empty
-            // here (single-turn semantics), so nothing to revert anyway.
-            if (attacker.Curr_Stamina <= 0) continue
-            this.log(`[muted]— Turn ${turns} · ${actor}'s turn —[/muted]`, false)
-            this.take_turn(actor)
+            if (attacker.Curr_Stamina > 0) {
+                this.log(`[muted]— Turn ${turns} · ${actor}'s turn —[/muted]`, false)
+                this.take_turn(actor)
+            }
             this.post_turn()
         }
     }
@@ -163,14 +158,9 @@ class LiveBattleManager {
         const raw_atk = base_atk * style_mult
         const raw_def = defender[def_type] as number
 
-        // Defense weakens as stamina drops: [FATIGUE_FLOOR, 1.0]
-        const stamina_ratio = defender.Curr_Stamina / defender.Max_Stamina
-        const fatigue = BATTLE_TUNING.FATIGUE_FLOOR + (1 - BATTLE_TUNING.FATIGUE_FLOOR) * stamina_ratio
-        const effective_def = raw_def * fatigue
-
         // Subtraction-based damage with variance
         const variance = (1 - BATTLE_TUNING.VARIANCE) + Math.random() * BATTLE_TUNING.VARIANCE * 2
-        let raw_damage = (raw_atk - effective_def) * variance
+        let raw_damage = (raw_atk - raw_def) * variance
         if (this._dmg_reduction > 0) {
             raw_damage *= (1 - this._dmg_reduction);
         }
@@ -225,6 +215,9 @@ class LiveBattleManager {
         const you = owner === 'player' ? this._you : this._rival;
         const rival = owner === 'player' ? this._rival : this._you;
         const color = owner === 'player' ? 'green' : 'darkorange';
+
+        // Exhausted actors can't proc skills (live_start fires before any stamina drain).
+        if (trigger !== 'live_start' && you.Curr_Stamina <= 0) return;
 
         // Iterate the right side's skill list. Player uses equipped inventory;
         // rival uses the pre-rolled loadout snapshot.
