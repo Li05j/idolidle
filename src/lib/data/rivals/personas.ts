@@ -68,3 +68,16 @@ export const ALL_PERSONAS: Persona[] = [
 export function pickPersona(): Persona {
     return ALL_PERSONAS[Math.floor(Math.random() * ALL_PERSONAS.length)];
 }
+
+export const RIVAL_ADJECTIVES: string[] = [
+    'dazzling', 'fierce', 'elegant', 'ruthless', 'cocky', 'stoic',
+    'radiant', 'cunning', 'tireless', 'haughty', 'graceful', 'magnetic',
+    'sharp-tongued', 'sly', 'unflinching', 'reckless', 'serene', 'impeccable',
+    'merciless', 'quietly terrifying', 'starstruck', 'velvet-voiced',
+    'lightning-fast', 'iron-willed', 'unbothered', 'flashy', 'sultry',
+    'unshakeable', 'brilliant', 'meticulous',
+];
+
+export function pickAdjective(): string {
+    return RIVAL_ADJECTIVES[Math.floor(Math.random() * RIVAL_ADJECTIVES.length)];
+}

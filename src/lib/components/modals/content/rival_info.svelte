@@ -15,9 +15,9 @@
     <!-- Header: persona name + condition pill -->
     <div class="flex items-center justify-between gap-4 shrink-0">
         <h3 class="text-xl font-bold text-[var(--text-primary)] truncate flex items-baseline gap-2 min-w-0">
-            <span class="truncate">{LiveInfo.persona_name}</span>
-            {#if LiveInfo.persona_desc}
-                <span class="text-xs font-normal italic text-[var(--text-muted)] opacity-70 truncate">{LiveInfo.persona_desc}</span>
+            <span class="truncate">{LiveInfo.rival_name}</span>
+            {#if LiveInfo.persona_label}
+                <span class="text-xs font-normal italic text-[var(--text-muted)] opacity-70 truncate">{LiveInfo.persona_label}</span>
             {/if}
         </h3>
         <div
@@ -43,6 +43,12 @@
                     {/if}
                 {/each}
             </div>
+            {#if LiveInfo.persona_desc}
+                <div class="mt-auto pt-2">
+                    <div class="h-px bg-gradient-to-r from-transparent via-[var(--progress-from)] to-transparent opacity-40 mb-3"></div>
+                    <div class="text-sm italic text-[var(--text-muted)] opacity-80 leading-relaxed">{LiveInfo.persona_desc}</div>
+                </div>
+            {/if}
         </div>
 
         <!-- Rival Loadout: 6 slot cards -->

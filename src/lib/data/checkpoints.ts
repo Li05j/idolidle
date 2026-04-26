@@ -25,6 +25,8 @@ export type CheckpointDef = {
     multi: number;
     /** Omit for terminal checkpoints (no LIVE battle). */
     rival?: RivalScale;
+    /** Proper name shown in the rival info modal. Omit on terminal checkpoints. */
+    rival_name?: string;
 };
 
 const BASE: BaseRanges = {
@@ -38,10 +40,10 @@ const BASE: BaseRanges = {
 };
 
 export const CHECKPOINTS: CheckpointDef[] = [
-    { time: 1000, multi: 1.0, rival: { stat_multi: 1,  fan_multi: 1,  equip_budget: 3  } },
-    { time: 2500, multi: 1.0, rival: { stat_multi: 5,  fan_multi: 6,  equip_budget: 9  } },
-    { time: 4000, multi: 1.0, rival: { stat_multi: 13, fan_multi: 15, equip_budget: 27 } },
-    { time: 6500, multi: 1.0, rival: { stat_multi: 25, fan_multi: 29, equip_budget: 81 } },
+    { time: 1000, multi: 1.0, rival_name: 'Hina Sato',    rival: { stat_multi: 1,  fan_multi: 1,  equip_budget: 3  } },
+    { time: 2500, multi: 1.0, rival_name: 'Mei Tanaka',   rival: { stat_multi: 5,  fan_multi: 6,  equip_budget: 9  } },
+    { time: 4000, multi: 1.0, rival_name: 'Akiko Mori',   rival: { stat_multi: 13, fan_multi: 15, equip_budget: 27 } },
+    { time: 6500, multi: 1.0, rival_name: 'Rei Kurosawa', rival: { stat_multi: 25, fan_multi: 29, equip_budget: 81 } },
     { time: Infinity, multi: 1.0 },
 ];
 

@@ -83,9 +83,19 @@ export type RivalBudgetInfo = { total: number; cap: number; used: number };
 class RivalComparison {
     public selected_equip_idx: number | null = $state(null);
 
-    public persona_name: string = $derived(
-        RivalStatsM.preview(CPs.current_completed_checkpoint).persona.name
-    );
+    public rival_name: string = $derived.by(() => {
+        const cp = CPs.current_completed_checkpoint;
+        const named = CHECKPOINTS[cp]?.rival_name;
+        if (named) return named;
+        return RivalStatsM.preview(cp).persona.name;
+    });
+
+    public persona_label: string = $derived.by(() => {
+        const preview = RivalStatsM.preview(CPs.current_completed_checkpoint);
+        const adj = preview.adjective;
+        const name = preview.persona.name;
+        return adj ? `The ${adj} ${name}` : name;
+    });
 
     public persona_desc: string = $derived(
         RivalStatsM.preview(CPs.current_completed_checkpoint).persona.desc
