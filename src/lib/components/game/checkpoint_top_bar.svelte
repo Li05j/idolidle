@@ -49,7 +49,7 @@
                         class={`px-4 py-1 text-xs ${pending ? 'font-bold tracking-wide glow-pending' : ''}`}
                     />
                     {#if pending}
-                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-6 z-50">
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 -ml-3 mt-6 z-40">
                             <DramaticArrow />
                         </div>
                     {/if}
