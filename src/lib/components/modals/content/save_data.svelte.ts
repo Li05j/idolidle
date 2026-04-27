@@ -8,13 +8,13 @@ export class SaveDataVM {
 
 	private _copy_timer: ReturnType<typeof setTimeout> | null = null;
 
-	generate_export() {
-		this.export_text = Save.export_blob();
+	async generate_export() {
+		this.export_text = await Save.export_blob();
 		this.copied = false;
 	}
 
 	async copy_export() {
-		if (!this.export_text) this.generate_export();
+		if (!this.export_text) await this.generate_export();
 		try {
 			await navigator.clipboard.writeText(this.export_text);
 			this.copied = true;
@@ -25,7 +25,7 @@ export class SaveDataVM {
 		}
 	}
 
-	apply_import() {
+	async apply_import() {
 		this.import_error = null;
 		const trimmed = this.import_text.trim();
 		if (!trimmed) {
@@ -33,7 +33,7 @@ export class SaveDataVM {
 			return;
 		}
 		if (!window.confirm('Import will overwrite your current save and reload. Continue?')) return;
-		const err = Save.import_blob(trimmed);
+		const err = await Save.import_blob(trimmed);
 		if (err) this.import_error = err;
 	}
 }

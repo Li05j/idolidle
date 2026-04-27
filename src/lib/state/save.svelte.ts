@@ -16,6 +16,12 @@ const SAVE_INTERVAL_MS = 2000;
 const TAB_LOCK_CHANNEL = 'idolidle-tab-lock';
 const TAB_HANDSHAKE_MS = 150;
 const EXPORT_PREFIX = 'IDOLIDLE1:';
+const CHECKSUM_LEN = 8; // hex chars of sha-256 prefix; collision-resistant enough for paste detection
+
+async function _sha256_short(text: string): Promise<string> {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2, '0')).join('').slice(0, CHECKSUM_LEN);
+}
 
 type TabMessage = { type: 'HELLO' | 'CLAIM'; id: number };
 
@@ -99,14 +105,17 @@ class SaveManager {
     };
 
     /**
-     * Encode the current save as a portable text blob: `IDOLIDLE1:` + base64(JSON).
-     * Base64 is friction, not security: makes casual localStorage edits harder.
+     * Encode the current save as a portable text blob:
+     *   `IDOLIDLE1:<sha256-short>:<base64(JSON)>`
+     * Base64 is friction; the checksum catches truncated/corrupted pastes before
+     * we ever try to parse the inner JSON.
      */
-    export_blob(): string {
+    async export_blob(): Promise<string> {
         const json = JSON.stringify(this._build_blob());
+        const sum = await _sha256_short(json);
         // btoa needs latin-1; route through UTF-8 bytes so non-ASCII names survive.
         const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(json)));
-        return `${EXPORT_PREFIX}${b64}`;
+        return `${EXPORT_PREFIX}${sum}:${b64}`;
     }
 
     /**
@@ -114,17 +123,27 @@ class SaveManager {
      * reloads (same flow as restart_game) so every domain rehydrates cleanly.
      * Returns null on success, an error message string on failure.
      */
-    import_blob(text: string): string | null {
+    async import_blob(text: string): Promise<string | null> {
         const trimmed = text.trim();
         if (!trimmed.startsWith(EXPORT_PREFIX)) return 'Not a valid save blob.';
 
-        const b64 = trimmed.slice(EXPORT_PREFIX.length);
+        const rest = trimmed.slice(EXPORT_PREFIX.length);
+        const sep = rest.indexOf(':');
+        if (sep !== CHECKSUM_LEN) return 'Blob is malformed (bad checksum field).';
+        const expected_sum = rest.slice(0, CHECKSUM_LEN);
+        const b64 = rest.slice(CHECKSUM_LEN + 1);
+
         let json: string;
         try {
             const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
             json = new TextDecoder().decode(bytes);
         } catch {
             return 'Blob is corrupted (base64 decode failed).';
+        }
+
+        const actual_sum = await _sha256_short(json);
+        if (actual_sum !== expected_sum) {
+            return 'Checksum mismatch — the blob is incomplete or was modified.';
         }
 
         let parsed: unknown;
