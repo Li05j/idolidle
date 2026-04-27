@@ -1,7 +1,6 @@
 import type { BasicStats } from '$lib/types';
 
-const BUILD_ENV: 'prod' | 'dev' = 'dev';
-export const DEV = BUILD_ENV === 'dev';
+export const DEV = import.meta.env.DEV;
 
 const prod = {
 	time_scale: 1000.0,
