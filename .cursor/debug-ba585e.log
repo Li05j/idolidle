@@ -1,0 +1,14 @@
+{"sessionId":"ba585e","hypothesisId":"H1,H4","location":"save.svelte.ts:acquire_tab_lock:enter","message":"post HELLO","data":{"tab_id":843100746283761},"timestamp":1777321807853}
+{"sessionId":"ba585e","hypothesisId":"H3","location":"+page.svelte:lock_state","message":"lock_state changed","data":{"lock_state":"pending","is_locked":false,"handshake_done":false},"timestamp":1777321807854}
+{"sessionId":"ba585e","hypothesisId":"H1,H2,H5","location":"save.svelte.ts:acquire_tab_lock:after_wait","message":"handshake done","data":{"tab_id":843100746283761,"is_locked":false},"timestamp":1777321808036}
+{"sessionId":"ba585e","hypothesisId":"H5","location":"+page.svelte:acquire_tab_lock.then","message":"handshake then","data":{"got":true,"is_locked":false},"timestamp":1777321808036}
+{"sessionId":"ba585e","hypothesisId":"H3","location":"+page.svelte:lock_state","message":"lock_state changed","data":{"lock_state":"active","is_locked":false,"handshake_done":true},"timestamp":1777321808060}
+{"sessionId":"ba585e","hypothesisId":"H1,H4","location":"save.svelte.ts:acquire_tab_lock:enter","message":"post HELLO","data":{"tab_id":921026728337878},"timestamp":1777321817877}
+{"sessionId":"ba585e","hypothesisId":"H3","location":"+page.svelte:lock_state","message":"lock_state changed","data":{"lock_state":"pending","is_locked":false,"handshake_done":false},"timestamp":1777321817878}
+{"sessionId":"ba585e","hypothesisId":"H1,H2,H5","location":"save.svelte.ts:acquire_tab_lock:after_wait","message":"handshake done","data":{"tab_id":921026728337878,"is_locked":false},"timestamp":1777321818130}
+{"sessionId":"ba585e","hypothesisId":"H5","location":"+page.svelte:acquire_tab_lock.then","message":"handshake then","data":{"got":true,"is_locked":false},"timestamp":1777321818131}
+{"sessionId":"ba585e","hypothesisId":"H3","location":"+page.svelte:lock_state","message":"lock_state changed","data":{"lock_state":"active","is_locked":false,"handshake_done":true},"timestamp":1777321818155}
+{"sessionId":"ba585e","hypothesisId":"H1,H2,H4","location":"save.svelte.ts:_on_tab_message","message":"recv","data":{"msg":{"type":"HELLO","id":921026728337878},"self":843100746283761,"active":true,"locked":false},"timestamp":1777321818158}
+{"sessionId":"ba585e","hypothesisId":"H1,H2,H4","location":"save.svelte.ts:_on_tab_message","message":"recv","data":{"msg":{"type":"CLAIM","id":843100746283761},"self":921026728337878,"active":true,"locked":false},"timestamp":1777321818165}
+{"sessionId":"ba585e","hypothesisId":"H3","location":"save.svelte.ts:_lock_tab","message":"locked self","data":{"tab_id":921026728337878},"timestamp":1777321818165}
+{"sessionId":"ba585e","hypothesisId":"H3","location":"+page.svelte:lock_state","message":"lock_state changed","data":{"lock_state":"locked","is_locked":true,"handshake_done":true},"timestamp":1777321818166}

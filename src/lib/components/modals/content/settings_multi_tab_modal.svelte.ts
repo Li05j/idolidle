@@ -1,6 +1,6 @@
 import { DEV } from "$lib/config";
 
-export type SettingsTabId = 'handbook' | 'debug';
+export type SettingsTabId = 'handbook' | 'save_data' | 'debug';
 
 type SettingsTab = {
 	id: SettingsTabId;
@@ -10,6 +10,7 @@ type SettingsTab = {
 export class SettingsMultiTabModalVM {
 	readonly tabs: SettingsTab[] = [
 		{ id: 'handbook', label: 'Handbook' },
+		{ id: 'save_data', label: 'Save Data' },
 		...(DEV ? [{ id: 'debug', label: 'Debug' } satisfies SettingsTab] : []),
 	];
 

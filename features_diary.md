@@ -60,7 +60,7 @@ Spend dream points on permanent upgrades (persist across rebirths). Upgrade defi
 
 ## Settings
 
-The Settings button opens a multi-tab modal. The **Idol Handbook** tab explains stat terminology, LIVE battles, and dreams. In dev (`BUILD_ENV === 'dev'` in `src/lib/config.ts`), a **Debug** tab exposes a CFG preset selector — Apply persists to `localStorage` and reloads. A separate Restart button wipes progress and reloads on the current preset. Switching preset wipes any save.
+The Settings button opens a multi-tab modal. The **Idol Handbook** tab explains stat terminology, LIVE battles, and dreams. The **Save Data** tab exposes Export (generates a base64-wrapped text blob of the current save) and Import (paste a blob to overwrite and reload). In dev (check `src/lib/config.ts`), a **Debug** tab will be visible.
 
 ## Save / Load
 

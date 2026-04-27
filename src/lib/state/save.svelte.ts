@@ -15,6 +15,7 @@ const SAVE_VERSION = 2 as const;
 const SAVE_INTERVAL_MS = 2000;
 const TAB_LOCK_CHANNEL = 'idolidle-tab-lock';
 const TAB_HANDSHAKE_MS = 150;
+const EXPORT_PREFIX = 'IDOLIDLE1:';
 
 type TabMessage = { type: 'HELLO' | 'CLAIM'; id: number };
 
@@ -62,18 +63,13 @@ class SaveManager {
         this._loaded = false;
     }
 
-    /** Stamp the active card's live elapsed into the tracker, then write the whole blob. */
-    save_now = () => {
-        if (typeof localStorage === 'undefined') return;
-        if (!this._loaded) return;
-        if (this._battle_in_progress) return;
-
+    private _build_blob(): SaveBlob {
         const snap = TodoCardM.active_snapshot;
         if (snap) {
             TD_List_Tracker.set_elapsed(snap.key.loc, snap.key.action, snap.elapsed);
         }
 
-        const blob: SaveBlob = {
+        return {
             version: SAVE_VERSION,
             preset: CURRENT_PRESET,
             stats:   stat_list_serialize(),
@@ -87,13 +83,72 @@ class SaveManager {
             rivals:  RivalStatsM.serialize(),
             upgrades: Progression.serialize(),
         };
+    }
+
+    /** Stamp the active card's live elapsed into the tracker, then write the whole blob. */
+    save_now = () => {
+        if (typeof localStorage === 'undefined') return;
+        if (!this._loaded) return;
+        if (this._battle_in_progress) return;
 
         try {
-            localStorage.setItem(SAVE_KEY, JSON.stringify(blob));
+            localStorage.setItem(SAVE_KEY, JSON.stringify(this._build_blob()));
         } catch (e) {
             console.error('save failed', e);
         }
     };
+
+    /**
+     * Encode the current save as a portable text blob: `IDOLIDLE1:` + base64(JSON).
+     * Base64 is friction, not security: makes casual localStorage edits harder.
+     */
+    export_blob(): string {
+        const json = JSON.stringify(this._build_blob());
+        // btoa needs latin-1; route through UTF-8 bytes so non-ASCII names survive.
+        const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(json)));
+        return `${EXPORT_PREFIX}${b64}`;
+    }
+
+    /**
+     * Validate and apply an exported blob. On success, writes to localStorage and
+     * reloads (same flow as restart_game) so every domain rehydrates cleanly.
+     * Returns null on success, an error message string on failure.
+     */
+    import_blob(text: string): string | null {
+        const trimmed = text.trim();
+        if (!trimmed.startsWith(EXPORT_PREFIX)) return 'Not a valid save blob.';
+
+        const b64 = trimmed.slice(EXPORT_PREFIX.length);
+        let json: string;
+        try {
+            const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+            json = new TextDecoder().decode(bytes);
+        } catch {
+            return 'Blob is corrupted (base64 decode failed).';
+        }
+
+        let parsed: unknown;
+        try {
+            parsed = JSON.parse(json);
+        } catch {
+            return 'Blob is corrupted (JSON parse failed).';
+        }
+
+        if (!parsed || typeof parsed !== 'object') return 'Blob is not an object.';
+        const p = parsed as Partial<SaveBlob>;
+        if (p.version !== SAVE_VERSION) return `Save version mismatch (got ${p.version}, need ${SAVE_VERSION}).`;
+        if (p.preset !== CURRENT_PRESET) return `Preset mismatch (blob: ${p.preset}, current: ${CURRENT_PRESET}).`;
+
+        this.disable();
+        try {
+            localStorage.setItem(SAVE_KEY, json);
+        } catch (e) {
+            console.error('import write failed', e);
+            return 'Failed to persist imported save.';
+        }
+        window.location.reload();
+        return null;
+    }
 
     /** Returns true if a save was loaded; false if there was nothing or it was rejected. */
     load(): boolean {

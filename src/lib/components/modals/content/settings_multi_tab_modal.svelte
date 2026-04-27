@@ -1,6 +1,7 @@
 <script lang="ts">
     import Debug from "./debug.svelte";
     import IdolHandbook from "./idol_handbook.svelte";
+    import SaveData from "./save_data.svelte";
     import { SettingsMultiTabModalVM } from "./settings_multi_tab_modal.svelte.ts";
 
     const vm = new SettingsMultiTabModalVM();
@@ -29,6 +30,8 @@
         <div class="ml-6">
             {#if vm.active === 'handbook'}
                 <IdolHandbook />
+            {:else if vm.active === 'save_data'}
+                <SaveData />
             {:else if vm.active === 'debug'}
                 <Debug />
             {/if}
