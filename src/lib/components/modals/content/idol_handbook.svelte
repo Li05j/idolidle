@@ -11,7 +11,7 @@
 		</div> -->
 		<h2 class="mt-1 text-2xl font-bold text-[var(--text-primary)]">Idol Handbook</h2>
 		<p class="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--text-muted)]">
-			Anything and everything you probably want to know about being the best Idol no one ever was!
+			Anything and everything you probably want to know about being the best Idol, like no one ever was!
 		</p>
 	</div>
 

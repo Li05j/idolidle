@@ -51,14 +51,6 @@
                     class="relative w-full rounded-2xl bg-[var(--surface-inset)] px-8 pt-8 pb-6 flex flex-col items-center gap-3 text-center shadow-md cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
                     style="border: 2px solid color-mix(in srgb, var(--battle-rival) 40%, transparent);"
                 >
-                    <!-- Condition pill, top-right inside card -->
-                    <div
-                        class="absolute top-3 right-3 px-3 py-0.5 rounded-full text-xs font-semibold text-[var(--text-primary)] whitespace-nowrap"
-                        style="border: 1px solid hsl({LiveInfo.avg_clamped * 120}, 70%, 50%); box-shadow: inset 0 0 0 9999px hsla({LiveInfo.avg_clamped * 120}, 70%, 50%, 0.15);"
-                    >
-                        {LiveInfo.condition_text}
-                    </div>
-
                     <div class="text-4xl font-bold text-[var(--text-primary)] tracking-wide">
                         {LiveInfo.rival_name}
                     </div>
@@ -73,6 +65,14 @@
                         Click for Full Profile →
                     </div>
                 </button>
+                <div class="flex justify-end mt-2">
+                    <div
+                        class="px-3 py-0.5 rounded-full text-xs font-semibold text-[var(--text-primary)] whitespace-nowrap"
+                        style="border: 1px solid hsl({LiveInfo.avg_clamped * 120}, 70%, 50%); box-shadow: inset 0 0 0 9999px hsla({LiveInfo.avg_clamped * 120}, 70%, 50%, 0.15);"
+                    >
+                        {LiveInfo.condition_text}
+                    </div>
+                </div>
             </div>
         </div>
 
