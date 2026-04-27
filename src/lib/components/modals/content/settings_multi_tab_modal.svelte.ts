@@ -9,7 +9,7 @@ type SettingsTab = {
 
 export class SettingsMultiTabModalVM {
 	readonly tabs: SettingsTab[] = [
-		{ id: 'handbook', label: 'Idol Handbook' },
+		{ id: 'handbook', label: 'Handbook' },
 		...(DEV ? [{ id: 'debug', label: 'Debug' } satisfies SettingsTab] : []),
 	];
 

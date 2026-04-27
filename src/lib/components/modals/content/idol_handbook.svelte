@@ -6,9 +6,9 @@
 
 <div class="flex max-h-[72vh] flex-col gap-6 overflow-y-auto pr-2">
 	<div class="rounded-2xl bg-[var(--surface-inset)] px-6 py-5 shadow-sm">
-		<div class="text-[0.65rem] font-bold uppercase tracking-[0.28em] text-[var(--rose)]">
+		<!-- <div class="text-[0.65rem] font-bold uppercase tracking-[0.28em] text-[var(--rose)]">
 			Player Reference
-		</div>
+		</div> -->
 		<h2 class="mt-1 text-2xl font-bold text-[var(--text-primary)]">Idol Handbook</h2>
 		<p class="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--text-muted)]">
 			Quick notes for the numbers and systems that matter most while training toward the next LIVE.
