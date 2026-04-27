@@ -2,9 +2,15 @@ import { CFG } from '$lib/config';
 import { CHECKPOINTS } from '$lib/data/checkpoints';
 
 class Checkpoints {
-	public current_time_spent = $state(0)
-
+	private _time_spent = $state(0)
 	private _idx = $state(0)
+	private _tick = $state(0)
+
+	get current_time_spent() { return this._time_spent }
+	set current_time_spent(v: number) { this._time_spent = v; this._tick++; }
+
+	get mutation_tick() { return this._tick }
+	mark_dirty() { this._tick++ }
 
 	get current_completed_checkpoint() {
 		return this._idx
@@ -30,13 +36,15 @@ class Checkpoints {
 	advanceToNextCheckpoint() {
 		if (this._idx < CHECKPOINTS.length - 1) {
 			this._idx++
-			this.current_time_spent = 0
+			this._time_spent = 0
+			this._tick++
 		}
 	}
 
     reset() {
         this._idx = 0
-        this.current_time_spent = 0
+        this._time_spent = 0
+        this._tick++
     }
 
     serialize() {

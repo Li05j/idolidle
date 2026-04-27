@@ -5,17 +5,21 @@ export type TDEntry = { name: string; elapsed: number };
 class TodoListTracker {
     public locations: TDEntry[] = $state([]);
     public actions: Map<string, TDEntry[]> = $state(new Map());
+    private _tick = $state(0);
+
+    get mutation_tick() { return this._tick; }
+    mark_dirty() { this._tick++; }
 
     set_elapsed(loc: string, action: string | undefined, elapsed: number): void {
         if (action === undefined) {
             const e = this.locations.find(x => x.name === loc);
-            if (e) e.elapsed = elapsed;
+            if (e) { e.elapsed = elapsed; this._tick++; }
             return;
         }
         const list = this.actions.get(loc);
         if (!list) return;
         const e = list.find(x => x.name === action);
-        if (e) e.elapsed = elapsed;
+        if (e) { e.elapsed = elapsed; this._tick++; }
     }
 
     get_elapsed(loc: string, action: string | undefined): number {
@@ -28,6 +32,7 @@ class TodoListTracker {
     public reset() {
         this.locations = [];
         this.actions = new Map();
+        this._tick++;
     }
 
     serialize() {

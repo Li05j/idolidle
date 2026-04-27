@@ -5,6 +5,10 @@ import { Dreams } from '$lib/state/dreams.svelte'
 
 type RoundFn = (v: number) => number;
 
+let _stats_tick = $state(0);
+export function stats_mutation_tick() { return _stats_tick; }
+function bump() { _stats_tick++; }
+
 function createStat(name: BasicStats, round: RoundFn, formatFinal: (v: number) => string, baseInit: number, multiInit: number) {
 	let base = $state(baseInit);
 	let multi = $state(multiInit);
@@ -18,13 +22,13 @@ function createStat(name: BasicStats, round: RoundFn, formatFinal: (v: number) =
 
 	return {
 		get name() { return name },
-		get base() { return base }, set base(v) { base = v },
-		get multi() { return multi }, set multi(v) { multi = v },
-		get equip_base() { return equip_base }, set equip_base(v) { equip_base = v },
-		get equip_multi() { return equip_multi }, set equip_multi(v) { equip_multi = v },
+		get base() { return base }, set base(v) { base = v; bump(); },
+		get multi() { return multi }, set multi(v) { multi = v; bump(); },
+		get equip_base() { return equip_base }, set equip_base(v) { equip_base = v; bump(); },
+		get equip_multi() { return equip_multi }, set equip_multi(v) { equip_multi = v; bump(); },
 		get total_base() { return total_base() },
 		get total_multi() { return total_multi() },
-		add_base_from_final(v: number) { base += v / total_multi() },
+		add_base_from_final(v: number) { base += v / total_multi(); bump(); },
 		format_final_gain(v: number) { return round(v * total_multi()).toString() },
 		get final() { return round(total_base() * total_multi()) },
 		get final_str() { return formatFinal(round(total_base() * total_multi())) },
@@ -32,6 +36,7 @@ function createStat(name: BasicStats, round: RoundFn, formatFinal: (v: number) =
 			base = baseInit;
 			multi = multiInit;
 			// equip_base/equip_multi NOT reset — recomputed from equipment state
+			bump();
 		},
 	};
 }

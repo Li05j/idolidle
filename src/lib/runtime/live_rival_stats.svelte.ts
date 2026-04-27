@@ -34,7 +34,11 @@ function rerollPreviews(): (RivalPreview | null)[] {
 
 class RivalStats {
     private _previews: (RivalPreview | null)[] = $state(rerollPreviews());
+    private _tick = $state(0);
     public battle: LiveBattleStats = emptyStats();
+
+    get mutation_tick() { return this._tick; }
+    mark_dirty() { this._tick++; }
 
     preview(checkpoint: number): RivalPreview {
         return this._previews[checkpoint] ?? this._previews.find(p => p !== null) ?? FALLBACK_PREVIEW;
@@ -46,6 +50,7 @@ class RivalStats {
 
     reroll() {
         this._previews = rerollPreviews();
+        this._tick++;
     }
 
     serialize() {

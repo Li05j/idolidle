@@ -2,9 +2,14 @@ import { CFG } from '$lib/config';
 
 class ActionMastery {
 	private _counts: Record<string, number> = $state({});
+	private _tick = $state(0);
+
+	get mutation_tick() { return this._tick; }
+	mark_dirty() { this._tick++; }
 
 	increment(mastery_id: string) {
 		this._counts[mastery_id] = (this._counts[mastery_id] ?? 0) + 1;
+		this._tick++;
 	}
 
 	completions(mastery_id: string): number {

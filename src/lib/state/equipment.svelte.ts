@@ -3,7 +3,6 @@ import {
     type Rarity,
     type EquipSlot,
     EQUIP_CONFIG,
-    RARITY_ORDER,
     rarity_index,
     exp_to_next_level,
     effective_bonus,
@@ -40,15 +39,19 @@ class EquipmentManager {
     private _equipped: Record<EquipSlotKey, string | null> = $state(empty_slots());
     private _ever_obtained: Set<string> = $state(new Set());
     private _pending_dp = $state(0);
+    private _tick = $state(0);
 
     get inventory() { return this._inventory; }
     get equipped() { return this._equipped; }
     get ever_obtained(): ReadonlySet<string> { return this._ever_obtained; }
     get pending_dp() { return this._pending_dp; }
+    get mutation_tick() { return this._tick; }
+    mark_dirty() { this._tick++; }
 
     flush_pending_dp(): number {
         const dp = this._pending_dp;
         this._pending_dp = 0;
+        this.mark_dirty();
         return dp;
     }
 
@@ -86,6 +89,7 @@ class EquipmentManager {
                 exp: 0,
             });
             history.addSystemLog(`New equipment obtained: ${def.name} (${rolled_rarity})!`);
+            this.mark_dirty();
             return;
         }
 
@@ -101,6 +105,7 @@ class EquipmentManager {
             this._add_exp(existing, exp_gain);
             history.addSystemLog(`${def.name} (+${exp_gain} EXP)`);
         }
+        this.mark_dirty();
     }
 
     equip(equip_id: string, slot: EquipSlotKey): boolean {
@@ -115,12 +120,14 @@ class EquipmentManager {
         // Unequip whatever is in that slot first
         this._equipped[slot] = equip_id;
         this.recalculate_equip_stats();
+        this.mark_dirty();
         return true;
     }
 
     unequip(slot: EquipSlotKey): void {
         this._equipped[slot] = null;
         this.recalculate_equip_stats();
+        this.mark_dirty();
     }
 
     recalculate_equip_stats(): void {
@@ -151,6 +158,7 @@ class EquipmentManager {
 
         const def = EQUIP_REGISTRY.get(item.equip_id);
         item.exp += amount;
+        this.mark_dirty();
 
         let leveled = false;
         while (item.level < EQUIP_CONFIG.level_cap) {
@@ -182,6 +190,7 @@ class EquipmentManager {
             this._equipped[slot] = null;
         }
         this.recalculate_equip_stats();
+        this.mark_dirty();
     }
 
     serialize() {

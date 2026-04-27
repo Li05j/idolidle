@@ -64,12 +64,13 @@ The Settings button opens a multi-tab modal. The **Idol Handbook** tab explains 
 
 ## Save / Load
 
-Autosaves to `localStorage` (`idolidle_save`) on a ~1s debounce + flush on tab close. Whole-blob writes, no manual save button. Tolerant load: unknown ids/names get dropped, missing fields default. Save shape lives in `src/lib/state/save.svelte.ts`. The page is client-only (no SSR).
+Autosaves to `localStorage` (`idolidle_save`) on a 2s interval (only writes when something changed since last save) + flush on tab close. Whole-blob writes, no manual save button. Tolerant load: unknown ids/names get dropped, missing fields default. Save shape lives in `src/lib/state/save.svelte.ts`. The page is client-only (no SSR).
 
 Notes:
 - Action card progress is stored on `TD_List_Tracker` entries; the active card stamps elapsed on pause and right before each save. Renamed actions lose in-progress elapsed.
 - In-flight LIVE replays are not persisted; on reload, if the CP bar is full, the freeze + glow re-engage and the player re-enters the LIVE via Go To LIVE (in-fight RNG re-rolls against the same persisted rival).
 - Restart and preset switch both wipe the save.
+- Only one tab can play at a time. On boot, tabs handshake over a `BroadcastChannel`; if another tab is already active, the newcomer shows a "Game is open in another tab" screen and refuses to run (no saves, no timers). Refresh after closing the duplicate to play here.
 
 ---
 

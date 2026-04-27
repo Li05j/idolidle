@@ -21,6 +21,10 @@ class DreamUpgradeState {
     private _levels: Record<string, number> = $state(
         Object.fromEntries(ALL_DREAM_UPGRADES.map(u => [u.id, 0]))
     );
+    private _tick = $state(0);
+
+    get mutation_tick() { return this._tick; }
+    mark_dirty() { this._tick++; }
 
     level(id: string): number {
         return this._levels[id] ?? 0;
@@ -43,6 +47,7 @@ class DreamUpgradeState {
         if (!this.can_purchase(id)) return false;
         Rebirth.deduct_points(this.cost(id));
         this._levels[id]++;
+        this._tick++;
         return true;
     }
 

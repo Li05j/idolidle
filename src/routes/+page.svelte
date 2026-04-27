@@ -22,7 +22,20 @@
     const had_save = Save.load();
     if (!had_save) Progression.init();
     EquipM.recalculate_equip_stats();
-    Save.mark_loaded();
+
+    let handshake_done = $state(false);
+
+    Save.acquire_tab_lock().then((got) => {
+        if (got) {
+            Save.mark_loaded();
+            Save.start_autosave();
+        }
+        handshake_done = true;
+    });
+
+    let lock_state = $derived<'pending' | 'active' | 'locked'>(
+        !handshake_done ? 'pending' : (Save.is_locked ? 'locked' : 'active')
+    );
 
     function openSettings() {
         ModalM.open({ component: SettingsMultiTab, size: 'lg', closeable: true });
@@ -43,39 +56,49 @@
         document.addEventListener('keydown', ModalM.handleKeydown);
         return () => document.removeEventListener('keydown', ModalM.handleKeydown);
     });
-
-    Save.start_autosave();
 </script>
 
-<ModalShell />
-
-<div class="h-screen flex flex-col">
-    <div class="top-0">
-        <CheckpointTopBar {handle_live}/>
+{#if lock_state === 'pending'}
+    <div class="h-screen flex items-center justify-center text-sm opacity-60">Loading…</div>
+{:else if lock_state === 'locked'}
+    <div class="h-screen flex flex-col items-center justify-center gap-3 p-6 text-center">
+        <div class="text-xl font-semibold">Game is open in another tab</div>
+        <div class="text-sm opacity-70 max-w-md">
+            To prevent your progress from being overwritten, only one tab can run the game at a time.
+            Close other tabs and refresh this page to play here.
+        </div>
     </div>
-    <div class="flex-auto p-3 overflow-hidden">
-        <div class="grid grid-cols-[1fr_1fr_3fr] gap-3 overflow-hidden h-full">
+{:else}
+    <ModalShell />
 
-            <div class="flex flex-col h-full overflow-hidden gap-3">
-                <div class={`transition-opacity duration-300 ${frozen_class}`}>
-                    <Stats />
-                </div>
-                <div class={`flex-1 overflow-y-auto transition-opacity duration-300 ${frozen_class}`}>
-                    <History />
-                </div>
-                <div class="grid grid-cols-2 justify-center px-2 gap-2">
-                    <GenericButton name={"Settings"} onclick={openSettings} variant='secondary' class={"px-3 py-2 text-xs w-full"}/>
-                    <GenericButton name={"Idol Hub"} onclick={openHub} class={"px-3 py-2 text-xs w-full"}/>
-                </div>
-            </div>
+    <div class="h-screen flex flex-col">
+        <div class="top-0">
+            <CheckpointTopBar {handle_live}/>
+        </div>
+        <div class="flex-auto p-3 overflow-hidden">
+            <div class="grid grid-cols-[1fr_1fr_3fr] gap-3 overflow-hidden h-full">
 
-            <div class={`flex-auto overflow-hidden h-full transition-opacity duration-300 ${frozen_class}`}>
-                <AvailableLocations />
-            </div>
+                <div class="flex flex-col h-full overflow-hidden gap-3">
+                    <div class={`transition-opacity duration-300 ${frozen_class}`}>
+                        <Stats />
+                    </div>
+                    <div class={`flex-1 overflow-y-auto transition-opacity duration-300 ${frozen_class}`}>
+                        <History />
+                    </div>
+                    <div class="grid grid-cols-2 justify-center px-2 gap-2">
+                        <GenericButton name={"Settings"} onclick={openSettings} variant='secondary' class={"px-3 py-2 text-xs w-full"}/>
+                        <GenericButton name={"Idol Hub"} onclick={openHub} class={"px-3 py-2 text-xs w-full"}/>
+                    </div>
+                </div>
 
-            <div class={`flex-auto overflow-hidden h-full transition-opacity duration-300 ${frozen_class}`}>
-                <AvailableActions />
+                <div class={`flex-auto overflow-hidden h-full transition-opacity duration-300 ${frozen_class}`}>
+                    <AvailableLocations />
+                </div>
+
+                <div class={`flex-auto overflow-hidden h-full transition-opacity duration-300 ${frozen_class}`}>
+                    <AvailableActions />
+                </div>
             </div>
         </div>
     </div>
-</div>
+{/if}

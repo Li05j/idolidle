@@ -11,11 +11,17 @@ import type { BasicStats } from '$lib/types';
 class RunTotalsState {
     private _moni_earned = $state(0);
     private _fans_earned = $state(0);
+    private _tick = $state(0);
+
+    get mutation_tick() { return this._tick; }
+    mark_dirty() { this._tick++; }
 
     add(stat: BasicStats, final_amount: number): void {
         if (final_amount <= 0) return;
         if (stat === 'Moni') this._moni_earned += final_amount;
         else if (stat === 'Fans') this._fans_earned += final_amount;
+        else return;
+        this._tick++;
     }
 
     value(stat: BasicStats): number {
@@ -27,6 +33,7 @@ class RunTotalsState {
     reset(): void {
         this._moni_earned = 0;
         this._fans_earned = 0;
+        this._tick++;
     }
 
     get moni_earned() { return this._moni_earned; }

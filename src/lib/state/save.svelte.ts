@@ -1,6 +1,5 @@
 import { CURRENT_PRESET, SAVE_KEY, type PresetName } from '$lib/config';
-import { BASIC_STATS } from '$lib/types';
-import { stat_list, stat_list_serialize, stat_list_deserialize } from '$lib/state/stats.svelte';
+import { stat_list_serialize, stat_list_deserialize, stats_mutation_tick } from '$lib/state/stats.svelte';
 import { CPs } from '$lib/state/checkpoints.svelte';
 import { EquipM } from '$lib/state/equipment.svelte';
 import { Mastery } from '$lib/state/mastery.svelte';
@@ -13,7 +12,11 @@ import { TodoCardM } from '$lib/runtime/todo_card_manager.svelte';
 import { Progression } from '$lib/runtime/progression_engine.svelte';
 
 const SAVE_VERSION = 2 as const;
-const DEBOUNCE_MS = 1000;
+const SAVE_INTERVAL_MS = 2000;
+const TAB_LOCK_CHANNEL = 'idolidle-tab-lock';
+const TAB_HANDSHAKE_MS = 150;
+
+type TabMessage = { type: 'HELLO' | 'CLAIM'; id: number };
 
 type SaveBlob = {
     version: typeof SAVE_VERSION;
@@ -32,9 +35,18 @@ type SaveBlob = {
 
 class SaveManager {
     private _battle_in_progress = false;
-    private _debounce_id: ReturnType<typeof setTimeout> | null = null;
+    private _interval_id: ReturnType<typeof setInterval> | null = null;
     private _autosave_started = false;
     private _loaded = false;
+    private _dirty = false;
+
+    // Tab lock state. Active tabs respond to HELLOs with CLAIMs. Locked tabs go quiet.
+    private _channel: BroadcastChannel | null = null;
+    private _tab_id: number = Math.floor(Math.random() * 1e15);
+    private _tab_active = false;
+    private _is_locked = $state(false);
+
+    get is_locked() { return this._is_locked; }
 
     set_battle_in_progress(b: boolean) {
         this._battle_in_progress = b;
@@ -114,44 +126,90 @@ class SaveManager {
         return true;
     }
 
-    /** Set up debounced autosave + beforeunload flush. Idempotent. */
+    /**
+     * Acquire the single-tab lock. Resolves true if this tab gets the lock,
+     * false if another tab is already active (or wins the simultaneous-boot
+     * tiebreaker). Falls back to true if BroadcastChannel is unavailable.
+     */
+    async acquire_tab_lock(): Promise<boolean> {
+        if (typeof BroadcastChannel === 'undefined') return true;
+
+        this._channel = new BroadcastChannel(TAB_LOCK_CHANNEL);
+        this._channel.onmessage = (e) => this._on_tab_message(e.data as TabMessage);
+
+        this._channel.postMessage({ type: 'HELLO', id: this._tab_id } satisfies TabMessage);
+
+        await new Promise(r => setTimeout(r, TAB_HANDSHAKE_MS));
+
+        if (this._is_locked) return false;
+        this._tab_active = true;
+        return true;
+    }
+
+    private _on_tab_message(msg: TabMessage) {
+        if (this._is_locked) return;
+
+        if (msg.type === 'CLAIM') {
+            // An already-active tab is rejecting us.
+            if (msg.id !== this._tab_id) this._lock_tab();
+            return;
+        }
+
+        if (msg.type === 'HELLO') {
+            if (msg.id === this._tab_id) return;
+            if (this._tab_active) {
+                // We're the established active tab; reject the newcomer.
+                this._channel?.postMessage({ type: 'CLAIM', id: this._tab_id } satisfies TabMessage);
+            } else if (msg.id < this._tab_id) {
+                // Both booting; lower id wins.
+                this._lock_tab();
+            }
+            // If incoming id is higher, do nothing — we'll send CLAIM after our window closes.
+        }
+    }
+
+    private _lock_tab() {
+        this._is_locked = true;
+        this._tab_active = false;
+        this._loaded = false; // belt-and-suspenders: prevent any save attempt
+    }
+
+    /** Close the BroadcastChannel. Used by HMR cleanup. */
+    dispose_tab_channel() {
+        this._channel?.close();
+        this._channel = null;
+    }
+
+    /** Set up interval-based autosave + beforeunload flush. Idempotent. */
     start_autosave() {
         if (this._autosave_started) return;
         this._autosave_started = true;
 
-        const schedule = () => {
-            if (this._debounce_id !== null) clearTimeout(this._debounce_id);
-            this._debounce_id = setTimeout(() => {
-                this._debounce_id = null;
-                this.save_now();
-            }, DEBOUNCE_MS);
-        };
-
-        // Touch sentinel signals so the effect re-runs on any meaningful change.
-        // The set is intentionally broad; reading is cheap and missing one would silently lose writes.
+        // Subscribe to one mutation tick per persisted domain. Each domain bumps its own
+        // tick from inside its mutators, so adding a new persisted field only requires
+        // wiring `mark_dirty()` (or an internal `_tick++`) in the same module.
         $effect.root(() => {
             $effect(() => {
-                for (const k of BASIC_STATS) {
-                    void stat_list[k].base; void stat_list[k].multi;
-                    void stat_list[k].equip_base; void stat_list[k].equip_multi;
-                }
-                void CPs.current_completed_checkpoint;
-                void CPs.current_time_spent;
-                void EquipM.inventory.size;
-                void EquipM.equipped;
-                void EquipM.pending_dp;
-                void EquipM.ever_obtained.size;
-                void Rebirth.rebirth_count;
-                void Rebirth.rebirth_points;
-                void Rebirth.max_completed_checkpoints;
-                void RunTotals.moni_earned;
-                void RunTotals.fans_earned;
-                void TD_List_Tracker.locations.length;
-                void TD_List_Tracker.actions.size;
+                void stats_mutation_tick();
+                void CPs.mutation_tick;
+                void EquipM.mutation_tick;
+                void Mastery.mutation_tick;
+                void Rebirth.mutation_tick;
+                void Dreams.mutation_tick;
+                void RunTotals.mutation_tick;
+                void TD_List_Tracker.mutation_tick;
+                void RivalStatsM.mutation_tick;
+                void Progression.mutation_tick;
 
-                schedule();
+                this._dirty = true;
             });
         });
+
+        this._interval_id = setInterval(() => {
+            if (!this._dirty) return;
+            this.save_now();
+            this._dirty = false;
+        }, SAVE_INTERVAL_MS);
 
         if (typeof window !== 'undefined') {
             window.addEventListener('beforeunload', this.save_now);
@@ -160,3 +218,11 @@ class SaveManager {
 }
 
 export const Save = new SaveManager();
+
+// Vite HMR: when this module is hot-replaced, close the old tab-lock channel so
+// the new instance's HELLO doesn't get echoed back as a CLAIM by the stale one.
+if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+        Save.dispose_tab_channel();
+    });
+}

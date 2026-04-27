@@ -12,12 +12,16 @@ class RebirthStats {
     private _rebirth_count = $state(0)
     private _max_completed_checkpoints = $state(0)
     private _rebirth_points = $state(0)
+    private _tick = $state(0)
 
     private base_gains: Record<BasicStats, number> = $state(zero_record())
     private multi_gains: Record<BasicStats, number> = $state(zero_record())
 
 	private BASE_RATIO = CFG.rebirth_base_ratio
 	private MULTI_RATIO = CFG.rebirth_multi_ratio
+
+    get mutation_tick() { return this._tick; }
+    mark_dirty() { this._tick++; }
 
     inherit_stats() {
         const cp = CPs.current_completed_checkpoint + 1
@@ -32,6 +36,7 @@ class RebirthStats {
             this.base_gains[key]  += Math.min(source * this.BASE_RATIO,  base_cap)
             this.multi_gains[key] += Math.min(source * this.MULTI_RATIO, multi_cap)
         }
+        this._tick++;
     }
 
     apply_gains_to_initial_stats() {
@@ -47,21 +52,25 @@ class RebirthStats {
             points += CFG.checkpoint_dp_base ** i;
         }
         this._rebirth_points += points;
+        this._tick++;
         return points;
     }
 
     add_dream_points(n: number) {
         this._rebirth_points += n;
+        this._tick++;
     }
 
     deduct_points(n: number) {
         this._rebirth_points -= n;
+        this._tick++;
     }
 
-    increment_rebirth_count() { this._rebirth_count++; }
+    increment_rebirth_count() { this._rebirth_count++; this._tick++; }
     update_max_completed_checkpoints(c: number) {
         if (c > this._max_completed_checkpoints) {
             this._max_completed_checkpoints = c
+            this._tick++;
         }
     }
 

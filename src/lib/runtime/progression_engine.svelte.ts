@@ -4,6 +4,10 @@ import type { ActionDef, LocationDef, UpgradeDef } from '$lib/data/locations/loc
 
 class ProgressionEngine {
     private applied_upgrades: Set<string> = new Set();
+    private _tick = $state(0);
+
+    get mutation_tick() { return this._tick; }
+    mark_dirty() { this._tick++; }
 
     onLocationArrived(locationName: string) {
         const def = locationMap.get(locationName);
@@ -25,6 +29,8 @@ class ProgressionEngine {
         for (const unlockDef of def.unlocks()) {
             TD_List_Tracker.locations.push({ name: unlockDef.name, elapsed: 0 });
         }
+
+        TD_List_Tracker.mark_dirty();
     }
 
     onUsesExhausted(triggeredLocation: string, actionName: string) {
@@ -52,6 +58,9 @@ class ProgressionEngine {
             ...TD_List_Tracker.actions,
             [owner.name, newEntries],
         ]);
+
+        this._tick++;
+        TD_List_Tracker.mark_dirty();
     }
 
     private _findUpgrade(actionName: string): { owner: LocationDef; upgrade: UpgradeDef } | undefined {
@@ -71,6 +80,8 @@ class ProgressionEngine {
             ...TD_List_Tracker.actions,
             [locationName, filtered],
         ]);
+
+        TD_List_Tracker.mark_dirty();
     }
 
     /** Reset locationMap to its baseline (every base def under its own name). Run before any upgrade replay. */
@@ -85,6 +96,8 @@ class ProgressionEngine {
         this._restoreBaseline();
         TD_List_Tracker.locations = [{ name: STARTING_LOCATION.name, elapsed: 0 }];
         TD_List_Tracker.actions = new Map();
+        this._tick++;
+        TD_List_Tracker.mark_dirty();
     }
 
     reset() {
