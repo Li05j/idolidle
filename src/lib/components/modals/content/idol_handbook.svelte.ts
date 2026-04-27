@@ -5,45 +5,42 @@ type Term = {
 
 type HandbookSection = {
 	title: string;
-	subtitle: string;
+	subtitle?: string;
 	items: string[];
 };
 
 export class IdolHandbookVM {
 	readonly terms: Term[] = [
-		{ name: 'Base', body: 'The raw stat value you build from actions, dreams, and equipment.' },
-		{ name: 'Multi', body: 'A multiplier applied after base. More multi makes future base gains matter more.' },
-		{ name: 'Final', body: 'The number the game actually uses: base times multi, then rounded for display.' },
-		{ name: 'Fans', body: 'Your LIVE health bar. Attacks steal fans instead of deleting them.' },
-		{ name: 'Moni', body: 'Spendable money for actions. Spending Moni does not erase dream inheritance credit.' },
-		{ name: 'Stamina', body: 'How many moves you can afford in LIVE before you run dry.' },
-		{ name: 'Haste', body: 'Turn speed in LIVE. Higher haste fills your action bar faster.' },
-		{ name: 'Sing / Dance', body: 'Attack stats. Each basic move randomly uses one of them.' },
-		{ name: 'Charm / Presence', body: 'Defense stats. They blunt incoming Sing or Dance moves.' },
-		{ name: 'Style', body: 'A LIVE-only momentum stack. Each move adds Style, making later hits stronger.' },
+		{ name: 'Fans', body: 'Your lifeline. Hit zero and your Idol career is over.' },
+		{ name: 'Moni', body: 'Spent on actions outside LIVE. Does not affect LIVE directly.' },
+		{ name: 'Stamina', body: 'How many moves you get in a LIVE before you run out of gas.' },
+		{ name: 'Haste', body: 'More Haste, more moves over your Rival.' },
+		{ name: 'Sing / Dance', body: 'Your offensive moves. Poach Fans by stunning the Rival with your coquettish maneuvers!' },
+		{ name: 'Charm / Presence', body: 'Your defense. Charm resists Sing, Presence resists Dance.' },
 	];
 
 	readonly sections: HandbookSection[] = [
 		{
 			title: 'LIVE Battle',
-			subtitle: 'How rival showdowns are resolved.',
+			// subtitle: 'How LIVE battles are resolved.',
 			items: [
-				'Haste decides who acts next by filling action bars.',
-				'Each move spends stamina, rolls Sing or Dance, then checks against Charm or Presence.',
-				'Damage poaches fans from the defender. If someone hits zero fans, the LIVE ends.',
-				'Equipment skills can fire during specific battle timings and each skill fires at most once per battle.',
-				'Winning unlocks the next checkpoint choice. Losing means you need more training or better equipment.',
+				'Your Rival\'s stats and loadout are randomly generated.',
+				'Each move costs Stamina, rolls your Sing or Dance, then checks against your Rival\'s Charm or Presence.',
+				'Each successful move grants a Style stack, which adds a bonus to your Sing and Dance for the rest of the LIVE.',
+				'Equipment skills fire automatically, at most once per LIVE.',
+				'Damage poaches Fans from the other Idol. The first Idol to hit zero Fans loses.',
+				'If both Idols run out of Stamina, the one with more Fans wins.',
 			],
 		},
 		{
 			title: 'Dreams',
-			subtitle: 'The reset layer after a LIVE.',
+			// subtitle: 'When you could not handle reality anymore.',
 			items: [
-				'After a LIVE, dreaming resets the run but keeps permanent dream progress.',
-				'Dreams inherit part of your run stats into future base and multi bonuses.',
-				'Fans and Moni inheritance uses what you earned this run, not what you still have left.',
-				'Dream Points come from checkpoints and equipment found during the run.',
-				'Spend Dream Points on permanent upgrades in the Idol Hub.',
+				'Dreaming resets the run and converts part of your run stats into permanent base and multi bonuses.',
+				'Fans and Moni inheritance is based on what you earned this run, not what you have left.',
+				'Dream Points are earned from how many Rivals you have defeated and the equipment you found during the run.',
+				'Dream Points are spent on permanent upgrades in the Idol Hub.',
+				'You can only Dream after a LIVE.',
 			],
 		},
 	];
