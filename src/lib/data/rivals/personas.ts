@@ -79,9 +79,9 @@ export const RIVAL_ADJECTIVES: string[] = [
     'dazzling', 'fierce', 'elegant', 'ruthless', 'cocky', 'stoic',
     'radiant', 'cunning', 'tireless', 'haughty', 'graceful', 'magnetic',
     'sharp-tongued', 'sly', 'unflinching', 'reckless', 'serene', 'impeccable',
-    'merciless', 'quietly terrifying', 'starstruck', 'velvet-voiced',
-    'lightning-fast', 'iron-willed', 'unbothered', 'flashy', 'sultry',
-    'unshakeable', 'brilliant', 'meticulous',
+    'merciless', 'terrifying', 'starstruck', 'impeccable',
+    'marvelous', 'strong-willed', 'unbothered', 'flashy', 'sultry',
+    'unshakeable', 'brilliant', 'meticulous', 'unwavering', 'sassy', 'zesty', 'coquettish', 'aloof', 'quirky', 'bashful', 'serious', 'calm', 'bold', 'kittenish', 'relaxed', 'gentle', 'adamant', 'nonchalant', 'annoying', 'wary',
 ];
 
 export function pickAdjective(): string {
