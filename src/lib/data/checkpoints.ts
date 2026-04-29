@@ -22,7 +22,12 @@ export type RivalScale = {
 
 export type RivalDef = {
     name: string;
+    /** Short identity tag, e.g. "Your childhood friend". */
+    title: string;
+    /** Narrative body. Persona-agnostic — persona may reroll between dreams. */
     bio: string;
+    /** Optional in-character line. */
+    quote?: string;
     scale: RivalScale;
 };
 
@@ -48,7 +53,9 @@ export const CHECKPOINTS: CheckpointDef[] = [
         time: 1000, multi: 1.0,
         rival: {
             name: 'Hina Sato',
-            bio: 'A bright-eyed first-timer from your hometown. You used to walk to school together; now she stands across the stage.',
+            title: 'Your childhood friend',
+            bio: 'You two used to eat from the same plate, wear the same dresses, walk to school side by side. Now she stands across the stage, facing you, questioning your determination.',
+            quote: 'Please, give up and stay. The Idol industry is harsh — you can never make it. Just... stay with me at home.',
             scale: { stat_multi: 1, fan_multi: 1, equip_budget: 3 },
         },
     },
@@ -56,7 +63,9 @@ export const CHECKPOINTS: CheckpointDef[] = [
         time: 2500, multi: 1.0,
         rival: {
             name: 'Mei Tanaka',
-            bio: 'Trained at a mid-tier academy and convinced she is owed the spotlight. Underestimates everyone, including you.',
+            title: 'President of the school Idol Club',
+            bio: 'You skipped every meeting. She ran every drill, booked every venue, held the club together while you daydreamed in the back row. Tonight she finally has a stage worth her time.',
+            quote: 'You barely showed up to a single rehearsal. And yet here you are, on MY stage. Cute.',
             scale: { stat_multi: 5, fan_multi: 6, equip_budget: 9 },
         },
     },
@@ -64,7 +73,9 @@ export const CHECKPOINTS: CheckpointDef[] = [
         time: 4000, multi: 1.0,
         rival: {
             name: 'Akiko Mori',
-            bio: 'Daughter of a retired idol legend. Quiet, precise, and unsettlingly composed under the lights.',
+            title: 'The reigning idol of this town',
+            bio: 'Every poster in the train station has her face on it. Beat her and the next train out of town is yours — that ticket has your name on it, if you can earn it.',
+            quote: 'This town is mine. The lights, the crowds, the platform — all mine. Take one step toward that train and I will end you on this stage.',
             scale: { stat_multi: 13, fan_multi: 15, equip_budget: 27 },
         },
     },
@@ -72,7 +83,8 @@ export const CHECKPOINTS: CheckpointDef[] = [
         time: 6500, multi: 1.0,
         rival: {
             name: 'Rei Kurosawa',
-            bio: 'The reigning top idol. They say she has not lost a stage in three years. You are about to test that.',
+            title: 'A rival who came out of nowhere',
+            bio: 'Nobody knows where she trained or who she is. She just showed up, and now she is in your way.',
             scale: { stat_multi: 25, fan_multi: 29, equip_budget: 81 },
         },
     },

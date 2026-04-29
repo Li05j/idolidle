@@ -26,6 +26,8 @@ Rivals also receive **equipment** from a budget-based system. Each checkpoint ha
 
 The pre-battle **Live Info** panel shows the stat comparison alongside the rival's current equipment loadout. Clicking a rival equip reveals its rarity-adjusted stat bonuses and battle skill (no EXP/ownership since rivals don't own items).
 
+Each named checkpoint rival carries a `title` (identity tag), `bio` (narrative body), and optional `quote` (in-character line). The pre-LIVE preview composes these with the rolled persona label and persona description into a challenger card. Bio/quote text stays persona-agnostic since the persona rerolls between dreams.
+
 Battle logic: `src/lib/state/live.svelte.ts`. Checkpoint scale lives inline on each `CheckpointDef` in `src/lib/data/checkpoints.ts`. Persona pool: `src/lib/data/rivals/personas.ts`.
 
 ## Skills
@@ -90,7 +92,7 @@ Upgrades reference their trigger and removed actions by **action name string**: 
 
 ### Add a checkpoint
 
-Append a `CheckpointDef` to `CHECKPOINTS` in `src/lib/data/checkpoints.ts`. Include an inline `rival: { stat_multi, fan_multi? }` for battle checkpoints; omit for terminal.
+Append a `CheckpointDef` to `CHECKPOINTS` in `src/lib/data/checkpoints.ts`. Include an inline `rival: { name, title, bio, quote?, scale }` for battle checkpoints; omit for terminal.
 
 ### Add a rival persona
 

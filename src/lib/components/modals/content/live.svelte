@@ -51,13 +51,42 @@
                     class="relative w-full rounded-2xl bg-[var(--surface-inset)] px-8 pt-8 pb-6 flex flex-col items-center gap-3 text-center shadow-md cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
                     style="border: 2px solid color-mix(in srgb, var(--battle-rival) 40%, transparent);"
                 >
-                    <div class="text-4xl font-bold text-[var(--text-primary)] tracking-wide">
-                        {LiveInfo.rival_name}
+                    <div class="flex flex-col items-center gap-1">
+                        <div class="text-4xl font-bold text-[var(--text-primary)] tracking-wide">
+                            {LiveInfo.rival_name}
+                        </div>
+                        <div class="text-xs uppercase tracking-[0.25em] font-semibold text-[var(--rose)]">
+                            is challenging you!
+                        </div>
                     </div>
-                    {#if LiveInfo.rival_bio}
+
+                    {#if LiveInfo.rival_title || LiveInfo.persona_label}
+                        <div class="text-sm text-[var(--text-secondary)] font-medium">
+                            {#if LiveInfo.rival_title}{LiveInfo.rival_title}{/if}
+                            {#if LiveInfo.rival_title && LiveInfo.persona_label} — {/if}
+                            {#if LiveInfo.persona_label}<span class="italic">{LiveInfo.persona_label}</span>{/if}
+                        </div>
+                    {/if}
+
+                    {#if LiveInfo.rival_bio || LiveInfo.rival_quote}
                         <div class="h-px w-20 bg-gradient-to-r from-transparent via-[var(--battle-rival)]/60 to-transparent"></div>
-                        <p class="text-base text-[var(--text-muted)] leading-relaxed max-w-xl italic">
-                            “{LiveInfo.rival_bio}”
+                    {/if}
+
+                    {#if LiveInfo.rival_bio}
+                        <p class="text-base text-[var(--text-muted)] leading-relaxed max-w-xl">
+                            {LiveInfo.rival_bio}
+                        </p>
+                    {/if}
+
+                    {#if LiveInfo.rival_quote}
+                        <p class="text-base text-[var(--text-primary)] leading-relaxed max-w-xl italic border-l-2 border-[var(--battle-rival)]/60 pl-4 text-left self-center">
+                            “{LiveInfo.rival_quote}”
+                        </p>
+                    {/if}
+
+                    {#if LiveInfo.persona_desc}
+                        <p class="text-xs text-[var(--text-muted)] opacity-60 italic max-w-xl mt-1">
+                            {LiveInfo.persona_desc}
                         </p>
                     {/if}
 

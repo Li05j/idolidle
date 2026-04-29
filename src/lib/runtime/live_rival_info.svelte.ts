@@ -90,8 +90,16 @@ class RivalComparison {
         return RivalStatsM.preview(cp).persona.name;
     });
 
+    public rival_title: string = $derived(
+        CHECKPOINTS[CPs.current_completed_checkpoint]?.rival?.title ?? ''
+    );
+
     public rival_bio: string = $derived(
         CHECKPOINTS[CPs.current_completed_checkpoint]?.rival?.bio ?? ''
+    );
+
+    public rival_quote: string = $derived(
+        CHECKPOINTS[CPs.current_completed_checkpoint]?.rival?.quote ?? ''
     );
 
     public persona_label: string = $derived.by(() => {
