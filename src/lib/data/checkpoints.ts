@@ -52,7 +52,7 @@ export const CHECKPOINTS: CheckpointDef[] = [
     {
         time: 1000, multi: 1.0,
         rival: {
-            name: 'Hina Sato',
+            name: 'Bubbles',
             title: 'Your childhood friend',
             bio: 'You two used to eat from the same plate, wear the same dresses, walk to school side by side. Now she stands across the stage, facing you, questioning your determination.',
             quote: 'Please, give up and stay. The Idol industry is harsh, you can never make it. Just... stay with me at home.',
@@ -62,7 +62,7 @@ export const CHECKPOINTS: CheckpointDef[] = [
     {
         time: 2500, multi: 1.0,
         rival: {
-            name: 'Mei Tanaka',
+            name: 'Buttercup',
             title: 'President of the school Idol Club',
             bio: 'She runs the school Idol Club like a fiefdom. Every performance, every spotlight, every freshman with stars in their eyes pays tribute. Then you opened your own club across the hall. Word travels fast. And now, she came to collect.',
             quote: 'A second Idol Club? In MY school? I own every stage you are standing on. Walk off it now, or I drag you off in front of everyone.',
@@ -72,7 +72,7 @@ export const CHECKPOINTS: CheckpointDef[] = [
     {
         time: 4000, multi: 1.0,
         rival: {
-            name: 'Akiko Mori',
+            name: 'Blossom',
             title: 'The reigning idol of this town',
             bio: 'The undisputed star of the town. She headlines the summer festivals, the shopping arcades, the local radio. Every flyer on every telephone pole has her face on it, twice. Nothing rises here without her permission, but you.',
             quote: 'Everyone claps for you here. They clapped for me too, loud enough that I believed it. So I went outside, out of this town. It was... freezing. So I came back. You will too. They always come back.',
@@ -80,9 +80,9 @@ export const CHECKPOINTS: CheckpointDef[] = [
         },
     },
     {
-        time: 6500, multi: 1.0,
+        time: 4000, multi: 1.0,
         rival: {
-            name: 'Rei Kurosawa',
+            name: 'Mystery',
             title: 'A rival who came out of nowhere',
             bio: 'Nobody knows where she trained or who she is. She just showed up, and now she is in your way.',
             scale: { stat_multi: 25, fan_multi: 29, equip_budget: 81 },
