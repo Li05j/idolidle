@@ -16,13 +16,8 @@ class Checkpoints {
 		return this._idx
 	}
 
-	get current_multi() {
-		return CHECKPOINTS[this._idx].multi
-	}
-
 	get current_total_time() {
-		const cp = CHECKPOINTS[this._idx];
-		return cp.time * CFG.time_scale * cp.multi
+		return CHECKPOINTS[this._idx].time * CFG.time_scale
 	}
 
 	get is_terminal() {

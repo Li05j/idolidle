@@ -33,7 +33,6 @@ export type RivalDef = {
 
 export type CheckpointDef = {
     time: number;
-    multi: number;
     /** Omit for terminal checkpoints (no LIVE battle). */
     rival?: RivalDef;
 };
@@ -50,7 +49,7 @@ const BASE: BaseRanges = {
 
 export const CHECKPOINTS: CheckpointDef[] = [
     {
-        time: 1000, multi: 1.0,
+        time: 1000,
         rival: {
             name: 'Bubbles',
             title: 'Your childhood friend',
@@ -60,7 +59,7 @@ export const CHECKPOINTS: CheckpointDef[] = [
         },
     },
     {
-        time: 2500, multi: 1.0,
+        time: 2500,
         rival: {
             name: 'Buttercup',
             title: 'President of the school Idol Club',
@@ -70,7 +69,7 @@ export const CHECKPOINTS: CheckpointDef[] = [
         },
     },
     {
-        time: 4000, multi: 1.0,
+        time: 4000,
         rival: {
             name: 'Blossom',
             title: 'The reigning idol of this town',
@@ -80,7 +79,7 @@ export const CHECKPOINTS: CheckpointDef[] = [
         },
     },
     {
-        time: 4000, multi: 1.0,
+        time: 4000,
         rival: {
             name: 'Mystery',
             title: 'A rival who came out of nowhere',
@@ -88,7 +87,7 @@ export const CHECKPOINTS: CheckpointDef[] = [
             scale: { stat_multi: 25, fan_multi: 29, equip_budget: 81 },
         },
     },
-    { time: Infinity, multi: 1.0 },
+    { time: Infinity },
 ];
 
 function rollRange([min, max]: StatRange, scale: number): number {
