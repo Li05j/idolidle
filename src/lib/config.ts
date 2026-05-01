@@ -41,7 +41,7 @@ export const PRESET_NAMES = Object.keys(PRESETS) as PresetName[];
 
 const PRESET_KEY = 'idolidle_preset';
 export const SAVE_KEY = 'idolidle_save';
-const DEFAULT_PRESET: PresetName = 'super-fast';
+const DEFAULT_PRESET: PresetName = 'prod';
 
 function read_preset(): PresetName {
 	if (typeof localStorage === 'undefined') return DEFAULT_PRESET;
