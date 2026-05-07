@@ -62,11 +62,11 @@ Spend dream points on permanent upgrades (persist across rebirths). Upgrade defi
 
 ## Settings
 
-The Settings button opens a multi-tab modal. The **Idol Handbook** tab explains stat terminology, LIVE battles, and dreams. The **Save Data** tab exposes Export (generates a base64-wrapped text blob with an embedded SHA-256 checksum) and Import (paste a blob to overwrite and reload; checksum, version, and preset must all match). In dev (check `src/lib/config.ts`), a **Debug** tab will be visible.
+The Settings button opens a multi-tab modal. The **Idol Handbook** tab explains stat terminology, LIVE battles, and dreams. The **Save Data** tab exposes Export and Import save data. In dev (check `src/lib/config.ts`), a **Debug** tab will be visible.
 
 ## Save / Load
 
-Autosaves to `localStorage` (`idolidle_save`) on a 2s interval (only writes when something changed since last save) + flush on tab close. Whole-blob writes, no manual save button. Tolerant load: unknown ids/names get dropped, missing fields default. Save shape lives in `src/lib/state/save.svelte.ts`. The page is client-only (no SSR).
+Autosaves to `localStorage` (`idolidle_save`) on a 2s interval (only writes when something changed since last save) + flush on tab close. Saves are stored as a compressed (lz-string) envelope with a sync FNV-1a checksum. Whole-blob writes, no manual save button. Save shape lives in `src/lib/state/save.svelte.ts`. The page is client-only (no SSR).
 
 Notes:
 - Action card progress is stored on `TD_List_Tracker` entries; the active card stamps elapsed on pause and right before each save. Renamed actions lose in-progress elapsed.

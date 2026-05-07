@@ -1,3 +1,4 @@
+import LZString from 'lz-string';
 import { CURRENT_PRESET, SAVE_KEY, type PresetName } from '$lib/config';
 import { stat_list_serialize, stat_list_deserialize, stats_mutation_tick } from '$lib/state/stats.svelte';
 import { CPs } from '$lib/state/checkpoints.svelte';
@@ -15,12 +16,66 @@ const SAVE_VERSION = 2 as const;
 const SAVE_INTERVAL_MS = 2000;
 const TAB_LOCK_CHANNEL = 'idolidle-tab-lock';
 const TAB_HANDSHAKE_MS = 150;
-const EXPORT_PREFIX = 'IDOLIDLE1:';
-const CHECKSUM_LEN = 8; // hex chars of sha-256 prefix; collision-resistant enough for paste detection
+
+// Storage envelope: `<STORAGE_PREFIX><fnv1a-hex>:<lz-string UTF16(JSON)>`
+// Sync hash (FNV-1a) keeps save_now synchronous so beforeunload still flushes.
+const STORAGE_PREFIX = 'IDOLIDLE_S1:';
+const FNV_LEN = 8;
+
+// Export envelope: `<EXPORT_PREFIX><sha256-short>:<lz-string base64(JSON)>`
+// Async hash is fine here; export is user-initiated and not on the autosave path.
+const EXPORT_PREFIX = 'IDOLIDLE2:';
+const CHECKSUM_LEN = 8;
 
 async function _sha256_short(text: string): Promise<string> {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
     return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2, '0')).join('').slice(0, CHECKSUM_LEN);
+}
+
+// Tamper-detection only. Math.imul gives proper 32-bit truncated multiply.
+function _fnv1a_hex(s: string): string {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < s.length; i++) {
+        h ^= s.charCodeAt(i);
+        h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h.toString(16).padStart(FNV_LEN, '0');
+}
+
+function _pack_storage(json: string): string {
+    const compressed = LZString.compressToUTF16(json);
+    const sum = _fnv1a_hex(compressed);
+    return `${STORAGE_PREFIX}${sum}:${compressed}`;
+}
+
+function _unpack_storage(text: string): string | null {
+    if (!text.startsWith(STORAGE_PREFIX)) return null;
+    const rest = text.slice(STORAGE_PREFIX.length);
+    if (rest[FNV_LEN] !== ':') return null;
+    const expected = rest.slice(0, FNV_LEN);
+    const compressed = rest.slice(FNV_LEN + 1);
+    if (_fnv1a_hex(compressed) !== expected) return null;
+    const json = LZString.decompressFromUTF16(compressed);
+    return json || null;
+}
+
+async function _pack_export(json: string): Promise<string> {
+    const compressed = LZString.compressToBase64(json);
+    const sum = await _sha256_short(compressed);
+    return `${EXPORT_PREFIX}${sum}:${compressed}`;
+}
+
+async function _unpack_export(text: string): Promise<{ json: string } | { error: string }> {
+    if (!text.startsWith(EXPORT_PREFIX)) return { error: 'Not a valid save blob.' };
+    const rest = text.slice(EXPORT_PREFIX.length);
+    if (rest[CHECKSUM_LEN] !== ':') return { error: 'Blob is malformed (bad checksum field).' };
+    const expected = rest.slice(0, CHECKSUM_LEN);
+    const compressed = rest.slice(CHECKSUM_LEN + 1);
+    const actual = await _sha256_short(compressed);
+    if (actual !== expected) return { error: 'Checksum mismatch: the blob is incomplete or was modified.' };
+    const json = LZString.decompressFromBase64(compressed);
+    if (!json) return { error: 'Blob is corrupted (decompression failed).' };
+    return { json };
 }
 
 type TabMessage = { type: 'HELLO' | 'CLAIM'; id: number };
@@ -98,7 +153,7 @@ class SaveManager {
         if (this._battle_in_progress) return;
 
         try {
-            localStorage.setItem(SAVE_KEY, JSON.stringify(this._build_blob()));
+            localStorage.setItem(SAVE_KEY, _pack_storage(JSON.stringify(this._build_blob())));
         } catch (e) {
             console.error('save failed', e);
         }
@@ -106,16 +161,12 @@ class SaveManager {
 
     /**
      * Encode the current save as a portable text blob:
-     *   `IDOLIDLE1:<sha256-short>:<base64(JSON)>`
-     * Base64 is friction; the checksum catches truncated/corrupted pastes before
-     * we ever try to parse the inner JSON.
+     *   `IDOLIDLE2:<sha256-short>:<lz-string base64(JSON)>`
+     * Compression makes field names non-grep-able; the checksum catches
+     * truncated/corrupted pastes (and casual edits) before we try to parse.
      */
     async export_blob(): Promise<string> {
-        const json = JSON.stringify(this._build_blob());
-        const sum = await _sha256_short(json);
-        // btoa needs latin-1; route through UTF-8 bytes so non-ASCII names survive.
-        const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(json)));
-        return `${EXPORT_PREFIX}${sum}:${b64}`;
+        return _pack_export(JSON.stringify(this._build_blob()));
     }
 
     /**
@@ -124,31 +175,12 @@ class SaveManager {
      * Returns null on success, an error message string on failure.
      */
     async import_blob(text: string): Promise<string | null> {
-        const trimmed = text.trim();
-        if (!trimmed.startsWith(EXPORT_PREFIX)) return 'Not a valid save blob.';
-
-        const rest = trimmed.slice(EXPORT_PREFIX.length);
-        const sep = rest.indexOf(':');
-        if (sep !== CHECKSUM_LEN) return 'Blob is malformed (bad checksum field).';
-        const expected_sum = rest.slice(0, CHECKSUM_LEN);
-        const b64 = rest.slice(CHECKSUM_LEN + 1);
-
-        let json: string;
-        try {
-            const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-            json = new TextDecoder().decode(bytes);
-        } catch {
-            return 'Blob is corrupted (base64 decode failed).';
-        }
-
-        const actual_sum = await _sha256_short(json);
-        if (actual_sum !== expected_sum) {
-            return 'Checksum mismatch — the blob is incomplete or was modified.';
-        }
+        const result = await _unpack_export(text.trim());
+        if ('error' in result) return result.error;
 
         let parsed: unknown;
         try {
-            parsed = JSON.parse(json);
+            parsed = JSON.parse(result.json);
         } catch {
             return 'Blob is corrupted (JSON parse failed).';
         }
@@ -160,7 +192,8 @@ class SaveManager {
 
         this.disable();
         try {
-            localStorage.setItem(SAVE_KEY, json);
+            // Re-pack into storage envelope so the next load finds the expected format.
+            localStorage.setItem(SAVE_KEY, _pack_storage(result.json));
         } catch (e) {
             console.error('import write failed', e);
             return 'Failed to persist imported save.';
@@ -175,9 +208,13 @@ class SaveManager {
         const raw = localStorage.getItem(SAVE_KEY);
         if (!raw) return false;
 
+        // Legacy: raw JSON written by the pre-compression format. Next autosave repacks it.
+        const json = raw.startsWith('{') ? raw : _unpack_storage(raw);
+        if (json === null) return false;
+
         let parsed: unknown;
         try {
-            parsed = JSON.parse(raw);
+            parsed = JSON.parse(json);
         } catch {
             return false;
         }
