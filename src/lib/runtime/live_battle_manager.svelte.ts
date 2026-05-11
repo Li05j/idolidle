@@ -46,6 +46,10 @@ class LiveBattleManager {
     private _you: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, Style: 0 }
     private _rival: LiveBattleStats = { Fans: 0, Max_Stamina: 0, Curr_Stamina: 0, Haste: 0, Sing: 0, Dance: 0, Charm: 0, Presence: 0, Style: 0 }
 
+    // Stamina cost per Sing/Dance basic attack, frozen at battle start.
+    private _you_stamina_cost = { Sing: 0, Dance: 0 }
+    private _rival_stamina_cost = { Sing: 0, Dance: 0 }
+
     private _action_bar = [0, 0]
     private _rival_equipment: RivalEquipEntry[] = []
     private _replay_interval: ReturnType<typeof setInterval> | null = null
@@ -69,6 +73,11 @@ class LiveBattleManager {
             Presence: stat_list.Presence.final,
             Style: 0,
         }
+
+        this._you_stamina_cost.Sing = this._you.Sing * BATTLE_TUNING.STAMINA_COST_MULT + 1
+        this._you_stamina_cost.Dance = this._you.Dance * BATTLE_TUNING.STAMINA_COST_MULT + 1
+        this._rival_stamina_cost.Sing = this._rival.Sing * BATTLE_TUNING.STAMINA_COST_MULT + 1
+        this._rival_stamina_cost.Dance = this._rival.Dance * BATTLE_TUNING.STAMINA_COST_MULT + 1
 
         this.display_your_fans = this._you.Fans
         this.display_enemy_fans = this._rival.Fans
@@ -170,8 +179,10 @@ class LiveBattleManager {
         attacker.Fans += fans_stolen
         defender.Fans -= fans_stolen
 
-        // Pay stamina (Style does not affect cost — only damage)
-        const stamina_cost = base_atk * BATTLE_TUNING.STAMINA_COST_MULT + 1
+        // Stamina cost is frozen at battle start. Stat changes and style does 
+        // not affect depletion rate.
+        const cost_table = actor === "Player" ? this._you_stamina_cost : this._rival_stamina_cost
+        const stamina_cost = cost_table[atk_type]
         attacker.Curr_Stamina = Math.max(attacker.Curr_Stamina - stamina_cost, 0)
 
         // Bump Style before the snapshotting log so the display ticks up on this turn.
