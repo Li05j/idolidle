@@ -8,7 +8,7 @@
 
 {#if CPs.is_terminal}
     <div class="w-full h-full p-6 flex items-center justify-center text-center text-[var(--text-muted)] italic">
-        You're already the top idol — no more rivals to face.
+        You're already the top idol. No more rivals to face.
     </div>
 {:else}
 <div class="w-full h-full p-6 flex flex-col gap-4 min-h-0">

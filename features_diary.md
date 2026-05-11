@@ -46,6 +46,8 @@ Item definitions: `src/lib/data/equipment/`. Global tuning: `EQUIP_CONFIG` in `e
 
 The checkpoint bar fills while actions run. When it fills, the active card pauses, the locations/actions/stats/history panels freeze (settings/idol hub/LIVE info/Go To LIVE stay clickable), and Go To LIVE glows as a hint. Pressing Go To LIVE opens the LIVE preview, which is closeable (Esc/backdrop) so the player can back out. Once **Start Battle!** is pressed, the modal locks until the post-battle Continue / Rebirth choice. Rival scales with each checkpoint. Data: `src/lib/data/checkpoints.ts` (`CHECKPOINTS`). Runtime state: `src/lib/state/checkpoints.svelte.ts`.
 
+At the terminal checkpoint the top bar shows a closing line and a button that opens the rebirth confirmation directly, since there is no LIVE to win first.
+
 ## Action Mastery
 
 Actions track total completions across all rebirths. More completions = shorter action time, via a rational diminishing curve (`floor + (1-floor) / (1 + rate * c^p)`) that stays gentle for the first ~10 reps then dives toward a hard floor. Upgraded actions can share a mastery track by setting `mastery_id` to the base action's name. Config in `config.ts`; state in `src/lib/state/mastery.svelte.ts`.

@@ -5,6 +5,7 @@
     import { msToSecF } from "$lib/utils/utils"
     import GenericButton from "../shared/generic_button.svelte";
     import RivalInfo from "$lib/components/modals/content/rival_info.svelte";
+    import RebirthAlert from "$lib/components/modals/content/rebirth_alert.svelte";
     import DramaticArrow from "./dramatic_arrow.svelte";
 
     let { handle_live } = $props()
@@ -22,12 +23,24 @@
         ModalM.open({ component: RivalInfo, size: 'lg', closeable: true });
     }
 
+    function open_dream() {
+        ModalM.open({ component: RebirthAlert, size: 'sm', closeable: true });
+    }
+
     const info_svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="10"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>`;
 </script>
 
 {#if CPs.is_terminal}
-    <div class="bg-[var(--surface-card)] p-3 rounded-b-2xl shadow-md mb-1 w-full text-center text-sm font-semibold text-[var(--text-primary)]">
-        You're already the top idol — no more rivals to face.
+    <div class="bg-[var(--surface-card)] p-3 rounded-b-2xl shadow-md mb-1 w-full flex flex-col items-center gap-2">
+        <div class="text-sm font-semibold text-[var(--text-primary)] text-center italic">
+            You finally reached the top. But what if... it was all just a sweet, sweet dream?
+        </div>
+        <GenericButton
+            name={"It was all a Dream..."}
+            onclick={open_dream}
+            variant='secondary'
+            class={"px-6 py-1 text-xs"}
+        />
     </div>
 {:else}
     <div class="bg-[var(--surface-card)] p-3 rounded-b-2xl shadow-md mb-1 w-full">
