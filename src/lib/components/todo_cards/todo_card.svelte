@@ -20,7 +20,7 @@
 </script>
 
 <div
-    class="{vm.bg_color} {vm.border} transition-all duration-200 px-5 pt-3 pb-2 rounded-[var(--border-radius-card)] shadow-sm relative overflow-hidden mb-3 hover:shadow-md hover:scale-[1.01] {(vm.disabled && !vm.timer.is_active) ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'} {is_collapse ? 'h-22' : 'h-44'}"
+    class="{vm.bg_color} {vm.border} transition-all duration-200 px-5 pt-3 pb-2 rounded-[var(--border-radius-card)] shadow-sm relative overflow-hidden mb-3 hover:shadow-md hover:scale-[1.01] {(vm.disabled && !vm.timer.is_active) ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'} {is_collapse ? 'h-22' : 'h-45'}"
     onclick={() => vm.toggle(repeat_val)}
     onmouseenter={() => vm.hovered = true}
     onmouseleave={() => vm.hovered = false}
@@ -71,7 +71,7 @@
                         class="px-1.5 py-0.5 rounded-full font-semibold"
                         style="color: var(--chip-mastery-fg); background: var(--chip-mastery-bg);"
                     >
-                        M·{vm.mastery_info.count} −{vm.mastery_info.pct}%
+                        Mastery · {vm.mastery_info.count} −{vm.mastery_info.pct}%
                     </span>
                 {/if}
 

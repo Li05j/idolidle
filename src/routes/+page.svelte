@@ -46,7 +46,6 @@
     }
 
     function handle_live() {
-        TodoCardM.deactivateCurrentActiveCard();
         ModalM.open({ component: Live, size: 'worker', closeable: true });
     }
 
