@@ -1,9 +1,17 @@
 <script lang="ts">
     import TodoCard from '$lib/components/todo_cards/todo_card.svelte';
+    import { Progression } from '$lib/runtime/progression_engine.svelte';
 
     let { title, actionNames }: { title: string, actionNames: string[] } = $props();
     let repeat_val = $state('x1');
     let is_collapse = $state(false);
+
+    let visibleNames = $derived(
+        actionNames.filter(n => {
+            const def = Progression.resolveAction(title, n);
+            return !def?.hidden?.();
+        })
+    );
 
     function toggle_collapse() {
         is_collapse = !is_collapse;
@@ -27,7 +35,7 @@
         </button>
     </legend>
     <div class="grid grid-cols-3">
-        {#each actionNames as actName (actName)}
+        {#each visibleNames as actName (actName)}
             <div class="col-span-1 px-2">
                 <TodoCard locationName={title} actionName={actName} {repeat_val} {is_collapse} />
             </div>

@@ -56,7 +56,7 @@ Actions track total completions across all rebirths. More completions = shorter 
 
 After a LIVE, you can "dream" (rebirth). Resets progress but permanently carries over a portion of stats as base/multi bonuses. Both base and multi carry-over are capped per-rebirth by checkpoints completed this run. Logic in `src/lib/state/rebirth.svelte.ts`; per-run earnings tracked in `src/lib/state/run_totals.svelte.ts`.
 
-**Dream Points** are awarded on rebirth from two sources: equipment obtained during the run, and checkpoints completed.
+**Dream Points** are awarded on rebirth from two sources: equipment obtained during the run, and checkpoints completed. Some actions will cause DP gains to be 0 temporarily.
 
 ## Dream Upgrades
 

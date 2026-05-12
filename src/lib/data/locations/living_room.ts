@@ -2,6 +2,9 @@ import { history } from '$lib/state/history.svelte';
 import { simple_flat_stat_reward } from '$lib/utils/reward_helpers';
 import { weighted_pick } from '$lib/utils/equip_drop';
 import { EquipM } from '$lib/state/equipment.svelte';
+import { CPs } from '$lib/state/checkpoints.svelte';
+import { Rebirth } from '$lib/state/rebirth.svelte';
+import { RunTotals } from '$lib/state/run_totals.svelte';
 import type { Rarity } from '$lib/data/equipment/equipment_definition';
 import type { ActionDef, LocationDef } from './location_definition';
 import { park } from './park';
@@ -48,7 +51,7 @@ const dancing_practice: ActionDef = {
     name: 'Dancing Practice',
     kind: 'training',
     base_time: 5,
-    desc: "Limbs flail, rhythm fails, and then you trip yourself. Maybe the floor just hates you.",
+    desc: "You try a simple spin and immediately trip yourself. Maybe the floor just hates you.",
     rewards: [
         { which_stat: "Dance", target: 'base', amount: 0.5 },
     ],
@@ -86,6 +89,31 @@ const dancing_practice_plus: ActionDef = {
     },
 };
 
+const take_a_nap: ActionDef = {
+    name: 'Take a Nap',
+    kind: 'special',
+    base_time: 0,
+    no_drops: true,
+    desc: "\"I-I'm just too tired.... to train, to work, to do ANYTHING... There is simply no point...\"",
+    rewards: [],
+    hidden: () => Rebirth.max_completed_checkpoints < 1,
+    requires: {
+        text: "Not at terminal checkpoint",
+        is_met: () => !CPs.is_terminal,
+    },
+    instant: {
+        confirm: {
+            title: 'Take a Nap?',
+            body: "This special action skips Time (fills the checkpoint bar instantly). Doing so will cause your Dream Points gain to be Zero for this run. Are you sure?",
+        },
+        fn: () => {
+            CPs.current_time_spent = CPs.current_total_time;
+            RunTotals.block_dp();
+            history.addSystemLog("You dozed off. The LIVE is upon you.");
+        },
+    },
+};
+
 const rummage_the_couch_action: ActionDef = {
     name: 'Rummage the Couch',
     kind: 'training',
@@ -103,7 +131,7 @@ const rummage_the_couch_action: ActionDef = {
 const living_room_plus: LocationDef = {
     name: 'Living Room',
     base_time: 4,
-    desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster—no one's watching (except maybe the cat). Meow.",
+    desc: "The first stage of your idol career, or maybe just where socks mysteriously vanish. Sing off-key, dance like a disaster. No one's watching (except maybe the cat). Meow.",
     rewards: [
         { which_stat: "Stamina", target: 'base', amount: 0.2 },
     ],
@@ -112,7 +140,7 @@ const living_room_plus: LocationDef = {
         table: LIVING_ROOM_DROP_TABLE,
     },
     unlocks: () => [park, school],
-    actions: [rummage_the_couch_action, singing_practice_plus, dancing_practice_plus,],
+    actions: [rummage_the_couch_action, singing_practice_plus, dancing_practice_plus, take_a_nap],
 };
 
 export const living_room: LocationDef = {
@@ -127,7 +155,7 @@ export const living_room: LocationDef = {
         table: LIVING_ROOM_DROP_TABLE,
     },
     unlocks: () => [park, school],
-    actions: [singing_practice, dancing_practice],
+    actions: [singing_practice, dancing_practice, take_a_nap],
     upgrades: [
         {
             trigger: 'Upgrade Living Room',

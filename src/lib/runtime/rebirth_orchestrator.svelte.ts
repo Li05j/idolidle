@@ -19,8 +19,14 @@ export function performRebirth() {
     Rebirth.inherit_stats()
     const cp_dp = Rebirth.award_rebirth_points()
     const equip_dp = EquipM.flush_pending_dp()
-    Rebirth.add_dream_points(equip_dp)
-    history.addSystemLog(`Your idol dream inspired you... +${cp_dp + equip_dp} DP`)
+    const blocked = RunTotals.dp_blocked
+    if (blocked) {
+        Rebirth.deduct_points(cp_dp)
+        history.addSystemLog(`You napped through your dream... +0 DP`)
+    } else {
+        Rebirth.add_dream_points(equip_dp)
+        history.addSystemLog(`Your idol dream inspired you... +${cp_dp + equip_dp} DP`)
+    }
     RunTotals.reset()
     stat_list_reset()
     LiveBattleM.reset()

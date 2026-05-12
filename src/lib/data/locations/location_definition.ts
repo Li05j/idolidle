@@ -1,7 +1,7 @@
 import type { BasicStats, Reward } from '$lib/types';
 import type { EquipDropTable } from '$lib/data/equipment/equipment_definition';
 
-export type ActionKind = 'training' | 'earning' | 'spending';
+export type ActionKind = 'training' | 'earning' | 'spending' | 'special';
 
 export type ActionDef = {
     name: string;
@@ -27,6 +27,15 @@ export type ActionDef = {
         fn: () => void;
         /** Short description of what the on_complete bonus does, shown in tooltip. */
         desc?: string;
+    };
+
+    /** When truthy, the action is filtered out of the action list entirely. Distinct from `requires` (which only disables). */
+    hidden?: () => boolean;
+
+    /** Marks the action as a one-shot button: clicking opens a confirm modal, then runs `fn`. No timer, rewards, mastery, or drops. */
+    instant?: {
+        confirm: { title: string; body: string };
+        fn: () => void;
     };
 };
 

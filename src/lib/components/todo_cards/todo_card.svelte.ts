@@ -1,9 +1,11 @@
 import { stat_list } from '$lib/state/stats.svelte';
 import { createTodoTimer } from './todo_timer.svelte';
 import { TodoCardM } from '$lib/runtime/todo_card_manager.svelte';
+import { ModalM } from '$lib/runtime/modal_manager.svelte';
 import { Progression } from '$lib/runtime/progression_engine.svelte';
 import { locationMap } from '$lib/data/locations/index';
 import { history } from '$lib/state/history.svelte';
+import ConfirmAction from '$lib/components/modals/content/confirm_action.svelte';
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
 import { executeAction, actionRewardText, handle_rewards, reward_string, format_reward_chip, format_cost_chip, depends_pairs, type RewardChip } from '$lib/utils/utils';
 import { getLocationHint } from '$lib/data/hints';
@@ -17,6 +19,7 @@ const ACTION_BG = {
     training: { normal: 'bg-[var(--card-action)]',         hover: 'bg-[var(--card-action-hover)]' },
     earning:  { normal: 'bg-[var(--card-gain-currency)]',  hover: 'bg-[var(--card-gain-currency-hover)]' },
     spending: { normal: 'bg-[var(--card-spend-currency)]', hover: 'bg-[var(--card-spend-currency-hover)]' },
+    special:  { normal: 'bg-[var(--card-special)]',        hover: 'bg-[var(--card-special-hover)]' },
 } as const;
 
 const LOCATION_BG = { normal: 'bg-[var(--card-location)]', hover: 'bg-[var(--card-location-hover)]' };
@@ -95,6 +98,7 @@ export class TodoCardVM {
     }
 
     get prereq(): { text: string; met: boolean } | undefined {
+        if (this.actionDef?.kind === 'special') return undefined;
         const req = this.def.requires;
         if (!req) return undefined;
         return { text: req.text, met: req.is_met() };
@@ -113,6 +117,16 @@ export class TodoCardVM {
 
     get has_uses(): boolean {
         return this.actionDef?.uses !== undefined;
+    }
+
+    get is_special(): boolean {
+        return this.actionDef?.kind === 'special';
+    }
+
+    get watermark(): { text: string; tone: 'normal' | 'danger' } {
+        if (this.actionDef?.instant) return { text: 'Danger', tone: 'danger' };
+        if (this.has_uses) return { text: 'ONCE', tone: 'normal' };
+        return { text: `x${this.timer.is_active ? this.loop : this.display_loop}`, tone: 'normal' };
     }
 
     get mastery_id(): string {
@@ -170,6 +184,23 @@ export class TodoCardVM {
     }
 
     toggle(repeat_val?: string) {
+        if (this.disabled) return;
+
+        const instant = this.actionDef?.instant;
+        if (instant) {
+            ModalM.open({
+                component: ConfirmAction,
+                size: 'sm',
+                closeable: true,
+                props: {
+                    title: instant.confirm.title,
+                    body: instant.confirm.body,
+                    on_yes: instant.fn,
+                },
+            });
+            return;
+        }
+
         if (this.timer.is_paused) {
             this.start(repeat_val);
         } else {

@@ -20,19 +20,17 @@
 </script>
 
 <div
-    class="{vm.bg_color} {vm.border} transition-all duration-200 px-5 pt-3 pb-2 rounded-[var(--border-radius-card)] shadow-sm relative overflow-hidden mb-3 hover:shadow-md hover:scale-[1.01] {(vm.disabled && !vm.timer.is_active) ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'} {is_collapse ? 'h-22' : 'h-45'}"
+    class="{vm.bg_color} {vm.border} transition-all duration-200 px-5 pt-3 pb-2 rounded-[var(--border-radius-card)] shadow-sm relative overflow-hidden mb-3 hover:shadow-md hover:scale-[1.01] {(vm.disabled && !vm.timer.is_active) ? 'cursor-not-allowed opacity-80' : 'cursor-pointer'} {is_collapse ? 'h-22' : 'h-48'}"
     onclick={() => vm.toggle(repeat_val)}
     onmouseenter={() => vm.hovered = true}
     onmouseleave={() => vm.hovered = false}
 >
     {#if !vm.is_location}
         <div class="absolute bottom-3 right-4 flex pointer-events-none z-0">
-            <span class="text-6xl font-extrabold text-[var(--text-primary)] opacity-[0.07] transform rotate-12 select-none">
-                {#if vm.has_uses}
-                    ONCE
-                {:else}
-                    x{vm.timer.is_active ? vm.loop : vm.display_loop}
-                {/if}
+            <span
+                class="text-6xl font-extrabold transform rotate-12 select-none {vm.watermark.tone === 'danger' ? 'text-[var(--rose)] opacity-[0.25]' : 'text-[var(--text-primary)] opacity-[0.07]'}"
+            >
+                {vm.watermark.text}
             </span>
         </div>
     {/if}
@@ -41,18 +39,22 @@
         <!-- Header: name + timer -->
         <div class="flex justify-between items-center">
             <div class="text-sm font-bold text-[var(--text-primary)] truncate pr-2">{vm.name}</div>
-            <div class="text-[var(--text-muted)] text-xs whitespace-nowrap">
-                {msToSecF(vm.timer.elapsed)}/{msToSecF(vm.todo_actual_duration)}s
-            </div>
+            {#if !vm.is_special}
+                <div class="text-[var(--text-muted)] text-xs whitespace-nowrap">
+                    {msToSecF(vm.timer.elapsed)}/{msToSecF(vm.todo_actual_duration)}s
+                </div>
+            {/if}
         </div>
 
-        <!-- Progress bar -->
-        <div class="w-full bg-[var(--progress-bg)] rounded-full h-3 overflow-hidden">
-            <div
-                class="h-3 w-full rounded-full will-change-transform {vm.timer.is_active ? 'progress-shimmer' : ''}"
-                style="transform: scaleX({vm.todo_actual_duration > 0 ? Math.min(vm.timer.elapsed / vm.todo_actual_duration, 1) : 0}); transform-origin: left; background: linear-gradient(90deg, var(--progress-from), var(--progress-to), var(--progress-from));"
-            ></div>
-        </div>
+        {#if !vm.is_special}
+            <!-- Progress bar -->
+            <div class="w-full bg-[var(--progress-bg)] rounded-full h-2 overflow-hidden">
+                <div
+                    class="h-2 w-full rounded-full will-change-transform {vm.timer.is_active ? 'progress-shimmer' : ''}"
+                    style="transform: scaleX({vm.todo_actual_duration > 0 ? Math.min(vm.timer.elapsed / vm.todo_actual_duration, 1) : 0}); transform-origin: left; background: linear-gradient(90deg, var(--progress-from), var(--progress-to), var(--progress-from));"
+                ></div>
+            </div>
+        {/if}
 
         {#if !is_collapse}
             <!-- Chip row: prereq, mastery, depends, on-complete bonus, hint -->
@@ -110,7 +112,7 @@
         {/if}
 
         <!-- Cost / reward strip (visible in both modes) -->
-        <div class="mt-auto flex justify-between items-end gap-2 text-[11px] relative z-10">
+        <div class="mt-auto flex justify-between items-end gap-2 text-[10px] relative z-10">
             <div class="flex flex-wrap gap-1">
                 {#each vm.cost_chips as c}
                     <span

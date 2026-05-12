@@ -11,6 +11,7 @@ import type { BasicStats } from '$lib/types';
 class RunTotalsState {
     private _moni_earned = $state(0);
     private _fans_earned = $state(0);
+    private _dp_blocked = $state(false);
     private _tick = $state(0);
 
     get mutation_tick() { return this._tick; }
@@ -33,21 +34,29 @@ class RunTotalsState {
     reset(): void {
         this._moni_earned = 0;
         this._fans_earned = 0;
+        this._dp_blocked = false;
+        this._tick++;
+    }
+
+    block_dp(): void {
+        this._dp_blocked = true;
         this._tick++;
     }
 
     get moni_earned() { return this._moni_earned; }
     get fans_earned() { return this._fans_earned; }
+    get dp_blocked() { return this._dp_blocked; }
 
     serialize() {
-        return { moni: this._moni_earned, fans: this._fans_earned };
+        return { moni: this._moni_earned, fans: this._fans_earned, dp_blocked: this._dp_blocked };
     }
 
     deserialize(data: unknown): void {
         if (!data || typeof data !== 'object') return;
-        const d = data as { moni?: unknown; fans?: unknown };
+        const d = data as { moni?: unknown; fans?: unknown; dp_blocked?: unknown };
         if (typeof d.moni === 'number') this._moni_earned = d.moni;
         if (typeof d.fans === 'number') this._fans_earned = d.fans;
+        this._dp_blocked = d.dp_blocked === true;
     }
 }
 
