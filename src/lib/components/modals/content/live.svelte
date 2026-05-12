@@ -133,13 +133,13 @@
     <div class="w-full flex justify-center">
         <div class="relative w-2/3 h-6 bg-[var(--progress-bg)] rounded-full my-8 overflow-hidden">
             <div
-                class="absolute top-0 left-0 h-full transition-all duration-300 rounded-full"
-                style="width: {vm.leftPercent}%; background: var(--battle-player);"
+                class="absolute top-0 left-0 h-full w-full rounded-full transition-transform duration-300 will-change-transform"
+                style="transform: scaleX({vm.leftPercent / 100}); transform-origin: left; background: var(--battle-player);"
             ></div>
 
             <div
-                class="absolute top-0 right-0 h-full transition-all duration-300 rounded-full"
-                style="width: {vm.rightPercent}%; background: var(--battle-rival);"
+                class="absolute top-0 right-0 h-full w-full rounded-full transition-transform duration-300 will-change-transform"
+                style="transform: scaleX({vm.rightPercent / 100}); transform-origin: right; background: var(--battle-rival);"
             ></div>
 
             <div
