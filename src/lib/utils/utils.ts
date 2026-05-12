@@ -43,6 +43,52 @@ function scaled_bonus(r: Reward): number {
     return apply_stat_scaling(calc_stat_effectiveness(r.scaling.sources));
 }
 
+export type RewardChip = {
+    sign: '+' | '-';
+    amount: string;
+    stat: string;
+    suffix?: string;
+    scaled?: boolean;
+};
+
+export function format_reward_chip(r: Reward): RewardChip {
+    const depends_gain = scaled_bonus(r);
+    if (r.target === 'base') {
+        let fixed_at = DECIMAL_PLACES;
+        if (r.which_stat === 'Fans' || r.which_stat === 'Moni') fixed_at = 0;
+        const summed_flat_gain = r.amount + depends_gain;
+        const multi = stat_list[r.which_stat].multi;
+        const v = summed_flat_gain * multi;
+        return {
+            sign: v >= 0 ? '+' : '-',
+            amount: Math.abs(v).toFixed(fixed_at),
+            stat: r.which_stat,
+            scaled: !!r.scaling,
+        };
+    }
+    const v = r.amount + depends_gain;
+    return {
+        sign: v >= 0 ? '+' : '-',
+        amount: Math.abs(v).toFixed(2),
+        stat: r.which_stat,
+        suffix: 'Multi',
+        scaled: !!r.scaling,
+    };
+}
+
+export function format_cost_chip(c: { stat: string; amount: number }): RewardChip {
+    return { sign: '-', amount: String(c.amount), stat: c.stat };
+}
+
+export function depends_pairs(def: ActionDef): Array<{ sources: string[]; target: string }> {
+    return def.rewards
+        .filter(r => r.scaling?.sources.length)
+        .map(r => ({
+            sources: r.scaling!.sources.map(d => d.which_stat),
+            target: r.which_stat,
+        }));
+}
+
 export function reward_string(rewards: Reward[]): string {
     let ret_str = ""
     rewards.forEach(r => {

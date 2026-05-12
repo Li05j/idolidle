@@ -89,6 +89,28 @@
 
     /* Shared radius */
     --border-radius-card: 0.875rem;
+
+    /* Card info chips */
+    --chip-cost-fg:    #B91C1C;
+    --chip-cost-bg:    rgba(185, 28, 28, 0.10);
+    --chip-reward-fg:  #15803D;
+    --chip-reward-bg:  rgba(21, 128, 61, 0.10);
+    --chip-locked-fg:  #DC2626;
+    --chip-locked-bg:  rgba(220, 38, 38, 0.14);
+    --chip-mastery-fg: #7C3AED;
+    --chip-mastery-bg: rgba(124, 58, 237, 0.10);
+    --chip-bonus-fg:   #2563EB;
+    --chip-bonus-bg:   rgba(37, 99, 235, 0.10);
+}
+
+@keyframes progress-shimmer {
+    0%   { background-position:   0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+.progress-shimmer {
+    background-size: 200% 100% !important;
+    animation: progress-shimmer 2.2s linear infinite;
 }
 
 @keyframes pulse-glow {

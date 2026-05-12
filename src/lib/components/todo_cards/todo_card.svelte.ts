@@ -5,7 +5,8 @@ import { Progression } from '$lib/runtime/progression_engine.svelte';
 import { locationMap } from '$lib/data/locations/index';
 import { history } from '$lib/state/history.svelte';
 import type { ActionDef, LocationDef } from '$lib/data/locations/location_definition';
-import { executeAction, actionRewardText, handle_rewards, reward_string } from '$lib/utils/utils';
+import { executeAction, actionRewardText, handle_rewards, reward_string, format_reward_chip, format_cost_chip, depends_pairs, type RewardChip } from '$lib/utils/utils';
+import { getLocationHint } from '$lib/data/hints';
 import { CFG } from '$lib/config';
 import { Mastery } from '$lib/state/mastery.svelte';
 import { Dreams } from '$lib/state/dreams.svelte';
@@ -75,6 +76,39 @@ export class TodoCardVM {
         const d = this.def;
         if ('kind' in d) return actionRewardText(d);
         return reward_string(d.rewards);
+    }
+
+    get cost_chips(): RewardChip[] {
+        return (this.actionDef?.costs ?? []).map(format_cost_chip);
+    }
+
+    get reward_chips(): RewardChip[] {
+        return this.def.rewards.map(format_reward_chip);
+    }
+
+    get depends(): Array<{ sources: string[]; target: string }> {
+        return this.actionDef ? depends_pairs(this.actionDef) : [];
+    }
+
+    get on_complete_desc(): string | undefined {
+        return this.actionDef?.on_complete?.desc;
+    }
+
+    get prereq(): { text: string; met: boolean } | undefined {
+        const req = this.def.requires;
+        if (!req) return undefined;
+        return { text: req.text, met: req.is_met() };
+    }
+
+    get mastery_info(): { count: number; pct: number } | undefined {
+        if (this.actionDef?.kind !== 'training') return undefined;
+        const count = Mastery.completions(this.mastery_id);
+        const factor = Mastery.factor_for_count(count);
+        return { count, pct: Math.round((1 - factor) * 100) };
+    }
+
+    get hint(): string | null {
+        return this.is_location ? getLocationHint(this.locationName) : null;
     }
 
     get has_uses(): boolean {
